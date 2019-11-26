@@ -1,0 +1,5 @@
+library(qqman)
+my_data <- read.delim("genomecoverage_normalized_w_scaffoldnames_MG8.txt")
+tiff("manhattanplot_MG8.tiff", units="in", width=25, height=5, res=300)
+manhattan(my_data, chr = "CHROMOSOME", bp = "BASE", snp = "BASE", p = "COUNT", logp=FALSE, ylab= NA , xlab= NA , genomevideline=FALSE, suggestiveline = FALSE, main = NA, annotateTop = TRUE, cex.lab=1.5, cex.axis = 1.5, ylim = c(0,3000))
+dev.off()
