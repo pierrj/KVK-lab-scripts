@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=bedtools_genomecov
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/G3_1A_tests
+bedtools genomecov -d -ibam mergedandpe.G3_1A_bwamem.bam > genomecoverage.mergedandpe.G3_1A_bwamem.bed
