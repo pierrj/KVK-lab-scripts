@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name=mappbsim_restrictive
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio
+#SBATCH --qos=savio_normal
+#SBATCH --time=23:59:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/pierrj/eccDNA/magnaporthe_pureculture/rawdata/pbsim
+source activate python=2.7
+pbmm2 align --preset CCS --sort -k 28 --log-file ../../analysis/pbsim_mapped_restrictive/pbsimreads_mapped_restrictive.log --log-level INFO ../../reference_genomes/guy11_genomebaoetal2017.mmi pooled_pbsimreads.fastq ../../analysis/pbsim_mapped_restrictive/pbsimreads_mapped_restrictive.bam
+source deactivate

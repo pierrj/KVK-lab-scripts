@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=sort_illumina_mapping
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/
+samtools view -S -b G3_1A_aligned > G3_1A_aligned.bam
+samtools sort G3_1A_aligned.bam -o G3_1A_aligned.sorted.bam
+samtools index G3_1A_aligned.sorted.bam

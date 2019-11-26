@@ -1,0 +1,15 @@
+split: linesplit14.sam: No space left on device
+cat: linesplit15.sam: No such file or directory
+cat: linesplit16.sam: No such file or directory
+cat: linesplit17.sam: No such file or directory
+cat: linesplit18.sam: No such file or directory
+cat: linesplit19.sam: No such file or directory
+cat: linesplit20.sam: No such file or directory
+cat: linesplit21.sam: No such file or directory
+cat: linesplit22.sam: No such file or directory
+cat: linesplit23.sam: No such file or directory
+[E::sam_parse1] incomplete aux field
+[W::sam_read1] Parse error at line 92326
+[main_samview] truncated file.
+/var/spool/slurmd/job4384017/slurm_script: line 20: syntax error near unexpected token `;'
+/var/spool/slurmd/job4384017/slurm_script: line 20: `for (( i = 0 ; i < 24; i++)); do srun --ntasks=1 --nodes=1 ccs --reportFile=ccs_report_split$i.txt split$i.subreads.bam $i.split.ccs.bam & ; done'

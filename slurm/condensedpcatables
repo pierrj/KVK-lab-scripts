@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --job-name=condensedpcatables
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/
+for d in */ ; do 
+    echo "$d"
+    cd $d
+    awk -v var="$d" '$3 <= 1000 && $1 <=10 {print var "\t" $1 "-" $3, $4}' genomecoverage_normalized_w_scaffoldnames > condensedtable_for_PCA
+    echo -e "SAMPLENAME\tBASE\tCOUNT" | cat - condensedtable_for_PCA > condensedtable_for_PCA.txt
+    cd ..
+done
+cat ./**/condensedtable_for_PCA.txt > final_condensedtable_for_PCA.txt

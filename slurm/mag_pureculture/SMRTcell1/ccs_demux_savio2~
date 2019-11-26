@@ -1,0 +1,38 @@
+#!/bin/bash
+#SBATCH --job-name=ccs_demux
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=4
+#SBATCH --ntasks=4
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell1
+samtools view -h subreads.bam > subreads.sam
+total_lines=$(samtools view -c subreads.sam)
+((lines_per_file = (total_lines + 4 - 1) / 4))
+split --lines=${lines_perfile} -d --additional-suffix=.sam subreads.sam linesplit
+samtools view -H subreads.sam > head.linesplit0.sam
+for (( i = 1 ; i < 4; i++)); do cp head.linesplit0.sam head.linesplit$i.sam ; done
+for (( i = 0 ; i < 4; i++)); do cat head.linesplit$i.sam linesplit0$i.sam > split$i.subreads.sam ; done
+for (( i = 0 ; i < 4; i++)); do samtools view -b split$i.subreads.sam > split$i.subreads.bam; done 
+source activate python=2.7
+srun --ntasks=1 --nodes=1 ccs --reportFile=ccs_report_split0.txt split0.subreads.bam split0.ccs.bam &
+srun --ntasks=1 --nodes=1 ccs --reportFile=ccs_report_split1.txt split1.subreads.bam split1.ccs.bam &
+srun --ntasks=1 --nodes=1 ccs --reportFile=ccs_report_split2.txt split2.subreads.bam split2.ccs.bam &
+srun --ntasks=1 --nodes=1 ccs --reportFile=ccs_report_split3.txt split3.subreads.bam split3.ccs.bam &
+wait
+sleep 60
+source deactivate
+echo "done with ccs"
+bamtools merge -in split0.ccs.bam -in split1.ccs.bam -in split2.ccs.bam -in split3.ccs.bam -out ccs.bam
+echo "done merging"
+echo "Number of CCS"
+samtools view -c ccs.bam
+source activate python=2.7
+lima --different --dump-removed --split-bam-named --ccs ccs.bam /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/barcodes.fasta demux.bam
+source deactivate
+echo "done demux"
+Rscript --vanilla ~/scripts/lima/report_detail.R demux.lima.report

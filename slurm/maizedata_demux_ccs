@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=maizedata_demux_splitmerge
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=1:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/maizepacbio/
+# source activate python=2.7
+# lima --different --dump-removed --split-bam-named --ccs analysis_savio2_knl_rety/maizeccs.bam  ../../barcodes.fasta analysis_savio2_knl_rety/maizedemux_retry.bam
+# lima --different --dump-removed --split-bam-named --ccs splitmerge/maizeccs_merged_awksplit.bam  ../../barcodes.fasta splitmerge/maizedemux_awk.bam
+# lima --different --dump-removed --split-bam-named --ccs splitmerge_cat/maizeccs_merged_linesplit.bam  ../../barcodes.fasta splitmerge_cat/maizedemux_linesplit.bam
+# source deactivate
+cd analysis_savio2_knl_rety
+Rscript --vanilla ~/scripts/lima/report_detail.R maizedemux_retry.lima.report
+cd ../splitmerge
+Rscript --vanilla ~/scripts/lima/report_detail.R maizedemux_awk.lima.report
+cd ../splitmerge_cat
+Rscript --vanilla ~/scripts/lima/report_detail.R maizedemux_linesplit.lima.report

@@ -1,0 +1,12 @@
+Number of reads
+
+
+Building a new DB, current time: 05/29/2019 19:48:05
+New DB name:   /global/scratch/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2/K11_1/demux.fasta
+New DB title:  demux.fasta
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 1000000000B
+Adding sequences from FASTA; added 4536 sequences in 0.382661 seconds.
+Number of reads mapping to EYFP
+3 EYFP.blast.txt

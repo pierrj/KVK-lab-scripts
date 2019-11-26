@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=rarefication_test
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/G3_1A
+source activate python=2.7
+for i in {1000..10000..1000}; do
+    samtools view demux.bam | shuf | head -$i > "$i".tmp
+    cat <(samtools view -H demux.bam) "$i".tmp | samtools view -b > "$i"_header.tmp.bam
+    pbmm2 align --preset CCS --sort --log-level INFO /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/reference_genomes/guy11_genome_baoetal2017.mmi "$i"_header.tmp.bam "$i"_mapped.tmp.bam
+    samtools view -F 2048 "$i"_mapped.tmp.bam | grep -o 'SA:Z:.*' | while read -r line ; do echo "$line" | awk -F ";" '{print NF}' ; done | awk '$1 >= 5 {print}' | wc -l &>> rarefy_microecc_yaxis
+    echo $i &>> rarefy_microecc_xaxis
+done
+paste rarefy_microecc_xaxis rarefy_microecc_yaxis > rarefy_microecc
+echo -e "READCOUNT\tMICROECCS" | cat - rarefy_microecc > rarefy_microecc.txt
+rm *.tmp*
+source deactivate

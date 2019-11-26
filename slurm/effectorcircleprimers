@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --job-name=effectorcircleprimers
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/
+source activate python=2.7
+for d in */ ; do 
+    echo "$d"
+    cd $d
+    awk -v OFS='\t' '{if ($5 >= 2) {print $2, $3, $4}}' riceblast_effector_coverage_100_SRs > high_coverage_effector_circles
+    if [ -s high_coverage_effector_circles ]
+        then
+            echo "effector circles found"
+            samtools view baoetal2017_mapped_forintersect.bam | grep 'SA:Z:' | cat <(samtools view -H baoetal2017_mapped_forintersect.bam) - | samtools view -b | bedtools intersect -b "stdin" -a high_coverage_effector_circles -bed -wb -f 1.0 > highcoverage_effector_circles_wb
+            awk -v OFS='\t' '{print $4, $5, $6}' highcoverage_effector_circles_wb | sort -k1,1 -k2,3n | bedtools merge > effectorcircle_locations
+            awk -v OFS='\t' '{$2 = $3 - 200} {print}' effectorcircle_locations > effectorcircle_locations_left
+            awk -v OFS='\t' '{$3 = $2 + 200} {print}' effectorcircle_locations > effectorcircle_locations_right
+            cat effectorcircle_locations_right effectorcircle_locations_left | sort -k1,1 -k2,3n > effectorcircle_locations_junctions
+            bedtools getfasta -fi /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/reference_genomes/guy11_genome_baoetal2017.fasta -bed effectorcircle_locations_junctions -fo effectorcircle_locations_junctions.fasta
+            while read -r ONE; do read -r TWO; read -r THREE; read -r FOUR; echo "SEQUENCE_TEMPLATE=${FOUR}${TWO}"; done < effectorcircle_locations_junctions.fasta > effectorcircle_junctions_merged_sequences
+            sort -k2,2 -k3,4n riceblast_effector_coverage_100_SRs | awk -v OFS='\t' '{if ($5 >= 2) {print "SEQUENCE_ID="$1"_crcl"}}' > effectorcircle_names
+            a=($(wc -l effectorcircle_names))
+            printf 'SEQUENCE_PRIMER_PAIR_OK_REGION_LIST=0,195,205,195\n%.0s' $(eval "echo {1.."$(($a))"}") > primer_pair_ok_region
+            printf '=\n%.0s' $(eval "echo {1.."$(($a))"}") > equals
+            paste -d"\n" effectorcircle_names effectorcircle_junctions_merged_sequences primer_pair_ok_region equals > junctions.boulder
+            /global/home/users/pierrj/scripts/primer3/src/primer3_core --p3_settings_file=/global/home/users/pierrj/scripts/primer3/src/PMJ_settings junctions.boulder > junctions.primers.boulder
+            grep -oP '(PRIMER_.*._.*._SEQUENCE=)\K.*' junctions.primers.boulder > junctions.primers
+            for i in {1..4};do cat effectorcircle_names ; done | sort > effectorcirclenames_duped ### where 4 is the number of primers per junction times 2
+            dirname=$(basename $d)
+            for i in $(eval "echo {1.."$(($a))"}") ; do printf '_'$dirname'_F0\n_'$dirname'_R0\n_'$dirname'_F1\n_'$dirname'_R1\n'; done > primernames
+            paste -d'\0' effectorcirclenames_duped primernames | awk '{print substr($0,length($0)-19,20)}' > primernames_column
+            paste -d'\t' primernames_column junctions.primers > primers.foridt."$dirname"
+            cd ..
+        else
+            echo "no effector circles"
+            cd ..
+            continue
+    fi
+done

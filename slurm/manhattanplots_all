@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --job-name=manhattanplots_allsamples
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/
+for d in */ ; do 
+    echo "$d"
+    cd $d
+    cp ~/scripts/R/manhattanplot.R manhattanplot.R
+    R CMD BATCH manhattanplot.R
+    cd ..
+done

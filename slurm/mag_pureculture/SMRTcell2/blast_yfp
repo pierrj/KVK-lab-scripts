@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=SMRTcell2_K11_1_blast_yfp
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBTACH --output=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2/k11_1_blastyfp_output.txt
+#SBATCH --error=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2/k11_1_blastyfp_error.txt
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2
+mkdir K11_1
+cp demux.AJI_2--OF_PacF2.bam K11_1/demux.bam
+echo "Number of reads"
+samtools view -c demux.bam
+cd K11_1
+samtools fastq demux.bam > demux.fastq
+cat demux.fastq | paste - - - - | sed 's/^@/>/g'| cut -f1-2 | tr '\t' '\n' > demux.fasta
+makeblastdb -in demux.fasta -dbtype nucl
+blastn -query /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/reference_genomes/EYFP.fasta -db demux.fasta -out EYFP.blast.txt -outfmt 6 -max_target_seqs 100000
+echo "Number of reads mapping to EYFP"
+wc -l EYFP.blast.txt

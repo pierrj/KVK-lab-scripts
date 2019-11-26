@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name=demuxjob1
+#SBATCH --account=vector_kvklab
+#SBATCH --partition=vector
+#SBATCH --qos=vector_batch
+#SBATCH --time=02:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /clusterfs/vector/scratch/pierrj/eccDNA/magnaporthe_pureculture/rawdata/maizepacbio/KM01_P1.JE_0.4x
+tar -xvzf r54179_20180720_170231_2_B01.tar.gz

@@ -1,0 +1,28 @@
+samtools view: writing to standard output failed: No space left on device
+samtools view: error closing standard output: -1
+split: : invalid number of lines
+Try 'split --help' for more information.
+cat: linesplit00.sam: No such file or directory
+cat: linesplit01.sam: No such file or directory
+cat: linesplit02.sam: No such file or directory
+cat: linesplit03.sam: No such file or directory
+cat: linesplit04.sam: No such file or directory
+cat: linesplit05.sam: No such file or directory
+cat: linesplit06.sam: No such file or directory
+cat: linesplit07.sam: No such file or directory
+cat: linesplit08.sam: No such file or directory
+cat: linesplit09.sam: No such file or directory
+cat: linesplit10.sam: No such file or directory
+cat: linesplit11.sam: No such file or directory
+cat: linesplit12.sam: No such file or directory
+cat: linesplit13.sam: No such file or directory
+cat: linesplit14.sam: No such file or directory
+cat: linesplit15.sam: No such file or directory
+cat: linesplit16.sam: No such file or directory
+cat: linesplit17.sam: No such file or directory
+cat: linesplit18.sam: No such file or directory
+cat: linesplit19.sam: No such file or directory
+cat: linesplit20.sam: No such file or directory
+cat: linesplit21.sam: No such file or directory
+cat: linesplit22.sam: No such file or directory
+cat: linesplit23.sam: No such file or directory

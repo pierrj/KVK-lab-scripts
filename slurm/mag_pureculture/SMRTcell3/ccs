@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=SMRTcell3_ccs
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=24
+#SBATCH --ntasks=24
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBTACH --output=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell3/ccs_output.txt
+#SBATCH --error=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell3/ccs_error.txt
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell3
+source activate python=2.7
+for (( i = 0 ; i < 24; i++))
+do
+    srun --ntasks=1 --nodes=1 ccs --reportFile=ccs_report_split$i.txt split$i.subreads.bam $i.split.ccs.bam &
+done
+wait
+sleep 60
+source deactivate
+echo "done with ccs"

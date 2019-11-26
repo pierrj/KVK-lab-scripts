@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name=intersect
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=2
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/G3_1A/gene_intersect/
+bedtools intersect -b MG8_mapped.bam -a /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/reference_genomes/Magnaporthe_oryzae.MG8.43.chr.gff3 -bed -c > MG8_mapped.genes.intersect.bed

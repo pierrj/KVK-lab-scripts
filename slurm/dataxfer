@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=knowneffectors_transfer
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/
+source activate python=2.7
+for d in */ ; do 
+    echo "$d"
+    cd $d
+    mkdir /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/datatransfer/"$d"
+    cp riceblast_effector_coverage /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/datatransfer/"$d"/riceblast_effector_coverage
+    cp riceblast_effector_coverage_100_SRs /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/datatransfer/"$d"/riceblast_effector_coverage_100_SRs
+    cp baoetal2017_mapped_forintersect.bam /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/datatransfer/"$d"/baoetal2017_mapped_forintersect.bam
+    cp baoetal2017_mapped_forintersect.bam.bai /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/datatransfer/"$d"/baoetal2017_mapped_forintersect.bam.bai
+    cp guy11_genome_baoetal2017.fasta /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/datatransfer/"$d"/guy11_genome_baoetal2017.fasta
+   cd ..
+done

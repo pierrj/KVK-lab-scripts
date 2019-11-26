@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --job-name=SMRTcell2_split_retry
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --time=48:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBTACH --output=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2/split_output.txt
+#SBATCH --error=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2/split_error.txt
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell2
+split --number=l/24 -d --additional-suffix=.sam subreads.sam linesplit
+samtools view -H subreads.sam > head.linesplit0.sam
+for (( i = 1 ; i < 24; i++)); do cp head.linesplit0.sam head.linesplit$i.sam ; done
+for (( i = 0 ; i < 10; i++)); do cat head.linesplit$i.sam linesplit0$i.sam > split$i.subreads.sam ; done
+for (( i = 10 ; i < 24; i++)); do cat head.linesplit$i.sam linesplit$i.sam > split$i.subreads.sam ; done
+for (( i = 0 ; i < 24; i++)); do samtools view -b split$i.subreads.sam > split$i.subreads.bam; done 

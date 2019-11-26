@@ -1,0 +1,15 @@
+split: : invalid number of lines
+Try 'split --help' for more information.
+cat: linesplit00.sam: No such file or directory
+cat: linesplit01.sam: No such file or directory
+cat: linesplit02.sam: No such file or directory
+cat: linesplit03.sam: No such file or directory
+done with ccs
+done merging
+Number of CCS
+0
+done demux
+Error in mutate_impl(.data, dots) : 
+  Evaluation error: object 'ReadLengths' not found.
+Calls: %>% ... <Anonymous> -> mutate -> mutate.tbl_df -> mutate_impl -> .Call
+Execution halted

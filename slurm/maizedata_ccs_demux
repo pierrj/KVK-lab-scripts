@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=maizedata_ccs_demux_savio2_knl_2nodes
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2_knl
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=2
+#SBATCH --time=72:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/maizepacbio/
+source activate python=2.7
+ccs m54179_180721_023318.subreads.bam analysis_savio2_knl_2nodes/maizeccs.bam
+source deactivate
