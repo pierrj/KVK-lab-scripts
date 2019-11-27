@@ -17,7 +17,7 @@ def data_entry(data):
     c.execute('''Drop TABLE if exists server''')
     c.execute('''Create TABLE if not exists server(chrom, start, end)''')
     for i in range(len(data)):
-        c.execute("INSERT INTO server(chrom, start, end) VALUES(?,?,?)", (test[i]))
+        c.execute("INSERT INTO server(chrom, start, end) VALUES(?,?,?)", (data[i]))
     conn.commit()
 
 
