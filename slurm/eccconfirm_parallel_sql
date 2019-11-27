@@ -15,5 +15,5 @@ git pull
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/G3_1A_tests
 ipcluster start -n $SLURM_NTASKS &
 sleep 45
-ipython /global/home/users/pierrj/git/eccconfirm_sql_parallel.py
+ipython /global/home/users/pierrj/git/python/eccconfirm_sql_parallel.py
 ipcluster stop
