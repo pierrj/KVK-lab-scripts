@@ -8,8 +8,10 @@
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/G3_1A_tests
 ipcluster start -n $SLURM_NTASKS &
 sleep 45
-ipython eccconfirm.py
+ipython /global/home/users/pierrj/git/eccconfirm_sql_parallel.py
 ipcluster stop

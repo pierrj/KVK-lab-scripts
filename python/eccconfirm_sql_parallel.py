@@ -82,7 +82,7 @@ confirmedeccs = list(compress(eccloc_list, yesornoeccs))
 # In[ ]:
 
 
-with open('parallel.confirmed', 'w', newline = '') as confirmed:
+with open('parallel.confirmed.sql', 'w', newline = '') as confirmed:
     w = csv.writer(confirmed, delimiter = '\t')
     w.writerows(confirmedeccs)
 
