@@ -5,7 +5,7 @@ from itertools import compress
 
 with open('merged.splitreads.sorted.reverseread1.G3_1A_bwamem.bed', newline = '') as eccloc:
     eccloc_reader = csv.reader(eccloc, delimiter = '\t')
-    eccloc_list = [[int(row[0][10:12]), int(row[1]), int(row[2])] for row in eccloc_reader]
+    eccloc_list = [[int(row[0][10:12]) - 1, int(row[1]), int(row[2])] for row in eccloc_reader]
     
 with open('discordantmappedreads.oppositefacing.bed', newline = '') as discordant:
     discordant_reader = csv.reader(discordant, delimiter = '\t')
