@@ -12,4 +12,5 @@
 cd /global/home/users/pierrj/git
 git pull
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/G3_1A_tests
-bedtools genomecov -d -ibam mergedandpe.G3_1A_bwamem.bam > genomecoverage.mergedandpe.G3_1A_bwamem.bed
+samtools sort mergedandpe.G3_1A_bwamem.bam -o sorted.mergedandpe.G3_1A_bwamem.bam
+bedtools genomecov -d -ibam sorted.mergedandpe.G3_1A_bwamem.bam > genomecoverage.mergedandpe.G3_1A_bwamem.bed
