@@ -9,8 +9,9 @@ with open('merged.splitreads.sorted.reverseread1.G3_1A_bwamem.bed', newline = ''
     
 with open('discordantmappedreads.oppositefacing.bed', newline = '') as discordant:
     discordant_reader = csv.reader(discordant, delimiter = '\t')
-    discordant_list = [[int(row[0][10:12]), int(row[1]), int(row[2])] for row in discordant_reader]
-    discordant_indexed = [[x[1:] for x in g] for k, g in groupby(discordant_list, key = lambda x: x[0])]
+    discordant_indexed = [[] for i in range(56)]
+    for row in discordant_reader:
+        discordant_indexed[(int(row[0][10:12])-1)].append([int(row[1]), int(row[2])])
 
 def confirmeccs(ecc):
     for i in range(0, len(discordant_indexed[ecc[0]]), 2):
