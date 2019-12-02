@@ -1,6 +1,7 @@
 import csv
 import ipyparallel as ipp
 from itertools import groupby
+from itertools import compress
 
 with open('merged.splitreads.sorted.reverseread1.G3_1A_bwamem.bed', newline = '') as eccloc:
     eccloc_reader = csv.reader(eccloc, delimiter = '\t')
@@ -25,11 +26,10 @@ dview.block = True
 lview = rc.load_balanced_view()
 lview.block = True
 
-mydict = dict(discordant_list = discordant_list)
+mydict = dict(discordant_indexed = discordant_indexed)
 dview.push(mydict)
 
 yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
-from itertools import compress
 confirmedeccs = list(compress(eccloc_list, yesornoeccs))
 
 with open('parallel.confirmed', 'w', newline = '') as confirmed:
