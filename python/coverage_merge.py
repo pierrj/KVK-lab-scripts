@@ -62,10 +62,11 @@ def confidence_check(confirmed):
 confidence_list = confidence_check(confirmed_list)
 
 def index_confidence_list(confidence_list):
-    confidence_indexed = [[] for i in range(56)] ## scaffold number here, get this variable from somewhere else
+    confidence_index = [[] for i in range(56)] ## scaffold number here, get this variable from somewhere else
     for i in range(len(confidence_list)):
         row = confidence_list[i]
-        confidence_indexed[int(row[0])].append([int(row[0]), int(row[1]), int(row[2]), str(row[3]), str(row[4]), str(row[5]), 'no'])
+        confidence_index[int(row[0])].append([int(row[0]), int(row[1]), int(row[2]), str(row[3]), str(row[4]), str(row[5]), 'no']) ## adds no to be changed to yes if their is a variant
+    return confidence_index
 
 confidence_indexed = index_confidence_list(confidence_list)
 
