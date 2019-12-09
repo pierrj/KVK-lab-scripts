@@ -16,7 +16,7 @@ with open('samechromosome.exactlytwice.reverseread1.G3_1A_bwamem.bam', newline =
 
 with open('getsrloc_test', newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
-    with open('merged.getsrloc_test') as filtered:
+    with open('merged.getsrloc_test', 'w', newline = '') as filtered:
         w = csv.writer(filtered, delimiter = '\t')
         for line1 in file_reader:
             line2 = next(file_reader)
