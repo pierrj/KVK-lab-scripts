@@ -65,7 +65,7 @@ def index_confidence_list(confidence_list):
     confidence_index = [[] for i in range(56)] ## scaffold number here, get this variable from somewhere else
     for i in range(len(confidence_list)):
         row = confidence_list[i]
-        confidence_index[int(row[0])].append([int(row[0]), int(row[1]), int(row[2]), str(row[3]), str(row[4]), str(row[5]), 'no']) ## adds no to be changed to yes if their is a variant
+        confidence_index[int(row[0])].append([int(row[0])+1, int(row[1]), int(row[2]), str(row[3]), str(row[4]), str(row[5]), 'no']) ## adds no to be changed to yes if their is a variant
     return confidence_index
 
 confidence_indexed = index_confidence_list(confidence_list)
@@ -206,11 +206,17 @@ for i in range(len(test_list)):
     variants_list.append(representative_variants)
 flat_list = [item for sublist in final_list for item in sublist]
 
-with open('final.eccs', 'w', newline = '') as final:
+with open('ecccaller_output.details.tsv', 'w', newline = '') as final:
     w = csv.writer(final, delimiter = '\t')
     w.writerows(flat_list)
 
-with open('variants_dict', 'w', newline="") as variants_dict:  
+#with open('ecccaller_output.bed', 'w', newline = '') as bed:
+ #   w = csv.writer(bed, delimiter = '\t')
+  #  for i in range(len(flat_list)):
+   #     scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
+    #    w.writerow(scaffold_string, flat_list[i][1], flat_list[i][2])
+
+with open('ecccaller_variants.tsv', 'w', newline="") as variants_dict:
     w = csv.writer(variants_dict, delimiter = '\t')
     for i in range(len(variants_list)):
         for key, value in variants_list[i].items():
