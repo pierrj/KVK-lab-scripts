@@ -2,7 +2,10 @@ import csv
 import ipyparallel as ipp
 from itertools import groupby
 from itertools import compress
+import subprocess
 
+
+## length filter junctions
 with open('samechromosome.exactlytwice.reverseread1.G3_1A_bwamem.bam', newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     with open('getsrloc_test', 'w', newline = '') as filtered:
@@ -14,7 +17,7 @@ with open('samechromosome.exactlytwice.reverseread1.G3_1A_bwamem.bam', newline =
                 w.writerow(line1)
                 w.writerow(line2)
 
-with open('getsrloc_test', newline = '') as file:
+with open('splitreads.sorted.reverseread1.G3_1A_bwamem.bed', newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     with open('merged.getsrloc_test', 'w', newline = '') as filtered:
         w = csv.writer(filtered, delimiter = '\t')
