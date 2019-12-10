@@ -58,10 +58,18 @@ with open('discordantmappedreads.oppositefacing.bed', newline = '') as discordan
 
 def confirmeccs(ecc):
     for i in range(0, len(discordant_indexed[ecc[0]]), 2):
-        read1 = discordant_indexed[ecc[0]][i]
-        read2 = discordant_indexed[ecc[0]][i+1]
+        reada = discordant_indexed[ecc[0]][i]
+        readb = discordant_indexed[ecc[0]][i+1]
+        if reada[0] < readb[0]:
+            read1 = reada
+            read2 = readb
+        else:
+            read1 = readb
+            read2 = reada
         if ecc[1] <= read1[0] <= ecc[2] and ecc[1] <= read1[1] <= ecc[2] and ecc[1] <= read2[0] <= ecc[2] and ecc[1] <= read2[1] <= ecc[2]:
-            return True
+            distance = abs(read1[1] - ecc[1]) + abs(read2[0] - ecc[2])
+            if distance <= 500:
+                return True
     return False
 
 rc = ipp.Client(profile='default', cluster_id='')
@@ -90,7 +98,7 @@ def splitreadcount_filter(lst, k):
     count_filtered = [el for el in lst if counted[tuple(el)] >= k]
     return [list(x) for x in set(tuple(x) for x in count_filtered)]
 
-confirmed_list = splitreadcount_filter(confirmed_list, 1)
+confirmed_list = splitreadcount_filter(confirmed_list, 2)
 
 with open('genomecoverage.mergedandpe.G3_1A_bwamem.bed') as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
@@ -296,12 +304,12 @@ with open('ecccaller_output.details.tsv', 'w', newline = '') as final:
     w = csv.writer(final, delimiter = '\t')
     w.writerows(flat_list)
 
-#with open('/global/home/users/pierrj/testfiles/ecccaller_output.bed', 'w', newline = '') as bed:
-#    w = csv.writer(bed, delimiter = '\t')
-#    for i in range(len(flat_list)):
-#        scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
-#        row = [scaffold_string, flat_list[i][1], flat_list[i][2]]
-#        w.writerow(row)
+with open('/global/home/users/pierrj/testfiles/ecccaller_output.bed', 'w', newline = '') as bed:
+    w = csv.writer(bed, delimiter = '\t')
+    for i in range(len(flat_list)):
+        scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
+        row = [scaffold_string, flat_list[i][1], flat_list[i][2]]
+        w.writerow(row)
 
 with open('ecccaller_variants.tsv', 'w', newline="") as variants_dict:
     w = csv.writer(variants_dict, delimiter = '\t')
