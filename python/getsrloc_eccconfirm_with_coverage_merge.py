@@ -98,7 +98,7 @@ def splitreadcount_filter(lst, k):
     count_filtered = [el for el in lst if counted[tuple(el)] >= k]
     return [list(x) for x in set(tuple(x) for x in count_filtered)]
 
-confirmed_list = splitreadcount_filter(confirmed_list, 2)
+confirmed_list = splitreadcount_filter(confirmed_list, 1)
 
 with open('genomecoverage.mergedandpe.G3_1A_bwamem.bed') as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
@@ -304,7 +304,7 @@ with open('ecccaller_output.details.tsv', 'w', newline = '') as final:
     w = csv.writer(final, delimiter = '\t')
     w.writerows(flat_list)
 
-with open('/global/home/users/pierrj/testfiles/ecccaller_output.bed', 'w', newline = '') as bed:
+with open('ecccaller_output.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(flat_list)):
         scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
