@@ -30,6 +30,7 @@ bedtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/bedtools/2.28.0/bi
 quality_filter = '''awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 49 ) || (b !~ /[DMIHS]/ && int(b) > 49)) print $0}' ''' + filename + ''' > ''' + filtered_filename
 exactlytwice_filter = '''awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' ''' + filtered_filename + ''' ''' + filtered_filename + ''' > ''' + exactlytwice_filename
 make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H G3_1A_bwamem.bam) ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
+## SORTING HERE PROBABLY NEEDS TO BE NUMERIC BUT WILL JUST DO IT IN PYTHON LATER
 bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
 
 subprocess.run(quality_filter, shell= True)
@@ -58,18 +59,10 @@ with open('discordantmappedreads.oppositefacing.bed', newline = '') as discordan
 
 def confirmeccs(ecc):
     for i in range(0, len(discordant_indexed[ecc[0]]), 2):
-        reada = discordant_indexed[ecc[0]][i]
-        readb = discordant_indexed[ecc[0]][i+1]
-        if reada[0] < readb[0]:
-            read1 = reada
-            read2 = readb
-        else:
-            read1 = readb
-            read2 = reada
+        read1 = discordant_indexed[ecc[0]][i]
+        read2 = discordant_indexed[ecc[0]][i+1]
         if ecc[1] <= read1[0] <= ecc[2] and ecc[1] <= read1[1] <= ecc[2] and ecc[1] <= read2[0] <= ecc[2] and ecc[1] <= read2[1] <= ecc[2]:
-            distance = abs(read1[1] - ecc[1]) + abs(read2[0] - ecc[2])
-            if distance <= 500:
-                return True
+            return True
     return False
 
 rc = ipp.Client(profile='default', cluster_id='')
