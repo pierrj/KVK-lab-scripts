@@ -296,11 +296,12 @@ with open('ecccaller_output.details.tsv', 'w', newline = '') as final:
     w = csv.writer(final, delimiter = '\t')
     w.writerows(flat_list)
 
-#with open('ecccaller_output.bed', 'w', newline = '') as bed:
- #   w = csv.writer(bed, delimiter = '\t')
-  #  for i in range(len(flat_list)):
-   #     scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
-    #    w.writerow(scaffold_string, flat_list[i][1], flat_list[i][2])
+#with open('/global/home/users/pierrj/testfiles/ecccaller_output.bed', 'w', newline = '') as bed:
+#    w = csv.writer(bed, delimiter = '\t')
+#    for i in range(len(flat_list)):
+#        scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
+#        row = [scaffold_string, flat_list[i][1], flat_list[i][2]]
+#        w.writerow(row)
 
 with open('ecccaller_variants.tsv', 'w', newline="") as variants_dict:
     w = csv.writer(variants_dict, delimiter = '\t')
