@@ -84,6 +84,14 @@ with open('parallel.confirmed') as confirmed:
     confirmed_reader = csv.reader(confirmed, delimiter = '\t')
     confirmed_list = [[int(row[0]), int(row[1]), int(row[2])] for row in confirmed_reader]
 
+def splitreadcount_filter(lst, k):
+    tuple_list = [tuple(x) for x in lst]
+    counted = collections.Counter(tuple_list)
+    count_filtered = [el for el in lst if counted[tuple(el)] >= k]
+    return [list(x) for x in set(tuple(x) for x in count_filtered)]
+
+confirmed_list = splitreadcount_filter(confirmed_list, 1)
+
 with open('genomecoverage.mergedandpe.G3_1A_bwamem.bed') as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
     coverage_indexed = [[] for i in range(56)]
@@ -277,9 +285,9 @@ def ecc_merge(eccs_perchrom):
 final_list = []
 variants_list = []
 ## SHOULD NOT HAVE TO DO THIS IN FINAL VERSION OF SCRIPT INPUT SHOULD JUST BE CONFIDENCE_LIST
-test_list = [ uniq_sort(confidence_indexed[i]) for i in range(len(confidence_indexed))]
-for i in range(len(test_list)):
-    variants_merged, representative_variants = ecc_merge(test_list[i])
+#test_list = [ sorted(confidence_indexed[i], key=lambda x:x [1]) for i in range(len(confidence_indexed))]
+for i in range(len(confidence_indexed)):
+    variants_merged, representative_variants = ecc_merge(confidence_indexed[i])
     final_list.append(variants_merged)
     variants_list.append(representative_variants)
 flat_list = [item for sublist in final_list for item in sublist]
