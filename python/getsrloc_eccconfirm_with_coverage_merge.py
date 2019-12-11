@@ -59,10 +59,18 @@ with open('discordantmappedreads.oppositefacing.bed', newline = '') as discordan
 
 def confirmeccs(ecc):
     for i in range(0, len(discordant_indexed[ecc[0]]), 2):
-        read1 = discordant_indexed[ecc[0]][i]
-        read2 = discordant_indexed[ecc[0]][i+1]
+        reada = discordant_indexed[ecc[0]][i]
+        readb = discordant_indexed[ecc[0]][i+1]
+        if reada[0] < readb[0]:
+            read1 = reada
+            read2 = readb
+        else:
+            read1 = readb
+            read2 = reada
         if ecc[1] <= read1[0] <= ecc[2] and ecc[1] <= read1[1] <= ecc[2] and ecc[1] <= read2[0] <= ecc[2] and ecc[1] <= read2[1] <= ecc[2]:
-            return True
+            distance = abs(read1[1] - ecc[1]) + abs(read2[0] - ecc[2])
+            if distance <= 500:
+                return True
     return False
 
 rc = ipp.Client(profile='default', cluster_id='')
