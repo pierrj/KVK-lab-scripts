@@ -43,7 +43,7 @@ bedtools bamtobed -i outwardfacing.mergedandpe.${sample}_bwamem.bam | sort -k 4,
 samtools sort mergedandpe.${sample}_bwamem.bam -o sorted.mergedandpe.${sample}_bwamem.bam
 bedtools genomecov -d -ibam sorted.mergedandpe.${sample}_bwamem.bam > genomecoverage.mergedandpe.${sample}_bwamem.bed
 
-ipcluster start -n $SLURM_NTASKS &
+ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 sleep 45
 ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bam genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample}
-ipcluster stop
+ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"

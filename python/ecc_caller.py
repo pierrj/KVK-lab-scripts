@@ -6,6 +6,7 @@ import subprocess
 import statistics
 import collections
 import sys
+import os
 
 split_read_file = str(sys.argv[1])
 
@@ -83,7 +84,7 @@ def confirmeccs(ecc):
                 return True
     return False
 
-rc = ipp.Client(profile='default', cluster_id='')
+rc = ipp.Client(profile='default', cluster_id = "slurm-" + os.environ['SLURM_JOBID'])
 dview = rc[:]
 dview.block = True
 lview = rc.load_balanced_view()
