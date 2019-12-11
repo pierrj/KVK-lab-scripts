@@ -5,6 +5,7 @@ from itertools import compress
 import subprocess
 import statistics
 import collections
+import os
 
 with open('/global/home/users/pierrj/testfiles/500.testbedtools.processed', newline = '') as eccloc:
     eccloc_reader = csv.reader(eccloc, delimiter = '\t')
@@ -16,7 +17,7 @@ with open('/global/home/users/pierrj/testfiles/sorted.discordantmappedreads.oppo
     for row in discordant_reader:
         discordant_indexed[(int(row[0][10:12])-1)].append([int(row[1]), int(row[2])])
 
-rc = ipp.Client(profile='default', cluster_id='')
+rc = ipp.Client(profile='default', cluster_id = "slurm-" + os.environ['SLURM_JOBID'])
 dview = rc[:]
 dview.block = True
 lview = rc.load_balanced_view()
