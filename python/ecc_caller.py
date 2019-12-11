@@ -111,7 +111,7 @@ def splitreadcount_filter(lst, k):
     count_filtered = [el for el in lst if counted[tuple(el)] >= k]
     return [list(x) for x in set(tuple(x) for x in count_filtered)]
 
-confirmed_list = splitreadcount_filter(confirmed_list, 1)
+confirmed_list = splitreadcount_filter(confirmed_list, 2)
 
 ##this should maybe have the newline argument
 with open(coverage_file) as coverage:
@@ -322,7 +322,7 @@ with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(flat_list)):
         scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
-        row = [scaffold_string, flat_list[i][1], flat_list[i][2]]
+        row = [scaffold_string, flat_list[i][1], flat_list[i][2], i]
         w.writerow(row)
 
 with open('ecccaller_variants.' + output_name + '.tsv', 'w', newline="") as variants_dict:
