@@ -16,7 +16,7 @@ coverage_file = str(sys.argv[3])
 
 output_name = str(sys.argv[4])
 
-## length filter junctions
+# length filter junctions to 1 million base pairs
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     with open('getsrloc_test', 'w', newline = '') as filtered:
@@ -28,27 +28,39 @@ with open(split_read_file, newline = '') as file:
                 w.writerow(line1)
                 w.writerow(line2)
 
-
-##these files will be gone later
+# set file names and software locations for bash commands
 filename = 'getsrloc_test'
 filtered_filename = 'qualityfiltered.' + filename
 exactlytwice_filename = 'exactlytwice.' + filtered_filename
 actualbam_filename = 'actualbam.' + exactlytwice_filename
 bedfile = filename + '.bed'
+# need to actually point to where these commands are for the bash commands to work
 samtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/samtools/1.8/bin/samtools'
 bedtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/bedtools/2.28.0/bin/bedtools'
 
+# define bash command to filter quality of split reads to have 50 bp or more matches on either side of the junction
+# first if statement here is because gensub returns the original string if it doesn't find any matches
 quality_filter = '''awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 49 ) || (b !~ /[DMIHS]/ && int(b) > 49)) print $0}' ''' + filename + ''' > ''' + filtered_filename
+
+# define bash command for filter out splitreads that only had one high quality split alignment
+# this is copied from a previous exactly twice filter
 exactlytwice_filter = '''awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' ''' + filtered_filename + ''' ''' + filtered_filename + ''' > ''' + exactlytwice_filename
+
+# define bash command for making an actual bam file from the sam files
+# bash -c allows the use of <() here
 make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H G3_1A_bwamem.bam) ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
-## SORTING HERE PROBABLY NEEDS TO BE NUMERIC BUT WILL JUST DO IT IN PYTHON LATER
+
+# define bash command for getting bedfile from bam file
 bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
 
+# run all defined commands
+# shell=true allows running commands as is
 subprocess.run(quality_filter, shell= True)
 subprocess.run(exactlytwice_filter, shell= True)
 subprocess.run(make_bam, shell= True)
 subprocess.run(bamtobed_sort, shell= True)
 
+# merge split read locations resulting in a putative ecc location
 with open('getsrloc_test.bed', newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     with open('merged.getsrloc_test', 'w', newline = '') as filtered:
@@ -58,20 +70,25 @@ with open('getsrloc_test.bed', newline = '') as file:
             line1[2] = line2[1]
             w.writerow(line1)
 
+# open putative ecc list
 with open('merged.getsrloc_test', newline = '') as eccloc:
     eccloc_reader = csv.reader(eccloc, delimiter = '\t')
     eccloc_list = [[int(row[0][10:12]) - 1, int(row[1]), int(row[2])] for row in eccloc_reader]
-    
+
+# open opposite facing discordant read file
 with open(outwardfacing_read_file, newline = '') as discordant:
     discordant_reader = csv.reader(discordant, delimiter = '\t')
+    # index discordant read file so that confirmeccs() only looks at discordant reads found on the same chromosome
     discordant_indexed = [[] for i in range(56)]
     for row in discordant_reader:
         discordant_indexed[(int(row[0][10:12])-1)].append([int(row[1]), int(row[2])])
 
+# does proximity filtering based off an estimated insert size of 400 + 25%
 def confirmeccs(ecc):
     for i in range(0, len(discordant_indexed[ecc[0]]), 2):
         reada = discordant_indexed[ecc[0]][i]
         readb = discordant_indexed[ecc[0]][i+1]
+        # on the fly sorting because the discordant reads are next to each other but not sorted by base position
         if reada[0] < readb[0]:
             read1 = reada
             read2 = readb
@@ -79,60 +96,73 @@ def confirmeccs(ecc):
             read1 = readb
             read2 = reada
         if ecc[1] <= read1[0] <= ecc[2] and ecc[1] <= read1[1] <= ecc[2] and ecc[1] <= read2[0] <= ecc[2] and ecc[1] <= read2[1] <= ecc[2]:
+            # calculate total distance from ecc start and end
             distance = abs(read1[1] - ecc[1]) + abs(read2[0] - ecc[2])
+            # set here for insert size distribution
             if distance <= 500:
                 return True
     return False
 
+# open parallelization client
 rc = ipp.Client(profile='default', cluster_id = "slurm-" + os.environ['SLURM_JOBID'])
 dview = rc[:]
 dview.block = True
 lview = rc.load_balanced_view()
 lview.block = True
 
+# give discordant_indexed to all engines
 mydict = dict(discordant_indexed = discordant_indexed)
 dview.push(mydict)
 
+# get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
 yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
 confirmedeccs = list(compress(eccloc_list, yesornoeccs))
 
+# write confirmed eccs to file
 with open('parallel.confirmed', 'w', newline = '') as confirmed:
     w = csv.writer(confirmed, delimiter = '\t')
     w.writerows(confirmedeccs)
 
-##this should maybe have the newline argument
+# re-open confirmed eccs file
 with open('parallel.confirmed') as confirmed:
     confirmed_reader = csv.reader(confirmed, delimiter = '\t')
     confirmed_list = [[int(row[0]), int(row[1]), int(row[2])] for row in confirmed_reader]
 
+# filter confirmed eccs based off being found k or more times in the list
 def splitreadcount_filter(lst, k):
     tuple_list = [tuple(x) for x in lst]
     counted = collections.Counter(tuple_list)
     count_filtered = [el for el in lst if counted[tuple(el)] >= k]
     return [list(x) for x in set(tuple(x) for x in count_filtered)]
 
+# only keep confirmed eccs that occur twice in the list, meaning that they are supported by two split reads
 confirmed_list = splitreadcount_filter(confirmed_list, 2)
 
-##this should maybe have the newline argument
+# open coverage file
 with open(coverage_file) as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
+    # index coverage file so that confidence check only looks at the same chromosome
     coverage_indexed = [[] for i in range(56)]
     for row in coverage_reader:
         coverage_indexed[(int(row[0][10:12])-1)].append([int(row[1]) -1, int(row[2])])
 
+# assign confidence to confirmed eccDNAs based off coverage
 def confidence_check(confirmed):
     for i in range(len(confirmed)):
         ecc = confirmed[i]
+        # get coverage of confirmed ecc region
         region_len = ecc[2] - ecc[1]
         region = coverage_indexed[ecc[0]][ecc[1]:(ecc[2]+1)]
         region_cov = [region[k][1] for k in range(len(region))]
         mean_region = round(statistics.mean(region_cov), 2)
+        # define regions before and after confirmed ecc that are of the same length as the ecc
         beforestart = ecc[1] - 1 - region_len
         afterstart = ecc[2] + 1
         region_before = coverage_indexed[ecc[0]][beforestart:beforestart + 1 + region_len]
         region_before_cov = [region_before[j][1] for j in range(len(region_before))]
         region_after = coverage_indexed[ecc[0]][afterstart:afterstart + 1 + region_len]
         region_after_cov = [region_after[g][1] for g in range(len(region_after))]
+        # check to see if the before and after regions go beyond the length of the chromosome if so dont calculate mean coverage for that region
         if beforestart > 0:
             mean_before = round(statistics.mean(region_before_cov), 2)
         else:
@@ -141,12 +171,15 @@ def confidence_check(confirmed):
             mean_after = round(statistics.mean(region_after_cov), 2)
         else:
             mean_after = 'N/A'
+        # write coverage string containing the means of the regions before, within, and after the confirmed ecc
         coverage_string = str(mean_before)+';'+str(mean_region)+';'+str(mean_after)
+        # if less than 95% of the ecc region is covered than the ecc is low confidence
         if region_cov.count(0) / len(region_cov) > 0.05:
             ecc.append('lowq')
             ecc.append('incomplete_coverage')
             ecc.append(coverage_string)
             continue
+        # if the ecc before or after regions fall beyond the borders of the chromosome than the ecc is medium confidence
         if beforestart <= 0:
             ecc.append('conf')
             ecc.append('too_close_to_start')
@@ -157,6 +190,7 @@ def confidence_check(confirmed):
             ecc.append('too_close_to_end')
             ecc.append(coverage_string)
             continue
+        # if the mean coverage of the eccDNA is twice the size of the before and after regions then eccDNA is high confidence, otherwise is it medium confidence
         if mean_region >= (2*mean_before) and mean_region >= (2*mean_after):
             ecc.append('hconf')
             ecc.append('none')
@@ -167,13 +201,16 @@ def confidence_check(confirmed):
             ecc.append(coverage_string)
     return confirmed
 
+# just calling the confidence function
 confidence_list = confidence_check(confirmed_list)
 
+# indexing function
 def index_confidence_list(confidence_list):
-    confidence_index = [[] for i in range(56)] ## scaffold number here, get this variable from somewhere else
+    confidence_index = [[] for i in range(56)]
     for i in range(len(confidence_list)):
         row = confidence_list[i]
-        confidence_index[int(row[0])].append([int(row[0])+1, int(row[1]), int(row[2]), str(row[3]), str(row[4]), str(row[5]), 'no']) ## adds no to be changed to yes if their is a variant
+        # add no to be changed to yes later by ecc_merge if variants are found
+        confidence_index[int(row[0])].append([int(row[0])+1, int(row[1]), int(row[2]), str(row[3]), str(row[4]), str(row[5]), 'no'])
     return confidence_index
 
 confidence_indexed = index_confidence_list(confidence_list)
@@ -183,7 +220,7 @@ def get_variants_grouped(eccs_perchrom):
     for i in range(len(eccs_perchrom)):
         ecc = eccs_perchrom[i]
         variants = []
-## this likely isnt ideal because of its rolling nature but this will be replaced by repeat/junction based later
+# rolling grouping of eccs by proximity
         for k in range(len(eccs_perchrom)):
             start_coordinate1 = eccs_perchrom[k][1] - 50
             start_coordinate2 = eccs_perchrom[k][1] + 50
@@ -191,21 +228,25 @@ def get_variants_grouped(eccs_perchrom):
             end_coordinate2 = eccs_perchrom[k][2] + 50
             if start_coordinate1 <= ecc[1] <= start_coordinate2 and end_coordinate1 <= ecc[2] <= end_coordinate2:
                 variants.append(eccs_perchrom[k])
-        if tuple([ecc]) != tuple(variants): ## if there isn't just itself in the list
+        # check if there isnt just itself in the list
+        if tuple([ecc]) != tuple(variants): 
             ecc_withvariants[tuple(ecc)] = variants
     variants_grouped = collections.defaultdict(list)
-    for key,val in ecc_withvariants.items(): ## group eccs with same variants
+    # group eccs with exact same variants 
+    # #because of rolling grouping this results in some less than ideal results when two groups of eccDNAs are near each other, but it only makes the grouping less accurate and isnt particularly dangerous
+    for key,val in ecc_withvariants.items(): 
         variants_grouped[tuple(tuple(x) for x in val)].append(key)
     return variants_grouped
 
-def getcoord(coord_list): ## get ideal representative coordinates based off medians
+# get ideal representative eccDNA based off start and end medians of variants
+def getcoord(coord_list): 
     median = statistics.median(coord_list)
     distancetoend = abs(median - max(coord_list))
     distancetostart = abs(median - min(coord_list))
     greaterlist = [i for i in coord_list if i >= median]
     smallerlist = [i for i in coord_list if i <= median]
-    #if median is closer to end, get value above median. if median is closer to start, get value below median
-    #if equal get both values, one as alt
+    # if median is closer to end, get value above median, if median is closer to start, get value below median
+    # if equal get both values, one is set to alt
     if distancetoend > distancetostart:
         coord = min(smallerlist, key=lambda x:abs(x-median))
         coord_alt = 'N/A'
@@ -219,29 +260,31 @@ def getcoord(coord_list): ## get ideal representative coordinates based off medi
         raise ValueError("getcoord error")
     return coord, coord_alt
 
-def test_coords(target_coord, other_coord, target_start_or_end, val): ## get closest matching coordinate based off on set/forced coordinate
-        ## check if start or end coordinate is the set one
+# get closest matching coordinate based off one set/forced coordinate
+def test_coords(target_coord, other_coord, target_start_or_end, val): 
+        # check if start or end coordinate is the one that is set by the function
         if target_start_or_end == 'start':
             known = 1
             unknown = 2
         if target_start_or_end == 'end':
             known = 2
             unknown = 1
-        ## get all potential options matching set coordinate
+        # get all potential unset coordinates that match set coordinate
         unknown_options = []
         for i in val:
             if i[known] == target_coord:
                 unknown_options.append(i[unknown])
-        ## test which one is the closest to the ideal median
+        # test which of the potential unset coordinates is closest to the ideal coordinate
         unknown_coord = min(unknown_options, key=lambda x:abs(x-other_coord))
         return unknown_coord
 
-def reconcile_coords(startcoord, endcoord, val): ## test which coordinate pair is closest to ideal
-        #test with start coordinate forced
+# test which coordinate pair is closest to the ideal coordinates
+def reconcile_coords(startcoord, endcoord, val): 
+        # test with start coordinate set/forced
         startcoord_forced = test_coords(startcoord, endcoord, 'start', val)
-        #test with end coordinate forced
+        # test with end coordinate set/forced
         endcoord_forced = test_coords(endcoord, startcoord, 'end', val)
-        #test how close each non-ideal corresponding coordinates are to the ideal
+        # test how close each non-ideal corresponding coordinates are to the ideal
         fit_startcoord_forced = abs(startcoord_forced - endcoord)
         fit_endcoord_forced = abs(endcoord_forced - startcoord)
         if fit_startcoord_forced <= fit_endcoord_forced:
@@ -249,6 +292,7 @@ def reconcile_coords(startcoord, endcoord, val): ## test which coordinate pair i
         else:
             return endcoord_forced, endcoord
 
+# get single representative variants for eccs with multiple variants
 def get_representative_variants(variants_grouped):
     representative_variants = {}
     for key, val in variants_grouped.items():
@@ -260,7 +304,7 @@ def get_representative_variants(variants_grouped):
         start_coord, start_coord_alt = getcoord(startlist)
         end_coord, end_coord_alt = getcoord(endlist)
         middle_ecc = 0
-    ## check to see if a single ecc has ideal coordinates for both end and start
+    # check to see if a single ecc has ideal coordinates for both end and start, check alternates as well
         for i in val:
             if i[1] == start_coord and i[2] == end_coord:
                 middle_ecc = i
@@ -270,54 +314,62 @@ def get_representative_variants(variants_grouped):
                 middle_ecc = i
             if i[1] == start_coord and i[2] == start_coord_alt:
                 middle_ecc = i
-    ## if not then reconcile coordinates
+    # otherwise reconcile coordinates to get closest representative ecc
         if middle_ecc == 0:
             start_coord_estimate, end_coord_estimate = reconcile_coords(start_coord, end_coord, val)
             for i in val:
                 if i[1] == start_coord_estimate and i[2] == end_coord_estimate:
                     middle_ecc = i
+    # make sure that a variant always gets called    
         if middle_ecc == 0:
             raise ValueError("No ecc merged ecc called")
         else:
             representative_variants[middle_ecc] = val
     return representative_variants
 
+# get only unique eccDNAs and sort based off start coordinate
 def uniq_sort(start_list):
     uniq_list = [list(x) for x in set(tuple(x) for x in start_list)]
     end_list = sorted(uniq_list,key=lambda x: x[1])
     return end_list
 
+# loop through eccDNA list, if the eccDNA is found in any of the values in the representative_variants dictionary
 def merge_variants(eccs_perchrom, representative_variants):
     for i in range(len(eccs_perchrom)):
         ecc = eccs_perchrom[i]
         for key, val in representative_variants.items():
             if tuple(ecc) in val:
                 key_list = list(key)
+                # replace that ecc with the representative variant key and change the no in the variant column to yes
                 key_list[6] = 'yes'
                 eccs_perchrom[i] = key_list
+    #get rid of all duplicates caused by variants being replaced by their representative eccs and then sort them
     variants_merged = uniq_sort(eccs_perchrom)
     return variants_merged
 
+# wrapper function for merging eccDNAs into representative variants
 def ecc_merge(eccs_perchrom):
     variants_grouped = get_variants_grouped(eccs_perchrom)
     representative_variants = get_representative_variants(variants_grouped)
     variants_merged = merge_variants(eccs_perchrom, representative_variants)
     return variants_merged, representative_variants
 
+# run wrapper function and store final eccDNA list and variants list
 final_list = []
 variants_list = []
-## SHOULD NOT HAVE TO DO THIS IN FINAL VERSION OF SCRIPT INPUT SHOULD JUST BE CONFIDENCE_LIST
-#test_list = [ sorted(confidence_indexed[i], key=lambda x:x [1]) for i in range(len(confidence_indexed))]
 for i in range(len(confidence_indexed)):
     variants_merged, representative_variants = ecc_merge(confidence_indexed[i])
     final_list.append(variants_merged)
     variants_list.append(representative_variants)
+# flatten/un-index list to be written to output
 flat_list = [item for sublist in final_list for item in sublist]
 
+# write detailed output for each eccDNA including chromosome/scaffold number, start base, end base, confidence, reason for confidence, and whether or not the eccDNA has variants
 with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as final:
     w = csv.writer(final, delimiter = '\t')
     w.writerows(flat_list)
 
+# write bed file output, with actual chromosome names, start and end coordinates and ecc number
 with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(flat_list)):
@@ -325,6 +377,7 @@ with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
         row = [scaffold_string, flat_list[i][1], flat_list[i][2], i]
         w.writerow(row)
 
+# write file with ecc variants, with representative variant in the first column and all variants it represents in second column
 with open('ecccaller_variants.' + output_name + '.tsv', 'w', newline="") as variants_dict:
     w = csv.writer(variants_dict, delimiter = '\t')
     for i in range(len(variants_list)):
