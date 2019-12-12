@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ecc_caller_test
+#SBATCH --job-name=ecc_caller_test_all
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
@@ -13,5 +13,5 @@
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/G3_1A_tests
 ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 sleep 45
-ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.reverseread1.G3_1A_bwamem.bam discordantmappedreads.oppositefacing.bed genomecoverage.mergedandpe.G3_1A_bwamem.bed G3_1A
+ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam discordantmappedreads.oppositefacing.bed genomecoverage.mergedandpe.G3_1A_bwamem.bed G3_1A_all
 ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
