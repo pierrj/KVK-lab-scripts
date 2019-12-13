@@ -48,7 +48,7 @@ exactlytwice_filter = '''awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' ''' + fil
 
 # define bash command for making an actual bam file from the sam files
 # bash -c allows the use of <() here
-make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H G3_1A_bwamem.bam) ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
+make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H mergedandpe.' + output_name + '_bwamem.bam) ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
 
 # define bash command for getting bedfile from bam file
 bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
