@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/massjobsubmissiontest/
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/massjobsubmissiontest/G3_1A
 sample="G3_1A"
 ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 sleep 45
