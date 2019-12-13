@@ -374,7 +374,13 @@ with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(flat_list)):
         scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
-        row = [scaffold_string, flat_list[i][1], flat_list[i][2], i]
+        if flat_list[i][3] == 'lowq':
+            color = '255,0,0'
+        if flat_list[i][3] == 'conf':
+            color = '255,255,0'
+        if flat_list[i][3] == 'hconf':
+            color = '0,255,0'
+        row = [scaffold_string, flat_list[i][1], flat_list[i][2], i, 0, '+', flat_list[i][1], flat_list[i][2], color ]
         w.writerow(row)
 
 # write file with ecc variants, with representative variant in the first column and all variants it represents in second column
