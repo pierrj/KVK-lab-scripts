@@ -42,5 +42,5 @@ bedtools genomecov -d -ibam sorted.mergedandpe.${sample}_bwamem.bam > genomecove
 
 ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 sleep 45
-ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bam genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample}
+ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample}
 ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"

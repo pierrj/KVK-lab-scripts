@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ecc_caller_test_all
+#SBATCH --job-name=ecc_caller_test
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
@@ -10,8 +10,9 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/G3_1A_tests
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/massjobsubmissiontest/
+sample = G3_1A
 ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 sleep 45
-ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam discordantmappedreads.oppositefacing.bed genomecoverage.mergedandpe.G3_1A_bwamem.bed G3_1A_all
+ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample}
 ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
