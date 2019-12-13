@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina
+cd $SLURM_SUBMIT_DIR
 mkdir ${sample}
 cd ${sample}
 find ../ -name "${sample}*R1*" | xargs -I '{}' mv {} ./${sample}_R1.fastq
