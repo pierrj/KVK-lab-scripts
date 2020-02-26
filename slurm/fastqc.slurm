@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=fastqc
+#SBATCH --job-name=fastqc_lanciano
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
@@ -9,5 +9,5 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
-fastqc *.fastq.gz --outdir=fastqc_output
+cd /global/scratch/users/pierrj/eccDNA/2017_lanciano
+fastqc *.fastq.bz2 --outdir=fastqc_output
