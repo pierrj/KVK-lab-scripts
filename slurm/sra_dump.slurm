@@ -11,6 +11,6 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/2018_moller
 while read p; do
-  ./scripts/sratoolkit.2.10.4-centos_linux64/bin/fastq-dump -O /global/scratch/users/pierrj/sra "$p"
+  /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fastq-dump -O /global/scratch/users/pierrj/sra "$p"
 done < SRR_list.txt
 fastqc *.fastq --outdir=fastqc
