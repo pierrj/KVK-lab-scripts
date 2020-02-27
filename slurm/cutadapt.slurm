@@ -12,4 +12,3 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.CT_3C_S57_L002_R1_001.fastq.gz -p trimmed.CT_3C_S57_L002_R2_001.fastq.gz CT_3C_S57_L002_R1_001.fastq.gz CT_3C_S57_L002_R2_001.fastq.gz
-fastqc trimmed.CT_3C_S57_L002_R1_001.fastq.gz --outdir=fastqc_output
