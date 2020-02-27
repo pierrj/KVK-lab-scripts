@@ -10,12 +10,9 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd $SLURM_SUBMIT_DIR
-mkdir ${sample}
-cd ${sample}
-find ../ -name "${sample}*R1*" | xargs -I '{}' mv {} ./${sample}_R1.fastq
-find ../ -name "${sample}*R2*" | xargs -I '{}' mv {} ./${sample}_R2.fastq
-cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.${sample}_R1.fastq -p trimmed.${sample}_R2.fastq ${sample}_R1.fastq ${sample}_R2.fastq
+cd /global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315396
+sample=SRR6315396
+cutadapt --interleaved -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.${sample}_R1.fastq -p trimmed.${sample}_R2.fastq ${sample}.fastq
 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f trimmed.${sample}_R1.fastq -r trimmed.${sample}_R2.fastq -1 seqprep.trimmed.${sample}_R1.fastq -2 seqprep.trimmed.${sample}_R2.fastq -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.trimmed.${sample}
 bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/guy11_genome_baoetal2017_bwa seqprep.trimmed.${sample}_R1.fastq seqprep.trimmed.${sample}_R2.fastq -o seqprep.trimmed.${sample}_bwamem.sam
 bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/guy11_genome_baoetal2017_bwa merged.trimmed.${sample} -o merged.trimmed.${sample}_bwamem.sam
