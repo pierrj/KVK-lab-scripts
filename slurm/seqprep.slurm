@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ecc_caller_G3_3A_seqprep
+#SBATCH --job-name=ecc_caller_G3_3A_seqprep_nocutadapt
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
@@ -12,4 +12,4 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_3A/G3_3A
 sample=G3_3A
-/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f trimmed.${sample}_R1.fastq -r trimmed.${sample}_R2.fastq -1 seqprep.trimmed.${sample}_R1.fastq -2 seqprep.trimmed.${sample}_R2.fastq -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.trimmed.${sample}
+/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${sample}_R1.fastq -r ${sample}_R2.fastq -1 seqprep.${sample}_R1.fastq -2 seqprep.${sample}_R2.fastq -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.${sample}
