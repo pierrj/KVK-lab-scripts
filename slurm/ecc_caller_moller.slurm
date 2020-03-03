@@ -10,8 +10,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315396
-sample=SRR6315396
+cd /global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315407
+sample=SRR6315407
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.${sample}_R1.fastq -p trimmed.${sample}_R2.fastq ${sample}_1.fastq ${sample}_2.fastq
 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f trimmed.${sample}_R1.fastq -r trimmed.${sample}_R2.fastq -1 seqprep.trimmed.${sample}_R1.fastq -2 seqprep.trimmed.${sample}_R2.fastq -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.trimmed.${sample}
 bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa seqprep.trimmed.${sample}_R1.fastq seqprep.trimmed.${sample}_R2.fastq -o seqprep.trimmed.${sample}_bwamem.sam
@@ -37,7 +37,7 @@ bedtools bamtobed -i outwardfacing.mergedandpe.${sample}_bwamem.bam | sort -k 4,
 samtools sort mergedandpe.${sample}_bwamem.bam -o sorted.mergedandpe.${sample}_bwamem.bam
 bedtools genomecov -d -ibam sorted.mergedandpe.${sample}_bwamem.bam > genomecoverage.mergedandpe.${sample}_bwamem.bed
 
-ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
-sleep 45
-ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample}
-ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
+# ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
+# sleep 45
+# ipython /global/home/users/pierrj/git/python/ecc_caller.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample}
+# ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
