@@ -176,18 +176,103 @@ def ecc_merge(eccs_perchrom):
     variants_merged = merge_variants(eccs_perchrom, representative_variants)
     return variants_merged, representative_variants
 
-final_list = []
-variants_list = []
+merged_list = []
+splitreads_list = []
 for i in range(len(ecc_indexed)):
     variants_merged, representative_variants = ecc_merge(ecc_indexed[i])
-    final_list.append(variants_merged)
-    variants_list.append(representative_variants)
+    merged_list.append(variants_merged)
+    splitreads_list.append(representative_variants)
 
-flat_list = [item for sublist in final_list for item in sublist]
+# write file with split reads per ecc, with representative ecc in the first column and all split reads in second column
+with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/ecccallerv2_splitreads.' + 'mergedtest' + '.tsv', 'w', newline="") as variants_dict:
+    w = csv.writer(variants_dict, delimiter = '\t')
+    for i in range(len(splitreads_list)):
+        for key, value in splitreads_list[i].items():
+           w.writerow([key, value])
+
+flat_merged_list = [item for sublist in merged_list for item in sublist]
+
+with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/genomecoverage.mergedandpe.G3_1A_bwamem.bed') as coverage:
+    coverage_reader = csv.reader(coverage, delimiter = '\t')
+    # index coverage file so that confidence check only looks at the same chromosome
+    coverage_indexed = [[] for i in range(56)]
+    for row in coverage_reader:
+        coverage_indexed[(int(row[0][10:12])-1)].append([int(row[1]) -1, int(row[2])])
+
+def confidence_check(confirmed):
+    for i in range(len(confirmed)):
+        ecc = confirmed[i]
+        # get coverage of confirmed ecc region
+        region_len = ecc[2] - ecc[1]
+        region = coverage_indexed[ecc[0]][ecc[1]:(ecc[2]+1)]
+        region_cov = [region[k][1] for k in range(len(region))]
+        mean_region = round(statistics.mean(region_cov), 2)
+        # define regions before and after confirmed ecc that are of the same length as the ecc
+        beforestart = ecc[1] - 1 - region_len
+        afterstart = ecc[2] + 1
+        region_before = coverage_indexed[ecc[0]][beforestart:beforestart + 1 + region_len]
+        region_before_cov = [region_before[j][1] for j in range(len(region_before))]
+        region_after = coverage_indexed[ecc[0]][afterstart:afterstart + 1 + region_len]
+        region_after_cov = [region_after[g][1] for g in range(len(region_after))]
+        # check to see if the before and after regions go beyond the length of the chromosome if so dont calculate mean coverage for that region
+        if beforestart > 0:
+            mean_before = round(statistics.mean(region_before_cov), 2)
+        else:
+            mean_before = 'N/A'
+        if afterstart + region_len <= coverage_indexed[ecc[0]][-1][0]:
+            mean_after = round(statistics.mean(region_after_cov), 2)
+        else:
+            mean_after = 'N/A'
+        # write coverage string containing the means of the regions before, within, and after the confirmed ecc
+        coverage_string = str(mean_before)+';'+str(mean_region)+';'+str(mean_after)
+        # if less than 95% of the ecc region is covered than the ecc is low confidence
+        if region_cov.count(0) / len(region_cov) > 0.05:
+            ecc.append('lowq')
+            ecc.append('incomplete_coverage')
+            ecc.append(coverage_string)
+            continue
+        if ecc[3] == 1:
+            ecc.append('lowq')
+            ecc.append('only_one_splitread')
+            ecc.append(coverage_string)
+            continue
+        # if the ecc before or after regions fall beyond the borders of the chromosome than the ecc is medium confidence
+        if beforestart <= 0 and ecc[3] < 3:
+            ecc.append('conf')
+            ecc.append('too_close_to_start')
+            ecc.append(coverage_string)
+            continue
+        if afterstart + region_len > coverage_indexed[ecc[0]][-1][0] and ecc[3] < 3:
+            ecc.append('conf')
+            ecc.append('too_close_to_end')
+            ecc.append(coverage_string)
+            continue
+        # if the mean coverage of the eccDNA is twice the size of the before and after regions OR the eccDNA is supported by three or more splitreads then eccDNA is high confidence, otherwise is it medium confidence
+        if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] < 3:
+            ecc.append('hconf')
+            ecc.append('coverage')
+            ecc.append(coverage_string)
+            continue
+        if (mean_region < (2*mean_before) or mean_region < (2*mean_after)) and ecc[3] >= 3:
+            ecc.append('hconf')
+            ecc.append('splitreads')
+            ecc.append(coverage_string)
+            continue
+        if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] >= 3:
+            ecc.append('hconf')
+            ecc.append('splitreads_and_coverage')
+            ecc.append(coverage_string)
+        else:
+            ecc.append('conf')
+            ecc.append('coverage_and_splitreads_too_low')
+            ecc.append(coverage_string)
+    return confirmed
+
+confidence_flat_merged_list = confidence_check(flat_merged_list)
 
 with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/ecccallerv2_output.' + 'mergedtest' + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
-    for i in range(len(flat_list)):
-        scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
-        row = [scaffold_string, flat_list[i][1], flat_list[i][2], flat_list[i][3], flat_list[i][4]]
+    for i in range(len(confidence_flat_merged_list)):
+        scaffold_string = 'MQOP010000' + str(confidence_flat_merged_list[i][0]).zfill(2) + ".1"
+        row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
         w.writerow(row)
