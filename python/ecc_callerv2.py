@@ -149,7 +149,7 @@ def index_ecc_list(ecc_list):
     for i in range(len(ecc_list)):
         row = ecc_list[i]
         # add no to be changed to yes later by ecc_merge if variants are found
-        ecc_index[int(row[0])].append([int(row[0])+1, int(row[1]), int(row[2]), int(row[3]), 'no'])
+        ecc_index[int(row[0])].append([int(row[0]), int(row[1]), int(row[2]), int(row[3]), 'no'])
     return ecc_index
 
 ecc_indexed = index_ecc_list(confirmed_list_sr)
@@ -362,6 +362,16 @@ def confidence_check(confirmed):
             ecc.append('too_close_to_end')
             ecc.append(coverage_string)
             continue
+        if beforestart <= 0 and ecc[3] >= 3:
+            ecc.append('hconf')
+            ecc.append('splitreads')
+            ecc.append(coverage_string)
+            continue
+        if afterstart + region_len > coverage_indexed[ecc[0]][-1][0] and ecc[3] >= 3:
+            ecc.append('hconf')
+            ecc.append('splitreads')
+            ecc.append(coverage_string)
+            continue
         # if the mean coverage of the eccDNA is twice the size of the before and after regions OR the eccDNA is supported by three or more splitreads then eccDNA is high confidence, otherwise is it medium confidence
         if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] < 3:
             ecc.append('hconf')
@@ -403,7 +413,7 @@ with open('ecccaller_splitreads.' + output_name + '.tsv', 'w', newline="") as va
 with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]).zfill(2) + scaffold_string2
+        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]+1).zfill(2) + scaffold_string2
         if confidence_flat_merged_list[i][3] == 'lowq':
             color = '255,0,0'
         if confidence_flat_merged_list[i][3] == 'conf':

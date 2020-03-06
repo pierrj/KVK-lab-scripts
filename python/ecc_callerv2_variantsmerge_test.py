@@ -247,6 +247,16 @@ def confidence_check(confirmed):
             ecc.append('too_close_to_end')
             ecc.append(coverage_string)
             continue
+        if beforestart <= 0 and ecc[3] >= 3:
+            ecc.append('hconf')
+            ecc.append('splitreads')
+            ecc.append(coverage_string)
+            continue
+        if afterstart + region_len > coverage_indexed[ecc[0]][-1][0] and ecc[3] >= 3:
+            ecc.append('hconf')
+            ecc.append('splitreads')
+            ecc.append(coverage_string)
+            continue
         # if the mean coverage of the eccDNA is twice the size of the before and after regions OR the eccDNA is supported by three or more splitreads then eccDNA is high confidence, otherwise is it medium confidence
         if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] < 3:
             ecc.append('hconf')
