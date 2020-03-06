@@ -10,4 +10,4 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-python /global/home/users/pierrj/git/python ecc_callerv2_variantsmerge_test.py
+python /global/home/users/pierrj/git/python/ecc_callerv2_variantsmerge_test.py
