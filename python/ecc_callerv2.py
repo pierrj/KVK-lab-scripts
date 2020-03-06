@@ -310,7 +310,7 @@ flat_merged_list = [item for sublist in merged_list for item in sublist]
 with open(coverage_file) as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
     # index coverage file so that confidence check only looks at the same chromosome
-    coverage_indexed = [[] for i in range(56)]
+    coverage_indexed = [[] for i in range(scaffold_number)]
     for row in coverage_reader:
         coverage_indexed[(int(row[0][10:12])-1)].append([int(row[1]) -1, int(row[2])])
 
@@ -395,7 +395,7 @@ def confidence_check(confirmed):
 
 confidence_flat_merged_list = confidence_check(flat_merged_list)
 
-with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
+with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
         scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]).zfill(2) + scaffold_string2
