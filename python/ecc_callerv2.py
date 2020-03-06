@@ -8,7 +8,131 @@ import collections
 import sys
 import os
 
-with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/parallel.confirmed') as confirmed:
+split_read_file = str(sys.argv[1])
+
+outwardfacing_read_file = str(sys.argv[2])
+
+coverage_file = str(sys.argv[3])
+
+output_name = str(sys.argv[4])
+
+scaffold_number = int(sys.argv[5])
+
+# length filter junctions to 1 million base pairs
+with open(split_read_file, newline = '') as file:
+    file_reader = csv.reader(file, delimiter = '\t')
+    with open('getsrloc_test', 'w', newline = '') as filtered:
+        w = csv.writer(filtered, delimiter = '\t')
+        for line1 in file_reader:
+            line2 = next(file_reader)
+            sum = int(line1[3]) - int(line2[3])
+            if abs(sum) <= 1000000:
+                w.writerow(line1)
+                w.writerow(line2)
+
+# set file names and software locations for bash commands
+filename = 'getsrloc_test'
+filtered_filename = 'qualityfiltered.' + filename
+exactlytwice_filename = 'exactlytwice.' + filtered_filename
+actualbam_filename = 'actualbam.' + exactlytwice_filename
+bedfile = filename + '.bed'
+# need to actually point to where these commands are for the bash commands to work
+samtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/samtools/1.8/bin/samtools'
+bedtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/bedtools/2.28.0/bin/bedtools'
+
+# define bash command to filter quality of split reads to have 50 bp or more matches on either side of the junction
+# first if statement here is because gensub returns the original string if it doesn't find any matches
+quality_filter = '''awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 49 ) || (b !~ /[DMIHS]/ && int(b) > 49)) print $0}' ''' + filename + ''' > ''' + filtered_filename
+
+# define bash command for filter out splitreads that only had one high quality split alignment
+# this is copied from a previous exactly twice filter
+exactlytwice_filter = '''awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' ''' + filtered_filename + ''' ''' + filtered_filename + ''' > ''' + exactlytwice_filename
+
+# define bash command for making an actual bam file from the sam files
+# bash -c allows the use of <() here
+make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H mergedandpe.' + output_name + '_bwamem.bam) ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
+
+# define bash command for getting bedfile from bam file
+bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
+
+# run all defined commands
+# shell=true allows running commands as is
+subprocess.run(quality_filter, shell= True)
+subprocess.run(exactlytwice_filter, shell= True)
+subprocess.run(make_bam, shell= True)
+subprocess.run(bamtobed_sort, shell= True)
+
+# merge split read locations resulting in a putative ecc location
+with open('getsrloc_test.bed', newline = '') as file:
+    file_reader = csv.reader(file, delimiter = '\t')
+    with open('merged.getsrloc_test', 'w', newline = '') as filtered:
+        w = csv.writer(filtered, delimiter = '\t')
+        for line1 in file_reader:
+            line2 = next(file_reader)
+            line1[2] = line2[1]
+            w.writerow(line1)
+
+# open putative ecc list
+with open('merged.getsrloc_test', newline = '') as eccloc:
+    eccloc_reader = csv.reader(eccloc, delimiter = '\t')
+    eccloc_list = [[int(row[0][10:12]) - 1, int(row[1]), int(row[2])] for row in eccloc_reader]
+
+with open('merged.getsrloc_test', newline = '') as scaffold:
+    scaffold_reader = csv.reader(scaffold, delimiter = '\t')
+    for row in scaffold_reader:
+        scaffold_string1 = row[0][:10]
+        scaffold_string2 = row[0][12:]
+        break
+
+# open opposite facing discordant read file
+with open(outwardfacing_read_file, newline = '') as discordant:
+    discordant_reader = csv.reader(discordant, delimiter = '\t')
+    # index discordant read file so that confirmeccs() only looks at discordant reads found on the same chromosome
+    discordant_indexed = [[] for i in range(scaffold_number)]
+    for row in discordant_reader:
+        discordant_indexed[(int(row[0][10:12])-1)].append([int(row[1]), int(row[2])])
+
+# does proximity filtering based off an estimated insert size of 400 + 25%
+def confirmeccs(ecc):
+    for i in range(0, len(discordant_indexed[ecc[0]]), 2):
+        reada = discordant_indexed[ecc[0]][i]
+        readb = discordant_indexed[ecc[0]][i+1]
+        # on the fly sorting because the discordant reads are next to each other but not sorted by base position
+        if reada[0] < readb[0]:
+            read1 = reada
+            read2 = readb
+        else:
+            read1 = readb
+            read2 = reada
+        if ecc[1] <= read1[0] <= ecc[2] and ecc[1] <= read1[1] <= ecc[2] and ecc[1] <= read2[0] <= ecc[2] and ecc[1] <= read2[1] <= ecc[2]:
+            # calculate total distance from ecc start and end
+            distance = abs(read1[1] - ecc[1]) + abs(read2[0] - ecc[2])
+            # set here for insert size distribution
+            if distance <= 500:
+                return True
+    return False
+
+# open parallelization client
+rc = ipp.Client(profile='default', cluster_id = "slurm-" + os.environ['SLURM_JOBID'])
+dview = rc[:]
+dview.block = True
+lview = rc.load_balanced_view()
+lview.block = True
+
+# give discordant_indexed to all engines
+mydict = dict(discordant_indexed = discordant_indexed)
+dview.push(mydict)
+
+# get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
+yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
+confirmedeccs = list(compress(eccloc_list, yesornoeccs))
+
+# write confirmed eccs to file
+with open('parallel.confirmed', 'w', newline = '') as confirmed:
+    w = csv.writer(confirmed, delimiter = '\t')
+    w.writerows(confirmedeccs)
+
+with open('parallel.confirmed') as confirmed:
     confirmed_reader = csv.reader(confirmed, delimiter = '\t')
     confirmed_list = [[int(row[0]), int(row[1]), int(row[2])] for row in confirmed_reader]
 
@@ -25,10 +149,8 @@ def index_ecc_list(ecc_list):
     for i in range(len(ecc_list)):
         row = ecc_list[i]
         # add no to be changed to yes later by ecc_merge if variants are found
-        ecc_index[int(row[0])].append([int(row[0]), int(row[1]), int(row[2]), int(row[3]), 'no'])
+        ecc_index[int(row[0])].append([int(row[0])+1, int(row[1]), int(row[2]), int(row[3]), 'no'])
     return ecc_index
-
-scaffold_number = 56
 
 ecc_indexed = index_ecc_list(confirmed_list_sr)
 
@@ -183,16 +305,9 @@ for i in range(len(ecc_indexed)):
     merged_list.append(variants_merged)
     splitreads_list.append(representative_variants)
 
-# write file with split reads per ecc, with representative ecc in the first column and all split reads in second column
-with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/ecccallerv2_splitreads.' + 'mergedtest' + '.tsv', 'w', newline="") as variants_dict:
-    w = csv.writer(variants_dict, delimiter = '\t')
-    for i in range(len(splitreads_list)):
-        for key, value in splitreads_list[i].items():
-           w.writerow([key, value])
-
 flat_merged_list = [item for sublist in merged_list for item in sublist]
 
-with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/genomecoverage.mergedandpe.G3_1A_bwamem.bed') as coverage:
+with open(coverage_file) as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
     # index coverage file so that confidence check only looks at the same chromosome
     coverage_indexed = [[] for i in range(56)]
@@ -270,9 +385,30 @@ def confidence_check(confirmed):
 
 confidence_flat_merged_list = confidence_check(flat_merged_list)
 
-with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv2/ecccallerv2_output.' + 'mergedtest' + '.bed', 'w', newline = '') as bed:
+with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        scaffold_string = 'MQOP010000' + str(confidence_flat_merged_list[i][0]+1).zfill(2) + ".1"
+        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]).zfill(2) + scaffold_string2
         row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
+        w.writerow(row)
+
+# write file with split reads per ecc, with representative ecc in the first column and all split reads in second column
+with open('ecccaller_splitreads.' + output_name + '.tsv', 'w', newline="") as variants_dict:
+    w = csv.writer(variants_dict, delimiter = '\t')
+    for i in range(len(splitreads_list)):
+        for key, value in splitreads_list[i].items():
+           w.writerow([key, value])
+
+# write bed file output, with actual chromosome names, start and end coordinates and ecc number
+with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
+    w = csv.writer(bed, delimiter = '\t')
+    for i in range(len(confidence_flat_merged_list)):
+        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]).zfill(2) + scaffold_string2
+        if confidence_flat_merged_list[i][3] == 'lowq':
+            color = '255,0,0'
+        if confidence_flat_merged_list[i][3] == 'conf':
+            color = '255,255,0'
+        if confidence_flat_merged_list[i][3] == 'hconf':
+            color = '0,255,0'
+        row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
         w.writerow(row)
