@@ -32,7 +32,6 @@ scaffold_number = 56
 
 ecc_indexed = index_ecc_list(confirmed_list_sr)
 
-## def ecc_merge functions
 def get_variants_grouped(eccs_perchrom):
     ecc_withvariants = {}
     for i in range(len(eccs_perchrom)):
@@ -156,14 +155,14 @@ def merge_variants(eccs_perchrom, representative_variants):
     for i in range(len(eccs_perchrom)):
         ecc = eccs_perchrom[i]
         for key, val in representative_variants.items():
-            if tuple(ecc) in val:
+            if tuple(ecc) in val and [tuple(ecc)] != val: #double check to make sure val isnt just ecc
                 key_list = list(key)
                 # replace that ecc with the representative variant key and change the no in the variant column to yes
                 key_list[4] = 'yes'
                 # replace the number of split reads by the sum of split reads of the eccDNAs
                 sr_sum = 0
-                for i in range(len(val)):
-                    sr_sum += val[i][3]
+                for l in range(len(val)):
+                    sr_sum += val[l][3]
                 key_list[3] = sr_sum
                 eccs_perchrom[i] = key_list
     #get rid of all duplicates caused by variants being replaced by their representative eccs and then sort them
