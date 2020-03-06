@@ -190,5 +190,5 @@ with open('/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/i
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(flat_list)):
         scaffold_string = 'MQOP010000' + str(flat_list[i][0]).zfill(2) + ".1"
-        row = [scaffold_string, flat_list[i][1], flat_list[i][2], i, 0, '+', flat_list[i][1], flat_list[i][2]]
+        row = [scaffold_string, flat_list[i][1], flat_list[i][2], flat_list[i][3], flat_list[i][4]]
         w.writerow(row)
