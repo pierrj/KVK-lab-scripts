@@ -11,4 +11,4 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
-for f in *.fastq.gz; do zcat $f | wc -l; done
+gunzip *.fastq.gz
