@@ -414,11 +414,11 @@ with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
         scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]+1).zfill(2) + scaffold_string2
-        if confidence_flat_merged_list[i][3] == 'lowq':
+        if confidence_flat_merged_list[i][4] == 'lowq':
             color = '255,0,0'
-        if confidence_flat_merged_list[i][3] == 'conf':
+        if confidence_flat_merged_list[i][4] == 'conf':
             color = '255,255,0'
-        if confidence_flat_merged_list[i][3] == 'hconf':
+        if confidence_flat_merged_list[i][4] == 'hconf':
             color = '0,255,0'
         row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
         w.writerow(row)
