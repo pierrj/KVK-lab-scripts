@@ -11,6 +11,8 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_3B
+bwa index /global/scratch/users/pierrj/eccDNA/stress_experiments/references/pBR322.fasta
+bwa index /global/scratch/users/pierrj/eccDNA/stress_experiments/references/B71_mitochondria.fasta
 bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/stress_experiments/references/pBR322.fasta CT_3B_R1.fastq CT_3B_R2.fastq -o pBR322_CT_3B.sam
 bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/stress_experiments/references/B71_mitochondria.fasta CT_3B_R1.fastq CT_3B_R2.fastq -o B71_CT_3B.sam
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/HP_3A
