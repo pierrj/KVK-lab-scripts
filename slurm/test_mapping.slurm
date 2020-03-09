@@ -10,6 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd //global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A
-bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/stress_experiments/references/pBR322.fasta G3_1A_R1.fastq G3_1A_R2.fastq -o pBR322_G3_1A.sam
-bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/stress_experiments/references/B71_mitochondria.fasta G3_1A_R1.fastq G3_1A_R2.fastq -o B71_G3_1A.sam
+cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_3B
+bwa mem -t 24 /global/scratch/users/pierrj/eccDNA/stress_experiments/references/B71_mitochondria.fasta CT_3B_R1.fastq CT_3B_R2.fastq -o B71_CT_3B.sam
+samtools view -b B71_CT_3B.sam > B71_CT_3B.bam
+samtools sort B71_CT_3B.bam -o sorted.B71_CT_3B.bam
