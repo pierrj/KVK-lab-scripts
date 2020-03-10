@@ -22,5 +22,6 @@ samtools view -b -h -F 4 mergedandpe.G3_1A_bwamem.bam > only_mappedreads.mergeda
 #     sleep 45
 #     ipython /global/home/users/pierrj/git/python/ecc_callerv2.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample} 56
 #     ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
+#     awk '{ if ($6 == "hconf") print $0}' ecccaller_output.G3_1A.details.tsv | wc -l >> /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/rarefaction_plot
 #     cd ..
 # done
