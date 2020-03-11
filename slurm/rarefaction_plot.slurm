@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/
 cd rarefaction_plot
 for i in $(seq 0.1 0.1 1.0); do
     # mkdir $i
-    # cd $i
+    cd $i
     sample=G3_1A_${i}
     # samtools view -bh -s ${i} /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/only_mappedreads.mergedandpe.G3_1A_bwamem.bam > mergedandpe.${sample}_bwamem.bam
     # /global/home/users/pierrj/git/bash/ecc_callerv2_upstream.sh ${sample}
