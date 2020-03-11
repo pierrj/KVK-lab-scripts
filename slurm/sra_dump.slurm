@@ -9,11 +9,10 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/genome/
-mkdir 2018_foster
-cd 2018_foster
+cd /global/scratch/users/pierrj/genome/2018_foster
 mkdir tmp
 # while read p; do
 #   /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/rnaseq/2019_luciano -t /global/scratch/users/pierrj/rnaseq/2019_luciano/tmp "$p"
 # done < SRR_list.txt
-/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/genome/2018_foster -t /global/scratch/users/pierrj/genome/2018_foster/tmp ERR2660591
+prefetch ERR2660591
+/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/genome/2018_foster -t /global/scratch/users/pierrj/genome/2018_foster/tmp /global/scratch/users/pierrj/genome/2018_foster/ERR2660591.sra
