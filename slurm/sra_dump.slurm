@@ -14,5 +14,5 @@ mkdir tmp
 # while read p; do
 #   /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/rnaseq/2019_luciano -t /global/scratch/users/pierrj/rnaseq/2019_luciano/tmp "$p"
 # done < SRR_list.txt
-prefetch ERR2660591
+/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ERR2660591
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/genome/2018_foster -t /global/scratch/users/pierrj/genome/2018_foster/tmp /global/scratch/users/pierrj/genome/2018_foster/ERR2660591.sra
