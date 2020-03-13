@@ -104,6 +104,7 @@ with open(outwardfacing_read_file, newline = '') as discordant:
 
 # does proximity filtering based off an estimated insert size of 400 + 25%
 def confirmeccs(discordant_readpair):
+    ecc_list = []
     for i in range(0, len(eccs_indexed[discordant_readpair[0]])):
         ecc = eccs_indexed[discordant_readpair[0]][i]
         read1_start = discordant_readpair[1]
@@ -116,8 +117,9 @@ def confirmeccs(discordant_readpair):
             # set here for insert size distribution
             if distance <= 500:
                 ecc_to_add = [discordant_readpair[0] ,ecc[0], ecc[1]]
-                if ecc_to_add not in confirmed_eccs:
-                    confirmed_eccs.append(ecc_to_add)
+                ecc_list.append(ecc_to_add)
+    if ecc_list != []:
+        return ecc_list
 
 # open parallelization client
 rc = ipp.Client(profile='default', cluster_id = "slurm-" + os.environ['SLURM_JOBID'])
@@ -130,9 +132,10 @@ lview.block = True
 mydict = dict(eccs_indexed = eccs_indexed)
 dview.push(mydict)
 
-# get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
-confirmed_eccs = []
-blank = list(lview.map(confirmeccs, discordant_list))
+# get list of SR locations that each discordant read pair confirms, then filter nones, flatten list and only return unique eccDNAs
+confirmedeccs_listoflists = list(filter(None, (list(map(confirmeccs, discordant_list)))))
+confirmedeccs_flat = [item for sublist in confirmedeccs_listoflists for item in sublist]
+confirmed_eccs = [list(x) for x in set(tuple(x) for x in confirmedeccs_flat)]
 
 # write confirmed eccs to file
 with open('parallel.confirmed', 'w', newline = '') as confirmed:
