@@ -66,12 +66,12 @@ subprocess.run(bamtobed_sort, shell= True)
 # open putative ecc list and index to speed up confirming eccs
 with open('getsrloc_test.bed', newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
-    eccs_indexed = [[] for i in range(scaffold_number)]
+    eccloc_list = []
     for row1 in file_reader:
         row2 = next(file_reader)
         ecc_loc_raw = sorted([int(row1[1]), int(row1[2]), int(row2[1]), int(row2[2])])
-        ecc_loc = [ecc_loc_raw[0], ecc_loc_raw[3]]
-        eccs_indexed[(int(row1[0][10:12])-1)].append(ecc_loc)
+        ecc_loc = [int(row1[0][10:12]) - 1, ecc_loc_raw[0], ecc_loc_raw[3]]
+        eccloc_list.append(ecc_loc)
 
 #just catching scaffold string for output
 with open('getsrloc_test.bed', newline = '') as scaffold:
