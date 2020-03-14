@@ -133,8 +133,9 @@ mydict = dict(eccs_indexed = eccs_indexed)
 dview.push(mydict)
 
 # get list of SR locations that each discordant read pair confirms, then filter nones, flatten list and only return unique eccDNAs
-confirmedeccs_listoflists = list(filter(None, (list(lview.map(confirmeccs, discordant_list)))))
-confirmedeccs_flat = [item for sublist in confirmedeccs_listoflists for item in sublist]
+confirmedeccs_listoflists = list(lview.map(confirmeccs, discordant_list))
+confirmedeccs_listoflists_filtered = list(filter(None, confirmedeccs_listoflists))
+confirmedeccs_flat = [item for sublist in confirmedeccs_listoflists_filtered for item in sublist]
 confirmed_eccs = [list(x) for x in set(tuple(x) for x in confirmedeccs_flat)]
 
 # write confirmed eccs to file
