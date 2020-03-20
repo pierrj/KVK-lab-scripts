@@ -158,10 +158,10 @@ def get_variants_grouped(eccs_perchrom):
         variants = []
 # rolling grouping of eccs by proximity
         for k in range(len(eccs_perchrom)):
-            start_coordinate1 = eccs_perchrom[k][1] - 50
-            start_coordinate2 = eccs_perchrom[k][1] + 50
-            end_coordinate1 = eccs_perchrom[k][2] - 50
-            end_coordinate2 = eccs_perchrom[k][2] + 50
+            start_coordinate1 = eccs_perchrom[k][1] - 20
+            start_coordinate2 = eccs_perchrom[k][1] + 20
+            end_coordinate1 = eccs_perchrom[k][2] - 20
+            end_coordinate2 = eccs_perchrom[k][2] + 20
             if start_coordinate1 <= ecc[1] <= start_coordinate2 and end_coordinate1 <= ecc[2] <= end_coordinate2:
                 variants.append(eccs_perchrom[k])
         # check if there isnt just itself in the list
