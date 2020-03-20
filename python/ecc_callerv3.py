@@ -395,7 +395,7 @@ confidence_flat_merged_list = confidence_check(flat_merged_list)
 with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]).zfill(2) + scaffold_string2
+        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]+1).zfill(2) + scaffold_string2
         row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
         w.writerow(row)
 
