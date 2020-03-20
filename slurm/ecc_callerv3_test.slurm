@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=v3test_20bpmerge
+#SBATCH --job-name=v3test_20bpSR
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
@@ -15,7 +15,7 @@
 # cd ${sample}
 # find ../ -name "${sample}*R1*" | xargs -I '{}' mv {} ./${sample}_R1.fastq
 # find ../ -name "${sample}*R2*" | xargs -I '{}' mv {} ./${sample}_R2.fastq
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv3/20bp_merge
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv3/20bp_SR
 sample=G3_1A
 #/global/home/users/pierrj/scripts/fastq-tools-0.8/src/fastq-sample ${sample}_R1.fastq ${sample}_R2.fastq -n 22396408 -o sampled.${sample}
 #/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f sampled.${sample}.1.fastq -r sampled.${sample}.2.fastq -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
@@ -49,5 +49,5 @@ sample=G3_1A
 
 ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 sleep 45
-ipython /global/home/users/pierrj/git/python/ecc_callerv3.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample} 56
+ipython /global/home/users/pierrj/git/python/ecc_callerv3_20bpSRs.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample} 56
 ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
