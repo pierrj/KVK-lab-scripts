@@ -10,5 +10,5 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/2018_moller/references
-bwa index -p GRCh37.p13_bwa GCF_000001405.25_GRCh37.p13_genomic.fna
+cd /global/scratch/users/pierrj/references
+bwa index -p guy11_genome_baoetal2017_with_70-15_mito_bwa guy11_genome_baoetal2017_with_70-15_mito.fasta

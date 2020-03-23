@@ -24,5 +24,7 @@ elif [ $type == "tx" ];
 fi
 
 ### USAGE
-### sbatch --export=type=something,query=something,db=something,out=something /global/home/users/pierrj/git/slurm/blast.slurm
+### set your variables
+### then use this command
+### sbatch --export=type=$type,query=$query,db=$db,out=$out /global/home/users/pierrj/git/slurm/blast.slurm
 ### USAGE
