@@ -40,9 +40,9 @@ bedfile = filename + '.bed'
 samtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/samtools/1.8/bin/samtools'
 bedtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/bedtools/2.28.0/bin/bedtools'
 
-# define bash command to filter quality of split reads to have 50 bp or more matches on either side of the junction
+# define bash command to filter quality of split reads to have 20 bp or more matches on either side of the junction
 # first if statement here is because gensub returns the original string if it doesn't find any matches
-quality_filter = '''awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 49 ) || (b !~ /[DMIHS]/ && int(b) > 49)) print $0}' ''' + filename + ''' > ''' + filtered_filename
+quality_filter = '''awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ''' + filename + ''' > ''' + filtered_filename
 
 # define bash command for filter out splitreads that only had one high quality split alignment
 # this is copied from a previous exactly twice filter
