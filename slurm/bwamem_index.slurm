@@ -11,4 +11,4 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/references
-bwa index -p guy11_genome_baoetal2017_with_70-15_mito_bwa guy11_genome_baoetal2017_with_70-15_mito.fasta
+bwa index -p guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_bwa guy11_genome_baoetal2017_with_70-15_mito_with_spikeins.fasta
