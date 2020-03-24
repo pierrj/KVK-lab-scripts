@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=map_mito_spikeins
+#SBATCH --job-name=map_spikeins_PQ_1A
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
@@ -16,7 +16,7 @@
 # find ../ -name "${sample}*R1*" | xargs -I '{}' mv {} ./${sample}_R1.fastq
 # find ../ -name "${sample}*R2*" | xargs -I '{}' mv {} ./${sample}_R2.fastq
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/guy11_and_spikeins
-sample=CT_1A
+sample=PQ_1A
 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/${sample}_R1.fastq -r /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/${sample}_R2.fastq -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o tmp.trimmed.seqprep.${sample}_R1.fastq -p tmp.trimmed.seqprep.${sample}_R2.fastq tmp.seqprep.${sample}_R1.fastq.gz tmp.seqprep.${sample}_R2.fastq.gz
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o tmp.trimmed.merged.${sample} tmp.merged.${sample}.fastq.gz

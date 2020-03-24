@@ -15,7 +15,7 @@
 # cd ${sample}
 # find ../ -name "${sample}*R1*" | xargs -I '{}' mv {} ./${sample}_R1.fastq
 # find ../ -name "${sample}*R2*" | xargs -I '{}' mv {} ./${sample}_R2.fastq
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/pureculture_samples/G3_1A/ecc_callerv3/20bp_SR
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/mapq0_test
 sample=G3_1A_mapq0
 #/global/home/users/pierrj/scripts/fastq-tools-0.8/src/fastq-sample ${sample}_R1.fastq ${sample}_R2.fastq -n 22396408 -o sampled.${sample}
 #/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f sampled.${sample}.1.fastq -r sampled.${sample}.2.fastq -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
