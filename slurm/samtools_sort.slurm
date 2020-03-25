@@ -11,5 +11,5 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/guy11_and_spikeins
-samtools sort mergedandpe.CT_1A_bwamem.bam > sorted.mergedandpe.CT_1A_bwamem.bam
-samtools index sorted.mergedandpe.CT_1A_bwamem.bam
+samtools sort mergedandpe.PQ_1A_bwamem.bam > sorted.mergedandpe.PQ_1A_bwamem.bam
+samtools index sorted.mergedandpe.PQ_1A_bwamem.bam
