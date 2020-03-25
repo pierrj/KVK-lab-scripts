@@ -18,14 +18,14 @@ else
 cd ${sample}
 # find ../ -name "${sample}*R1*" | xargs -I '{}' mv {} ./${sample}_R1.fastq
 # find ../ -name "${sample}*R2*" | xargs -I '{}' mv {} ./${sample}_R2.fastq
-/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${sample}_R1.fastq -r ${sample}_R2.fastq -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
-cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o tmp.trimmed.seqprep.${sample}_R1.fastq -p tmp.trimmed.seqprep.${sample}_R2.fastq tmp.seqprep.${sample}_R1.fastq.gz tmp.seqprep.${sample}_R2.fastq.gz
-cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o tmp.trimmed.merged.${sample} tmp.merged.${sample}.fastq.gz
-bwa mem -t 24 /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_bwa tmp.trimmed.seqprep.${sample}_R1.fastq tmp.trimmed.seqprep.${sample}_R2.fastq -o tmp.seqprep.trimmed.${sample}_bwamem.sam
-bwa mem -t 24 /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_bwa tmp.trimmed.merged.${sample} -o tmp.merged.trimmed.${sample}_bwamem.sam
-samtools view -S -b tmp.seqprep.trimmed.${sample}_bwamem.sam > tmp.seqprep.trimmed.${sample}_bwamem.bam
-samtools view -S -b tmp.merged.trimmed.${sample}_bwamem.sam > tmp.merged.trimmed.${sample}_bwamem.bam
-bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimmed.${sample}_bwamem.bam -out mergedandpe.${sample}_bwamem.bam
+# /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${sample}_R1.fastq -r ${sample}_R2.fastq -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
+# cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o tmp.trimmed.seqprep.${sample}_R1.fastq -p tmp.trimmed.seqprep.${sample}_R2.fastq tmp.seqprep.${sample}_R1.fastq.gz tmp.seqprep.${sample}_R2.fastq.gz
+# cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o tmp.trimmed.merged.${sample} tmp.merged.${sample}.fastq.gz
+# bwa mem -t 24 /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_bwa tmp.trimmed.seqprep.${sample}_R1.fastq tmp.trimmed.seqprep.${sample}_R2.fastq -o tmp.seqprep.trimmed.${sample}_bwamem.sam
+# bwa mem -t 24 /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_bwa tmp.trimmed.merged.${sample} -o tmp.merged.trimmed.${sample}_bwamem.sam
+# samtools view -S -b tmp.seqprep.trimmed.${sample}_bwamem.sam > tmp.seqprep.trimmed.${sample}_bwamem.bam
+# samtools view -S -b tmp.merged.trimmed.${sample}_bwamem.sam > tmp.merged.trimmed.${sample}_bwamem.bam
+# bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimmed.${sample}_bwamem.bam -out mergedandpe.${sample}_bwamem.bam
 
 ## get splitread input file
 # samtools view -f 81 -F 4 mergedandpe.${sample}_bwamem.bam > tmp.reverseread1.mergedandpe.${sample}_bwamem.sam
@@ -44,27 +44,30 @@ bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimm
 # samtools sort mergedandpe.${sample}_bwamem.bam -o tmp.sorted.mergedandpe.${sample}_bwamem.bam
 # bedtools genomecov -d -ibam tmp.sorted.mergedandpe.${sample}_bwamem.bam > genomecoverage.mergedandpe.${sample}_bwamem.bed
 
-rm tmp.*
+# rm tmp.*
 
 # ipcluster start -n $SLURM_NTASKS --cluster-id="slurm-${SLURM_JOBID}" &
 # sleep 45
 # ipython /global/home/users/pierrj/git/python/ecc_callerv2.py samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam outwardfacing.mergedandpe.${sample}_bwamem.bed genomecoverage.mergedandpe.${sample}_bwamem.bed ${sample} 56
 # ipcluster stop --cluster-id="slurm-${SLURM_JOBID}"
 
-samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
-samtools index sorted.mergedandpe.${sample}_bwamem.bam
+# samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
+# samtools index sorted.mergedandpe.${sample}_bwamem.bam
 
-samtools view -b sorted.mergedandpe.${sample}_bwamem.bam pGBT9 > pGBT9.sorted.mergedandpe.${sample}_bwamem.bam
-samtools view -b sorted.mergedandpe.${sample}_bwamem.bam pUC19 > pUC19.sorted.mergedandpe.${sample}_bwamem.bam
-samtools view -b sorted.mergedandpe.${sample}_bwamem.bam pBR322 > pBR322.sorted.mergedandpe.${sample}_bwamem.bam
+samtools flagstat sorted.mergedandpe.${sample}_bwamem.bam > ${sample}.flagstat
 
-echo "${sample}"
-samtools view -c pGBT9.sorted.mergedandpe.${sample}_bwamem.bam
-samtools view -c pUC19.sorted.mergedandpe.${sample}_bwamem.bam
-samtools view -c pBR322.sorted.mergedandpe.${sample}_bwamem.bam
+total=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam)
+pgbt9=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam pGBT9)
+puc19=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam pUC19)
+pbr322=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam pBR322)
+mito=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam Supercontig_7.9)
+guy11=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " "))
+total_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam)
+pgbt9_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam pGBT9)
+puc19_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam pUC19)
+pbr322_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam pBR322)
+mito_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam Supercontig_7.9)
+guy11_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " "))
 
-echo "uniquely mapped"
-samtools view -c -q 1 pGBT9.sorted.mergedandpe.${sample}_bwamem.bam
-samtools view -c -q 1 pUC19.sorted.mergedandpe.${sample}_bwamem.bam
-samtools view -c -q 1 pBR322.sorted.mergedandpe.${sample}_bwamem.bam
+echo -e $sample'\t'$total'\t'$pgbt9'\t'$puc19'\t'$pbr322'\t'$mito'\t'$guy11'\t'$total_u'\t'$pgbt9_u'\t'$puc19_u'\t'$pbr322_u'\t'$mito_u'\t'$guy11_u >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/readcounts
 fi
