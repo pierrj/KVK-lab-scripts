@@ -1,8 +1,8 @@
 #!/bin/bash
-samtools view -f 81 -F 4 mergedandpe.${1}_bwamem.bam ${2} > tmp.reverseread1.mergedandpe.${2}_bwamem.sam
-samtools view -f 145 -F 4 mergedandpe.${1}_bwamem.bam ${2} > tmp.reverseread2.mergedandpe.${2}_bwamem.sam
-samtools view -f 65 -F 20 mergedandpe.${1}_bwamem.bam ${2} > tmp.forwardread1.mergedandpe.${2}_bwamem.sam
-samtools view -f 129 -F 20 mergedandpe.${1}_bwamem.bam ${2} > tmp.forwardread2.mergedandpe.${2}_bwamem.sam
+samtools view -f 81 -F 4 sorted.mergedandpe.${1}_bwamem.bam ${2} > tmp.reverseread1.mergedandpe.${2}_bwamem.sam
+samtools view -f 145 -F 4 sorted.mergedandpe.${1}_bwamem.bam ${2} > tmp.reverseread2.mergedandpe.${2}_bwamem.sam
+samtools view -f 65 -F 20 sorted.mergedandpe.${1}_bwamem.bam ${2} > tmp.forwardread1.mergedandpe.${2}_bwamem.sam
+samtools view -f 129 -F 20 sorted.mergedandpe.${1}_bwamem.bam ${2} > tmp.forwardread2.mergedandpe.${2}_bwamem.sam
 
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.reverseread1.mergedandpe.${2}_bwamem.sam tmp.reverseread1.mergedandpe.${2}_bwamem.sam > tmp.samechromosome.exactlytwice.reverseread1.mergedandpe.${2}_bwamem.sam
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.reverseread2.mergedandpe.${2}_bwamem.sam tmp.reverseread2.mergedandpe.${2}_bwamem.sam > tmp.samechromosome.exactlytwice.reverseread2.mergedandpe.${2}_bwamem.sam
