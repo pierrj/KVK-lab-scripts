@@ -26,6 +26,6 @@ sample=IF_1A
 # samtools view -S -b tmp.merged.trimmed.${sample}_bwamem.sam > tmp.merged.trimmed.${sample}_bwamem.bam
 # bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimmed.${sample}_bwamem.bam -out mergedandpe.${sample}_bwamem.bam
 # samtools flagstat mergedandpe.${sample}_bwamem.bam
-samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}bwamem.bam
+samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
 samtools index sorted.mergedandpe.${sample}_bwamem.bam
 # rm tmp.*
