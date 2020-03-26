@@ -10,5 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+cd /global/scratch/users/pierrj/blast
+update_blastdb.pl --decompress nt
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/infected_and_spikeins
-blastn -query  unmapped100.sorted.mergedandpe.IF_1A_bwamem.fasta -db nt -out unmapped100.IF_1A.blastn -num_threads 20 -outfmt 6 -max_target_seqs 1
+blastn -query  unmapped100.sorted.mergedandpe.IF_1A_bwamem.fasta -db /global/scratch/users/pierrj/blast/nt -out unmapped100.IF_1A.blastn -num_threads 20 -outfmt 6 -max_target_seqs 1
