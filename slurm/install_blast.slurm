@@ -11,7 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/blast/
-tar xvfz ncbi-blast-2.10.0+-src.tar.gaz
+tar xvfz ncbi-blast-2.10.0+-src.tar.gz
 cd ncbi-blast-2.10.0+-src
 cd c++
 ./configure
