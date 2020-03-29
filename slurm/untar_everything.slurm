@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/blast/blastdb_ver4_curl/ftp.ncbi.nlm.nih.gov/blast/db/v4
+/global/scratch/users/pierrj/blast/blastdb_ver4_curl/blast/db/v4
 # wget -r -l1 --no-parent --no-check-certificate -A nt_v4.*.tar.gz* 'ftp://ftp.ncbi.nlm.nih.gov/blast/db/v4/' -P /global/scratch/users/pierrj/blast/blastdb_ver4_curl
 for file in *.tar.gz; do
     tar xvfz $file
