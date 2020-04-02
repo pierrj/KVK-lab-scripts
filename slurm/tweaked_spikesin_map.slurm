@@ -25,6 +25,6 @@ bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimm
 samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
 samtools index sorted.mergedandpe.${sample}_bwamem.bam
 
-/global/home/users/pierrj/git/bash/get_SR_count.sh ${sample}
+/global/home/users/pierrj/git/bash/test_getSRcount.sh ${sample}
 
 rm tmp.*
