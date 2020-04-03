@@ -11,5 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/infected_and_spikeins
-blastn -query  unmapped1000.mergedandpe.IF_1A_bwamem.fasta -db /global/scratch/users/pierrj/blast/blastdb_ver4_curl/blast/db/v4/nt -out unmapped100.IF_1A.blastn -num_threads 20 -outfmt "6 qacc sacc evalue 
+sample=IF_1A
+samtools view -f 4 mergedandpe.${sample}_bwamem.bam | shuf -n 10000 > unmapped10000.mergedandpe.${sample}_bwamem.fasta
+blastn -query  unmapped10000.mergedandpe.${sample}_bwamem.fasta -db /global/scratch/users/pierrj/blast/blastdb_ver4_curl/blast/db/v4/nt -out unmapped10000.mergedandpe.${sample}_bwamem.blastn -num_threads 20 -outfmt "6 qacc sacc evalue 
 qstart qend sstart send  stitle " -max_target_seqs 1
