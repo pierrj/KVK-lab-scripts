@@ -29,7 +29,7 @@ mv tmp.outwardfacing.mergedandpe.${sample}_bwamem.bed tmp.outwardfacing.mergedan
 awk 'BEGIN {OFS="\t"}; {print $1,$2,$3,substr($4, 1, length($4)-2),$5,$6}' tmp.outwardfacing.mergedandpe.${sample}_bwamem.bed.old > tmp.outwardfacing.mergedandpe.${sample}_bwamem.bed.old.trimmed
 awk 'NR==FNR{a[$4]++; next} a[$4]==2' tmp.outwardfacing.mergedandpe.${sample}_bwamem.bed.old.trimmed tmp.outwardfacing.mergedandpe.${sample}_bwamem.bed.old.trimmed > outwardfacing.mergedandpe.${sample}_bwamem.bed
 
-bedtools genomecov -d -ibam guy11.sorted.mergedandpe.${sample}_bwamem.bam > genomecoverage.mergedandpe.${sample}_bwamem.bed
+bedtools genomecov -d -ibam guy11.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > genomecoverage.mergedandpe.${sample}_bwamem.bed
 
 rm tmp.*
 
