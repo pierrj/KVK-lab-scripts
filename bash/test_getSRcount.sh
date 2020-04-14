@@ -2,6 +2,7 @@
 pgbt9=$(/global/home/users/pierrj/git/bash/get_SR_count.sh ${1} pGBT9)
 puc19=$(/global/home/users/pierrj/git/bash/get_SR_count.sh ${1} pUC19_tweaked)
 pbr322=$(/global/home/users/pierrj/git/bash/get_SR_count.sh ${1} pBR322_tweaked)
+rm SR_countable_${1}
 touch SR_countable_${1}
 
 echo -e '0.01''\t'$pgbt9 >> SR_countable_${1}
