@@ -11,7 +11,6 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd $SLURM_SUBMIT_DIR
-if [ ${sample:0:2} = "IF" ]
 cd ${sample}
 # /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${sample}_R1.fastq -r ${sample}_R2.fastq -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
 # cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o tmp.trimmed.seqprep.${sample}_R1.fastq -p tmp.trimmed.seqprep.${sample}_R2.fastq tmp.seqprep.${sample}_R1.fastq.gz tmp.seqprep.${sample}_R2.fastq.gz
@@ -25,7 +24,3 @@ cd ${sample}
 # samtools index sorted.mergedandpe.${sample}_bwamem.bam
 
 /global/home/users/pierrj/git/bash/test_getSRcount.sh ${sample}
-
-rm tmp.*
-
-fi
