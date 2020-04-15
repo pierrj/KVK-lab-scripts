@@ -10,5 +10,5 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-igvtools count /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/mergedandpe.G3_1A.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/illumina.G3_1A.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+igvtools count /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/mergedandpe.G3_1A_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/illumina.G3_1A.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 igvtools count /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/SMRTcell_all/G3_1A/bao2017_genome_mapped.MAPPED.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/pacbio.G3_1A.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
