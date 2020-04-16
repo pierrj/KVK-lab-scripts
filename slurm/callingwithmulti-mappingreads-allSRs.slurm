@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=callingwithmulti-mappingreads-allSRs
+#SBATCH --job-name=callingwithmulti-mappingreads-samechromosomeSRs
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
@@ -26,3 +26,24 @@ samtools view -b <(cat <(samtools view -H mergedandpe.${sample}_bwamem.bam) exac
 bedtools bamtobed -i exactlytwice.all.mergedandpe.${sample}_bwamem.actual.bam | sort -k 4,4 -k 2,2 > exactlytwice.all.mergedandpe.${sample}_bwamem.bed
 
 igvtools count exactlytwice.all.mergedandpe.${sample}_bwamem.bed /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/illumina.allSRs.G3_1A.bed.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+
+
+samtools view -b <(cat <(samtools view -H mergedandpe.${sample}_bwamem.bam) samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam ) > samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bam
+bedtools bamtobed -i samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bam | sort -k 1,1 -k2n > samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bed
+
+igvtools count samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bed /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/illumina.samechromSRs.G3_1A.bed.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+
+
+awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam > qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam > exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam
+samtools view -b -h <(cat <(samtools view -H mergedandpe.G3_1A_bwamem.bam) exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.bam) > exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bam
+bedtools bamtobed -i exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bam | sort -k 1,1 -k2n > exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bed
+
+igvtools count exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bed /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/illumina.samechromqualfilteredSRs.G3_1A.bed.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+
+cat exactlytwice.all.mergedandpe.${sample}_bwamem.bed | awk '$1=="MQOP01000002.1" && $2 > 1996800 && $2 < 2004730 {print substr($4,0, length($4)-2)}' > targetregion_readlist
+touch targetregion_splitreads
+while read splitread;
+do
+    grep ${splitread} exactlytwice.all.mergedandpe.${sample}_bwamem.bed >> targetregion_splitreads
+done < targetregion_readlist
