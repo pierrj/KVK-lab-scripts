@@ -11,9 +11,6 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd $SLURM_SUBMIT_DIR
-# mkdir ${sample}
-if [ ${sample:0:2} = "IF" ]
-then
 cd ${sample}
 total=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam)
 guy11=$(samtools view -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " "))
@@ -23,4 +20,3 @@ guy11_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam 
 rice_u=$(samtools view -q 1 -c -F 2048 sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/ORSA_w_organelles.contignames | tr "\n" " "))
 
 echo -e $sample'\t'$total'\t'$guy11'\t'$rice'\t'$total_u'\t'$guy11_u'\t'$rice_u >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/IF_readsmapped
-fi
