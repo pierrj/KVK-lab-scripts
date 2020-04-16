@@ -10,4 +10,4 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-igvtools count --includeDuplicates /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/sorted.mergedandpe.G3_1A_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/includeDuplicates.illumina.G3_1A.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+igvtools count /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/sorted.mergedandpe.G3_1A_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/includeDuplicates.illumina.G3_1A.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
