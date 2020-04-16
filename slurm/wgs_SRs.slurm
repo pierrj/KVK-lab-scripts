@@ -12,9 +12,13 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/genome/2018_foster/
 sample=ERR2660591
+samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
+samtools index sorted.mergedandpe.${sample}_bwamem.bam
 igvtools count mergedandpe.${sample}_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/WGS.illumina.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 # samtools view -b -q 1 mergedandpe.${sample}_bwamem.bam > unique.mergedandpe.${sample}_bwamem.bam
-igvtools count unique.mergedandpe.${sample}_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/WGS.illumina.unique.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+samtools sort unique.mergedandpe.${sample}_bwamem.bam > sorted.unique.mergedandpe.${sample}_bwamem.bam
+samtools index sorted.unique.mergedandpe.${sample}_bwamem.bam
+igvtools count sorted.unique.mergedandpe.${sample}_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/WGS.illumina.unique.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 
 # samtools view -f 81 -F 4 mergedandpe.${sample}_bwamem.bam > tmp.reverseread1.mergedandpe.${sample}_bwamem.sam
 # samtools view -f 145 -F 4 mergedandpe.${sample}_bwamem.bam > tmp.reverseread2.mergedandpe.${sample}_bwamem.sam
