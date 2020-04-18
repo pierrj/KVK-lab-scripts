@@ -14,12 +14,12 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_unique
 ls genomecoverage.mergedandpe.*_bwamem.bed  | awk '{print substr($0,28,4)}' | sort | uniq > techrepsmerged/mapfile
 while read sample; 
 do
-    paste $(find . -name "binned_libnormalized.genomecoverage.mergedandpe.${sample}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged/binned_libnormalized.genomecoverage.mergedandpe.${sample}_bwamem.bed
+    paste $(find . -maxdepth 1 -name "binned_libnormalized.genomecoverage.mergedandpe.${sample}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged/binned_libnormalized.genomecoverage.mergedandpe.${sample}_bwamem.bed
 done < techrepsmerged/mapfile
 normalize_factor=$(grep CT_1A illumina_libsizes | awk '{print $2/1000000}')
 awk -v OFS='-' -v N=$normalize_factor '{sum+=$3} NR%100==0 {print $1,$2; sum =0}' genomecoverage.mergedandpe.CT_1A_bwamem.bed > techrepsmerged/first_column
-ls -1 binned_libnormalized.genomecoverage.mergedandpe.*_bwamem.bed > techrepsmerged/list
 cd techrepsmerged
+ls -1 binned_libnormalized.genomecoverage.mergedandpe.*_bwamem.bed > list
 paste first_column $(cat list | tr "\n" " ") > binned_libnormalized.coverage.mergedandpe.table.old
 ls -1 binned_libnormalized.genomecoverage.mergedandpe.*_bwamem.bed | awk '{print substr($0, 49, 4)}' > first_row.old
 cat <(echo x) first_row.old | tr "\n" "\t" | sed '$ s/.$//' > first_row
