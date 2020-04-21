@@ -14,20 +14,20 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 while read sample;
 do
     cd ${sample}
-    samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam
-    total=$(samtools view -c -F 2048 guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam)
-    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/illumina_libsizes
-    bedtools genomecov -d -ibam guy11.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/genomecoverage.mergedandpe.${sample}_bwamem.bed
+    # samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam
+    # total=$(samtools view -c -F 2048 guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam)
+    # echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/illumina_libsizes
+    bedtools genomecov -d -ibam guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/genomecoverage.mergedandpe.${sample}_bwamem.bed
     cd ..
 done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
 while read sample;
 do
     cd ${sample}
-    samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam
-    total=$(samtools view -c -F 2048 guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam)
-    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/illumina_libsizes
-    bedtools genomecov -d -ibam guy11.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/genomecoverage.mergedandpe.${sample}_bwamem.bed
+    # samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam
+    # total=$(samtools view -c -F 2048 guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam)
+    # echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/illumina_libsizes
+    bedtools genomecov -d -ibam guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/genomecoverage.mergedandpe.${sample}_bwamem.bed
     cd ..
 done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats
