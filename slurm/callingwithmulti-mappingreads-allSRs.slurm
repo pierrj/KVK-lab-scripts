@@ -41,7 +41,7 @@ bedtools bamtobed -i exactlytwice.qualityfiltered.samechromosome.exactlytwice.al
 
 igvtools count exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.G3_1A_bwamem.actual.bed /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/illumina.samechromqualfilteredSRs.G3_1A.bed.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 
-cat exactlytwice.all.mergedandpe.${sample}_bwamem.bed | awk '$1=="MQOP01000002.1" && $2 > 1996800 && $2 < 2004730 {print substr($4,0, length($4)-2)}' > targetregion_readlist
+cat exactlytwice.all.mergedandpe.${sample}_bwamem.bed | awk '$1=="MQOP01000002.1" && $2 > 1996800 && $2 < 2004730 {print $4}' > targetregion_readlist
 touch targetregion_splitreads
 while read splitread;
 do

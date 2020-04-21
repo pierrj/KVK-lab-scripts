@@ -14,7 +14,7 @@ cd /global/scratch/users/pierrj/genome/2018_foster/
 sample=ERR2660591
 samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
 samtools index sorted.mergedandpe.${sample}_bwamem.bam
-igvtools count mergedandpe.${sample}_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/WGS.illumina.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+igvtools count sorted.mergedandpe.${sample}_bwamem.bam /global/scratch/users/pierrj/eccDNA/pipeline_tests/peaks_gone/WGS.illumina.bam.tdf /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 # samtools view -b -q 1 mergedandpe.${sample}_bwamem.bam > unique.mergedandpe.${sample}_bwamem.bam
 samtools sort unique.mergedandpe.${sample}_bwamem.bam > sorted.unique.mergedandpe.${sample}_bwamem.bam
 samtools index sorted.unique.mergedandpe.${sample}_bwamem.bam
