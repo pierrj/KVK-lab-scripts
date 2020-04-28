@@ -12,4 +12,4 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/distribution
 awk '{print $3-$2}' ../merging/parallel.confirmed.G3_1.bed > distribution.G3_1.unsorted
-Rscript --vanilla /global/home/users/pierrj/git/hist.R distribution.G3_1.unsorted distribution.G3_1.unsorted.tiff
+Rscript --vanilla /global/home/users/pierrj/git/R/hist.R distribution.G3_1.unsorted distribution.G3_1.unsorted.tiff
