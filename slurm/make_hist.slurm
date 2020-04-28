@@ -11,5 +11,8 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/distribution
-awk '{print $3-$2}' ../merging/parallel.confirmed.G3_1.bed > distribution.G3_1.unsorted
-Rscript --vanilla /global/home/users/pierrj/git/R/histogram.R distribution.G3_1.unsorted distribution.G3_1.unsorted.tiff
+while read sample;
+do
+    awk '{print $3-$2}' ../merging/parallel.confirmed.${sample}.bed > distribution.${sample}.unsorted
+    Rscript --vanilla /global/home/users/pierrj/git/R/histogram.R distribution.${sample}.unsorted distribution.${sample}.unsorted.tiff
+done < mapfile
