@@ -12,8 +12,4 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/distribution
 awk '{print $3-$2}' ../merging/parallel.confirmed.G3_1.bed > distribution.G3_1.unsorted
-R --no-save
-chol <- read.table("distribution.G3_1.unsorted", header = FALSE)
-tiff("distribution.G3_1.unsorted.tiff", units="in", width=5, height=5, res=300)
-hist(chol$V1, breaks=1000)
-dev.off()
+Rscript --vanilla /global/home/users/pierrj/git/hist.R distribution.G3_1.unsorted distribution.G3_1.unsorted.tiff
