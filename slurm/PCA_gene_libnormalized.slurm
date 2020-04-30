@@ -29,7 +29,7 @@ do
     cd ..
 done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized
-awk '{print $1}' libnormalized.genes.parallel.confirmed.CT_1A.bed > first_column
+awk '{print $1}' genes.parallel.confirmed.CT_1A.bed > first_column
 ls -1 libnormalized.genes.parallel.confirmed.*.bed > list
 paste first_column $(cat list | tr "\n" " ") > libnormalized.gene.table.old
 ls -1 libnormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 42, 5)}' > first_row.old
