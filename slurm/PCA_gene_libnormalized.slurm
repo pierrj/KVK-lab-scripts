@@ -14,36 +14,27 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 while read sample;
 do
     cd ${sample}
-    # samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam
-    # total=$(samtools view -c -F 2048 guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam)
-    # echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/illumina_libsizes
-    bedtools genomecov -d -ibam guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/genomecoverage.mergedandpe.${sample}_bwamem.bed
+    bedtools intersect -f 1 -wa -c -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/sp_enrichment/moryzae_all_trimmed.uniquefiltered.gff -b /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk -v OFS='\t' '{print $4, $5}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed
+    normalize_factor=$(grep ${sample} /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/SRcount_slopes | awk '{print $2}')
+    awk -v N=$normalize_factor '{print $2/N; sum =0}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/libnormalized.genes.parallel.confirmed.${sample}.bed
     cd ..
 done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
 while read sample;
 do
     cd ${sample}
-    # samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam
-    # total=$(samtools view -c -F 2048 guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam)
-    # echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/illumina_libsizes
-    bedtools genomecov -d -ibam guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/libnormalized_repeats/genomecoverage.mergedandpe.${sample}_bwamem.bed
+    bedtools intersect -f 1 -wa -c -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/sp_enrichment/moryzae_all_trimmed.uniquefiltered.gff -b /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk -v OFS='\t' '{print $4, $5}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed
+    normalize_factor=$(grep ${sample} /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/SRcount_slopes | awk '{print $2}')
+    awk -v N=$normalize_factor '{print $2/N; sum =0}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/libnormalized.genes.parallel.confirmed.${sample}.bed
     cd ..
 done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized
-ls genomecoverage.mergedandpe.*_bwamem.bed  | awk '{print substr($0,28,5)}' | sort | uniq > mapfile
-while read sample; 
-do
-    normalize_factor=$(grep ${sample} illumina_libsizes | awk '{print $2/1000000}')
-    awk -v N=$normalize_factor '{sum+=$3} NR%100==0 {print sum/100/N; sum =0}' genomecoverage.mergedandpe.${sample}_bwamem.bed > binned_libnormalized.genomecoverage.mergedandpe.${sample}_bwamem.bed
-done < mapfile
-normalize_factor=$(grep CT_1A illumina_libsizes | awk '{print $2/1000000}')
-awk -v OFS='-' -v N=$normalize_factor '{sum+=$3} NR%100==0 {print $1,$2; sum =0}' genomecoverage.mergedandpe.CT_1A_bwamem.bed > first_column
-ls -1 binned_libnormalized.genomecoverage.mergedandpe.*_bwamem.bed > list
-paste first_column $(cat list | tr "\n" " ") > binned_libnormalized.coverage.mergedandpe.table.old
-ls -1 binned_libnormalized.genomecoverage.mergedandpe.*_bwamem.bed | awk '{print substr($0, 49, 5)}' > first_row.old
+awk '{print $1}' libnormalized.genes.parallel.confirmed.CT_1A.bed > first_column
+ls -1 libnormalized.genes.parallel.confirmed.*.bed > list
+paste first_column $(cat list | tr "\n" " ") > libnormalized.gene.table.old
+ls -1 libnormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 41, 5)}' > first_row.old
 cat <(echo x) first_row.old | tr "\n" "\t" | sed '$ s/.$//' > first_row
-cat first_row <(echo) binned_libnormalized.coverage.mergedandpe.table.old > binned_libnormalized.coverage.mergedandpe.table
+cat first_row <(echo) libnormalized.gene.table.old > libnormalized.gene.table
 awk 'BEGIN { FS=OFS="\t" }
 {
     for (rowNr=1;rowNr<=NF;rowNr++) {
@@ -58,4 +49,32 @@ END {
             printf "%s%s", cell[rowNr,colNr], (colNr < maxCols ? OFS : ORS)
         }
     }
-}' binned_libnormalized.coverage.mergedandpe.table > transposed_table.txt
+}' libnormalized.gene.table > libnormalized.gene.table.transposed
+mkdir techrepsmerged
+ls libnormalized.genes.parallel.confirmed.*.bed  | awk '{print substr($0,41,4)}' | sort | uniq > techrepsmerged/mapfile
+while read sample; 
+do
+    paste $(find . -maxdepth 1 -name "libnormalized.genes.parallel.confirmed.${sample}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged/libnormalized.genes.parallel.confirmed.${sample}.bed
+done < techrepsmerged/mapfile
+cp first_column techrepsmerged/first_column
+cd techrepsmerged
+ls -1 libnormalized.genes.parallel.confirmed.*.bed > list
+paste first_column $(cat list | tr "\n" " ") > libnormalized.gene.techrepsmerged.table.old
+ls -1 libnormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 41, 4)}' > first_row.old
+cat <(echo x) first_row.old | tr "\n" "\t" | sed '$ s/.$//' > first_row
+cat first_row <(echo) libnormalized.gene.techrepsmerged.table.old > libnormalized.gene.techrepsmerged.table
+awk 'BEGIN { FS=OFS="\t" }
+{
+    for (rowNr=1;rowNr<=NF;rowNr++) {
+        cell[rowNr,NR] = $rowNr
+    }
+    maxRows = (NF > maxRows ? NF : maxRows)
+    maxCols = NR
+}
+END {
+    for (rowNr=1;rowNr<=maxRows;rowNr++) {
+        for (colNr=1;colNr<=maxCols;colNr++) {
+            printf "%s%s", cell[rowNr,colNr], (colNr < maxCols ? OFS : ORS)
+        }
+    }
+}' libnormalized.gene.techrepsmerged.table > libnormalized.gene.techrepsmerged.table.transposed

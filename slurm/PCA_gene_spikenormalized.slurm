@@ -41,7 +41,6 @@ END {
         }
     }
 }' spikenormalized.gene.table > spikenormalized.gene.table.transposed
-mkdir techrepsmerged
 ls spikenormalized.genes.parallel.confirmed.*.bed  | awk '{print substr($0,41,4)}' | sort | uniq > techrepsmerged/mapfile
 while read sample; 
 do
