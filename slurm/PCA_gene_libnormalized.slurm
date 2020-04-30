@@ -50,7 +50,6 @@ END {
         }
     }
 }' libnormalized.gene.table > libnormalized.gene.table.transposed
-mkdir techrepsmerged
 ls libnormalized.genes.parallel.confirmed.*.bed  | awk '{print substr($0,41,4)}' | sort | uniq > techrepsmerged/mapfile
 while read sample; 
 do
