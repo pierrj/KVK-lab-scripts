@@ -23,7 +23,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_spikenormalized
 awk '{print $1}' genes.parallel.confirmed.CT_1A.bed > first_column
 ls -1 spikenormalized.genes.parallel.confirmed.*.bed > list
 paste first_column $(cat list | tr "\n" " ") > spikenormalized.gene.table.old
-ls -1 spikenormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 40, 5)}' > first_row.old
+ls -1 spikenormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 42, 5)}' > first_row.old
 cat <(echo x) first_row.old | tr "\n" "\t" | sed '$ s/.$//' > first_row
 cat first_row <(echo) spikenormalized.gene.table.old > spikenormalized.gene.table
 awk 'BEGIN { FS=OFS="\t" }
@@ -41,7 +41,7 @@ END {
         }
     }
 }' spikenormalized.gene.table > spikenormalized.gene.table.transposed
-ls spikenormalized.genes.parallel.confirmed.*.bed  | awk '{print substr($0,40,4)}' | sort | uniq > techrepsmerged/mapfile
+ls spikenormalized.genes.parallel.confirmed.*.bed  | awk '{print substr($0,42,4)}' | sort | uniq > techrepsmerged/mapfile
 while read sample; 
 do
     paste $(find . -maxdepth 1 -name "spikenormalized.genes.parallel.confirmed.${sample}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged/spikenormalized.genes.parallel.confirmed.${sample}.bed
@@ -50,7 +50,7 @@ cp first_column techrepsmerged/first_column
 cd techrepsmerged
 ls -1 spikenormalized.genes.parallel.confirmed.*.bed > list
 paste first_column $(cat list | tr "\n" " ") > spikenormalized.gene.techrepsmerged.table.old
-ls -1 spikenormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 40, 4)}' > first_row.old
+ls -1 spikenormalized.genes.parallel.confirmed.*.bed | awk '{print substr($0, 42, 4)}' > first_row.old
 cat <(echo x) first_row.old | tr "\n" "\t" | sed '$ s/.$//' > first_row
 cat first_row <(echo) spikenormalized.gene.techrepsmerged.table.old > spikenormalized.gene.techrepsmerged.table
 awk 'BEGIN { FS=OFS="\t" }
