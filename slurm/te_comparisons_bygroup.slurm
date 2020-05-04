@@ -45,7 +45,7 @@ END {
 if [ ! -d "techrepsmerged_${table}" ]; then
     mkdir techrepsmerged_${table}
 fi
-ls *.${table}  | awk '{print substr($0,40,4)}' | sort | uniq > techrepsmerged_${table}/mapfile
+ls *.${table} | awk '{print substr($0,0,4)}' | sort | uniq > techrepsmerged_${table}/mapfile
 while read sample; 
 do
     paste $(find . -maxdepth 1 -name "*.${table}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged_${table}/${sample}.${table}
@@ -103,7 +103,7 @@ END {
 if [ ! -d "techrepsmerged_${table}" ]; then
     mkdir techrepsmerged_${table}
 fi
-ls *.${table}  | awk '{print substr($0,40,4)}' | sort | uniq > techrepsmerged_${table}/mapfile
+ls *.${table} | awk '{print substr($0,0,4)}' | sort | uniq > techrepsmerged_${table}/mapfile
 while read sample; 
 do
     paste $(find . -maxdepth 1 -name "*.${table}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged_${table}/${sample}.${table}
