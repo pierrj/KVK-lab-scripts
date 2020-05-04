@@ -72,6 +72,7 @@ END {
         }
     }
 }' ${table}.table > ${table}.table.transposed
+cd ..
 
 table=groupcount.spikenormalized
 while read sample;
@@ -130,3 +131,4 @@ END {
         }
     }
 }' ${table}.table > ${table}.table.transposed
+cd ..
