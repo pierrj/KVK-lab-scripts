@@ -20,6 +20,7 @@ while read sample;
 do
     awk '{ seen[$9] += $17} END { for (i in seen) print seen[i] }' ${sample}.teintersect.readsperkb.libnormalized.bed > ${sample}.${table}
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+sample=CT_1A
 awk '{ seen[$9] += $17} END { for (i in seen) print i }' ${sample}.${table} | awk -F":" '{print (NF>1)? $NF : ""}' > ${table}.firstcolumn
 ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn.firstcolumn $(cat list | tr "\n" " ") > ${table}.table.old
@@ -48,6 +49,7 @@ while read sample;
 do
     awk '{ seen[$9] += $17} END { for (i in seen) print seen[i] }' ${sample}.teintersect.readsperkb.libnormalized.bed > ${sample}.${table}
 done < /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile
+sample=CT_1A
 awk '{ seen[$9] += $17} END { for (i in seen) print i }' ${sample}.${table} | awk -F":" '{print (NF>1)? $NF : ""}' > ${table}.firstcolumn
 ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn.firstcolumn $(cat list | tr "\n" " ") > ${table}.table.old
