@@ -15,7 +15,7 @@ while read sample;
 do
     cd ${sample}
     bedtools intersect -f 1 -wa -c -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/sp_enrichment/moryzae_all_trimmed.uniquefiltered.gff -b /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk -v OFS='\t' '{print $4, $5}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed
-    normalize_factor=$(grep ${sample} /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/SRcount_slopes | awk '{print $2}')
+    normalize_factor=$(wc -l /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk '{print $1/100000}')
     awk -v N=$normalize_factor '{print $2/N; sum =0}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/libnormalized.genes.parallel.confirmed.${sample}.bed
     cd ..
 done < mapfile
@@ -24,7 +24,7 @@ while read sample;
 do
     cd ${sample}
     bedtools intersect -f 1 -wa -c -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/sp_enrichment/moryzae_all_trimmed.uniquefiltered.gff -b /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk -v OFS='\t' '{print $4, $5}' > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed
-    normalize_factor=$(grep ${sample} /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalization/SRcount_slopes | awk '{print $2}')
+    normalize_factor=$(wc -l /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk '{print $1/100000}')
     awk -v N=$normalize_factor '{print $2/N; sum =0}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/genes.parallel.confirmed.${sample}.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/gene_libnormalized/libnormalized.genes.parallel.confirmed.${sample}.bed
     cd ..
 done < mapfile
