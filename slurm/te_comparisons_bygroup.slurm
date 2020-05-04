@@ -42,7 +42,36 @@ END {
         }
     }
 }' ${table}.table > ${table}.table.transposed
-
+if [ ! -d "techrepsmerged_${table}" ]; then
+    mkdir techrepsmerged_${table}
+fi
+ls *.${table}  | awk '{print substr($0,40,4)}' | sort | uniq > techrepsmerged_${table}/mapfile
+while read sample; 
+do
+    paste $(find . -maxdepth 1 -name "*.${table}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged_${table}/${sample}.${table}
+done < techrepsmerged_${table}/mapfile
+cp ${table}.firstcolumn techrepsmerged_${table}/${table}.firstcolumn
+cd techrepsmerged_${table}
+ls -1 *.${table} > ${table}.list
+paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
+ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
+cat <(echo x) ${table}.first_row.old | tr "\n" "\t" | sed '$ s/.$//' > ${table}.first_row
+cat ${table}.first_row <(echo) ${table}.table.old > ${table}.table
+awk 'BEGIN { FS=OFS="\t" }
+{
+    for (rowNr=1;rowNr<=NF;rowNr++) {
+        cell[rowNr,NR] = $rowNr
+    }
+    maxRows = (NF > maxRows ? NF : maxRows)
+    maxCols = NR
+}
+END {
+    for (rowNr=1;rowNr<=maxRows;rowNr++) {
+        for (colNr=1;colNr<=maxCols;colNr++) {
+            printf "%s%s", cell[rowNr,colNr], (colNr < maxCols ? OFS : ORS)
+        }
+    }
+}' ${table}.table > ${table}.table.transposed
 
 table=groupcount.spikenormalized
 while read sample;
@@ -51,6 +80,36 @@ do
 done < /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile
 sample=CT_1A
 awk '{ seen[$9] += $17} END { for (i in seen) print i }' ${sample}.teintersect.readsperkb.libnormalized.bed | awk -F":" '{print (NF>1)? $NF : ""}' > ${table}.firstcolumn
+ls -1 *.${table} > ${table}.list
+paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
+ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
+cat <(echo x) ${table}.first_row.old | tr "\n" "\t" | sed '$ s/.$//' > ${table}.first_row
+cat ${table}.first_row <(echo) ${table}.table.old > ${table}.table
+awk 'BEGIN { FS=OFS="\t" }
+{
+    for (rowNr=1;rowNr<=NF;rowNr++) {
+        cell[rowNr,NR] = $rowNr
+    }
+    maxRows = (NF > maxRows ? NF : maxRows)
+    maxCols = NR
+}
+END {
+    for (rowNr=1;rowNr<=maxRows;rowNr++) {
+        for (colNr=1;colNr<=maxCols;colNr++) {
+            printf "%s%s", cell[rowNr,colNr], (colNr < maxCols ? OFS : ORS)
+        }
+    }
+}' ${table}.table > ${table}.table.transposed
+if [ ! -d "techrepsmerged_${table}" ]; then
+    mkdir techrepsmerged_${table}
+fi
+ls *.${table}  | awk '{print substr($0,40,4)}' | sort | uniq > techrepsmerged_${table}/mapfile
+while read sample; 
+do
+    paste $(find . -maxdepth 1 -name "*.${table}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > techrepsmerged_${table}/${sample}.${table}
+done < techrepsmerged_${table}/mapfile
+cp ${table}.firstcolumn techrepsmerged_${table}/${table}.firstcolumn
+cd techrepsmerged_${table}
 ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
