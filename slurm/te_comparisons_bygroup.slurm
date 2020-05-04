@@ -77,10 +77,10 @@ cd ..
 table=groupcount.spikenormalized
 while read sample;
 do
-    awk '{ seen[$9] += $17} END { for (i in seen) print seen[i] }' ${sample}.teintersect.readsperkb.libnormalized.bed > ${sample}.${table}
+    awk '{ seen[$9] += $17} END { for (i in seen) print seen[i] }' ${sample}.teintersect.readsperkb.spikenormalized.bed > ${sample}.${table}
 done < /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile
 sample=CT_1A
-awk '{ seen[$9] += $17} END { for (i in seen) print i }' ${sample}.teintersect.readsperkb.libnormalized.bed | awk -F":" '{print (NF>1)? $NF : ""}' > ${table}.firstcolumn
+awk '{ seen[$9] += $17} END { for (i in seen) print i }' ${sample}.teintersect.readsperkb.spikenormalized.bed | awk -F":" '{print (NF>1)? $NF : ""}' > ${table}.firstcolumn
 ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
