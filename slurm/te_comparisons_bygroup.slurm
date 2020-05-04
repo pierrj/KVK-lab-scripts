@@ -56,7 +56,7 @@ ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
 cat <(echo x) ${table}.first_row.old | tr "\n" "\t" | sed '$ s/.$//' > ${table}.first_row
-cat ${table}.first_row <(echo) ${table}.table.old > ${table}.table
+cat ${table}.first_row <(echo) ${table}.techrepsmerged.table.old > ${table}.techrepsmerged.table
 awk 'BEGIN { FS=OFS="\t" }
 {
     for (rowNr=1;rowNr<=NF;rowNr++) {
@@ -71,7 +71,7 @@ END {
             printf "%s%s", cell[rowNr,colNr], (colNr < maxCols ? OFS : ORS)
         }
     }
-}' ${table}.table > ${table}.table.transposed
+}' ${table}.techrepsmerged.table > ${table}.techrepsmerged.table.transposed
 cd ..
 
 table=groupcount.spikenormalized
@@ -115,7 +115,7 @@ ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
 cat <(echo x) ${table}.first_row.old | tr "\n" "\t" | sed '$ s/.$//' > ${table}.first_row
-cat ${table}.first_row <(echo) ${table}.table.old > ${table}.table
+cat ${table}.first_row <(echo) ${table}.techrepsmerged.table.old > ${table}.techrepsmerged.table
 awk 'BEGIN { FS=OFS="\t" }
 {
     for (rowNr=1;rowNr<=NF;rowNr++) {
@@ -130,5 +130,5 @@ END {
             printf "%s%s", cell[rowNr,colNr], (colNr < maxCols ? OFS : ORS)
         }
     }
-}' ${table}.table > ${table}.table.transposed
+}' ${table}.techrepsmerged.table > ${table}.techrepsmerged.table.transposed
 cd ..
