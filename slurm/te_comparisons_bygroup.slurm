@@ -53,7 +53,7 @@ done < techrepsmerged_${table}/mapfile
 cp ${table}.firstcolumn techrepsmerged_${table}/${table}.firstcolumn
 cd techrepsmerged_${table}
 ls -1 *.${table} > ${table}.list
-paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
+paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.techrepsmerged.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
 cat <(echo x) ${table}.first_row.old | tr "\n" "\t" | sed '$ s/.$//' > ${table}.first_row
 cat ${table}.first_row <(echo) ${table}.techrepsmerged.table.old > ${table}.techrepsmerged.table
@@ -112,7 +112,7 @@ done < techrepsmerged_${table}/mapfile
 cp ${table}.firstcolumn techrepsmerged_${table}/${table}.firstcolumn
 cd techrepsmerged_${table}
 ls -1 *.${table} > ${table}.list
-paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
+paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.techrepsmerged.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
 cat <(echo x) ${table}.first_row.old | tr "\n" "\t" | sed '$ s/.$//' > ${table}.first_row
 cat ${table}.first_row <(echo) ${table}.techrepsmerged.table.old > ${table}.techrepsmerged.table
