@@ -16,7 +16,7 @@ touch ltr_versus_all
 while read sample;
 do
     total=$(samtools view -c /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam)
-    te_sum=$(awk '{if ($12 ~ /Gypsy/ || $9 ~ /Copia/) print $0}' PQ_2C.teintersect.bed | awk '{sum+=$15} END {print sum}')
+    te_sum=$(awk '{if ($12 ~ /Gypsy/ || $9 ~ /Copia/) print $0}' ${sample}.teintersect.bed | awk '{sum+=$15} END {print sum}')
     echo "scale=4;($total-$nonefcs)/$total" | bc
     percent=$(echo "scale=4;$te_sum/$total" | bc)
     echo -e ${sample}'\t'$te_sum'\t'$total'\t'$percent >> ltr_versus_all
@@ -24,7 +24,7 @@ done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapf
 while read sample;
 do
     total=$(samtools view -c /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/${sample}/guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam)
-    te_sum=$(awk '{if ($12 ~ /Gypsy/ || $9 ~ /Copia/) print $0}' PQ_2C.teintersect.bed | awk '{sum+=$15} END {print sum}')
+    te_sum=$(awk '{if ($12 ~ /Gypsy/ || $9 ~ /Copia/) print $0}' ${sample}.teintersect.bed | awk '{sum+=$15} END {print sum}')
     echo "scale=4;($total-$nonefcs)/$total" | bc
     percent=$(echo "scale=4;$te_sum/$total" | bc)
     echo -e ${sample}'\t'$te_sum'\t'$total'\t'$percent >> ltr_versus_all
