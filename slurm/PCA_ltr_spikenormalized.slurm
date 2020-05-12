@@ -17,7 +17,7 @@ do
     awk '{if ($12 ~ /Gypsy/ || $9 ~ /Copia/) print $17}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.spikenormalized.bed > ${sample}.${table}
 done < /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile
 sample=CT_1A
-awk -v OFS=';' '{print $1,$4,$5,$9}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.spikenormalized.bed > ${table}.firstcolumn
+awk -v OFS=';' '{if ($12 ~ /Gypsy/ || $9 ~ /Copia/) print $1,$4,$5,$9}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.spikenormalized.bed > ${table}.firstcolumn
 ls -1 *.${table} > ${table}.list
 paste ${table}.firstcolumn $(cat ${table}.list | tr "\n" " ") > ${table}.table.old
 ls -1 *.${table} | awk '{print substr($0, 0, 5)}' > ${table}.first_row.old
