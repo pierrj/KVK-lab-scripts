@@ -19,8 +19,8 @@ bwa mem -t 24 /global/scratch/users/pierrj/references/Magnaporthe_oryzae.MG8.dna
 bwa mem -t 24 /global/scratch/users/pierrj/references/Magnaporthe_oryzae.MG8.dna.toplevel.noMT_bwa tmp.trimmed.merged.${sample} -o tmp.merged.trimmed.${sample}_bwamem.sam
 samtools view -S -b tmp.seqprep.trimmed.${sample}_bwamem.sam > tmp.seqprep.trimmed.${sample}_bwamem.bam
 samtools view -S -b tmp.merged.trimmed.${sample}_bwamem.sam > tmp.merged.trimmed.${sample}_bwamem.bam
-bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimmed.${sample}_bwamem.bam -out mergedandpe.${sample}_bwamem.bam
-samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
-samtools index sorted.mergedandpe.${sample}_bwamem.bam
+bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimmed.${sample}_bwamem.bam -out MG8.mergedandpe.${sample}_bwamem.bam
+samtools sort MG8.mergedandpe.${sample}_bwamem.bam > sorted.MG8.mergedandpe.${sample}_bwamem.bam
+samtools index sorted.MG8.mergedandpe.${sample}_bwamem.bam
 
-bedtools genomecov -d -ibam sorted.mergedandpe.${sample}_bwamem.bam > genomecoverage.mergedandpe.${sample}_bwamem.bed
+bedtools genomecov -d -ibam sorted.MG8.mergedandpe.${sample}_bwamem.bam > genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam
