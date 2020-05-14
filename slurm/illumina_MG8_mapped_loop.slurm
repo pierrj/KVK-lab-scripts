@@ -23,4 +23,4 @@ bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimm
 samtools sort mergedandpe.${sample}_bwamem.bam > sorted.mergedandpe.${sample}_bwamem.bam
 samtools index sorted.mergedandpe.${sample}_bwamem.bam
 
-bedtools genomecov -d -ibam sorted.mergedandpe.${sample}_bwamem.bam | awk ' /M/ {print $0}' > genomecoverage.mergedandpe.${sample}_bwamem.bed
+bedtools genomecov -d -ibam sorted.mergedandpe.${sample}_bwamem.bam > genomecoverage.mergedandpe.${sample}_bwamem.bed
