@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/CT_1A_MG8
 sample=CT_1A
-bedtools genomecov -d -i parallel.confirmed.sorted.bed -g /global/scratch/users/pierrj/references/Magnaporthe_oryzae.MG8.dna.toplevel.noMT.fa > parallel.confirmed.sorted.bed.genomecov
+bedtools genomecov -d -i parallel.confirmed.sorted.bed -g /global/scratch/users/pierrj/references/Magnaporthe_oryzae.MG8.dna.toplevel.noMT.chromsizes > parallel.confirmed.sorted.bed.genomecov
 awk -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2, sum/100}'  parallel.confirmed.sorted.bed.genomecov > parallel.confirmed.sorted.bed.manhattanplot.old
 echo -e 'CHROMOSOME''\t''BASE''\t''COUNT' > first_row
 cat first_row parallel.confirmed.sorted.bed.manhattanplot.old > parallel.confirmed.sorted.bed.manhattanplot
