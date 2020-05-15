@@ -12,17 +12,18 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
 table=manhattanplots
-while read sample; 
-do
-    cd ${sample}
-    normalize_factor=$(samtools view -c -F 4 -F 2048 sorted.MG8.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
-    awk -v N=$normalize_factor '{sum+=$3} NR%100==0 {print sum/100/N; sum =0}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${sample}.${table}
-    cd ..
-done < mapfile
-sample=CT_1A
+# while read sample; 
+# do
+#     cd ${sample}
+#     normalize_factor=$(samtools view -c -F 4 -F 2048 sorted.MG8.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
+#     awk -v N=$normalize_factor '{sum+=$3} NR%100==0 {print sum/100/N; sum =0}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${sample}.${table}
+#     cd ..
+# done < mapfile
+# sample=CT_1A
 cd CT_1A
 normalize_factor=$(samtools view -c -F 4 -F 2048 sorted.MG8.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
-awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2}' /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${table}.firstcolumncd /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/
+awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2}' /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${table}.firstcolumn
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/
 if [ ! -d "techrepsmerged_${table}" ]; then
     mkdir techrepsmerged_${table}
 fi
