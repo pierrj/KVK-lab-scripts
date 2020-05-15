@@ -17,7 +17,7 @@ do
     samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam
     bedtools intersect -sorted -g /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes -F 1 -wa -c -a /global/scratch/users/pierrj/references/GUY11_pacbio_ET_KROJ.features.forintersect.gff -b guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.bed
     awk -v OFS='\t' '{print $1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$15/$13*1000}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.bed
-    normalize_factor=$(samtools view -c -F 2048 guy11.sorted.allmapq.mergedandpe.G3_1A_bwamem.bam | awk '{print $1/1000000}' )
+    normalize_factor=$(samtools view -c -F 4 -F 2048 guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
     awk -v N=$normalize_factor -v OFS='\t' '{print $1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$16/N}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.libnormalized.bed
     awk '{print $17}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.libnormalized.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/te_libnormalized/${sample}.teintersect.forpca.bed
     cd ..
@@ -29,7 +29,7 @@ do
     samtools view -b sorted.mergedandpe.${sample}_bwamem.bam $(cat /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames | tr "\n" " ") > guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam
     bedtools intersect -sorted -g /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes -F 1 -wa -c -a /global/scratch/users/pierrj/references/GUY11_pacbio_ET_KROJ.features.forintersect.gff -b guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.bed
     awk -v OFS='\t' '{print $1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$15/$13*1000}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.bed
-    normalize_factor=$(samtools view -c -F 2048 guy11.sorted.allmapq.mergedandpe.G3_1A_bwamem.bam | awk '{print $1/1000000}' )
+    normalize_factor=$(samtools view -c -F 4 -F 2048 guy11.sorted.allmapq.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
     awk -v N=$normalize_factor -v OFS='\t' '{print $1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$16/N}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.libnormalized.bed
     awk '{print $17}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/tecomparisons/${sample}.teintersect.readsperkb.libnormalized.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/pca/te_libnormalized/${sample}.teintersect.forpca.bed
     cd ..
