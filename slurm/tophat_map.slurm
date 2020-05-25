@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=tophat_map
 #SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=24
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -15,6 +15,6 @@
 module remove python/3.6
 module load python/2.7
 cd /global/scratch/users/pierrj/rnaseq/moryzae/2012_soanes
-tophat -o 47_tophat -p 24 --b2-very-sensitive \
+tophat -o 47_tophat -p 24 \
     --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome --transcriptome-only \
     /global/scratch/users/pierrj/references/guy11_genome_baoetal2017 SRR298847.sra.fastq
