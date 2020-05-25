@@ -9,13 +9,11 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/genome/2018_foster
+outdir=rnaseq/moryzae/2019_li
+accession=SRX5630771
+cd /global/scratch/users/pierrj/${outdir}
 # while read p; do
 #   /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/rnaseq/2019_luciano -t /global/scratch/users/pierrj/rnaseq/2019_luciano/tmp "$p"
 # done < SRR_list.txt
-/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ERR2660591 -O /global/scratch/users/pierrj/genome/2018_foster
-/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/genome/2018_foster -t /global/scratch/users/pierrj/genome/2018_foster/tmp /global/scratch/users/pierrj/genome/2018_foster/ERR2660591.sra
-# mv ERR2660591_R1.fastq ERR2660591_R1.fastq.old
-# mv ERR2660591_R2.fastq ERR2660591_R2.fastq.old
-# awk '{ if (NR % 2 == 1) print $1, $2, $2".1" ; else print $0}' ERR2660591_R1.fastq.old > ERR2660591_R1.fastq
-# awk '{ if (NR % 2 == 1) print $1, $2, $2".2" ; else print $0}' ERR2660591_R2.fastq.old > ERR2660591_R2.fastq
+/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${accession} -O /global/scratch/users/pierrj/${outdir}
+/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e 24 -O /global/scratch/users/pierrj/${outdir} -t /global/scratch/users/pierrj/${outdir}/tmp /global/scratch/users/pierrj/${outdir}/${accession}.sra
