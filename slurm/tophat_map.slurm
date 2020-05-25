@@ -14,7 +14,7 @@
 #bowtie2-build --threads 24 guy11_genome_baoetal2017.fasta guy11_genome_baoetal2017
 module remove python/3.6
 module load python/2.7
-cd /global/scratch/users/pierrj/rnaseq/moryzae/
+cd /global/scratch/users/pierrj/rnaseq/moryzae/2012_soanes
 tophat -o 47_tophat -p 24 --b2-very-sensitive \
     --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome --transcriptome-only \
     /global/scratch/users/pierrj/references/guy11_genome_baoetal2017 SRR298847.sra.fastq
