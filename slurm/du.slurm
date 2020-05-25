@@ -7,5 +7,5 @@
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
-cd /global/scratch/users/pierrj/
-du -hcs
+cd /global/scratch/users/
+du -hcs pierrj
