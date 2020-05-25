@@ -16,5 +16,5 @@ module remove python/3.6
 module load python/2.7
 cd /global/scratch/users/pierrj/rnaseq/moryzae/2012_soanes
 tophat -o 47_tophat -p 24 \
-    --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome --transcriptome-only \
+    --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome \
     /global/scratch/users/pierrj/references/guy11_genome_baoetal2017 SRR298847.sra.fastq
