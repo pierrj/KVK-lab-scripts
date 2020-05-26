@@ -15,6 +15,13 @@
 module remove python/3.6
 module load python/2.7
 cd /global/scratch/users/pierrj/rnaseq/moryzae/2012_soanes
-tophat -o 47_tophat -p 24 \
-    --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome \
+tophat -o 47_tophat_bowtie -p 24 \
+    --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome --transcriptome-only \
     /global/scratch/users/pierrj/references/guy11_genome_baoetal2017 SRR298847.sra.fastq
+
+tophat -o 47_tophat_bowtie1 -p 24 --bowtie1 \
+    --transcriptome-only \
+    -G /global/scratch/users/pierrj/references/Guy11_augustus_raw.gff --transcriptome-index=/global/scratch/users/pierrj/references/Guy11_augustus_raw_transcriptome_bowtie1 \
+    /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_bowtie1 SRR298847.sra.fastq    
+
+bowtie2 -x /global/scratch/users/pierrj/references/guy11_genome_baoetal2017 -U SRR298847.sra.fastq -S bowtie2_test
