@@ -39,7 +39,6 @@ do
     paste $(find . -maxdepth 1 -name "${sample}*.${table}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > treatmentsmerged_${table}/${sample}.${table}
 done < treatmentsmerged_${table}/mapfile
 cd treatmentsmerged_${table}
-cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${table}.firstcolumn /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/techrepsmerged_${table}/treatmentsmerged_${table}/${table}.firstcolumn
 sample=G3_1A
 normalize_factor=$(wc -l /global/scratch/users/pierrj/eccDNA/pipeline_tests/merging/parallel.confirmed.${sample}.bed | awk '{print $1/100000}')
 awk -v N=$normalize_factor '{print $1}' /global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison/genes.parallel.confirmed.${sample}.bed > /global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison/techrepsmerged_${table}/treatmentsmerged_${table}/${table}.firstcolumn
