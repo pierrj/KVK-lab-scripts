@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/codingregions_comparison/
 sample=G3_1A
-file="/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/sorted.mergedandpe.${sample}_bwamem.bam"
+file="/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/guy11.repeats.sorted.mergedandpe.G3_1A_bwamem.bam"
 samtools view -f 81 -F 4 ${file} > tmp.reverseread1.mergedandpe.${sample}_bwamem.sam
 samtools view -f 145 -F 4 ${file} > tmp.reverseread2.mergedandpe.${sample}_bwamem.sam
 samtools view -f 65 -F 20 ${file} > tmp.forwardread1.mergedandpe.${sample}_bwamem.sam
