@@ -25,5 +25,5 @@ cat  tmp.samechromosome.exactlytwice.reverseread1.mergedandpe.${sample}_bwamem.s
 
 awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam > qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam > exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam
-samtools view -b -h <(cat <(samtools view -H mergedandpe.${sample}_bwamem.bam) exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam) > SRs.mergedandpe.${sample}_bwamem.bam
+samtools view -b -h <(cat <(samtools view -H /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/mergedandpe.${sample}_bwamem.bam) exactlytwice.qualityfiltered.samechromosome.exactlytwice.all.mergedandpe.${sample}_bwamem.bam) > SRs.mergedandpe.${sample}_bwamem.bam
 bedtools bamtobed -i SRs.mergedandpe.${sample}_bwamem.bam | sort -k 4,4 -k 2,2 > SRs.mergedandpe.${sample}_bwamem.bed
