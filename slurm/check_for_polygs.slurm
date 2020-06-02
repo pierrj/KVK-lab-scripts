@@ -31,9 +31,7 @@ done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/
 while read sample; 
 do
-    cd ${sample}
     echo ${sample}
     grep 'GGGGGGGGGGGGGGGGGGGG' ${sample}_R1.fastq | wc -l
     grep 'GGGGGGGGGGGGGGGGGGGG' ${sample}_R2.fastq | wc -l
-    cd ..
 done < mapfile
