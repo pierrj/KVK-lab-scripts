@@ -10,6 +10,15 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
+table=manhattanplots
+while read sample; 
+do
+    cd ${sample}
+    normalize_factor=$(samtools view -c -F 4 -F 2048 sorted.MG8.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
+    awk -v N=$normalize_factor '{sum+=$3} NR%100==0 {print sum/100/N; sum =0}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${sample}.${table}
+    cd ..
+done < mapfile
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 table=manhattanplots
 while read sample; 
