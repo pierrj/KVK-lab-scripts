@@ -28,7 +28,7 @@ sample=RC_1A
 # bedtools genomecov -d -ibam sorted.MG8.mergedandpe.${sample}_bwamem.bam > genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam
 
 table=manhattanplots
-normalize_factor=$(samtools view -c -F 4 -F 2048 sorted.MG8.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
+normalize_factor=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/IF_1A/sorted.MG8.mergedandpe.IF_1A_bwamem.bam | awk '{print $1/1000000}' )
 awk -v N=$normalize_factor '{sum+=$3} NR%100==0 {print sum/100/N; sum =0}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > ${sample}.${table}
 awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > ${table}.firstcolumn
 echo -e 'CHROMOSOME''\t''BASE''\t''COUNT' > ${table}.first_row
