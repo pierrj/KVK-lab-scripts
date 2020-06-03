@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --job-name=mapped_rice_sequences.slurm
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
+#SBATCH --time=24:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/polygtrimming
+file1='/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A_R1.fastq'
+file2='/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A_R2.fastq'
+sample=RC_1A
+/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${file1} -r ${file2} -1 tmp.seqprep.${sample}_R1.fastq.gz -2 tmp.seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${sample}.fastq.gz
+cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${sample}_R1.fastq -p tmp.trimmed.seqprep.${sample}_R2.fastq tmp.seqprep.${sample}_R1.fastq.gz tmp.seqprep.${sample}_R2.fastq.gz
+cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --nextseq-trim=20 -o tmp.trimmed.merged.${sample} tmp.merged.${sample}.fastq.gz
+bwa mem -t 24 /global/scratch/users/pierrj/references/Magnaporthe_oryzae.MG8.dna.toplevel.noMT_bwa tmp.trimmed.seqprep.${sample}_R1.fastq tmp.trimmed.seqprep.${sample}_R2.fastq -o tmp.seqprep.trimmed.${sample}_bwamem.sam
+bwa mem -t 24 /global/scratch/users/pierrj/references/Magnaporthe_oryzae.MG8.dna.toplevel.noMT_bwa tmp.trimmed.merged.${sample} -o tmp.merged.trimmed.${sample}_bwamem.sam
+samtools view -S -b tmp.seqprep.trimmed.${sample}_bwamem.sam > tmp.seqprep.trimmed.${sample}_bwamem.bam
+samtools view -S -b tmp.merged.trimmed.${sample}_bwamem.sam > tmp.merged.trimmed.${sample}_bwamem.bam
+bamtools merge -in tmp.seqprep.trimmed.${sample}_bwamem.bam -in tmp.merged.trimmed.${sample}_bwamem.bam -out MG8.mergedandpe.${sample}_bwamem.bam
+samtools sort MG8.mergedandpe.${sample}_bwamem.bam > sorted.MG8.mergedandpe.${sample}_bwamem.bam
+samtools index sorted.MG8.mergedandpe.${sample}_bwamem.bam
+
+bedtools genomecov -d -ibam sorted.MG8.mergedandpe.${sample}_bwamem.bam > genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam
+
+table=manhattanplots
+normalize_factor=$(samtools view -c -F 4 -F 2048 sorted.MG8.mergedandpe.${sample}_bwamem.bam | awk '{print $1/1000000}' )
+awk -v N=$normalize_factor '{sum+=$3} NR%100==0 {print sum/100/N; sum =0}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/${sample}.${table}
+awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2}' genomecoverage.MG8.mergedandpe.${sample}_bwamem.bam > ${table}.firstcolumn
+echo -e 'CHROMOSOME''\t''BASE''\t''COUNT' > ${table}.first_row
+paste ${table}.firstcolumn ${sample}.${table} > ${sample}.${table}.table.old
+cat ${table}.first_row ${sample}.${table}.table.old > ${sample}.${table}.table
