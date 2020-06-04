@@ -34,3 +34,6 @@ awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2}' geno
 echo -e 'CHROMOSOME''\t''BASE''\t''COUNT' > ${table}.first_row
 paste ${table}.firstcolumn ${sample}.${table} > ${sample}.${table}.table.old
 cat ${table}.first_row ${sample}.${table}.table.old > ${sample}.${table}.table
+paste ${sample}.${table} /global/scratch/users/pierrj/eccDNA/pipeline_tests/manhattanplots/techrepsmerged_manhattanplots/treatmentsmerged_manhattanplots/G3.manhattanplots | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > RC_1AandG3.${table}
+paste ${table}.firstcolumn RC_1AandG3.${table} > RC_1AandG3.${table}.table.old
+cat ${table}.first_row RC_1AandG3.${table}.table.old > RC_1AandG3.${table}.table
