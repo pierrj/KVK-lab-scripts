@@ -18,7 +18,7 @@ samtools view -f 145 -F 4 ${file} > tmp.reverseread2.mergedandpe.${sample}_bwame
 samtools view -f 65 -F 20 ${file} > tmp.forwardread1.mergedandpe.${sample}_bwamem.sam
 samtools view -f 129 -F 20 ${file} > tmp.forwardread2.mergedandpe.${sample}_bwamem.sam
 
-##these say sam chromosome bu they aren't actually same chromosome
+##these say same chromosome but they aren't actually same chromosome
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.reverseread1.mergedandpe.${sample}_bwamem.sam tmp.reverseread1.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.reverseread1.mergedandpe.${sample}_bwamem.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.reverseread2.mergedandpe.${sample}_bwamem.sam tmp.reverseread2.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.reverseread2.mergedandpe.${sample}_bwamem.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.forwardread1.mergedandpe.${sample}_bwamem.sam tmp.forwardread1.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.forwardread1.mergedandpe.${sample}_bwamem.sam
