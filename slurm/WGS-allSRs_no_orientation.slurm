@@ -21,7 +21,7 @@ file="mergedandpe.${sample}_bwamem.bam"
 # awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.2.${sample}_bwamem.sam mergedandpe.2.${sample}_bwamem.sam > exactlytwice.mergedandpe.2.${sample}_bwamem.sam
 # cat  exactlytwice.mergedandpe.1.${sample}_bwamem.sam exactlytwice.mergedandpe.2.${sample}_bwamem.sam > exactlytwice.all.mergedandpe.${sample}_bwamem.bam
 
-# qualityfilter_file="exactlytwice.all.mergedandpe.${sample}_bwamem.bam"
+qualityfilter_file="exactlytwice.all.mergedandpe.${sample}_bwamem.bam"
 
 
 # awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ${qualityfilter_file} > qualityfiltered.${qualityfilter_file}
