@@ -19,7 +19,7 @@ samtools view -f 129 -F 4 ${file} > mergedandpe.2.${sample}_bwamem.sam
 
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.1.${sample}_bwamem.sam mergedandpe.1.${sample}_bwamem.sam > exactlytwice.mergedandpe.1.${sample}_bwamem.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.2.${sample}_bwamem.sam mergedandpe.2.${sample}_bwamem.sam > exactlytwice.mergedandpe.2.${sample}_bwamem.sam
-cat  exactlytwice.mergedandpe.1.${sample}_bwamem.sam > exactlytwice.all.mergedandpe.${sample}_bwamem.bam
+cat  exactlytwice.mergedandpe.1.${sample}_bwamem.sam exactlytwice.mergedandpe.2.${sample}_bwamem.sam > exactlytwice.all.mergedandpe.${sample}_bwamem.bam
 
 qualityfilter_file="exactlytwice.all.mergedandpe.${sample}_bwamem.bam"
 
