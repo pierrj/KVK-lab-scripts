@@ -36,3 +36,6 @@ bedtools bamtobed -i SRs.mergedandpe.${sample}_bwamem.bam | sort -k4,4 -k2,2n > 
 
 bedtools intersect -f 1 -wa -a SRs.mergedandpe.${sample}_bwamem.bed -b /global/scratch/users/pierrj/references/GUY11_pacbio_maggy_ltr_locs.bed > maggy.SRs.mergedandpe.${sample}_bwamem.bed
 awk 'NR==FNR{a[$4]++; next} a[$4]==2' maggy.SRs.mergedandpe.${sample}_bwamem.bed maggy.SRs.mergedandpe.${sample}_bwamem.bed > exactlytwice.maggy.SRs.mergedandpe.${sample}_bwamem.bed
+
+samtools sort SRs.mergedandpe.${sample}_bwamem.bam > sorted.SRs.mergedandpe.${sample}_bwamem.bam
+samtools index sorted.SRs.mergedandpe.${sample}_bwamem.bam
