@@ -14,20 +14,42 @@ cd /global/scratch/users/pierrj/genome/2018_foster/
 sample=ERR2660591
 file="mergedandpe.${sample}_bwamem.bam"
 
-# samtools view -f 65 -F 4 ${file} > mergedandpe.1.${sample}_bwamem.sam
-# samtools view -f 129 -F 4 ${file} > mergedandpe.2.${sample}_bwamem.sam
+samtools view -f 65 -F 4 ${file} > mergedandpe.1.${sample}_bwamem.sam
+samtools view -f 129 -F 4 ${file} > mergedandpe.2.${sample}_bwamem.sam
 
-# awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.1.${sample}_bwamem.sam mergedandpe.1.${sample}_bwamem.sam > exactlytwice.mergedandpe.1.${sample}_bwamem.sam
-# awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.2.${sample}_bwamem.sam mergedandpe.2.${sample}_bwamem.sam > exactlytwice.mergedandpe.2.${sample}_bwamem.sam
-# cat  exactlytwice.mergedandpe.1.${sample}_bwamem.sam exactlytwice.mergedandpe.2.${sample}_bwamem.sam > exactlytwice.all.mergedandpe.${sample}_bwamem.bam
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.1.${sample}_bwamem.sam mergedandpe.1.${sample}_bwamem.sam > exactlytwice.mergedandpe.1.${sample}_bwamem.sam
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.2.${sample}_bwamem.sam mergedandpe.2.${sample}_bwamem.sam > exactlytwice.mergedandpe.2.${sample}_bwamem.sam
+cat  exactlytwice.mergedandpe.1.${sample}_bwamem.sam exactlytwice.mergedandpe.2.${sample}_bwamem.sam > exactlytwice.all.mergedandpe.${sample}_bwamem.bam
 
 qualityfilter_file="exactlytwice.all.mergedandpe.${sample}_bwamem.bam"
 
 
-# awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ${qualityfilter_file} > qualityfiltered.${qualityfilter_file}
-# awk 'NR==FNR{a[$1]++; next} a[$1]==2' qualityfiltered.${qualityfilter_file} qualityfiltered.${qualityfilter_file} > exactlytwice.qualityfiltered.${qualityfilter_file}
+awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ${qualityfilter_file} > qualityfiltered.${qualityfilter_file}
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' qualityfiltered.${qualityfilter_file} qualityfiltered.${qualityfilter_file} > exactlytwice.qualityfiltered.${qualityfilter_file}
 samtools view -b -h <(cat <(samtools view -H mergedandpe.${sample}_bwamem.bam) exactlytwice.qualityfiltered.${qualityfilter_file}) > SRs.no_orientation.mergedandpe.${sample}_bwamem.bam
 bedtools bamtobed -i SRs.no_orientation.mergedandpe.${sample}_bwamem.bam | sort -k4,4 -k2,2n > SRs.no_orientation.mergedandpe.${sample}_bwamem.bed
 
 samtools sort SRs.no_orientation.mergedandpe.${sample}_bwamem.bam > sorted.SRs.no_orientation.mergedandpe.${sample}_bwamem.bam
 samtools index sorted.SRs.no_orientation.mergedandpe.${sample}_bwamem.bam
+
+
+samtools view -f 81 -F 4 ${file} > tmp.reverseread1.mergedandpe.${sample}_bwamem.sam
+samtools view -f 145 -F 4 ${file} > tmp.reverseread2.mergedandpe.${sample}_bwamem.sam
+samtools view -f 65 -F 20 ${file} > tmp.forwardread1.mergedandpe.${sample}_bwamem.sam
+samtools view -f 129 -F 20 ${file} > tmp.forwardread2.mergedandpe.${sample}_bwamem.sam
+
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.reverseread1.mergedandpe.${sample}_bwamem.sam tmp.reverseread1.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.reverseread1.mergedandpe.${sample}_bwamem.sam
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.reverseread2.mergedandpe.${sample}_bwamem.sam tmp.reverseread2.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.reverseread2.mergedandpe.${sample}_bwamem.sam
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.forwardread1.mergedandpe.${sample}_bwamem.sam tmp.forwardread1.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.forwardread1.mergedandpe.${sample}_bwamem.sam
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.forwardread2.mergedandpe.${sample}_bwamem.sam tmp.forwardread2.mergedandpe.${sample}_bwamem.sam > tmp.samechromosome.exactlytwice.forwardread2.mergedandpe.${sample}_bwamem.sam
+cat  tmp.samechromosome.exactlytwice.reverseread1.mergedandpe.${sample}_bwamem.sam tmp.samechromosome.exactlytwice.reverseread2.mergedandpe.${sample}_bwamem.sam tmp.samechromosome.exactlytwice.forwardread1.mergedandpe.${sample}_bwamem.sam tmp.samechromosome.exactlytwice.forwardread2.mergedandpe.${sample}_bwamem.sam > exactlytwice.all.mergedandpe.${sample}_bwamem.bam
+
+qualityfilter_file="exactlytwice.all.mergedandpe.${sample}_bwamem.bam"
+
+awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ${qualityfilter_file} > qualityfiltered.${qualityfilter_file}
+awk 'NR==FNR{a[$1]++; next} a[$1]==2' qualityfiltered.${qualityfilter_file} qualityfiltered.${qualityfilter_file} > exactlytwice.qualityfiltered.${qualityfilter_file}
+samtools view -b -h <(cat <(samtools view -H mergedandpe.${sample}_bwamem.bam) exactlytwice.qualityfiltered.${qualityfilter_file}) > SRs.mergedandpe.${sample}_bwamem.bam
+bedtools bamtobed -i SRs.mergedandpe.${sample}_bwamem.bam | sort -k4,4 -k2,2n > SRs.mergedandpe.${sample}_bwamem.bed 
+
+samtools sort SRs.mergedandpe.${sample}_bwamem.bam > sorted.SRs.mergedandpe.${sample}_bwamem.bam
+samtools index sorted.SRs.mergedandpe.${sample}_bwamem.bam
