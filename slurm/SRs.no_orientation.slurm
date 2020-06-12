@@ -20,11 +20,11 @@ samtools view -f 129 -F 4 ${file} > mergedandpe.2.${sample}_bwamem.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.1.${sample}_bwamem.sam mergedandpe.1.${sample}_bwamem.sam > exactlytwice.mergedandpe.1.${sample}_bwamem.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' mergedandpe.2.${sample}_bwamem.sam mergedandpe.2.${sample}_bwamem.sam > exactlytwice.mergedandpe.2.${sample}_bwamem.sam
 
-qualityfilter_file="exactlytwice.1.mergedandpe.${sample}_bwamem.bam"
+qualityfilter_file="exactlytwice.1.mergedandpe.${sample}_bwamem.sam"
 awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ${qualityfilter_file} > qualityfiltered.${qualityfilter_file}
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' qualityfiltered.${qualityfilter_file} qualityfiltered.${qualityfilter_file} > exactlytwice.qualityfiltered.${qualityfilter_file}
 
-qualityfilter_file="exactlytwice.2.mergedandpe.${sample}_bwamem.bam"
+qualityfilter_file="exactlytwice.2.mergedandpe.${sample}_bwamem.sam"
 awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ${qualityfilter_file} > qualityfiltered.${qualityfilter_file}
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' qualityfiltered.${qualityfilter_file} qualityfiltered.${qualityfilter_file} > exactlytwice.qualityfiltered.${qualityfilter_file}
 
