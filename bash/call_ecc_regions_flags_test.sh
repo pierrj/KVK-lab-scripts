@@ -13,18 +13,18 @@ done
 
 ### THIS VERSION IS A TEST TO MAKE SURE THE FLAG OPTIONS REPLICATE THE NO FLAGS PIPELINE
 
-samtools view -b -q 1 ${SORTED_BAMFILE} $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SORTED_BAMFILE}
+samtools view -b -q 1 ${SORTED_BAMFILE} $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SAMPLE}.bam
 
-samtools view -f 81 -F 4 filtered.${SORTED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
+samtools view -f 81 -F 4 filtered.${SAMPLE}.bam > tmp.reverseread1.${SAMPLE}.sam
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.reverseread1.${SAMPLE}.sam tmp.reverseread1.${SAMPLE}.sam > tmp.samechromosome.exactlytwice.reverseread1.${SAMPLE}.sam
 
-samtools view -f 145 -F 4 filtered.${SORTED_BAMFILE} > tmp.reverseread2.${SAMPLE}.sam
+samtools view -f 145 -F 4 filtered.${SAMPLE}.bam > tmp.reverseread2.${SAMPLE}.sam
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.reverseread2.${SAMPLE}.sam tmp.reverseread2.${SAMPLE}.sam > tmp.samechromosome.exactlytwice.reverseread2.${SAMPLE}.sam
 
-samtools view -f 65 -F 20 filtered.${SORTED_BAMFILE} > tmp.forwardread1.${SAMPLE}.sam
+samtools view -f 65 -F 20 filtered.${SAMPLE}.bam > tmp.forwardread1.${SAMPLE}.sam
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.forwardread1.${SAMPLE}.sam tmp.forwardread1.${SAMPLE}.sam > tmp.samechromosome.exactlytwice.forwardread1.${SAMPLE}.sam
 
-samtools view -f 129 -F 20 filtered.${SORTED_BAMFILE} > tmp.forwardread2.${SAMPLE}.sam
+samtools view -f 129 -F 20 filtered.${SAMPLE}.bam > tmp.forwardread2.${SAMPLE}.sam
 awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.forwardread2.${SAMPLE}.sam tmp.forwardread2.${SAMPLE}.sam > tmp.samechromosome.exactlytwice.forwardread2.${SAMPLE}.sam
 
 cat tmp.samechromosome.exactlytwice.reverseread1.${SAMPLE}.sam \
@@ -37,8 +37,6 @@ bedtools bamtobed -i tmp.outwardfacing.${SAMPLE}.bam | sort -k 4,4 > tmp.outward
 mv tmp.outwardfacing.${SAMPLE}.bed tmp.outwardfacing.${SAMPLE}.bed.old
 awk 'BEGIN {OFS="\t"}; {print $1,$2,$3,substr($4, 1, length($4)-2),$5,$6}' tmp.outwardfacing.${SAMPLE}.bed.old > tmp.outwardfacing.${SAMPLE}.bed.old.trimmed
 awk 'NR==FNR{a[$4]++; next} a[$4]==2' tmp.outwardfacing.${SAMPLE}.bed.old.trimmed tmp.outwardfacing.${SAMPLE}.bed.old.trimmed > outwardfacing.${SAMPLE}.bed
-
-## PROBABLY RENAME SCAFFOLDS OF COVFILE, pre-SRs and OUTWARDFACING HERE ACCORDING TO MAPFILE
 
 awk -v OFS='\t' 'NR==FNR{c[$1]++;next};c[$1]' ${MAPFILE} ${COVFILE} > ${SAMPLE}.genomecoverage.filtered.bed
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
