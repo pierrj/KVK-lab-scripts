@@ -1,16 +1,20 @@
 #library(ggbiplot, lib.loc="/global/home/users/pierrj/R")
 library(ggbiplot)
 library(data.table)
-setwd("C:/globus/merged_tests/")
-input="techrepsmerged_spikenormalized"
+library(vegan)
+setwd("C:/globus/ltr_pca/")
+input="ltrs.libnormalized.techrepsmerged"
 file=paste("tableforPCA_", input, ".txt", sep="")
 mydata <- data.frame(fread(file), row.names=1)
 mydata <- mydata[,apply(mydata, 2, var, na.rm=TRUE) != 0]
 mydata.pca <- prcomp(mydata, center = TRUE, scale. = TRUE)
 
 ##this needs to be set manually##
- mydata.biorep <- c(rep("CT_1", 3), rep("CT_2", 3), rep("CT_3", 3), , rep("IF_1", 3), rep("IF_2", 3), rep("IF_3", 3), rep("PQ_1", 3), rep("PQ_2", 3), rep("PQ_3", 3))
-# mydata.biorep <- c(rep("CT", 3), rep("IF", 3), rep("PQ", 3))
+ #mydata.biorep <- c(rep("CT_1", 3), rep("CT_2", 3), rep("CT_3", 3), , rep("IF_1", 3), rep("IF_2", 3), rep("IF_3", 3), rep("PQ_1", 3), rep("PQ_2", 3), rep("PQ_3", 3))
+ #mydata.biorep <- c(rep("CT_1", 3), rep("CT_2", 3), rep("CT_3", 3), , rep("IF_1", 3), rep("IF_2", 3), rep("IF_3", 3), rep("PQ_1", 3), rep("PQ_2", 3), rep("PQ_3", 3))
+ mydata.biorep <- c(rep("CT", 3), rep("IF", 3), rep("PQ", 3))
+ #mydata.biorep <- c(rep("CT", 3), rep("G3", 3), rep("IF", 3), rep("PQ", 3))
+ 
 
 ##this needs to be set manually##
 
@@ -22,8 +26,15 @@ tiff(paste("PCA_", "PCs", pc_x, pc_y, "_", input, ".tif", sep=""), units="in", w
 ggbiplot(mydata.pca, var.axes = FALSE, choices=pc_choice,  groups=mydata.biorep) + geom_point(aes(colour=mydata.biorep), size=4)
 dev.off()
 
+matrix<-as.matrix(vegdist(mydata, method="euclidian"))
+df <- data.frame(fread("treatments.txt"), row.names=1)
+adonis(matrix ~ treatment, data = df)
 
-string=""
+matrix<-as.matrix(vegdist(mydata, method="euclidian"))
+df <- data.frame(fread("treatments_wG3.txt"), row.names=1)
+adonis(matrix ~ treatment, data = df)
+
+string="G3"
 string2=""
 string3=""
 string4=""
@@ -42,7 +53,7 @@ row.names.remove <- c(paste(string, "_1", sep=""), paste(string, "_2", sep=""), 
 mydata_removed <- mydata[!(row.names(mydata) %in% row.names.remove), ]
 mydata_removed <- mydata_removed[,apply(mydata_removed, 2, var, na.rm=TRUE) != 0]
 mydata_removed.pca <- prcomp(mydata_removed, center = TRUE, scale. = TRUE)
-mydata_removed.pca$rotation[,"PC1"]
+#mydata_removed.pca$rotation[,"PC1"]
 
 ##this needs to be set manually##
 mydata_removed.biorep <- c(rep("Control", 3),rep("Infected", 3), rep("ROS", 3))

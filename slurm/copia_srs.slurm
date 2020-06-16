@@ -18,4 +18,11 @@ awk 'NR==FNR{a[$4]++; next} a[$4]==2' copia.SRs.no_orientation.mergedandpe.${sam
 
 
 
-bedtools intersect -f 1 -wa -a copia.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed -b /global/scratch/users/pierrj/references/GUY11_pacbio_copia_group1_int_locs.bed > copia_int.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed
+bedtools intersect -f 1 -wa -a nonltr.copia.SRs.no_orientation.mergedandpe.G3_1A_bwamem.bed -b /global/scratch/users/pierrj/references/GUY11_pacbio_copia_group1_int_locs.bed > copia_int.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed
+
+
+bedtools intersect -wa -a SRs.no_orientation.mergedandpe.${sample}_bwamem.bed -b /global/scratch/users/pierrj/references/GUY11_pacbio_copia_group1_ltr_locs.bed > copia.anyoverlap.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed
+
+awk 'NR==FNR{a[$4]++; next} a[$4]==2' copia.anyoverlap.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed copia.anyoverlap.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed > exactlytwice.copia.anyoverlap.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed
+
+bedtools intersect -wa -a nonltr.copia.anyoverlap.SRs.no_orientation.mergedandpe.G3_1A_bwamem.bed -b /global/scratch/users/pierrj/references/GUY11_pacbio_copia_group1_int_locs.bed > copia_int.anyoverlap.SRs.no_orientation.mergedandpe.${sample}_bwamem.bed
