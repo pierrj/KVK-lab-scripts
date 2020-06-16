@@ -18,9 +18,15 @@ output_name = str(sys.argv[4])
 
 scaffold_number = int(sys.argv[5])
 
-# length filter junctions to 1 million base pairs
+scaffold_string1 = str(sys.argv[6]) ### string before scaffold numbers
 
-###### I THINK THIS IS WRONG BECAUSE OF SORTED INPUT #####
+scaffold_number_index_start = int(sys.argv[7]) ### python index of start of scaffold numbers
+
+scaffold_number_index_end = int(sys.argv[8]) ### python index of end of scaffold numbers
+
+scaffold_string2 = str(sys.argv[9]) ### string after scaffold numbers
+
+# length filter junctions to 1 million base pairs
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     with open('getsrloc_test', 'w', newline = '') as filtered:
@@ -56,7 +62,6 @@ make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view 
 
 # define bash command for getting bedfile from bam file
 bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
-###### I THINK THIS FIXES THE SORTING ISSUE #####
 
 # run all defined commands
 # shell=true allows running commands as is
@@ -73,16 +78,8 @@ with open('getsrloc_test.bed', newline = '') as file:
     for row1 in file_reader:
         row2 = next(file_reader)
         ecc_loc_raw = sorted([int(row1[1]), int(row1[2]), int(row2[1]), int(row2[2])])
-        ecc_loc = [int(row1[0][10:12]) - 1, ecc_loc_raw[0], ecc_loc_raw[3]]
+        ecc_loc = [int(row1[0][scaffold_number_index_start:scaffold_number_index_end]) - 1, ecc_loc_raw[0], ecc_loc_raw[3]]
         eccloc_list.append(ecc_loc)
-
-#just catching scaffold string for output
-with open('getsrloc_test.bed', newline = '') as scaffold:
-    scaffold_reader = csv.reader(scaffold, delimiter = '\t')
-    for row in scaffold_reader:
-        scaffold_string1 = row[0][:10]
-        scaffold_string2 = row[0][12:]
-        break
 
 # open opposite facing discordant read file
 with open(outwardfacing_read_file, newline = '') as discordant:
@@ -90,7 +87,7 @@ with open(outwardfacing_read_file, newline = '') as discordant:
     # index discordant read file so that confirmeccs() only looks at discordant reads found on the same chromosome
     discordant_indexed = [[] for i in range(scaffold_number)]
     for row in discordant_reader:
-        discordant_indexed[(int(row[0][10:12])-1)].append([int(row[1]), int(row[2])])
+        discordant_indexed[(int(row[0][scaffold_number_index_start:scaffold_number_index_end])-1)].append([int(row[1]), int(row[2])])
 
 # does proximity filtering based off an estimated insert size of 400 + 25%
 def confirmeccs(ecc):
@@ -312,7 +309,7 @@ with open(coverage_file) as coverage:
     # index coverage file so that confidence check only looks at the same chromosome
     coverage_indexed = [[] for i in range(scaffold_number)]
     for row in coverage_reader:
-        coverage_indexed[(int(row[0][10:12])-1)].append([int(row[1]) -1, int(row[2])])
+        coverage_indexed[(int(row[0][scaffold_number_index_start:scaffold_number_index_end])-1)].append([int(row[1]) -1, int(row[2])])
 
 def confidence_check(confirmed):
     for i in range(len(confirmed)):

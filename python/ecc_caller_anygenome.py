@@ -19,8 +19,6 @@ output_name = str(sys.argv[4])
 scaffold_number = int(sys.argv[5])
 
 # length filter junctions to 1 million base pairs
-
-###### I THINK THIS IS WRONG BECAUSE OF SORTED INPUT #####
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     with open('getsrloc_test', 'w', newline = '') as filtered:
@@ -56,7 +54,6 @@ make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view 
 
 # define bash command for getting bedfile from bam file
 bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
-###### I THINK THIS FIXES THE SORTING ISSUE #####
 
 # run all defined commands
 # shell=true allows running commands as is
@@ -73,16 +70,8 @@ with open('getsrloc_test.bed', newline = '') as file:
     for row1 in file_reader:
         row2 = next(file_reader)
         ecc_loc_raw = sorted([int(row1[1]), int(row1[2]), int(row2[1]), int(row2[2])])
-        ecc_loc = [int(row1[0][10:12]) - 1, ecc_loc_raw[0], ecc_loc_raw[3]]
+        ecc_loc = [int(row1[0]) - 1, ecc_loc_raw[0], ecc_loc_raw[3]]
         eccloc_list.append(ecc_loc)
-
-#just catching scaffold string for output
-with open('getsrloc_test.bed', newline = '') as scaffold:
-    scaffold_reader = csv.reader(scaffold, delimiter = '\t')
-    for row in scaffold_reader:
-        scaffold_string1 = row[0][:10]
-        scaffold_string2 = row[0][12:]
-        break
 
 # open opposite facing discordant read file
 with open(outwardfacing_read_file, newline = '') as discordant:
@@ -90,7 +79,7 @@ with open(outwardfacing_read_file, newline = '') as discordant:
     # index discordant read file so that confirmeccs() only looks at discordant reads found on the same chromosome
     discordant_indexed = [[] for i in range(scaffold_number)]
     for row in discordant_reader:
-        discordant_indexed[(int(row[0][10:12])-1)].append([int(row[1]), int(row[2])])
+        discordant_indexed[(int(row[0])-1)].append([int(row[1]), int(row[2])])
 
 # does proximity filtering based off an estimated insert size of 400 + 25%
 def confirmeccs(ecc):
@@ -312,7 +301,7 @@ with open(coverage_file) as coverage:
     # index coverage file so that confidence check only looks at the same chromosome
     coverage_indexed = [[] for i in range(scaffold_number)]
     for row in coverage_reader:
-        coverage_indexed[(int(row[0][10:12])-1)].append([int(row[1]) -1, int(row[2])])
+        coverage_indexed[(int(row[0])-1)].append([int(row[1]) -1, int(row[2])])
 
 def confidence_check(confirmed):
     for i in range(len(confirmed)):
@@ -398,8 +387,7 @@ confidence_flat_merged_list = confidence_check(flat_merged_list)
 with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]+1).zfill(2) + scaffold_string2
-        row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
+        row = [confidence_flat_merged_list[i][0], confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
         w.writerow(row)
 
 # write file with split reads per ecc, with representative ecc in the first column and all split reads in second column
@@ -413,12 +401,11 @@ with open('ecccaller_splitreads.' + output_name + '.tsv', 'w', newline="") as va
 with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        scaffold_string = scaffold_string1 + str(confidence_flat_merged_list[i][0]+1).zfill(2) + scaffold_string2
         if confidence_flat_merged_list[i][5] == 'lowq':
             color = '255,0,0'
         if confidence_flat_merged_list[i][5] == 'conf':
             color = '255,255,0'
         if confidence_flat_merged_list[i][5] == 'hconf':
             color = '0,255,0'
-        row = [scaffold_string, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
+        row = [confidence_flat_merged_list[i][0], confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
         w.writerow(row)
