@@ -1,11 +1,10 @@
 #!/bin/bash
-while getopts m:s:t:c: option
+while getopts m:s:c: option
 do
 case "${option}"
 in
 m) MAPFILE=${OPTARG};;
 s) SAMPLE=${OPTARG};;
-t) THREADS=${OPTARG};;
 c) COVFILE=${OPTARG};;
 esac
 done
