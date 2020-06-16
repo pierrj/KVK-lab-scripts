@@ -48,7 +48,7 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$3=a[$3];}1' tmp.chrom_count_and_names s
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
 sleep 300
-ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome.py samechromosome.exactlytwice.all.mergedandpe.${SAMPLE}_bwamem.renamed.sam outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} ${chrom_count}
+ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome.py samechromosome.exactlytwice.all.mergedandpe.${SAMPLE}_bwamem.renamed.sam outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} ${chrom_count} ${SORTED_BAMFILE}
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count

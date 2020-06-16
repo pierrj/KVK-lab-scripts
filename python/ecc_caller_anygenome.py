@@ -18,6 +18,8 @@ output_name = str(sys.argv[4])
 
 scaffold_number = int(sys.argv[5])
 
+sorted_bam = str(sys.argv[6])
+
 # length filter junctions to 1 million base pairs
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
@@ -50,7 +52,7 @@ exactlytwice_filter = '''awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' ''' + fil
 
 # define bash command for making an actual bam file from the sam files
 # bash -c allows the use of <() here
-make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H mergedandpe.' + output_name + '_bwamem.bam) ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
+make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H ' + sorted_bam + ') ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
 
 # define bash command for getting bedfile from bam file
 bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
