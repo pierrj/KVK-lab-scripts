@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_guy11_test
 
-/global/home/users/pierrj/git/bash/anygenome_coverageplot.sh -g /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_tweaked.fasta \
+/global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_tweaked.fasta \
     -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames \
     -1 /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/CT_1A_R1.fastq -2 /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/CT_1A_R2.fastq \
     -s CT_1A -t 20
