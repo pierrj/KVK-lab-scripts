@@ -104,7 +104,7 @@ def confirmeccs(ecc):
     return False
 
 # open parallelization client
-rc = ipp.Client(profile='default', cluster_id = "slurm-" + os.environ['SLURM_JOBID'])
+rc = ipp.Client(profile='default', cluster_id = "cluster-id-" + output_name)
 dview = rc[:]
 dview.block = True
 lview = rc.load_balanced_view()
