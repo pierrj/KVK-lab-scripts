@@ -51,7 +51,7 @@ ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome.py samechromos
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ecccaller_output.${SAMPLE}.renamed.bed
 awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.confirmed.plusone
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.confirmed.plusone > ${SAMPLE}.confirmedsplitreads.bed
 
