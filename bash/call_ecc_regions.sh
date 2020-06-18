@@ -7,7 +7,7 @@ m) MAPFILE=${OPTARG};;
 s) SAMPLE=${OPTARG};;
 t) THREADS=${OPTARG};;
 c) COVFILE=${OPTARG};;
-b) SORTED_BAMFILE=${OPTARG};;
+b) SORTED_BAMFILE=${OPTARG};; ### THE INDEX FILE HAS TO BE HERE TOO
 esac
 done
 
@@ -87,7 +87,7 @@ for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.renamed.bed
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$3=a[$3];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
 sleep 300
