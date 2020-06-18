@@ -342,7 +342,7 @@ confidence_flat_merged_list = confidence_check(flat_merged_list)
 with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        row = [confidence_flat_merged_list[i][0], confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
+        row = [confidence_flat_merged_list[i][0]+1, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], confidence_flat_merged_list[i][3], confidence_flat_merged_list[i][4],confidence_flat_merged_list[i][5], confidence_flat_merged_list[i][6], confidence_flat_merged_list[i][7]]
         w.writerow(row)
 
 # write file with split reads per ecc, with representative ecc in the first column and all split reads in second column
@@ -362,5 +362,5 @@ with open('ecccaller_output.' + output_name + '.bed', 'w', newline = '') as bed:
             color = '255,255,0'
         if confidence_flat_merged_list[i][5] == 'hconf':
             color = '0,255,0'
-        row = [confidence_flat_merged_list[i][0], confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
+        row = [confidence_flat_merged_list[i][0]+1, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
         w.writerow(row)
