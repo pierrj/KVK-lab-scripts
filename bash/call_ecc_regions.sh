@@ -71,7 +71,7 @@ awk -v OFS='\t' '{
 
 #### MAKE SURE THAT THIS WORKS AHHHHH
 
-awk -v OFS='\t' '$3-$2>1000000' merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.bed
+awk -v OFS='\t' '$3-$2<1000000' merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.bed
 
 #### MAKE SURE THAT THIS WORKS AHHHHH
 
