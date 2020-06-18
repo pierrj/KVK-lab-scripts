@@ -16,7 +16,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_guy
 #    -1 /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/CT_1A_R1.fastq -2 /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/CT_1A_R2.fastq \
 #    -s CT_1A -t 20
 
-/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames -s CT_1A -c CT_1A.genomecoverage.bed
+# /global/home/users/pierrj/git/bash/generate_coverageplot.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames -s CT_1A -c CT_1A.genomecoverage.bed
 
 /global/home/users/pierrj/git/bash/call_ecc_regions_flags_test.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames\
-    -s CT_1A -t 20 -c CT_1A.genomecoverage.bed -b CT_1A.sorted.mergedandpe.bwamem.bam
+    -s CT_1A -t 20 -c CT_1A.genomecoverage.bed -b /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/sorted.mergedandpe.CT_1A_bwamem.bam
