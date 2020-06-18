@@ -10,13 +10,8 @@ esac
 done
 
 awk -v OFS='\t' 'NR==FNR{c[$1]++;next};c[$1]' ${MAPFILE} ${COVFILE} > ${SAMPLE}.genomecoverage.filtered.bed
-chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
-for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
-paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
-
 normalize_factor=$(samtools view -c -F 4 -F 2048 ${SAMPLE}.sorted.mergedandpe.bwamem.bam | awk '{print $1/1000000}' )
-awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2, sum/100/N; sum =0}' ${SAMPLE}.genomecoverage.bed > ${SAMPLE}.genomecoverage.normalized.bed
+awk -v N=$normalize_factor -v OFS='\t' '{sum+=$3} NR%100==0 {print $1, $2, sum/100/N; sum =0}' ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.normalized.bed
 
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
 for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
