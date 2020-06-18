@@ -44,11 +44,10 @@ for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.renamed.bed
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$3=a[$3];}1' tmp.chrom_count_and_names samechromosome.exactlytwice.all.mergedandpe.${SAMPLE}_bwamem.sam > samechromosome.exactlytwice.all.mergedandpe.${SAMPLE}_bwamem.renamed.sam
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
 sleep 300
-ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome.py samechromosome.exactlytwice.all.mergedandpe.${SAMPLE}_bwamem.renamed.sam outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} ${chrom_count} ${SORTED_BAMFILE}
+ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome.py samechromosome.exactlytwice.all.mergedandpe.${SAMPLE}_bwamem.sam outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} ${chrom_count} ${SORTED_BAMFILE}
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count

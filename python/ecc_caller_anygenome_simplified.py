@@ -20,62 +20,12 @@ scaffold_number = int(sys.argv[5])
 
 sorted_bam = str(sys.argv[6])
 
-# length filter junctions to 1 million base pairs
+# open putative ecc list and index to speed up confirming eccs
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
-    with open('getsrloc_test', 'w', newline = '') as filtered:
-        w = csv.writer(filtered, delimiter = '\t')
-        for line1 in file_reader:
-            line2 = next(file_reader)
-            sum = int(line1[3]) - int(line2[3])
-            if abs(sum) <= 1000000:
-                w.writerow(line1)
-                w.writerow(line2)
-
-# set file names and software locations for bash commands
-filename = 'getsrloc_test'
-filtered_filename = 'qualityfiltered.' + filename
-exactlytwice_filename = 'exactlytwice.' + filtered_filename
-actualbam_filename = 'actualbam.' + exactlytwice_filename
-bedfile = filename + '.bed'
-# need to actually point to where these commands are for the bash commands to work
-samtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/samtools/1.8/bin/samtools'
-bedtools = '/global/home/groups/consultsw/sl-7.x86_64/modules/bedtools/2.28.0/bin/bedtools'
-
-# define bash command to filter quality of split reads to have 20 bp or more matches on either side of the junction
-# first if statement here is because gensub returns the original string if it doesn't find any matches
-quality_filter = '''awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' ''' + filename + ''' > ''' + filtered_filename
-
-# define bash command for filter out splitreads that only had one high quality split alignment
-# this is copied from a previous exactly twice filter
-exactlytwice_filter = '''awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' ''' + filtered_filename + ''' ''' + filtered_filename + ''' > ''' + exactlytwice_filename
-
-# define bash command for making an actual bam file from the sam files
-# bash -c allows the use of <() here
-make_bam = 'bash -c \"' + samtools + ' view -b -h <(cat <(' + samtools + ' view -H ' + sorted_bam + ') ' + exactlytwice_filename +') > ' + actualbam_filename + '\"'
-
-# define bash command for getting bedfile from bam file
-bamtobed_sort = bedtools + ' bamtobed -i ' + actualbam_filename + ' | sort -k 4,4 -k 2,2 > ' + bedfile
-
-rename_bed = '''awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names getsrloc_test.bed > getsrloc_test.renamed.bed'''
-
-# run all defined commands
-# shell=true allows running commands as is
-subprocess.run(quality_filter, shell= True)
-subprocess.run(exactlytwice_filter, shell= True)
-subprocess.run(make_bam, shell= True)
-subprocess.run(bamtobed_sort, shell= True)
-subprocess.run(rename_bed, shell=True)
-
-# merge split read locations resulting in a putative ecc location
-# open putative ecc list and index to speed up confirming eccs
-with open('getsrloc_test.renamed.bed', newline = '') as file:
-    file_reader = csv.reader(file, delimiter = '\t')
     eccloc_list = []
-    for row1 in file_reader:
-        row2 = next(file_reader)
-        ecc_loc_raw = sorted([int(row1[1]), int(row1[2]), int(row2[1]), int(row2[2])])
-        ecc_loc = [int(row1[0]) - 1, ecc_loc_raw[0], ecc_loc_raw[3]]
+    for row in file_reader:
+        ecc_loc = [int(row[0]) - 1, row[1], row[2]]
         eccloc_list.append(ecc_loc)
 
 # open opposite facing discordant read file
