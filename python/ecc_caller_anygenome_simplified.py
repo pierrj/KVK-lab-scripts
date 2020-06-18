@@ -25,7 +25,7 @@ with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     eccloc_list = []
     for row in file_reader:
-        ecc_loc = [int(row[0]) - 1, row[1], row[2]]
+        ecc_loc = [int(row[0]) - 1, int(row[1]), int(row[2])]
         eccloc_list.append(ecc_loc)
 
 # open opposite facing discordant read file
