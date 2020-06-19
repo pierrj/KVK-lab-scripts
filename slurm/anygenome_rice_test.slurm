@@ -17,7 +17,7 @@ read_path="/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/"
 mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 
 /global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome} \
-   -1 ${read_path}${sample}/${sample}_R1.fastq -2 ${read_path}${sample}/${sample}_R1.fastq \
+   -1 ${read_path}${sample}/${sample}_R1.fastq -2 ${read_path}${sample}/${sample}_R2.fastq \
    -s ${sample} -t ${SLURM_NTASKS}
 
 /global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
