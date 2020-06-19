@@ -15,43 +15,91 @@ samtools view -b -q 1 ${SORTED_BAMFILE} $(cat ${MAPFILE} | tr "\n" " ") > filter
 
 samtools view -f 81 -F 4 filtered.sorted.${SAMPLE}.bam > tmp.reverseread1.${SAMPLE}.sam
 splitread_file="reverseread1.${SAMPLE}.sam"
-awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
-awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} | sort -k1,1 -k18,18n > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{
+    prev=$0; f4=$4; f1=$1
+    getline 
+    if ($1 == f1 && f4 > $4) {
+        print prev
+        print $0
+    }
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
 samtools view -f 145 -F 4 filtered.sorted.${SAMPLE}.bam > tmp.reverseread2.${SAMPLE}.sam
 splitread_file="reverseread2.${SAMPLE}.sam"
-awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
-awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} | sort -k1,1 -k18,18n > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{
+    prev=$0; f4=$4; f1=$1
+    getline 
+    if ($1 == f1 && f4 > $4) {
+        print prev
+        print $0
+    }
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
 samtools view -f 65 -F 20 filtered.sorted.${SAMPLE}.bam > tmp.forwardread1.${SAMPLE}.sam
 splitread_file="forwardread1.${SAMPLE}.sam"
-awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
-awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} | sort -k1,1 -k18,18n > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{
+    prev=$0; f4=$4; f1=$1
+    getline 
+    if ($1 == f1 && f4 > $4) {
+        print prev
+        print $0
+    }
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
 samtools view -f 129 -F 20 filtered.sorted.${SAMPLE}.bam > tmp.forwardread2.${SAMPLE}.sam
 splitread_file="forwardread2.${SAMPLE}.sam"
-awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
-awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} | sort -k1,1 -k18,18n > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{
+    prev=$0; f4=$4; f1=$1
+    getline 
+    if ($1 == f1 && f4 > $4) {
+        print prev
+        print $0
+    }
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
 samtools view -f 16 -F 5 filtered.sorted.${SAMPLE}.bam > tmp.reversemerged.${SAMPLE}.sam
 splitread_file="reversemerged.${SAMPLE}.sam"
-awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
-awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} | sort -k1,1 -k18,18n > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{
+    prev=$0; f4=$4; f1=$1
+    getline 
+    if ($1 == f1 && f4 > $4) {
+        print prev
+        print $0
+    }
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
 samtools view -F 21 filtered.sorted.${SAMPLE}.bam > tmp.forwardmerged.${SAMPLE}.sam
 splitread_file="forwardmerged.${SAMPLE}.sam"
-awk '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if((a !~ /[DMIHS]/ && int(a) > 19 ) || (b !~ /[DMIHS]/ && int(b) > 19)) print $0}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
-awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
+awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_file} tmp.qualityfiltered.${splitread_file} | sort -k1,1 -k18,18n > tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+awk -v OFS='\t' '{
+    prev=$0; f4=$4; f1=$1
+    getline 
+    if ($1 == f1 && f4 > $4) {
+        print prev
+        print $0
+    }
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
-cat tmp.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMPLE}.sam \
-    tmp.samechromosome.exactlytwice.qualityfiltered.reverseread2.${SAMPLE}.sam \
-    tmp.samechromosome.exactlytwice.qualityfiltered.forwardread1.${SAMPLE}.sam \
-    tmp.samechromosome.exactlytwice.qualityfiltered.forwardread2.${SAMPLE}.sam \
-    tmp.samechromosome.exactlytwice.qualityfiltered.reversemerged.${SAMPLE}.sam \
-    tmp.samechromosome.exactlytwice.qualityfiltered.forwardmerged.${SAMPLE}.sam > tmp.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
+cat tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMPLE}.sam \
+    tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread2.${SAMPLE}.sam \
+    tmp.oriented.samechromosome.exactlytwice.qualityfiltered.forwardread1.${SAMPLE}.sam \
+    tmp.oriented.samechromosome.exactlytwice.qualityfiltered.forwardread2.${SAMPLE}.sam \
+    tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reversemerged.${SAMPLE}.sam \
+    tmp.oriented.samechromosome.exactlytwice.qualityfiltered.forwardmerged.${SAMPLE}.sam > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
-samtools view -b -h <(cat <(samtools view -H ${SORTED_BAMFILE}) tmp.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam) > tmp.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam
-bedtools bamtobed -i tmp.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam | sort -k4,4 -k2,2n > splitreads.${SAMPLE}.bed
+samtools view -b -h <(cat <(samtools view -H ${SORTED_BAMFILE}) tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam) > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam
+bedtools bamtobed -i tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam | sort -k4,4 -k2,2n > splitreads.${SAMPLE}.bed
 
 awk -v OFS='\t' '{
     prev=$0; f2=$2; f4=$4
