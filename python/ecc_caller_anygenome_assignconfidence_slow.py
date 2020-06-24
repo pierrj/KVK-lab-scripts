@@ -297,6 +297,9 @@ dview.block = True
 lview = rc.load_balanced_view()
 lview.block = True
 
+dview.execute('import sqlite3')
+dview.execute('import statistics')
+
 confidence_flat_merged_list = list(lview.map(confidence_check, flat_merged_list))
 
 with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as bed:
