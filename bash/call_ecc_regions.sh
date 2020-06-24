@@ -37,7 +37,7 @@ awk -v OFS='\t' '{
         print prev
         print $0
     }
-}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
+}' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} | awk -v OFS='\t' '{$NF=""; print $0}' | sed 's/[ \t]\+$//' > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
 samtools view -f 65 -F 20 filtered.sorted.${SAMPLE}.bam > tmp.forwardread1.${SAMPLE}.sam
 splitread_file="forwardread1.${SAMPLE}.sam"
@@ -46,7 +46,7 @@ awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_fi
 awk -v OFS='\t' '{
     prev=$0; f4=$4; f1=$1
     getline 
-    if ($1 == f1 && f4 < $4) {
+    if ($1 == f1 && f4 > $4) {
         print prev
         print $0
     }
@@ -59,7 +59,7 @@ awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_fi
 awk -v OFS='\t' '{
     prev=$0; f4=$4; f1=$1
     getline 
-    if ($1 == f1 && f4 < $4) {
+    if ($1 == f1 && f4 > $4) {
         print prev
         print $0
     }
@@ -85,7 +85,7 @@ awk 'NR==FNR{a[$1, $3]++; next} a[$1, $3]==2' tmp.qualityfiltered.${splitread_fi
 awk -v OFS='\t' '{
     prev=$0; f4=$4; f1=$1
     getline 
-    if ($1 == f1 && f4 < $4) {
+    if ($1 == f1 && f4 > $4) {
         print prev
         print $0
     }
