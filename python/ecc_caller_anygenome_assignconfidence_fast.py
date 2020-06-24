@@ -1,6 +1,8 @@
 import csv
 import statistics
 import collections
+import sys
+
 
 coverage_file = str(sys.argv[1])
 

@@ -1,24 +1,14 @@
 import csv
 import ipyparallel as ipp
-from itertools import groupby
-from itertools import compress
-import subprocess
-import statistics
-import collections
 import sys
-import os
 
 split_read_file = str(sys.argv[1])
 
 outwardfacing_read_file = str(sys.argv[2])
 
-coverage_file = str(sys.argv[3])
+output_name = str(sys.argv[3])
 
-output_name = str(sys.argv[4])
-
-scaffold_number = int(sys.argv[5])
-
-sorted_bam = str(sys.argv[6])
+scaffold_number = int(sys.argv[4])
 
 # open putative ecc list and index to speed up confirming eccs
 with open(split_read_file, newline = '') as file:

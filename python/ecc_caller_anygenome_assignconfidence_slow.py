@@ -3,6 +3,7 @@ import ipyparallel as ipp
 import statistics
 import collections
 import sqlite3
+import sys
 
 coverage_file = str(sys.argv[1])
 
