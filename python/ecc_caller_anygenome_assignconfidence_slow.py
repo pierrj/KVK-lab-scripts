@@ -194,8 +194,6 @@ with open(coverage_file) as coverage:
             c = conn.cursor()
             c.execute('''Drop TABLE if exists server''')
             c.execute('''Create TABLE if not exists server(base, count)''')
-            print('started while loop')
-            print(row)
             to_add = []
             while int(row[0]) == i+1:
                 to_add.append((int(row[1]), int(row[2])))
@@ -204,18 +202,8 @@ with open(coverage_file) as coverage:
                 except StopIteration:
                     break
             c.executemany("INSERT INTO server(base, count) VALUES(?,?)", to_add)
-            print('ended while loop')
-            print(row)
             conn.commit()
             conn.close()
-
-def grabcoverage_info(region):
-    conn = sqlite3.connect(r"scaffold"+str(region[0]+1)+"_sql.db")
-    c = conn.cursor()
-    c.execute("SELECT * FROM server WHERE base BETWEEN "+str(region[1])+" AND " +str(region[2]))
-    target_list = c.fetchall()
-    conn.close()
-    return target_list
 
 def confidence_check(ecc):
     # get coverage of confirmed ecc region
@@ -226,7 +214,11 @@ def confidence_check(ecc):
         region = [ecc[0], beforestart, afterstart]
     else:
         region = [ecc[0], ecc[1], afterstart]
-    region_all = grabcoverage_info(region)
+    conn = sqlite3.connect(r"scaffold"+str(region[0]+1)+"_sql.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM server WHERE base BETWEEN "+str(region[1])+" AND " +str(region[2]))
+    region_all = c.fetchall()
+    conn.close()
     region_cov = [region_all[k][1] for k in range(len(region_all))]
     if beforestart > 0:
         ecc_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
