@@ -253,91 +253,113 @@ flat_merged_list = [item for sublist in merged_list for item in sublist]
 
 with open(coverage_file) as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
-    # index coverage file so that confidence check only looks at the same chromosome
-    coverage_indexed = [[] for i in range(scaffold_number)]
     for row in coverage_reader:
-        coverage_indexed[(int(row[0])-1)].append([int(row[1]), int(row[2])])
+        for i in range(scaffold_number):
+            conn = sqlite3.connect(r"scaffold"+str(i+1)+"_sql.db")
+            c = conn.cursor()
+            c.execute('''Drop TABLE if exists server''')
+            c.execute('''Create TABLE if not exists server(base, count)''')
+            to_add = []
+            while int(row[0]) == i+1:
+                to_add.append((int(row[1]), int(row[2])))
+                try:
+                    row = next(coverage_reader)
+                except StopIteration:
+                    break
+            c.executemany("INSERT INTO server(base, count) VALUES(?,?)", to_add)
+            conn.commit()
+            conn.close()
 
-def confidence_check(confirmed):
-    for i in range(len(confirmed)):
-        ecc = confirmed[i]
-        # get coverage of confirmed ecc region
-        region_len = ecc[2] - ecc[1]
-        region = coverage_indexed[ecc[0]][ecc[1]:(ecc[2]+1)]
-        region_cov = [region[k][1] for k in range(len(region))]
-        mean_region = round(statistics.mean(region_cov), 2)
-        # define regions before and after confirmed ecc that are of the same length as the ecc
-        beforestart = ecc[1] - 1 - region_len
-        afterstart = ecc[2] + 1
-        region_before = coverage_indexed[ecc[0]][beforestart:beforestart + 1 + region_len]
-        region_before_cov = [region_before[j][1] for j in range(len(region_before))]
-        region_after = coverage_indexed[ecc[0]][afterstart:afterstart + 1 + region_len]
-        region_after_cov = [region_after[g][1] for g in range(len(region_after))]
-        # check to see if the before and after regions go beyond the length of the chromosome if so dont calculate mean coverage for that region
-        if beforestart > 0:
-            mean_before = round(statistics.mean(region_before_cov), 2)
-        else:
-            mean_before = 'N/A'
-        if afterstart + region_len <= coverage_indexed[ecc[0]][-1][0]:
-            mean_after = round(statistics.mean(region_after_cov), 2)
-        else:
-            mean_after = 'N/A'
-        # write coverage string containing the means of the regions before, within, and after the confirmed ecc
-        coverage_string = str(mean_before)+';'+str(mean_region)+';'+str(mean_after)
-        # if less than 95% of the ecc region is covered than the ecc is low confidence
-        if region_cov.count(0) / len(region_cov) > 0.05:
-            ecc.append('lowq')
-            ecc.append('incomplete_coverage')
-            ecc.append(coverage_string)
-            continue
-        if ecc[3] == 1:
-            ecc.append('lowq')
-            ecc.append('only_one_splitread')
-            ecc.append(coverage_string)
-            continue
-        # if the ecc before or after regions fall beyond the borders of the chromosome than the ecc is medium confidence
-        if beforestart <= 0 and ecc[3] < 3:
-            ecc.append('conf')
-            ecc.append('too_close_to_start')
-            ecc.append(coverage_string)
-            continue
-        if afterstart + region_len > coverage_indexed[ecc[0]][-1][0] and ecc[3] < 3:
-            ecc.append('conf')
-            ecc.append('too_close_to_end')
-            ecc.append(coverage_string)
-            continue
-        if beforestart <= 0 and ecc[3] >= 3:
-            ecc.append('hconf')
-            ecc.append('splitreads')
-            ecc.append(coverage_string)
-            continue
-        if afterstart + region_len > coverage_indexed[ecc[0]][-1][0] and ecc[3] >= 3:
-            ecc.append('hconf')
-            ecc.append('splitreads')
-            ecc.append(coverage_string)
-            continue
-        # if the mean coverage of the eccDNA is twice the size of the before and after regions OR the eccDNA is supported by three or more splitreads then eccDNA is high confidence, otherwise is it medium confidence
-        if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] < 3:
-            ecc.append('hconf')
-            ecc.append('coverage')
-            ecc.append(coverage_string)
-            continue
-        if (mean_region < (2*mean_before) or mean_region < (2*mean_after)) and ecc[3] >= 3:
-            ecc.append('hconf')
-            ecc.append('splitreads')
-            ecc.append(coverage_string)
-            continue
-        if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] >= 3:
-            ecc.append('hconf')
-            ecc.append('splitreads_and_coverage')
-            ecc.append(coverage_string)
-        else:
-            ecc.append('conf')
-            ecc.append('coverage_and_splitreads_too_low')
-            ecc.append(coverage_string)
-    return confirmed
+def confidence_check(ecc):
+    # get coverage of confirmed ecc region
+    region_len = ecc[2] - ecc[1]
+    beforestart = ecc[1] - region_len
+    afterstart =  ecc[2] + 2 + region_len
+    if beforestart > 0:
+        region = [ecc[0], beforestart, afterstart]
+    else:
+        region = [ecc[0], ecc[1], afterstart]
+    conn = sqlite3.connect(r"scaffold"+str(region[0]+1)+"_sql.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM server WHERE base BETWEEN "+str(region[1])+" AND " +str(region[2]))
+    region_all = c.fetchall()
+    conn.close()
+    region_cov = [region_all[k][1] for k in range(len(region_all))]
+    if beforestart > 0:
+        ecc_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
+        before_region_cov = region_cov[0:region_len+1]
+        after_region_cov = region_cov[(2 * region_len)+2:]
+    else:
+        ecc_region_cov = region_cov[0:region_len+1]
+        after_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
+    mean_region = round(statistics.mean(ecc_region_cov), 2)
+    if beforestart > 0:
+        mean_before = round(statistics.mean(before_region_cov), 2)
+    else:
+        mean_before = 'N/A'
+    if len(after_region_cov) == region_len + 1:
+        mean_after = round(statistics.mean(after_region_cov), 2)
+    else:
+        mean_after = 'N/A'
+    # write coverage string containing the means of the regions before, within, and after the confirmed ecc
+    coverage_string = str(mean_before)+';'+str(mean_region)+';'+str(mean_after)
+    # if less than 95% of the ecc region is covered than the ecc is low confidence
+    if ecc_region_cov.count(0) / len(ecc_region_cov) > 0.05:
+        ecc.append('lowq')
+        ecc.append('incomplete_coverage')
+        ecc.append(coverage_string)
+        return ecc
+    if ecc[3] == 1:
+        ecc.append('lowq')
+        ecc.append('only_one_splitread')
+        ecc.append(coverage_string)
+        return ecc
+    # if the ecc before or after regions fall beyond the borders of the chromosome than the ecc is medium confidence
+    if beforestart <= 0 and ecc[3] < 3:
+        ecc.append('conf')
+        ecc.append('too_close_to_start')
+        ecc.append(coverage_string)
+        return ecc
+    if len(after_region_cov) != region_len + 1 and ecc[3] <3:
+        ecc.append('conf')
+        ecc.append('too_close_to_end')
+        ecc.append(coverage_string)
+        return ecc
+    if beforestart <= 0 and ecc[3] >= 3:
+        ecc.append('hconf')
+        ecc.append('splitreads')
+        ecc.append(coverage_string)
+        return ecc
+    if len(after_region_cov) != region_len + 1 and ecc[3] >= 3:
+        ecc.append('hconf')
+        ecc.append('splitreads')
+        ecc.append(coverage_string)
+        return ecc
+    # if the mean coverage of the eccDNA is twice the size of the before and after regions OR the eccDNA is supported by three or more splitreads then eccDNA is high confidence, otherwise is it medium confidence
+    if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] < 3:
+        ecc.append('hconf')
+        ecc.append('coverage')
+        ecc.append(coverage_string)
+        return ecc
+    if (mean_region < (2*mean_before) or mean_region < (2*mean_after)) and ecc[3] >= 3:
+        ecc.append('hconf')
+        ecc.append('splitreads')
+        ecc.append(coverage_string)
+        return ecc
+    if mean_region >= (2*mean_before) and mean_region >= (2*mean_after) and ecc[3] >= 3:
+        ecc.append('hconf')
+        ecc.append('splitreads_and_coverage')
+        ecc.append(coverage_string)
+    else:
+        ecc.append('conf')
+        ecc.append('coverage_and_splitreads_too_low')
+        ecc.append(coverage_string)
+    return ecc
 
-confidence_flat_merged_list = confidence_check(flat_merged_list)
+dview.execute('import sqlite3')
+dview.execute('import statistics')
+
+confidence_flat_merged_list = list(lview.map(confidence_check, flat_merged_list))
 
 with open('ecccaller_output.' + output_name + '.details.tsv', 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
