@@ -16,11 +16,11 @@ genome="/global/scratch/users/pierrj/references/guy11bao_7015mito_spikeins_tweak
 read_path="/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/"
 mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 
-/global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome} \
-   -1 ${read_path}${sample}/${sample}_R1.fastq -2 ${read_path}${sample}/${sample}_R2.fastq \
-   -s ${sample} -t ${SLURM_NTASKS}
+#/global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome} \
+#  -1 ${read_path}${sample}/${sample}_R1.fastq -2 ${read_path}${sample}/${sample}_R2.fastq \
+#  -s ${sample} -t ${SLURM_NTASKS}
 
-/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
+#/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed -b ${sample}.sorted.mergedandpe.bwamem.bam
