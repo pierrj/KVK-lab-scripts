@@ -25,9 +25,9 @@ mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 echo "yo"
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t 10 -b ${sample}.sorted.mergedandpe.bwamem.bam
+    -s ${sample} -t 4 -b ${sample}.sorted.mergedandpe.bwamem.bam
 
 echo "whatsup"
 
-/global/home/users/pierrj/git/bash/asign_confidence.sh -m ${mapfile} \
+/global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
