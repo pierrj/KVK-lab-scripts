@@ -10,6 +10,8 @@ output_name = str(sys.argv[3])
 
 scaffold_number = int(sys.argv[4])
 
+print('successfully load modules')
+
 # open putative ecc list and index to speed up confirming eccs
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
@@ -17,6 +19,8 @@ with open(split_read_file, newline = '') as file:
     for row in file_reader:
         ecc_loc = [int(row[0]) - 1, int(row[1]), int(row[2])]
         eccloc_list.append(ecc_loc)
+
+print('successfully opened split read file')
 
 # open opposite facing discordant read file
 with open(outwardfacing_read_file, newline = '') as discordant:
