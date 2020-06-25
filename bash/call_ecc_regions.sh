@@ -116,7 +116,7 @@ done
 # awk 'BEGIN {OFS="\t"}; {print $1,$2,$3,substr($4, 1, length($4)-2),$5,$6}' tmp.outwardfacing.${SAMPLE}.bed.old > tmp.outwardfacing.${SAMPLE}.bed.old.trimmed
 # awk 'NR==FNR{a[$4]++; next} a[$4]==2' tmp.outwardfacing.${SAMPLE}.bed.old.trimmed tmp.outwardfacing.${SAMPLE}.bed.old.trimmed > outwardfacing.${SAMPLE}.bed
 
-# chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
+chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
 # for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 # paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 # awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.renamed.bed
@@ -124,7 +124,7 @@ done
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
 sleep 300
-ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count} ${SORTED_BAMFILE}
+ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count}
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
