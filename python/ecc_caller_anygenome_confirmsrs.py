@@ -26,6 +26,8 @@ with open(outwardfacing_read_file, newline = '') as discordant:
     for row in discordant_reader:
         discordant_indexed[(int(row[0])-1)].append([int(row[1]), int(row[2])])
 
+print('successfully opened files')
+
 # does proximity filtering based off an estimated insert size of 400 + 25%
 def confirmeccs(ecc):
     for i in range(0, len(discordant_indexed[ecc[0]]), 2):
@@ -57,9 +59,13 @@ lview.block = True
 mydict = dict(discordant_indexed = discordant_indexed)
 dview.push(mydict)
 
+print('successfully pushed')
+
 # get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
 yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
 confirmedeccs = list(compress(eccloc_list, yesornoeccs))
+
+print('succesfully wrote')
 
 # write confirmed eccs to file
 with open('parallel.confirmed', 'w', newline = '') as confirmed:
