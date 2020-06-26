@@ -59,3 +59,5 @@ lview.block = True
 
 mydict = dict(discordant_indexed = discordant_indexed)
 dview.push(mydict)
+
+print('successfully pushed')
