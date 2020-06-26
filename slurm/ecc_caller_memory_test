@@ -10,15 +10,10 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_rice_test
-sample="RC_1A"
-genome="/global/scratch/users/pierrj/references/guy11bao_7015mito_spikeins_tweaked_osativa_worganelles_bwa"
-read_path="/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/"
-mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
-
-SAMPLE=RC_1A
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_simplified_python_test
+sample="CT_1A"
 
 ipcluster start -n 2 --cluster-id="cluster-id-memory-test" &
 sleep 300
-ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 57
+ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 56
 ipcluster stop --cluster-id="cluster-id-memory-test"
