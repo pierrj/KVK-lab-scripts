@@ -11,7 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_simplified_python_test
-sample="CT_1A"
+SAMPLE="CT_1A"
 
 ipcluster start -n 2 --cluster-id="cluster-id-memory-test" &
 sleep 300
