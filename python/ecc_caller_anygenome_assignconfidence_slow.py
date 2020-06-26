@@ -196,7 +196,7 @@ with open(coverage_file) as coverage:
             c.execute('''Create TABLE if not exists server(base, count)''')
             to_add = []
             while int(row[0]) == i+1:
-                to_add.append(int(float(row[1])), int(float(row[2])))
+                to_add.append((int(float(row[1])), int(float(row[2]))))
                 try:
                     row = next(coverage_reader)
                 except StopIteration:
