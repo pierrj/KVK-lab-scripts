@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=rice_pipelinetest_memory
+#SBATCH --job-name=test_memory
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
@@ -18,7 +18,7 @@ mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 
 SAMPLE=RC_1A
 
-ipcluster start -n 1 --cluster-id="cluster-id-memory-test" &
+ipcluster start -n 2 --cluster-id="cluster-id-memory-test" &
 sleep 300
 ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 57
 ipcluster stop --cluster-id="cluster-id-memory-test"
