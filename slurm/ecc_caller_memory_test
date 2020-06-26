@@ -16,6 +16,6 @@ genome="/global/scratch/users/pierrj/references/guy11bao_7015mito_spikeins_tweak
 read_path="/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/"
 mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 
-SAMPLE=CT_1A
+SAMPLE=RC_1A
 
 python /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 57
