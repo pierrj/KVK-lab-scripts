@@ -61,3 +61,10 @@ mydict = dict(discordant_indexed = discordant_indexed)
 dview.push(mydict)
 
 print('successfully pushed')
+
+# get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
+yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
+
+print('succesfully confirmed')
+
+# confirmedeccs = list(compress(eccloc_list, yesornoeccs))
