@@ -53,7 +53,7 @@ def confirmeccs(ecc):
     return False
 
 # open parallelization client
-rc = ipp.Client(profile='default', cluster_id = "cluster-id-" + output_name)
+rc = ipp.Client(profile='default', cluster_id = "cluster-id-memory-test")
 dview = rc[:]
 dview.block = True
 lview = rc.load_balanced_view()
