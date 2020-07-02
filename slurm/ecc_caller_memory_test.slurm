@@ -13,7 +13,7 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_simplified_python_test
 SAMPLE="CT_1A"
 
-ipcluster start -n 2 --cluster-id="cluster-id-memory-test" &
+ipcluster start -n 2 --cluster-id="cluster-id-memory-test" --profile=pierrj &
 sleep 300
 ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 56
 ipcluster stop --cluster-id="cluster-id-memory-test"
