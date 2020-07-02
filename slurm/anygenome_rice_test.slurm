@@ -25,7 +25,7 @@ mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 echo "yo"
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t 4 -b ${sample}.sorted.mergedandpe.bwamem.bam
+    -s ${sample} -t ${SLURM_NTASKS} -b ${sample}.sorted.mergedandpe.bwamem.bam
 
 echo "whatsup"
 
