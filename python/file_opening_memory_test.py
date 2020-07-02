@@ -51,7 +51,7 @@ def confirmeccs(ecc):
                 return True
     return False
 
-rc = ipp.Client(profile='default', cluster_id = "cluster-id-memory-test")
+rc = ipp.Client(profile='pierrj', cluster_id = "cluster-id-memory-test")
 dview = rc[:]
 dview.block = True
 lview = rc.load_balanced_view()

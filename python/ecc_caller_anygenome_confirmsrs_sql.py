@@ -11,8 +11,6 @@ output_name = str(sys.argv[3])
 
 scaffold_number = int(sys.argv[4])
 
-print('successfully load modules')
-
 # open putative ecc list and index to speed up confirming eccs
 with open(split_read_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
@@ -21,38 +19,25 @@ with open(split_read_file, newline = '') as file:
         ecc_loc = [int(row[0]) - 1, int(row[1]), int(row[2])]
         eccloc_list.append(ecc_loc)
 
-print('successfully opened split read file')
-
-# open opposite facing discordant read file
-with open(outwardfacing_read_file, newline = '') as discordant:
+# open opposite facing discordant read file as SQL databases
+with open(outwardfacing_read_file) as discordant:
     discordant_reader = csv.reader(discordant, delimiter = '\t')
-    # index discordant read file so that confirmeccs() only looks at discordant reads found on the same chromosome
-    discordant_indexed = [[] for i in range(scaffold_number)]
     for row in discordant_reader:
-        discordant_indexed[(int(row[0])-1)].append([int(row[1]), int(row[2])])
-
-##### OPEN AS SQL DATABASES HERE ##### 
-
-with open(coverage_file) as coverage:
-    coverage_reader = csv.reader(coverage, delimiter = '\t')
-    for row in coverage_reader:
         for i in range(scaffold_number):
             conn = sqlite3.connect(r"scaffold"+str(i+1)+"_sql.db")
             c = conn.cursor()
             c.execute('''Drop TABLE if exists server''')
-            c.execute('''Create TABLE if not exists server(base, count)''')
+            c.execute('''Create TABLE if not exists server(start, end, name)''')
             to_add = []
             while int(row[0]) == i+1:
-                to_add.append((int(float(row[1])), int(float(row[2]))))
+                to_add.append((int(float(row[1])), int(float(row[2])), str(row[3]))) ### read names here too
                 try:
-                    row = next(coverage_reader)
+                    row = next(discordant_reader)
                 except StopIteration:
                     break
-            c.executemany("INSERT INTO server(base, count) VALUES(?,?)", to_add)
+            c.executemany("INSERT INTO server(start, end, name) VALUES(?,?,?)", to_add)
             conn.commit()
             conn.close()
-
-print('successfully opened files')
 
 # does proximity filtering based off an estimated insert size of 400 + 25%
 def confirmeccs(ecc):
@@ -76,6 +61,21 @@ def confirmeccs(ecc):
 
 
 ##### DEFINE CONFIRM ECCS SQL HERE ##### 
+
+def confidence_check(ecc):
+    # get coverage of confirmed ecc region
+    region_len = ecc[2] - ecc[1]
+    beforestart = ecc[1] - region_len
+    afterstart =  ecc[2] + 2 + region_len
+    if beforestart > 0:
+        region = [ecc[0], beforestart, afterstart]
+    else:
+        region = [ecc[0], ecc[1], afterstart]
+    conn = sqlite3.connect(r"scaffold"+str(region[0]+1)+"_sql.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM server WHERE start >= "+str(ecc[1])+" AND start <= " +str(ecc[2])+ " AND end >= "+str(ecc[1])+" end <= " + str(ecc[2]) )
+    potential_opposite_reads = c.fetchall()
+    conn.close()
 
 
 # open parallelization client
