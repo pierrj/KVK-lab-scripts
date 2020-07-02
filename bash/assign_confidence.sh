@@ -17,7 +17,7 @@ for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
 
-ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
+ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" --profile=pierrj &
 sleep 300
 ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_assignconfidence_slow.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} ${chrom_count} ${SORTED_BAMFILE}
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"

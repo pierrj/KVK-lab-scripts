@@ -122,7 +122,7 @@ paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
 
-ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
+ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" --profile=pierrj &
 sleep 300
 ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count}
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
