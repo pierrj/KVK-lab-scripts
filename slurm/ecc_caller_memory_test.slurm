@@ -10,11 +10,11 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_rice_test
-SAMPLE="RC_1A"
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_simplified_python_test
+SAMPLE="CT_1A"
 THREADS="4"
 
-ipcontroller --profile=pierrj --nodb --cluster-id='cluster-id-memory-test' &
+ipcontroller --profile=pierrj --mongodb --cluster-id='cluster-id-memory-test' &
 sleep 60
 for (( i = 0 ; i < ${THREADS}; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-memory-test' & done
 sleep 60
