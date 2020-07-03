@@ -18,7 +18,7 @@ ipcontroller --profile=pierrj --nodb --cluster-id='cluster-id-memory-test' &
 sleep 60
 for (( i = 0 ; i < ${THREADS}; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-memory-test' & done
 sleep 60
-ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 56
+ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 57
 ipcluster stop --cluster-id="cluster-id-memory-test" --profile=pierrj
 
 
