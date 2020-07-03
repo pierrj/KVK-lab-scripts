@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=test_memory
 #SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=24
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -12,9 +12,12 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_simplified_python_test
 SAMPLE="CT_1A"
+THREADS="24"
 
-ipcluster start -n 2 --cluster-id="cluster-id-memory-test" --profile=pierrj &
-sleep 300
+ipcontroller --profile=pierrj --nodb --cluster-id='cluster-id-memory-test' &
+
+for (( i = 0 ; i < ${THREADS}; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-memory-test' & done
+
 sleep 300
 ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 56
 ipcluster stop --cluster-id="cluster-id-memory-test" --profile=pierrj
