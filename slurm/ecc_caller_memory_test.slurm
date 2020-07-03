@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_rice_test
 SAMPLE="RC_1A"
-THREADS="24"
+THREADS="4"
 
 ipcontroller --profile=pierrj --nodb --cluster-id='cluster-id-memory-test' &
 sleep 60
