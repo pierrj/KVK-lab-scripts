@@ -23,6 +23,6 @@ THREADS="4"
 
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-memory-test" --profile=pierrj &
-sleep 300
+sleep 60
 ipython /global/home/users/pierrj/git/python/file_opening_memory_test.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} 56
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}" --profile=pierrj
