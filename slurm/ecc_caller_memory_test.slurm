@@ -14,7 +14,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_sim
 SAMPLE="CT_1A"
 THREADS="4"
 
-ipcontroller --profile=pierrj --cluster-id='cluster-id-memory-test' &
+ipcontroller --profile=pierrj  --cluster-id='cluster-id-memory-test' &
 sleep 60
 for (( i = 0 ; i < ${THREADS}; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-memory-test' & done
 sleep 60
