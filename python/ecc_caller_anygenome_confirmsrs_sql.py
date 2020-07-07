@@ -79,7 +79,7 @@ dview.block = True
 lview = rc.load_balanced_view()
 lview.block = True
 
-# give discordant_indexed to all engines
+dview.execute('from collections import Counter')
 
 # get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
 yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
