@@ -16,7 +16,7 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sql_confidence/slow
 
 THREADS='20'
-SAMPLE='CT_1A'
+SAMPLE='CT_1A_test'
 chrom_count='56'
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
