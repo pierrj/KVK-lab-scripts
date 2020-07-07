@@ -2,6 +2,8 @@ import csv
 import ipyparallel as ipp
 import sys
 import sqlite3
+from collections import Counter
+from itertools import compress
 
 split_read_file = str(sys.argv[1])
 
@@ -40,11 +42,24 @@ with open(outwardfacing_read_file) as discordant:
             conn.close()
 
 # does proximity filtering based off an estimated insert size of 400 + 25%
+
 def confirmeccs(ecc):
-    for i in range(0, len(discordant_indexed[ecc[0]]), 2):
-        reada = discordant_indexed[ecc[0]][i]
-        readb = discordant_indexed[ecc[0]][i+1]
-        # on the fly sorting because the discordant reads are next to each other but not sorted by base position
+    conn = sqlite3.connect(r"scaffold"+str(ecc[0]+1)+"_sql.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM server WHERE start >= "+str(ecc[1])+" AND start <= " +str(ecc[2])+ " AND end >= "+str(ecc[1])+" AND end <= " + str(ecc[2]) )
+    opposite_read_names = []
+    opposite_reads = []
+    for row in c.fetchall():
+        opposite_read_names.append(row[2])
+        opposite_reads.append((row[0], row[1], row[2]))
+    conn.close()
+    counted = Counter(opposite_read_names) 
+    filtered_names = set([el for el in opposite_read_names if counted[el] >= 2])
+    filtered_reads = [[row[0], row[1], row[2]] for row in opposite_reads if row[2] in filtered_names]
+    filtered_reads.sort(key = lambda x: x[2])
+    for i in range(0, len(filtered_reads), 2):
+        reada = opposite_reads[i]
+        readb = opposite_reads[i+1]
         if reada[0] < readb[0]:
             read1 = reada
             read2 = readb
@@ -52,31 +67,10 @@ def confirmeccs(ecc):
             read1 = readb
             read2 = reada
         if ecc[1] <= read1[0] <= ecc[2] and ecc[1] <= read1[1] <= ecc[2] and ecc[1] <= read2[0] <= ecc[2] and ecc[1] <= read2[1] <= ecc[2]:
-            # calculate total distance from ecc start and end
             distance = abs(read1[1] - ecc[1]) + abs(read2[0] - ecc[2])
-            # set here for insert size distribution
             if distance <= 500:
                 return True
     return False
-
-
-##### DEFINE CONFIRM ECCS SQL HERE ##### 
-
-def confidence_check(ecc):
-    # get coverage of confirmed ecc region
-    region_len = ecc[2] - ecc[1]
-    beforestart = ecc[1] - region_len
-    afterstart =  ecc[2] + 2 + region_len
-    if beforestart > 0:
-        region = [ecc[0], beforestart, afterstart]
-    else:
-        region = [ecc[0], ecc[1], afterstart]
-    conn = sqlite3.connect(r"scaffold"+str(region[0]+1)+"_sql.db")
-    c = conn.cursor()
-    c.execute("SELECT * FROM server WHERE start >= "+str(ecc[1])+" AND start <= " +str(ecc[2])+ " AND end >= "+str(ecc[1])+" end <= " + str(ecc[2]) )
-    potential_opposite_reads = c.fetchall()
-    conn.close()
-
 
 # open parallelization client
 rc = ipp.Client(profile='default', cluster_id = "cluster-id-" + output_name)
@@ -86,16 +80,10 @@ lview = rc.load_balanced_view()
 lview.block = True
 
 # give discordant_indexed to all engines
-mydict = dict(discordant_indexed = discordant_indexed)
-dview.push(mydict)
-
-print('successfully pushed')
 
 # get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
 yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
 confirmedeccs = list(compress(eccloc_list, yesornoeccs))
-
-print('succesfully wrote')
 
 # write confirmed eccs to file
 with open('parallel.confirmed', 'w', newline = '') as confirmed:
