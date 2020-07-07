@@ -18,6 +18,6 @@ SAMPLE=CT_1A
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sql_confidence/slow
 
 ipcluster start -n 20 --cluster-id="cluster-id-${SAMPLE}" &
-sleep 300
+sleep 60
 ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_assignconfidence_slow.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} 56
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
