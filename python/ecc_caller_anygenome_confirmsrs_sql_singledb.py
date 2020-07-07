@@ -73,7 +73,7 @@ lview.block = True
 
 dview.execute('from collections import Counter')
 dview.execute('import sqlite3')
-dview.execute('conn = sqlite3.connect(r"allscaffodls_sql.db")')
+dview.execute('conn = sqlite3.connect(r"allscaffolds_sql.db")')
 dview.execute('c = conn.cursor()')
 
 # get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
