@@ -202,6 +202,7 @@ with open(coverage_file) as coverage:
                 except StopIteration:
                     break
             c.executemany("INSERT INTO server(base, count) VALUES(?,?)", to_add)
+            c.execute("CREATE INDEX base_index ON server(base)")
             conn.commit()
             conn.close()
 
