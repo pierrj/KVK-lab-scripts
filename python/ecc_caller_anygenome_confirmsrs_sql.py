@@ -80,6 +80,7 @@ lview = rc.load_balanced_view()
 lview.block = True
 
 dview.execute('from collections import Counter')
+dview.execute('import sqlite3')
 
 # get true/false list if each ecc is confirmed, then compress only keeps where true is in the list
 yesornoeccs = list(lview.map(confirmeccs, eccloc_list))
