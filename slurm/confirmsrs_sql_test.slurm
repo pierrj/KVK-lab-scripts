@@ -17,5 +17,5 @@ chrom_count='56'
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
 sleep 300
-ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs_sql.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count}
+ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs_sql.py sorted.lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count}
 ipcluster stop --cluster-id="cluster-id-${SAMPLE}"

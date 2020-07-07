@@ -38,6 +38,8 @@ with open(outwardfacing_read_file) as discordant:
                 except StopIteration:
                     break
             c.executemany("INSERT INTO server(start, end, name) VALUES(?,?,?)", to_add)
+            c.execute("CREATE INDEX start_index ON server(start)")
+            c.execute("CREATE INDEX end_index ON server(end)")
             conn.commit()
             conn.close()
 
