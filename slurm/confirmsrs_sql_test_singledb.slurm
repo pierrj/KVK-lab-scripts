@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sqlconfirmsrs_singledb
 THREADS='20'
-SAMPLE='CT_1A'
+SAMPLE='CT_1A_singledb'
 chrom_count='56'
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
