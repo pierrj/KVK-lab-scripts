@@ -20,7 +20,7 @@ chrom_count='57'
 # ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs_sql_singledb.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count}
 # ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
 
-ipcontroller --sqlitedb --cluster-id="cluster-id-${SAMPLE}" &
+ipcontroller --nodb --cluster-id="cluster-id-${SAMPLE}" &
 sleep 60
 for (( i = 0 ; i < ${THREADS}; i++)); do ipengine --cluster-id="cluster-id-${SAMPLE}" & done
 sleep 60
