@@ -40,7 +40,6 @@ with open(outwardfacing_read_file) as discordant:
 
 def confirmeccs(ecc):
     c.execute("SELECT * FROM server WHERE chrom = " + str(ecc[0]+1) + " AND start >= "+str(ecc[1])+" AND start <= " +str(ecc[2])+ " AND end >= "+str(ecc[1])+" AND end <= " + str(ecc[2]) )
-    rc.purge_everything()
     opposite_read_names = []
     opposite_reads = []
     for row in c.fetchall():
