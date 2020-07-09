@@ -9,6 +9,7 @@ print('generated list')
 def loop(item):
     for i in range(len(list2)):
         if list2[i][0] == item[0]:
+            lview.results.clear()
             return True
     return False
 
