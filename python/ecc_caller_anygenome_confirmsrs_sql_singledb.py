@@ -39,7 +39,6 @@ with open(outwardfacing_read_file) as discordant:
 # does proximity filtering based off an estimated insert size of 400 + 25%
 
 def confirmeccs(ecc):
-    lview.results.clear()
     c.execute("SELECT * FROM server WHERE chrom = " + str(ecc[0]+1) + " AND start >= "+str(ecc[1])+" AND start <= " +str(ecc[2])+ " AND end >= "+str(ecc[1])+" AND end <= " + str(ecc[2]) )
     opposite_read_names = []
     opposite_reads = []
