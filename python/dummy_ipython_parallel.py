@@ -25,9 +25,9 @@ dview.push(mydict)
 
 print('pushed list 2')
 
-# trueorfalse = list(lview.map(loop, list1))
+trueorfalse = list(lview.map(loop, list1))
 
-# print('looped through list 2')
+print('looped through list 2')
 
 # found = list(compress(list1, trueorfalse))
 
