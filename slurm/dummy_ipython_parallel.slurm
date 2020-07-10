@@ -17,9 +17,9 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/dummy_parallel
 # ipython /global/home/users/pierrj/git/python/dummy_ipython_parallel.py
 # ipcluster stop --cluster-id="cluster-id-dummy"
 
-ipcontroller --profile=pierrj --nodb --cluster-id='cluster-id-dummy' &
+ipcontroller --nodb --cluster-id='cluster-id-dummy' &
 sleep 60
 for (( i = 0 ; i < 20; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-dummy' & done
 sleep 60
 ipython /global/home/users/pierrj/git/python/dummy_ipython_parallel.py
-ipcluster stop --cluster-id="cluster-id-dummy" --profile=pierrj
+ipcluster stop --cluster-id="cluster-id-dummy"
