@@ -7,7 +7,7 @@ list2 = [ [i, i, i] for i in range(2000000, 6000000)]
 print('generated list')
 
 def loop(item):
-    lview.results.clear()
+    rc.purge_everything()
     for i in range(len(list2)):
         if list2[i][0] == item[0]:
             return True
