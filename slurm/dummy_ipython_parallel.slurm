@@ -19,7 +19,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/dummy_parallel
 
 ipcontroller --nodb --cluster-id='cluster-id-dummy' &
 sleep 60
-for (( i = 0 ; i < 20; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-dummy' & done
+for (( i = 0 ; i < 20; i++)); do ipengine --cluster-id='cluster-id-dummy' & done
 sleep 60
 ipython /global/home/users/pierrj/git/python/dummy_ipython_parallel.py
 ipcluster stop --cluster-id="cluster-id-dummy"
