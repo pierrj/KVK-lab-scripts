@@ -4,6 +4,7 @@ from collections import Counter
 from itertools import compress
 import pandas as pd
 import numpy as np
+import csv
 
 split_read_file = str(sys.argv[1])
 
