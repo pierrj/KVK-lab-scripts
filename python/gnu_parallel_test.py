@@ -4,6 +4,7 @@ import csv
 test_file = str(sys.argv[1])
 
 with open(test_file, newline = '') as file:
+    file_reader = csv.reader(file, delimiter = '\t')
     list1 = []
     for row in file_reader:
         list1.append(row)
