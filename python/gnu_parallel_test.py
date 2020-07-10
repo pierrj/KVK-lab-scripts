@@ -12,4 +12,4 @@ output = 'processed' + test_file
 
 with open(output, 'w', newline = '') as out:
     w = csv.writer(out, delimiter = '\t')
-    w.writerows(out)
+    w.writerows(list1)
