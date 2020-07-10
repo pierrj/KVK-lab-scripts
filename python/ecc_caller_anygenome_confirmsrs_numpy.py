@@ -49,7 +49,7 @@ lview = rc.load_balanced_view()
 lview.block = True
 
 # give discordant_indexed to all engines
-mydict = dict(discordant_indexed = discordant_indexed)
+mydict = dict(numpy_dict = numpy_dict)
 dview.push(mydict)
 
 # get true/false list if each ecc is confirmed, then compress only keeps where true is in the list

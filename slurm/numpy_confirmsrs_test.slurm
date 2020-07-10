@@ -15,16 +15,16 @@ THREADS='20'
 SAMPLE='CT_1A'
 chrom_count='56'
 
-sort -k4,4 -k2,2n outwardfacing.CT_1A.renamed.bed > sorted.outwardfacing.CT_1A.renamed.bed
+# sort -k4,4 -k2,2n outwardfacing.CT_1A.renamed.bed > sorted.outwardfacing.CT_1A.renamed.bed
 
 
-awk -v OFS='\t' '{
-    prev=$0; f2=$2; f3=$3; f4=$4
-    getline 
-    if ($4 == f4 && f2 < $2 && f3 <$3) {
-        print $1, f2, $3, f3, $2
-    }
-}' sorted.outwardfacing.CT_1A.renamed.bed > sorted.grouped.outwardfacing.CT_1A.renamed.bed
+# awk -v OFS='\t' '{
+#     prev=$0; f2=$2; f3=$3; f4=$4
+#     getline 
+#     if ($4 == f4 && f2 < $2 && f3 <$3) {
+#         print $1, f2, $3, f3, $2
+#     }
+# }' sorted.outwardfacing.CT_1A.renamed.bed > sorted.grouped.outwardfacing.CT_1A.renamed.bed
 
 ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
 sleep 60
