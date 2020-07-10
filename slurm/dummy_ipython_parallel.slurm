@@ -12,7 +12,14 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/dummy_parallel
 
-ipcluster start -n 20 --cluster-id="cluster-id-dummy" &
+# ipcluster start -n 20 --cluster-id="cluster-id-dummy" &
+# sleep 60
+# ipython /global/home/users/pierrj/git/python/dummy_ipython_parallel.py
+# ipcluster stop --cluster-id="cluster-id-dummy"
+
+ipcontroller --profile=pierrj --nodb --cluster-id='cluster-id-dummy' &
+sleep 60
+for (( i = 0 ; i < 20; i++)); do ipengine --profile=pierrj --cluster-id='cluster-id-dummy' & done
 sleep 60
 ipython /global/home/users/pierrj/git/python/dummy_ipython_parallel.py
-ipcluster stop --cluster-id="cluster-id-dummy"
+ipcluster stop --cluster-id="cluster-id-dummy" --profile=pierrj
