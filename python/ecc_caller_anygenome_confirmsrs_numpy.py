@@ -48,6 +48,8 @@ dview.block = True
 lview = rc.load_balanced_view()
 lview.block = True
 
+dview.execute('import numpy as np')
+
 # give discordant_indexed to all engines
 mydict = dict(numpy_dict = numpy_dict)
 dview.push(mydict)
