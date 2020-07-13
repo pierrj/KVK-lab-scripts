@@ -9,7 +9,7 @@ output_number = str(sys.argv[2])
 
 with open('merged.confirmed'+output_number) as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
-    flat_merged_list = [[int(row[0]), int(row[1]), int(row[2])] for row in merged_reader]
+    flat_merged_list = [[int(row[0]), int(row[1]), int(row[2]), int(row[3]), str(row[4])] for row in merged_reader]
 
 
 def confidence_check(ecc):
