@@ -19,15 +19,15 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names $
 
 python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
 
-python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed
+python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${chrom_count}
 
 split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
 
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
 
-cat $(find . -maxdepth 1 -name ecccaller_output.${SAMPLE}.details.tsv* | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
+cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.details.tsv*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
 
-cat $(find . -maxdepth 1 -name ecccaller_output.${SAMPLE}.bed* | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.bed
+cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.bed*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.bed
 
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.details.tsv > ecccaller_output.${SAMPLE}.renamed.bed
 

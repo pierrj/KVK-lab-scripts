@@ -4,6 +4,8 @@ import sqlite3
 
 coverage_file = str(sys.argv[1])
 
+scaffold_number = str(sys.argv[2])
+
 with open(coverage_file) as coverage:
     coverage_reader = csv.reader(coverage, delimiter = '\t')
     for row in coverage_reader:
