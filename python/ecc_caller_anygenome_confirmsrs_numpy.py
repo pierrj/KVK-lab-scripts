@@ -35,7 +35,7 @@ def confirmeccs(ecc):
     mask_total = np.logical_and(mask1, mask2)
     masked = numpy_dict[ecc[0]][mask_total, :]
     masked[:,3] -= ecc[1]
-    masked[:,4] = ecc[2]-masked[:,2]
+    masked[:,4] = ecc[2]-masked[:,4]
     final =  masked[masked[:,3] + masked[:, 4] <= 500, :]
     if final.size == 0:
         return False
