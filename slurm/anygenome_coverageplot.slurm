@@ -19,4 +19,5 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/anygenome_coverageplot_sim
 # /global/home/users/pierrj/git/bash/generate_coverageplot.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames -s CT_1A -c CT_1A.genomecoverage.bed
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames\
-    -s CT_1A -t 20 -c CT_1A.genomecoverage.bed -b CT_1A.sorted.mergedandpe.bwamem.bam
+    -s CT_1A -t 20 -b CT_1A.sorted.mergedandpe.bwamem.bam
+
