@@ -1,6 +1,7 @@
 import sys
 import csv
 import sqlite3
+import statistics
 
 output_name = str(sys.argv[1])
 
