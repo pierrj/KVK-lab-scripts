@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/confirmsrs_numpy_test
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/confirmsrs_lists
 THREADS='20'
 SAMPLE='CT_1A'
 chrom_count='56'
