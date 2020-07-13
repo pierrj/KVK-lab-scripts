@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=anygenome_coverageplot
+#SBATCH --job-name=gnu_parallel
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal

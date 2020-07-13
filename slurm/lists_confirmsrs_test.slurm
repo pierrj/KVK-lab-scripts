@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=anygenome_coverageplot
+#SBATCH --job-name=lists_confirm_memory_test
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
