@@ -17,9 +17,18 @@ for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
 
-ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" --profile=pierrj &
-sleep 300
-ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_assignconfidence_slow.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} ${chrom_count} ${SORTED_BAMFILE}
-ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
+python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
+
+python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed
+
+split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
+
+parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
+
+cat $(find . -maxdepth 1 -name ecccaller_output.${SAMPLE}.details.tsv* | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
+
+cat $(find . -maxdepth 1 -name ecccaller_output.${SAMPLE}.bed* | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.bed
+
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.details.tsv > ecccaller_output.${SAMPLE}.renamed.bed
 
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ecccaller_output.${SAMPLE}.renamed.bed

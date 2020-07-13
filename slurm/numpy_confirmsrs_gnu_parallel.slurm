@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=gnu_parallel
+#SBATCH --job-name=gnu_parallel_rice_test
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
@@ -10,10 +10,10 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/confirmsrs_numpy_gnu_parallel/
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/confirmsrs_numpy_gnu_rice/
 THREADS='20'
-SAMPLE='CT_1A'
-chrom_count='56'
+SAMPLE='RC_1A'
+chrom_count='57'
 
 split --number=l/${THREADS} --numeric-suffixes=1 --additional-suffix=.bed lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed lengthfiltered.merged.splitreads.${SAMPLE}.renamed.
 

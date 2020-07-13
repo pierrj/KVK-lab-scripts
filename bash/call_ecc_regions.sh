@@ -111,7 +111,7 @@ awk -v OFS='\t' '{
 awk -v OFS='\t' '$3-$2<1000000' merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.bed
 
 samtools view filtered.sorted.${SAMPLE}.bam | awk '{ if (($2 == 83 || $2 == 147 ) && $9 > 0) print $0 ; else if (($2 == 99 || $2 == 163) && $9 <0) print $0}' | cat <(samtools view -H ${SORTED_BAMFILE}) - | samtools view -b -h - > tmp.outwardfacing.${SAMPLE}.bam
-bedtools bamtobed -i tmp.outwardfacing.${SAMPLE}.bam | sort -k 4,4 > tmp.outwardfacing.${SAMPLE}.bed
+bedtools bamtobed -i tmp.outwardfacing.${SAMPLE}.bam | sort -k 4,4 -k2,2n > tmp.outwardfacing.${SAMPLE}.bed
 mv tmp.outwardfacing.${SAMPLE}.bed tmp.outwardfacing.${SAMPLE}.bed.old
 awk 'BEGIN {OFS="\t"}; {print $1,$2,$3,substr($4, 1, length($4)-2),$5,$6}' tmp.outwardfacing.${SAMPLE}.bed.old > tmp.outwardfacing.${SAMPLE}.bed.old.trimmed
 awk 'NR==FNR{a[$4]++; next} a[$4]==2' tmp.outwardfacing.${SAMPLE}.bed.old.trimmed tmp.outwardfacing.${SAMPLE}.bed.old.trimmed > outwardfacing.${SAMPLE}.bed
@@ -122,10 +122,18 @@ paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
 
-ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" --profile=pierrj &
-sleep 300
-ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count}
-ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
+
+awk -v OFS='\t' '{
+    prev=$0; f2=$2; f3=$3; f4=$4
+    getline 
+    if ($4 == f4 && f2 < $2 && f3 <$3) {
+        print $1, f2, $3, f3, $2
+    }
+}' outwardfacing.${SAMPLE}.renamed.bed > grouped.outwardfacing.${SAMPLE}.renamed.bed
+
+split --number=l/${THREADS} --numeric-suffixes=1 --additional-suffix=.bed lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed lengthfiltered.merged.splitreads.${SAMPLE}.renamed.
+parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs_numpy_gnuparallel.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.{}.bed grouped.outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count} {} ::: $(seq -w 1 ${THREADS})
+cat $(find . -maxdepth 1 -name "parallel.confirmed*" | xargs -r ls -1 | tr "\n" " ") > parallel.confirmed
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.confirmed.plusone
