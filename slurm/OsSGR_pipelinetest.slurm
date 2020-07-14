@@ -10,13 +10,13 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/OsSGR
-sample="OsSGR"
-genome="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
+cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/OsSR
+sample="OsSR"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
 read_path="/global/scratch/users/pierrj/eccDNA/2017_lanciano/"
 mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
 
-/global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome} \
+/global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome_bwa} \
  -1 ${read_path}${sample}/${sample}_R1.fastq -2 ${read_path}${sample}/${sample}_R2.fastq \
  -s ${sample} -t ${SLURM_NTASKS}
 
