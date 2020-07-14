@@ -14,3 +14,14 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/numpy_gnu_confidence_test
 
 /global/home/users/pierrj/git/bash/assign_confidence.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames\
     -s CT_1A -t 20 -c CT_1A.genomecoverage.bed
+
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sql_confidence/slow
+
+THREADS='20'
+SAMPLE='CT_1A_test'
+chrom_count='56'
+
+ipcluster start -n ${THREADS} --cluster-id="cluster-id-${SAMPLE}" &
+sleep 60
+ipython /global/home/users/pierrj/git/python/ecc_caller_anygenome_assignconfidence_slow.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${SAMPLE} 56
+ipcluster stop --cluster-id="cluster-id-${SAMPLE}"
