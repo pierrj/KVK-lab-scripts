@@ -22,12 +22,8 @@ mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
 
 #/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
 
-echo "yo"
-
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b ${sample}.sorted.mergedandpe.bwamem.bam
-
-echo "whatsup"
 
 /global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
