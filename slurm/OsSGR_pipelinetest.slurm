@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/OsSGR
 sample="OsSGR"
-genome="/global/scratch/users/pierrj/references/ORSA_w_organelles.fasta"
+genome="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
 read_path="/global/scratch/users/pierrj/eccDNA/2017_lanciano/"
 mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
 
