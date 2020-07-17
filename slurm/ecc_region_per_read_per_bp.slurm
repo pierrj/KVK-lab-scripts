@@ -10,41 +10,41 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-#cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 
-# while read sample;
-# do
-#     cd ${sample}
-#     ecc_count=$(wc -l ecccaller_output.${sample}.bed | awk '{print $1}')
-#     read_count=$(samtools view -c guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam) ## should be number of reads mapped to scaffolds of interest
-#     genome_size=$(wc -l genomecoverage.mergedandpe.${sample}_bwamem.bed | awk '{print $1}') ## this is the new name for these, i think it is different for the old version of the pipelin
-#     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}')
-#     echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_comparison
-#     cd ..
-# done < mapfile
+while read sample;
+do
+    cd ${sample}
+    ecc_count=$(wc -l parallel.confirmed | awk '{print $1}')
+    read_count=$(samtools view -c guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam) ## should be number of reads mapped to scaffolds of interest
+    genome_size=$(wc -l genomecoverage.mergedandpe.${sample}_bwamem.bed | awk '{print $1}') ## this is the new name for these, i think it is different for the old version of the pipelin
+    total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}')
+    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_srs
+    cd ..
+done < mapfile
 
-# cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control
+cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control
 
-# while read sample;
-# do
-#     cd ${sample}
-#     ecc_count=$(wc -l ecccaller_output.${sample}.bed | awk '{print $1}')
-#     read_count=$(samtools view -c filtered.sorted.${sample}.bam) ## should be number of reads mapped to scaffolds of interest
-#     genome_size=$(wc -l ${sample}.genomecoverage.bed | awk '{print $1}') ## this is the new name for these, i think it is different for the old version of the pipelin
-#     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}')
-#     echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_comparison
-#     cd ..
-# done < mapfile
+while read sample;
+do
+    cd ${sample}
+    ecc_count=$(wc -l parallel.confirmed | awk '{print $1}')
+    read_count=$(samtools view -c filtered.sorted.${sample}.bam) ## should be number of reads mapped to scaffolds of interest
+    genome_size=$(wc -l ${sample}.genomecoverage.bed | awk '{print $1}') ## this is the new name for these, i think it is different for the old version of the pipelin
+    total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}')
+    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_srs
+    cd ..
+done < mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
 
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.bed | awk '{print $1}')
+    ecc_count=$(wc -l parallel.confirmed | awk '{print $1}')
     read_count=$(samtools view -c guy11.repeats.sorted.mergedandpe.${sample}_bwamem.bam) ## should be number of reads mapped to scaffolds of interest
     genome_size=$(wc -l genomecoverage.mergedandpe.${sample}_bwamem.bed | awk '{print $1}') ## this is the new name for these, i think it is different for the old version of the pipelin
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}')
-    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_comparison
+    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_srs
     cd ..
 done < mapfile
