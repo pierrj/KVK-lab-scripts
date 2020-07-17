@@ -11,4 +11,4 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/repeatmasker/ORSA_w_organelles
-RepeatMasker -pa 24 -s -lib /global/scratch/users/pierrj/repbase/TIGR_Oryza_Repeats.v3.3 -gff -a -dir . /global/scratch/users/pierrj/references/ORSA_w_organelles.fasta
+RepeatMasker -pa 24 -s -lib /global/scratch/users/pierrj/repbase/TIGR_Oryza_Repeats.v3.3.renamed -gff -a -dir . /global/scratch/users/pierrj/references/ORSA_w_organelles.fasta
