@@ -12,7 +12,6 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 
-
 while read sample;
 do
     cd ${sample}
@@ -20,7 +19,7 @@ do
     read_count=$(samtools view -c guy11.sorted.mergedandpe.${sample}_bwamem.bam) ## should be number of reads mapped to scaffolds of interest
     genome_size=$(wc -l genomecoverage.mergedandpe.${sample}_bwamem.bed | awk {print $1}) ## this is the new name for these, i think it is different for the old version of the pipelin
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" '{print ECC/READ/SIZE}')
-    echo -e $sample'\t'$total>> /global/scratch/users/pierrj/eccDNA/pipeline_tests/
+    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_comparison
     cd ..
 done < mapfile
 
@@ -33,6 +32,6 @@ do
     read_count=$(samtools view -c guy11.sorted.mergedandpe.${sample}_bwamem.bam) ## should be number of reads mapped to scaffolds of interest
     genome_size=$(wc -l genomecoverage.mergedandpe.${sample}_bwamem.bed | awk {print $1}) ## this is the new name for these, i think it is different for the old version of the pipelin
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" '{print ECC/READ/SIZE}')
-    echo -e $sample'\t'$total>> /global/scratch/users/pierrj/eccDNA/pipeline_tests/
+    echo -e $sample'\t'$total >> /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_count_comparison/ecc_count_comparison
     cd ..
 done < mapfile
