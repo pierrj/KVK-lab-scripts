@@ -1,6 +1,5 @@
 import csv
 import collections
-import sqlite3
 import sys
 import statistics
 
