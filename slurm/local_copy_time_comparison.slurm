@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=local_copy_time_comparison
 #SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
