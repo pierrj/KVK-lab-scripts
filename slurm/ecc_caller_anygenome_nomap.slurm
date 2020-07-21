@@ -17,7 +17,7 @@ cd ${sample}
 #  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
 #  -s ${sample} -t ${SLURM_NTASKS}
 
-/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
+# /global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b ${sample}.sorted.mergedandpe.bwamem.bam
