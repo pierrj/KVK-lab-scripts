@@ -12,8 +12,8 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/OsLT_multimap
 
-READONE='/global/scratch/users/pierrj/eccDNA/2017_lanciano/OsLT_multimap/OsLT_multimap/OsLTmulti_R1.fastq'
-READTWO='/global/scratch/users/pierrj/eccDNA/2017_lanciano/OsLT_multimap/OsLT_multimap/OsLTmulti_R2.fastq'
+READONE='/global/scratch/users/pierrj/eccDNA/2017_lanciano/OsLT_multimap/OsLTmulti_R1.fastq'
+READTWO='/global/scratch/users/pierrj/eccDNA/2017_lanciano/OsLT_multimap/OsLTmulti_R2.fastq'
 THREADS='24'
 SAMPLE='OsLTmulti'
 GENOME_DB='/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa'
