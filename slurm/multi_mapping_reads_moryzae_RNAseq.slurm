@@ -12,9 +12,9 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/rnaseq/moryzae/2012_soanes
 
-READONE='SRR298849.sra.fastq'
+READONE='SRR298848.sra.fastq'
 THREADS='24'
-SAMPLE='SRR298849'
+SAMPLE='SRR298848'
 GENOME_DB='/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa'
 bwa mem -a -t ${THREADS} ${GENOME_DB} ${READONE} -o tmp.merged.trimmed.${SAMPLE}_bwamem.sam
 samtools view -S -b tmp.merged.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergedandpe.bwamem.bam
