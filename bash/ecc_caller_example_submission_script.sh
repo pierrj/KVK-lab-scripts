@@ -14,3 +14,17 @@ mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
 sample="OsCT1"
 sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
+sample="OsSR"
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_nomap.slurm
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
+sample="OsCT1"
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
+sample="OsCT1"
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm
