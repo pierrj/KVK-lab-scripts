@@ -17,13 +17,13 @@ sample="OsSR_noseqprep"
 cd ${SLURM_SUBMIT_DIR} ## submit from pipeline_tests
 cd ${sample}
 
-/global/home/users/pierrj/git/bash/generate_bam_file_genomecov_noseqprep.sh -g ${genome_bwa} \
- -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
- -s ${sample} -t ${SLURM_NTASKS}
+# /global/home/users/pierrj/git/bash/generate_bam_file_genomecov_noseqprep.sh -g ${genome_bwa} \
+#  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
+#  -s ${sample} -t ${SLURM_NTASKS}
 
 /global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
 
-/global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
+/global/home/users/pierrj/git/bash/call_ecc_regions_noproperpairing.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b ${sample}.sorted.mergedandpe.bwamem.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
