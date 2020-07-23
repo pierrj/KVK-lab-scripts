@@ -19,4 +19,4 @@ sample='SRR6315407'
 #    -s ${sample} -t ${SLURM_NTASKS} -b /global/scratch/users/pierrj/eccDNA/2018_moller/${sample}/${sample}.sorted.mergedandpe.bwamem.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
+    -s ${sample} -t ${SLURM_NTASKS} -c /global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315407/SRR6315407.genomecoverage.bed
