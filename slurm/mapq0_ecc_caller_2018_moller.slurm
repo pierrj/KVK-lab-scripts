@@ -15,5 +15,8 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/mapq0_2018_moller
 mapfile='/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames'
 sample='SRR6315407'
 
-/global/home/users/pierrj/git/bash/call_ecc_regions_allmapq.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b /global/scratch/users/pierrj/eccDNA/2018_moller/${sample}/${sample}.sorted.mergedandpe.bwamem.bam
+#/global/home/users/pierrj/git/bash/call_ecc_regions_allmapq.sh -m ${mapfile} \
+#    -s ${sample} -t ${SLURM_NTASKS} -b /global/scratch/users/pierrj/eccDNA/2018_moller/${sample}/${sample}.sorted.mergedandpe.bwamem.bam
+
+/global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
+    -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
