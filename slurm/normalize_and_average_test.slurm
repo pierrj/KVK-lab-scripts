@@ -18,4 +18,4 @@ cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1000000 -b 100
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/mapfile_for_normalize_and_average -f 1000000 -b 100
