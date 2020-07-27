@@ -41,7 +41,7 @@ do
     bio_rep=$(echo "$line" | cut -f3)
     treatment=$(echo "$line" | cut -f4)
     mv ${target_file}.normalized_binned.${tech_rep}.${bio_rep}.${treatment} ${target_file}.normalized_binned
-done < mapfile
+done < ${MAPFILE}
 
 while read line; 
 do

@@ -16,6 +16,6 @@ cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control
 
 /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t .genomecoverage.filtered.bed -n filtered.sorted.
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalize_and_average_tests
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/mapfile_for_normalize_and_average -f 1000000 -b 100
