@@ -3,7 +3,7 @@ while getopts m: option ### THIS NEEDS TO BE FIXED ####
 do
 case "${option}"
 in
-m) MAPFILE=${OPTARG}
+m) MAPFILE=${OPTARG};;
 esac
 done
 

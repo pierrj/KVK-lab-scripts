@@ -3,7 +3,7 @@ while getopts m:f:b: option
 do
 case "${option}"
 in
-m) MAPFILE=${OPTARG}
+m) MAPFILE=${OPTARG};;
 f) SCALING_FACTOR=${OPTARG};; ## for scaling data so numbers arent so gross, usually 1000000
 b) BIN_SIZE=${OPTARG};; ## this is for averaging bins to a certain size, should be optional as well, usually 100
 esac

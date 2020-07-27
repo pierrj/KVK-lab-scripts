@@ -3,9 +3,9 @@ while getopts m:t:n: option ### THIS NEEDS TO BE FIXED ####
 do
 case "${option}"
 in
-m) MAPFILE=${OPTARG}
-t) FILE_EXTENSION=${OPTARG}
-n) NORMALIZE_EXTENSION=${OPTARG}
+m) MAPFILE=${OPTARG};;
+t) FILE_EXTENSION=${OPTARG};;
+n) NORMALIZE_EXTENSION=${OPTARG};;
 esac
 done
 
