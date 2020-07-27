@@ -13,8 +13,6 @@ if [ -f "mapfile_for_normalize_and_average" ]; then
     rm mapfile_for_normalize_and_average
 fi
 
-filtered.sorted.RC_1A.bam
-
 while read line; 
 do
     sample=$(echo "$line" | cut -f1)
