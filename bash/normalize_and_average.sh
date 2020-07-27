@@ -15,7 +15,7 @@ do
     normalize_file=$(echo "$line" | cut -f2)
     bio_rep=$(echo "$line" | cut -f3)
     treatment=$(echo "$line" | cut -f4)
-    normalize_factor=$(samtools view -c -F 4 -F 2048 ${normalize_file} | awk -v S=${SCALING_FACTOR} '{print $1/S' )
+    normalize_factor=$(samtools view -c -F 4 -F 2048 ${normalize_file} | awk -v S=${SCALING_FACTOR} '{print $1/S}' )
     echo -e ${bio_rep} '\t' ${treatment} >> bio_rep_mapfile
     echo ${treatment} >> treatment_mapfile
     awk -v N=${normalize_factor} -v B=${BIN_SIZE} '{sum+=$3} NR%B==0 {print sum/B/N; sum =0}' ${target_file} > ${target_file}.normalized_binned.${bio_rep}.${treatment}
