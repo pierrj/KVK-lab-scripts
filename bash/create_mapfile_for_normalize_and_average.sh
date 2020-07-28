@@ -32,7 +32,7 @@ do
     treatment=$(echo "$line" | cut -f3)
     cd ${sample}
     file_path=$(realpath ${start_string_file}${sample}${end_string_file})
-    normalize_path=$(realpath ${start_string_normalize_file}${sample}${end_string_normalize_file}.bam)
+    normalize_path=$(realpath ${start_string_normalize_file}${sample}${end_string_normalize_file})
     cd ..
     echo -e ${file_path}'\t' ${normalize_path}'\t'${sample}'\t'${bio_rep}'\t'${treatment} >> mapfile_for_normalize_and_average
 done < ${MAPFILE}
