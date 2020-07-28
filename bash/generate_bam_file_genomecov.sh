@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts g:1:2:s:t: option
+while getopts g:1:2:s:t:m: option
 do
 case "${option}"
 in
@@ -8,6 +8,7 @@ g) GENOME_DB=${OPTARG};;
 2) READTWO=${OPTARG};;
 s) SAMPLE=${OPTARG};;
 t) THREADS=${OPTARG};;
+m) MAPFILE=${OPTARG};;
 esac
 done
 
@@ -20,5 +21,7 @@ samtools sort ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bw
 samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
 bedtools genomecov -d -ibam ${SAMPLE}.sorted.mergedandpe.bwamem.bam > ${SAMPLE}.genomecoverage.bed
+
+samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
 
 rm tmp*

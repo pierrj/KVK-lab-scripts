@@ -15,12 +15,12 @@ cd ${sample}
 
 /global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome_bwa} \
  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
- -s ${sample} -t ${SLURM_NTASKS}
+ -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
 
 /global/home/users/pierrj/git/bash/generate_coverageplot.sh -m ${mapfile} -s ${sample} -c ${sample}.genomecoverage.bed
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b ${sample}.sorted.mergedandpe.bwamem.bam
+    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${SAMPLE}.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
