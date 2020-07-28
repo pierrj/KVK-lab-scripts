@@ -6,7 +6,7 @@ in
 m) MAPFILE=${OPTARG};;
 s) SAMPLE=${OPTARG};;
 t) THREADS=${OPTARG};;
-b) FILTERED_BAMFILE=${OPTARG};; ### THE INDEX FILE HAS TO BE HERE TOO
+b) FILTERED_BAMFILE=${OPTARG};;
 esac
 done
 
@@ -21,7 +21,6 @@ fi
 for i in $(seq 0.1 0.1 1.0); do
     rarefaction_sample=tmp.rarefaction.${SAMPLE}_${i}
     samtools view -bh -s ${i} ${FILTERED_BAMFILE} > ${rarefaction_sample}.bam
-    samtools index ${rarefaction_sample}.bam
     /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${MAPFILE} -s ${rarefaction_sample} -t ${THREADS} -b ${rarefaction_sample}.bam
     bedtools genomecov -d -ibam ${rarefaction_sample}.bam > ${rarefaction_sample}.bed
     /global/home/users/pierrj/git/bash/assign_confidence.sh -m ${MAPFILE} -s ${rarefaction_sample} -t ${THREADS} -c ${rarefaction_sample}.bed
