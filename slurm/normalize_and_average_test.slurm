@@ -10,12 +10,12 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control
+cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
 
 /global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m mapfile
 
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t .genomecoverage.filtered.bed -n filtered.sorted.
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t genomecoverage.mergedandpe.CT_1A_bwamem.bed -n guy11.sorted.allmapq.mergedandpe.CT_1A_bwamem.bam
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalize_and_average_tests
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/mapfile_for_normalize_and_average -f 1000000 -b 100
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile_for_normalize_and_average -f 1000000 -b 100

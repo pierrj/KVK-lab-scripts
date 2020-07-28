@@ -13,10 +13,10 @@ while read line;
 do
     target_file=$(echo "$line" | cut -f1)
     normalize_file=$(echo "$line" | cut -f2)
-    bio_rep=$(echo "$line" | cut -f3)
-    treatment=$(echo "$line" | cut -f4)
+    sample=$(echo "$line" | cut -f3)
+    bio_rep=$(echo "$line" | cut -f4)
+    treatment=$(echo "$line" | cut -f5)
     normalize_factor=$(samtools view -c -F 4 -F 2048 ${normalize_file} | awk -v S=${SCALING_FACTOR} '{print $1/S}' )
-    sample=$(basename ${target_file})
     awk -v N=${normalize_factor} -v B=${BIN_SIZE} '{sum+=$3} NR%B==0 {print sum/B/N; sum =0}' ${target_file} > ${sample}.normalized_binned.${bio_rep}.${treatment}
 done < ${MAPFILE}
 
@@ -34,19 +34,24 @@ do
 done < ${MAPFILE}
 
 ## clean up
+
 while read line; 
 do
     target_file=$(echo "$line" | cut -f1)
     normalize_file=$(echo "$line" | cut -f2)
-    bio_rep=$(echo "$line" | cut -f3)
-    treatment=$(echo "$line" | cut -f4)
-    sample=$(basename ${target_file})
+    sample=$(echo "$line" | cut -f3)
+    bio_rep=$(echo "$line" | cut -f4)
+    treatment=$(echo "$line" | cut -f5)
     mv ${sample}.normalized_binned.${bio_rep}.${treatment} ${sample}.normalized_binned
 done < ${MAPFILE}
 
+cut -f4- ${MAPFILE} | sort | uniq > bio_rep_mapfile
+
 while read line; 
 do
-    bio_rep=$(echo "$line" | cut -f3)
-    treatment=$(echo "$line" | cut -f4)
+    bio_rep=$(echo "$line" | cut -f1)
+    treatment=$(echo "$line" | cut -f2)
     mv ${bio_rep}.normalized_binned.${treatment} ${bio_rep}.normalized_binned
-done < ${MAPFILE}
+done < bio_rep_mapfile
+
+rm bio_rep_mapfile
