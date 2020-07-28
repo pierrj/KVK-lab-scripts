@@ -19,6 +19,6 @@ echo -e 'CHROMOSOME''\t''BASE''\t''COUNT' > tmp.first_row
 cat tmp.first_row ${SAMPLE}.normalized_binned.filtered.renamed > ${SAMPLE}.normalized_binned.filtered.renamed.table
 
 y_max=$(awk '{print $3}' ${SAMPLE}.normalized_binned.filtered | sort -nr | head -1 | awk '{print $0/1000}' | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}' | awk '{print $0*1000}')
-Rscript --vanilla /global/home/users/pierrj/git/R/make_coverageplot.R ${SAMPLE}.genomecoverage.table ${SAMPLE}.genomecoverage.tiff ${y_max}
+Rscript --vanilla /global/home/users/pierrj/git/R/make_coverageplot.R ${SAMPLE}.normalized_binned.filtered.renamed.table ${SAMPLE}.manhattanplot.tiff ${y_max}
 
 rm tmp*
