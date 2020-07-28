@@ -19,3 +19,5 @@ cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalize_and_average_tests
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile_for_normalize_and_average -f 1000000 -b 100
+
+/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m /global/scratch/users/pierrj/eccDNA/pipeline_tests/rarefaction_test/guy11_genome_baoetal2017.contignames -s CT -c CT.normalied_binned
