@@ -11,4 +11,4 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/ltr_finder
-ltr_finder -w 2 /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+ltr_finder -w 2 /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta > guy11_genome_baoetal2017.ltr_finder
