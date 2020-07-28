@@ -12,12 +12,12 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
 
-/global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m mapfile
+# /global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m mapfile
 
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t genomecoverage.mergedandpe.CT_1A_bwamem.bed -n guy11.sorted.allmapq.mergedandpe.CT_1A_bwamem.bam
+# /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t genomecoverage.mergedandpe.CT_1A_bwamem.bed -n guy11.sorted.allmapq.mergedandpe.CT_1A_bwamem.bam
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/normalize_and_average_tests
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile_for_normalize_and_average -f 1000000 -b 100
+# /global/home/users/pierrj/git/bash/normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/mapfile_for_normalize_and_average -f 1000000 -b 100
 
-/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames -s CT -c CT.normalied_binned
+/global/home/users/pierrj/git/bash/generate_coverageplot.sh -m /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames -s CT -c CT.normalized_binned
