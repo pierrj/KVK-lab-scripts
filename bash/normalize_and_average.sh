@@ -22,14 +22,14 @@ done < ${MAPFILE}
 
 while read line; 
 do
-    bio_rep=$(echo "$line" | cut -f3)
-    treatment=$(echo "$line" | cut -f4)
+    bio_rep=$(echo "$line" | cut -f4)
+    treatment=$(echo "$line" | cut -f5)
     paste $(find . -maxdepth 1 -name "*normalized_binned.${bio_rep}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${bio_rep}.normalized_binned.${treatment}
 done < ${MAPFILE}
 
 while read line; 
 do
-    treatment=$(echo "$line" | cut -f4)
+    treatment=$(echo "$line" | cut -f5)
     paste $(find . -maxdepth 1 -name "*.normalized_binned.${treatment}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.normalized_binned
 done < ${MAPFILE}
 
