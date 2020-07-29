@@ -29,6 +29,8 @@ parallel -j ${chrom_count} --link python /global/home/users/pierrj/git/python/ma
 
 date +"%T"
 
+cp ../anygenome_numpy_gnu/merged.confirmed .
+
 split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
 cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.details.tsv*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
@@ -44,6 +46,8 @@ date +"%T"
 python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${chrom_count}
 
 date +"%T"
+
+cp ../anygenome_numpy_gnu/merged.confirmed .
 
 split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
