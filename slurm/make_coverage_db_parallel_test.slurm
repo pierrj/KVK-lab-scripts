@@ -12,8 +12,8 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/makecoverage_db_parallel
 
-MAPFILE="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
-SAMPLE=RC_1A
+MAPFILE="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
+SAMPLE=SRR6315407
 THREADS=${SLURM_NTASKS}
 
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
