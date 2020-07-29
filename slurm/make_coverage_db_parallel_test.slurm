@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/makecoverage_db_parallel
 MAPFILE="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 SAMPLE=CT_1A
 THREADS=${SLURM_NTASKS}
-COVFILE=${sample}.genomecoverage.bed
+COVFILE=${SAMPLE}.genomecoverage.bed
 
 awk -v OFS='\t' 'NR==FNR{c[$1]++;next};c[$1]' ${MAPFILE} ${COVFILE} > ${SAMPLE}.genomecoverage.filtered.bed
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
