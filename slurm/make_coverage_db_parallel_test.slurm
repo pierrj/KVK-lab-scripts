@@ -49,6 +49,8 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count e
 md5sum ecccaller_output.${SAMPLE}.renamed.bed
 md5sum ecccaller_output.${SAMPLE}.renamed.bed
 
+ls | grep -v CT_1A.genomecoverage.bed | xargs rm
+
 date +"%T"
 
 python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${chrom_count}
@@ -69,5 +71,7 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count e
 
 md5sum ecccaller_output.${SAMPLE}.renamed.bed
 md5sum ecccaller_output.${SAMPLE}.renamed.bed
+
+ls | grep -v CT_1A.genomecoverage.bed | xargs rm
 
 date +"%T"
