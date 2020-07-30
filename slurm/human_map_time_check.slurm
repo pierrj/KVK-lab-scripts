@@ -10,12 +10,12 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/2018_moller/
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/human_debug
 
 mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
 genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
 sample="SRR6315407"
-cd ${sample}
+bamfile="/global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315407/SRR6315407.sorted.mergedandpe.bwamem.bam"
 
 # date +"%T"
 
@@ -30,9 +30,9 @@ cd ${sample}
 # date +"%T"
 
 # /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-#     -s ${sample} -t ${SLURM_NTASKS} -b ${sample}.sorted.mergedandpe.bwamem.bam
+#     -s ${sample} -t ${SLURM_NTASKS} -b ${bamfile}
 
-date +"%T"
+# date +"%T"
 
 MAPFILE=${mapfile}
 SAMPLE=${sample}
@@ -53,26 +53,30 @@ COVFILE=${sample}.genomecoverage.bed
 
 # python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${chrom_count}
 
-date +"%T"
+# date +"%T"
 
-split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
+# split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
 
-date +"%T"
+# date +"%T"
 
-# parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
+# # parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
 
-python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} 
+# python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} 
 
-date +"%T"
+# date +"%T"
 
-cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.details.tsv*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
+# cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.details.tsv*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
 
-cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.bed*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.bed
+# cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.bed*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.bed
 
-paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
+# paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.details.tsv > ecccaller_output.${SAMPLE}.renamed.bed
+# awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.details.tsv > ecccaller_output.${SAMPLE}.renamed.bed
 
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ecccaller_output.${SAMPLE}.renamed.bed
+# awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ecccaller_output.${SAMPLE}.renamed.bed
 
-date +"%T"
+# date +"%T"
+
+chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
+
+parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_caller_anygenome_confirmsrs_numpy_gnuparallel.py lengthfiltered.merged.splitreads.${SAMPLE}.renamed.{}.bed sorted.grouped.outwardfacing.${SAMPLE}.renamed.bed ${SAMPLE} ${chrom_count} {} ::: $(seq -w 1 ${THREADS})
