@@ -7,7 +7,11 @@ output_name = str(sys.argv[1])
 
 # output_number = str(sys.argv[2]) ## TEMPORARY
 
-with open('merged.confirmed'+output_number) as merged:
+# with open('merged.confirmed'+output_number) as merged:
+#     merged_reader = csv.reader(merged, delimiter = '\t')
+#     flat_merged_list = [[int(row[0]), int(row[1]), int(row[2]), int(row[3]), str(row[4])] for row in merged_reader]
+
+with open('merged.confirmed') as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
     flat_merged_list = [[int(row[0]), int(row[1]), int(row[2]), int(row[3]), str(row[4])] for row in merged_reader]
 
