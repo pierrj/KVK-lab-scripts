@@ -39,19 +39,19 @@ SAMPLE=${sample}
 THREADS=${SLURM_NTASKS}
 COVFILE=${sample}.genomecoverage.bed
 
-awk -v OFS='\t' 'NR==FNR{c[$1]++;next};c[$1]' ${MAPFILE} ${COVFILE} > ${SAMPLE}.genomecoverage.filtered.bed
-chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
-for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
-paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
+# awk -v OFS='\t' 'NR==FNR{c[$1]++;next};c[$1]' ${MAPFILE} ${COVFILE} > ${SAMPLE}.genomecoverage.filtered.bed
+# chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
+# for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
+# paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
+# awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${SAMPLE}.genomecoverage.filtered.bed > ${SAMPLE}.genomecoverage.filtered.renamed.bed
 
-date +"%T"
+# date +"%T"
 
-python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
+# python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
 
-date +"%T"
+# date +"%T"
 
-python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${chrom_count}
+# python /global/home/users/pierrj/git/python/make_coverage_db.py ${SAMPLE}.genomecoverage.filtered.renamed.bed ${chrom_count}
 
 date +"%T"
 
