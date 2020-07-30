@@ -5,7 +5,7 @@ import statistics
 
 output_name = str(sys.argv[1])
 
-output_number = str(sys.argv[2])
+# output_number = str(sys.argv[2]) ## TEMPORARY
 
 with open('merged.confirmed'+output_number) as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
@@ -21,7 +21,7 @@ def confidence_check(ecc):
         region = [ecc[0], beforestart, afterstart]
     else:
         region = [ecc[0], ecc[1], afterstart]
-    print(region)
+    print(region) ## TEMPORARY
     conn = sqlite3.connect(r"scaffold"+str(region[0]+1)+"_sql.db")
     c = conn.cursor()
     c.execute("SELECT * FROM server WHERE base BETWEEN "+str(region[1])+" AND " +str(region[2]))
