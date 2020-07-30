@@ -59,7 +59,9 @@ split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirm
 
 date +"%T"
 
-parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
+# parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} {} ::: $(seq -w 1 ${THREADS})
+
+python /global/home/users/pierrj/git/python/coverage_confirm_db.py ${SAMPLE} 
 
 date +"%T"
 
