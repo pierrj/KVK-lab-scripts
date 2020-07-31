@@ -22,7 +22,7 @@ cd nodb
 date +"%T"
 
 /global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b ${bamfile}
+    -s ${sample} -t ${SLURM_NTASKS} -b ${filtered_bamfile}
 
 cd ../yesdb
 
