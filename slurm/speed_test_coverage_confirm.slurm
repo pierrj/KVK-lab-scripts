@@ -12,7 +12,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm
 
-mapfile="/global/scratch/users/pierrj/references/ORSA_w_organelles.contignames"
+mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames" ##should be no organelles?
 sample="RC_1A"
 filtered_bamfile="/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/filtered.sorted.RC_1A.bam"
 bamfile="/global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A.sorted.mergedandpe.bwamem.bam"

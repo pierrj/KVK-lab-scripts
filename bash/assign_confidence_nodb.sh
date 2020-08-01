@@ -15,7 +15,10 @@ done
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
 for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
-samtools view -H ${FILTERED_BAMFILE} | awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{ if ($2 ~ /^SN/ && substr($2, 4) in a) $2="SN:"a[substr($2,4)];}1' tmp.chrom_count_and_names - | samtools reheader - ${FILTERED_BAMFILE} > renamed.filtered.sorted.${SAMPLE}.bam
+samtools view -H ${FILTERED_BAMFILE} | awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{ if ($2 ~ /^SN/ && substr($2, 4) in a) {print $1, "SN:"a[substr($2,4)], $3} else if ($1 ~ /^@PG/ || $1 ~ /^@HD/) {print $0}}' tmp.chrom_count_and_names - |\
+    samtools reheader - ${FILTERED_BAMFILE} > renamed.filtered.sorted.${SAMPLE}.bam
+
+samtools index renamed.filtered.sorted.${SAMPLE}.bam
 
 python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
 
