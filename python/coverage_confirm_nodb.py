@@ -10,6 +10,8 @@ output_number = str(sys.argv[2])
 
 bam = str(sys.argv[3])
 
+genome_file = str(sys.argv[4])
+
 bam_file = pybedtools.BedTool(bam)
 
 with open('merged.confirmed'+output_number) as merged:
@@ -27,7 +29,7 @@ def confidence_check(ecc):
         region = [ecc[0], ecc[1], afterstart]
     bed_string = str(region[0]+1) + " " + str(region[1]) + " " + str(region[2])
     bed = pybedtools.BedTool(bed_string, from_string=True)
-    region_all = bed.coverage(bam_file, d=True, sorted=True).to_dataframe()
+    region_all = bed.coverage(bam_file, d=True, sorted=True, g=genome_file).to_dataframe()
     region_cov = region_all['score'].tolist()
     if beforestart > 0:
         ecc_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
