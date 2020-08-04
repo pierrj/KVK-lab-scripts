@@ -18,15 +18,13 @@ paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 samtools view -H ${FILTERED_BAMFILE} | awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{ if ($2 ~ /^SN/ && substr($2, 4) in a) {print $1, "SN:"a[substr($2,4)], $3} else {print $0}}' tmp.chrom_count_and_names - |\
     samtools reheader - ${FILTERED_BAMFILE} > renamed.filtered.sorted.${SAMPLE}.bam
 
-samtools view -H renamed.filtered.sorted.${SAMPLE}.bam | awk -v OFS='\t' '{ if ($1 == "@SQ") {print substr($2,4), substr($3,4)}}' > tmp.genomefile
-
 samtools index renamed.filtered.sorted.${SAMPLE}.bam
 
 python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
 
 split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
 
-parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_nodb.py ${SAMPLE} {} renamed.filtered.sorted.${SAMPLE}.bam tmp.genomefile ::: $(seq -w 1 ${THREADS})
+parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_nodb.py ${SAMPLE} {} renamed.filtered.sorted.${SAMPLE}.bam ::: $(seq -w 1 ${THREADS})
 
 cat $(find . -maxdepth 1 -name "ecccaller_output.${SAMPLE}.details.tsv*" | xargs -r ls -1 | tr "\n" " ") > ecccaller_output.${SAMPLE}.details.tsv
 
