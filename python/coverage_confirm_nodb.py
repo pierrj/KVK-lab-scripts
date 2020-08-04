@@ -1,7 +1,7 @@
 import sys
 import csv
-import pybedtools
-import pandas as pd
+import pysam
+import numpy as np
 import statistics
 
 output_name = str(sys.argv[1])
@@ -10,9 +10,7 @@ output_number = str(sys.argv[2])
 
 bam = str(sys.argv[3])
 
-genome_file = str(sys.argv[4])
-
-bam_file = pybedtools.BedTool(bam)
+bam_file = pysam.AlignmentFile(bam, 'rb')
 
 with open('merged.confirmed'+output_number) as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
@@ -27,10 +25,8 @@ def confidence_check(ecc):
         region = [ecc[0], beforestart, afterstart]
     else:
         region = [ecc[0], ecc[1], afterstart]
-    bed_string = str(region[0]+1) + " " + str(region[1]) + " " + str(region[2])
-    bed = pybedtools.BedTool(bed_string, from_string=True)
-    region_all = bed.coverage(bam_file, d=True, sorted=True, g=genome_file).to_dataframe()
-    region_cov = region_all['score'].tolist()
+    cov = bam_file.count_coverage(str(region[0]+1), start=region[1], stop=region[2], quality_threshold=0, read_callback='nofilter')
+    region_cov = np.array([cov[0], cov[1], cov[2], cov[3]]).sum(axis=0).tolist()
     if beforestart > 0:
         ecc_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
         before_region_cov = region_cov[0:region_len+1]
