@@ -28,7 +28,7 @@ mkdir nodb
 
 cd nodb
 
-cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm/parallel.confirmed .
+cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm/nodb/parallel.confirmed .
 
 source activate bedtools
 
@@ -47,7 +47,7 @@ mkdir yesdb
 
 cd yesdb
 
-cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm/parallel.confirmed .
+cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm/nodb/parallel.confirmed .
 
 date +"%T"
 
