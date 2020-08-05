@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=highlighted_coverageplot_test
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
+#SBATCH --time=72:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/highlited_manhattanplots
+
+mapfile=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
+sample=CT
+covfile=/global/scratch/users/pierrj/eccDNA/pipeline_tests/normalize_and_average_tests/CT.normalized_binned
+bedfile=/global/scratch/users/pierrj/repeatmasker/moryzae_ltr_parts/guy11_genome_baoetal2017.ltr_parts.bed
+
+/global/home/users/pierrj/git/bash/generate_coverageplot_withhighlighting.sh -m ${mapfile} \
+    -s ${sample} -c ${covfile} -b ${bedfile}
