@@ -26,7 +26,7 @@ date +"%T"
 date +"%T"
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b ${bamfile}
+    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
 
 date +"%T"
 

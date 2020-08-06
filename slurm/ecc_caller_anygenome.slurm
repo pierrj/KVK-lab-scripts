@@ -17,14 +17,8 @@ cd ${sample}
  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
  -s ${sample} -t ${SLURM_NTASKS}
 
-date +"%T"
-
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b ${bamfile}
-
-date +"%T"
+    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
-
-date +"%T"
