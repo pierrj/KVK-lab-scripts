@@ -22,7 +22,9 @@ samtools index renamed.filtered.sorted.${SAMPLE}.bam
 
 python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
 
-split --number=l/${THREADS} --numeric-suffixes=1 merged.confirmed merged.confirmed
+shuf merged.confirmed > shuf.merged.confirmed
+
+split --number=l/${THREADS} --numeric-suffixes=1 shuf.merged.confirmed merged.confirmed
 
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_nodb.py ${SAMPLE} {} renamed.filtered.sorted.${SAMPLE}.bam ::: $(seq -w 1 ${THREADS})
 
