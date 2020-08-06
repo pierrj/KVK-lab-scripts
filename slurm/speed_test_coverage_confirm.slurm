@@ -14,21 +14,10 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confir
 
 mapfile="/local/job${SLURM_JOBID}/ORSA_no_organelles.contignames"
 sample="RC_1A"
-filtered_bamfile="/local/job${SLURM_JOBID}/filtered.sorted.RC_1A.bam"
-bamfile="/local/job${SLURM_JOBID}/RC_1A.sorted.mergedandpe.bwamem.bam"
+filtered_bamfile="/global/scratch/users/pierrj/eccDNA/pipeline_tests/RC_1A_noseqprep/filtered.sorted.RC_1A_noseqprep.bam"
+bamfile="/global/scratch/users/pierrj/eccDNA/pipeline_tests/RC_1A_noseqprep/RC_1A_noseqprep.sorted.mergedandpe.bwamem.bam"
 
-
-cd /local/job${SLURM_JOBID}/
-
-cp /global/scratch/users/pierrj/references/ORSA_no_organelles.contignames .
-cp /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/filtered.sorted.RC_1A.bam .
-cp /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A.sorted.mergedandpe.bwamem.bam .
-
-mkdir nodb
-
-cd nodb
-
-cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm/nodb/parallel.confirmed .
+cd nodb 
 
 source activate bedtools
 
@@ -43,11 +32,7 @@ source deactivate
 
 cd ..
 
-mkdir yesdb
-
 cd yesdb
-
-cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/speed_test_coverage_confirm/nodb/parallel.confirmed .
 
 date +"%T"
 

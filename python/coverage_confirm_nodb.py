@@ -1,16 +1,14 @@
 import sys
 import csv
-import pysam
 import numpy as np
 import statistics
+import subprocess
 
 output_name = str(sys.argv[1])
 
 output_number = str(sys.argv[2])
 
-bam = str(sys.argv[3])
-
-bam_file = pysam.AlignmentFile(bam, 'rb')
+bam_file = str(sys.argv[3])
 
 with open('merged.confirmed'+output_number) as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
@@ -25,8 +23,9 @@ def confidence_check(ecc):
         region = [ecc[0], beforestart, afterstart]
     else:
         region = [ecc[0], ecc[1], afterstart]
-    cov = bam_file.count_coverage(str(region[0]+1), start=region[1], stop=region[2], quality_threshold=0, read_callback='nofilter')
-    region_cov = np.array([cov[0], cov[1], cov[2], cov[3]]).sum(axis=0).tolist()
+    samtools_get_region = 'samtools depth -a -r '+str(region[0]+1)+':'+str(region[1])+'-'+str(region[2])+' '+bam_file
+    sp = subprocess.Popen(samtools_get_region, shell= True, stdout=subprocess.PIPE)
+    region_cov = [int(line.decode("utf-8").strip().split("\t")[2]) for line in sp.stdout]
     if beforestart > 0:
         ecc_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
         before_region_cov = region_cov[0:region_len+1]
