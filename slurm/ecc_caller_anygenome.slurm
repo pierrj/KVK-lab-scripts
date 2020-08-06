@@ -13,12 +13,18 @@
 cd ${SLURM_SUBMIT_DIR}
 cd ${sample}
 
-/global/home/users/pierrj/git/bash/generate_bam_file_genomecov.sh -g ${genome_bwa} \
+/global/home/users/pierrj/git/bash/generate_bam_file.sh -g ${genome_bwa} \
  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
- -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
+ -s ${sample} -t ${SLURM_NTASKS}
+
+date +"%T"
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${SAMPLE}.bam
+    -s ${sample} -t ${SLURM_NTASKS} -b ${bamfile}
 
-/global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
+date +"%T"
+
+/global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
+    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
+
+date +"%T"

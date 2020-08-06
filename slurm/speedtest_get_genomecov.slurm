@@ -19,7 +19,7 @@ date +"%T"
 
 source activate mosdepth
 
-mosdepth ${sample} ${bamfile} -t 3 -x
+mosdepth ${sample} ${bamfile} -t 3 -x -b 1
 
 date +"%T"
 
