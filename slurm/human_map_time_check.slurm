@@ -19,11 +19,11 @@ bamfile="/global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315407/SRR6315407.s
 
 cd ${sample}
 
-date +"%T"
+# date +"%T"
 
-/global/home/users/pierrj/git/bash/generate_bam_file.sh -g ${genome_bwa} \
- -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
- -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
+# /global/home/users/pierrj/git/bash/generate_bam_file.sh -g ${genome_bwa} \
+#  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
+#  -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
 
 date +"%T"
 
