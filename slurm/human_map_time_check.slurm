@@ -10,14 +10,12 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd ${SLURM_SUBMIT_DIR}
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/human_map_time_check
 
 mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
 genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
 sample="SRR6315407"
 bamfile="/global/scratch/users/pierrj/eccDNA/2018_moller/SRR6315407/SRR6315407.sorted.mergedandpe.bwamem.bam"
-
-cd ${sample}
 
 # date +"%T"
 
