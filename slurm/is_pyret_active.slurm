@@ -37,6 +37,6 @@ bedtools genomecov -d -ibam filtered.sorted.${sample}.bam > ${SAMPLE}.genomecove
 
 date +"%T"
 
-samtools depth -a filtered.sorted.${sample}.bam > ${sample}.genomecoverage
+samtools depth -a -d 0 filtered.sorted.${sample}.bam > ${sample}.genomecoverage
 
 date +"%T"
