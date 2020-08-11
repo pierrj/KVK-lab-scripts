@@ -23,13 +23,13 @@ bed='/global/scratch/users/pierrj/repeatmasker/moryzae_ltr_parts/pyret_locs.bed'
 
 # samtools depth -a filtered.sorted.${sample}.bam > ${sample}.genomecoverage
 
-# /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t G3_1A.genomecoverage -n filtered.sorted.G3_1A.bam
+# /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t G3_1A.genomecoverage.bedtools -n filtered.sorted.G3_1A.bam
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1000000 -b 100
+# /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1000000 -b 100
+
+# /global/home/users/pierrj/git/bash/generate_coverageplot_withhighlighting.sh -m ${mapfile} -s ${sample} -c ${sample}.normalized_binned  -b ${bed}
 
 cd G3_1A
-
-/global/home/users/pierrj/git/bash/generate_coverageplot_withhighlighting.sh -m ${mapfile} -s ${sample} -c ${sample}.normalized_binned  -b ${bed}
 
 date +"%T"
 
