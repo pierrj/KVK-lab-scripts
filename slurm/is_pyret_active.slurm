@@ -27,6 +27,8 @@ bed='/global/scratch/users/pierrj/repeatmasker/moryzae_ltr_parts/pyret_locs.bed'
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1000000 -b 100
 
+cd G3_1A
+
 /global/home/users/pierrj/git/bash/generate_coverageplot_withhighlighting.sh -m ${mapfile} -s ${sample} -c ${sample}.normalized_binned  -b ${bed}
 
 date +"%T"
