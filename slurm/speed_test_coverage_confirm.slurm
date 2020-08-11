@@ -28,17 +28,17 @@ date +"%T"
 
 date +"%T"
 
-source deactivate
+# source deactivate
 
-cd ..
+# cd ..
 
-cd yesdb
+# cd yesdb
 
-date +"%T"
+# date +"%T"
 
-bedtools genomecov -d -ibam ${bamfile} > ${sample}.genomecoverage.bed
+# bedtools genomecov -d -ibam ${bamfile} > ${sample}.genomecoverage.bed
 
-/global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
+# /global/home/users/pierrj/git/bash/assign_confidence.sh -m ${mapfile} \
+#     -s ${sample} -t ${SLURM_NTASKS} -c ${sample}.genomecoverage.bed
 
-date +"%T"
+# date +"%T"

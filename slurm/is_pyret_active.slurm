@@ -33,7 +33,7 @@ cd G3_1A
 
 date +"%T"
 
-bedtools genomecov -d -ibam filtered.sorted.${sample}.bam > ${SAMPLE}.genomecoverage.bedtools
+bedtools genomecov -d -ibam filtered.sorted.${sample}.bam > ${sample}.genomecoverage.bedtools
 
 date +"%T"
 
