@@ -23,7 +23,7 @@ def confidence_check(ecc):
         region = [ecc[0], beforestart, afterstart]
     else:
         region = [ecc[0], ecc[1], afterstart]
-    samtools_get_region = 'samtools depth -a -r '+str(region[0]+1)+':'+str(region[1])+'-'+str(region[2])+' '+bam_file
+    samtools_get_region = 'samtools depth -a -d 0 -r '+str(region[0]+1)+':'+str(region[1])+'-'+str(region[2])+' '+bam_file
     sp = subprocess.Popen(samtools_get_region, shell= True, stdout=subprocess.PIPE)
     region_cov = [int(line.decode("utf-8").strip().split("\t")[2]) for line in sp.stdout]
     if beforestart > 0:
