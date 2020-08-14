@@ -11,7 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan
-conda activate pfamscan
+source activate pfamscan
 
 module load hmemr
 
