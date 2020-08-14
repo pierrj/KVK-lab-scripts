@@ -13,7 +13,7 @@
 cd /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan
 source activate pfamscan
 
-module load hmemr
+module load hmmer
 
 pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan/G3.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/results/genes_on_eccs/G3_all.common.genes.fasta
 
