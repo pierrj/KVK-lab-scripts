@@ -13,6 +13,8 @@
 cd /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan
 conda activate pfamscan
 
+module load hmemr
+
 pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan/G3.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/results/genes_on_eccs/G3_all.common.genes.fasta
 
 pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan/WG.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/references/GUY11_PacBio_merge_KROJ_renamed.CDS.fasta
