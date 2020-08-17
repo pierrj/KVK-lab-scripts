@@ -10,6 +10,6 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-mkdir /global/scratch/users/pierrj/repeatmasker/moryzae_pyrettest/
-cd /global/scratch/users/pierrj/repeatmasker/moryzae_pyrettest/
-RepeatMasker -pa 24 -s -nolow -no_is -norna -lib /global/scratch/users/pierrj/references/pyret_3group_test.fasta -gff -a -dir . /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+mkdir /global/scratch/users/pierrj/repeatmasker/moryzae_final/
+cd /global/scratch/users/pierrj/repeatmasker/moryzae_final/
+RepeatMasker -pa 24 -s -lib /global/scratch/users/pierrj/repbase/RepBase25.04.fasta/fngrep_and_moryzae_ltr_elements.fasta -gff -a -dir . /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
