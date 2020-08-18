@@ -34,4 +34,6 @@ wc -l G3_2.common.genes
 
 wc -l G3_3.common.genes
 
+cat G3_1.common.genes G3_3.common.genes G3_2.common.genes | sort | uniq -c | awk '$1==3 {print $2}' | wc -l
+
 cat G3_1.common.genes G3_3.common.genes G3_2.common.genes | sort | uniq -c | awk '$1==3 {print $2}' > G3_all.common.genes
