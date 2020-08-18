@@ -14,7 +14,8 @@ cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
 while read sample
 do
 cd ${sample}
-cp ${sample}_R1.fastq /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
-cp ${sample}_R2.fastq /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
+rm *
+cp ../${sample}_R1.fastq .
+cp ../${sample}_R2.fastq .
 cd ..
 done < mapfile
