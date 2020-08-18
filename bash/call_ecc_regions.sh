@@ -134,5 +134,7 @@ parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_ca
 cat $(find . -maxdepth 1 -name "parallel.confirmed*" | xargs -r ls -1 | tr "\n" " ") > parallel.confirmed
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
-awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.confirmed.plusone
+awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.confirmed.plusone > ${SAMPLE}.confirmedsplitreads.bed
+
+rm parallel.confirmed*

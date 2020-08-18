@@ -7,6 +7,7 @@ m) MAPFILE=${OPTARG};;
 s) SAMPLE=${OPTARG};;
 t) THREADS=${OPTARG};;
 b) FILTERED_BAMFILE=${OPTARG};;
+r) CONFIRMED_SPLITREADS=${OPTARG};;
 esac
 done
 
@@ -19,6 +20,11 @@ samtools view -H ${FILTERED_BAMFILE} | awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{ 
     samtools reheader - ${FILTERED_BAMFILE} > renamed.filtered.sorted.${SAMPLE}.bam
 
 samtools index renamed.filtered.sorted.${SAMPLE}.bam
+
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${CONFIRMED_SPLITREADS} > parallel.plusone.confirmed
+awk -v OFS='\t' '{print $1-1, $2, $3}' parallel.plusone.confirmed > parallel.confirmed
+
+## this is a little messy
 
 python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
 
@@ -38,8 +44,12 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count e
 
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ecccaller_output.${SAMPLE}.renamed.bed
 
+rm ecccaller_output.${SAMPLE}.details.tsv*
+
+rm ecccaller_output.${SAMPLE}.bed*
+
 ## should probably sort outputs at the end
 
 ## need to delete temporary files
 
-## need to fix the spreadsheet as well
+## need to output and rename the spreadsheet as well
