@@ -13,6 +13,6 @@
 cd ${SLURM_SUBMIT_DIR}
 cd ${sample}
 
-bamfile=${sample}.sorted.mergedandpe.bwamem.bam
+bamfile=${SLURM_SUBMIT_DIR}/${sample}/${sample}.sorted.mergedandpe.bwamem.bam
 
 /global/home/users/pierrj/git/bash/generate_rarefaction_plot_data.sh -m ${mapfile} -s ${sample} -t ${SLURM_NTASKS} -b ${bamfile}
