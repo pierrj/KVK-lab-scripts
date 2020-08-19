@@ -21,4 +21,4 @@ cd ${sample}
     -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam -r ${sample}.confirmedsplitreads.bed 
+    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam -r ${sample}.confirmedsplitreads.bed

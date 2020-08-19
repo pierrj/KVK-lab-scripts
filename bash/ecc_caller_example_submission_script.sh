@@ -43,3 +43,7 @@ sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,ge
 mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_with_spikeins_tweaked_bwa"
 while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm; done < mapfile_CT_PQ
+
+
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+while read sample; do sbatch --job-name=$sample.rarefaction --export=sample=$sample,mapfile=$mapfile /global/home/users/pierrj/git/slurm/rarefaction_plot_mass_submission.slurm; done < mapfile
