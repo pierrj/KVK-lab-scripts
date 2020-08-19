@@ -13,6 +13,4 @@
 cd /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan_redo
 source activate pfamscan
 
-pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan_redo/G3.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/results/genes_on_eccs/G3_all.common.genes.fasta
-
-pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan_redo/WG.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/references/GUY11_PacBio_merge_KROJ_renamed.CDS.fasta
+pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/G3_BRAKER_pfamscan_redo/G3.never.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/results/genes_on_eccs/G3_.neverfound.fasta
