@@ -48,6 +48,10 @@ rm ecccaller_output.${SAMPLE}.details.tsv*
 
 rm ecccaller_output.${SAMPLE}.bed*
 
+rm parallel.confirmed
+
+rm parallel.plusone.confirmed
+
 ## should probably sort outputs at the end
 
 ## need to delete temporary files
