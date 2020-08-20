@@ -27,8 +27,8 @@ for i in $(seq 0.1 0.1 1.0); do
     samtools view -bh -s ${i} ${FILTERED_BAMFILE} > ${rarefaction_sample}.bam
     /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${MAPFILE} -s ${rarefaction_sample} -t ${THREADS} -b ${rarefaction_sample}.bam
     /global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${MAPFILE} -s ${rarefaction_sample} -t ${THREADS} -b ${rarefaction_sample}.bam -r ${rarefaction_sample}.confirmedsplitreads.bed
-    awk '{ if ($6 == "hconf") print $0}' ecccaller_output.${rarefaction_sample}.details.tsv | wc -l | awk '{print $1}' >> ../${SAMPLE}.rarefaction_output_hconf
-    wc -l ecccaller_output.${rarefaction_sample}.details.tsv | awk '{print $1}' >> ../${SAMPLE}.rarefaction_output_all
+    awk '{ if ($6 == "hconf") print $0}' ecccaller_output.${rarefaction_sample}.renamed.details.tsv | wc -l | awk '{print $1}' >> ../${SAMPLE}.rarefaction_output_hconf
+    wc -l ecccaller_output.${rarefaction_sample}.renamed.details.tsv | awk '{print $1}' >> ../${SAMPLE}.rarefaction_output_all
     cd ..
 done
 
