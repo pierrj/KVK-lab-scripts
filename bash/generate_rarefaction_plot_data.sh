@@ -18,6 +18,8 @@ if [ -f "${SAMPLE}.rarefaction_output_all" ]; then
     rm ${SAMPLE}.rarefaction_output_all
 fi
 
+## THIS MEANS I NEED THE FULL PATH TO THE BAM FILE WHICH ISNT GREAT
+
 for i in $(seq 0.1 0.1 1.0); do
     mkdir $i
     cd $i
