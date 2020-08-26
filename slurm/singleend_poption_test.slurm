@@ -17,25 +17,40 @@ GENOME_DB="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with
 THREADS="24"
 MAPFILE="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/single_end_test
+# cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/single_end_test
+# gzip -c ${READONE} > tmp.seqprep.${SAMPLE}_R1.fastq.gz
+# gzip -c ${READTWO} > tmp.seqprep.${SAMPLE}_R2.fastq.gz
+# cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq tmp.seqprep.${SAMPLE}_R1.fastq.gz tmp.seqprep.${SAMPLE}_R2.fastq.gz
+# cat tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq > tmp.trimmed.seqprep.${SAMPLE}.fastq
+# bwa mem -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
+# samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergedandpe.bwamem.bam
+# samtools sort ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
+# samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
+
+# samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
+
+# rm tmp*
+
+# cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/p_option_map_test
+# gzip -c ${READONE} > tmp.seqprep.${SAMPLE}_R1.fastq.gz
+# gzip -c ${READTWO} > tmp.seqprep.${SAMPLE}_R2.fastq.gz
+# cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq tmp.seqprep.${SAMPLE}_R1.fastq.gz tmp.seqprep.${SAMPLE}_R2.fastq.gz
+# bwa mem -P -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
+# samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergedandpe.bwamem.bam
+# samtools sort ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
+# samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
+
+# samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
+
+# rm tmp*
+
+mkdir /global/scratch/users/pierrj/eccDNA/pipeline_tests/a_option_map_test
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/a_option_map_test
 gzip -c ${READONE} > tmp.seqprep.${SAMPLE}_R1.fastq.gz
 gzip -c ${READTWO} > tmp.seqprep.${SAMPLE}_R2.fastq.gz
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq tmp.seqprep.${SAMPLE}_R1.fastq.gz tmp.seqprep.${SAMPLE}_R2.fastq.gz
 cat tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq > tmp.trimmed.seqprep.${SAMPLE}.fastq
-bwa mem -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
-samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergedandpe.bwamem.bam
-samtools sort ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
-samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
-
-samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
-
-rm tmp*
-
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/p_option_map_test
-gzip -c ${READONE} > tmp.seqprep.${SAMPLE}_R1.fastq.gz
-gzip -c ${READTWO} > tmp.seqprep.${SAMPLE}_R2.fastq.gz
-cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq tmp.seqprep.${SAMPLE}_R1.fastq.gz tmp.seqprep.${SAMPLE}_R2.fastq.gz
-bwa mem -P -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
+bwa mem -a -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
 samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergedandpe.bwamem.bam
 samtools sort ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
