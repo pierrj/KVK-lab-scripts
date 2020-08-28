@@ -4,7 +4,7 @@ do
 case "${option}"
 in
 s) SAMPLE=${OPTARG};;
-b) FILTERED_BAMFILE=${OPTARG};; ### THE INDEX FILE HAS TO BE HERE TOO
+b) FILTERED_BAMFILE=${OPTARG};;
 esac
 done
 
