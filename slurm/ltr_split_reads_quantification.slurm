@@ -13,13 +13,13 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ltr_splitreads_tests/
 
 
-sample=CT_1A_pe_noseqprep
-bamfile=/global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/filtered.sorted.CT_1A.bam
+# sample=CT_1A_pe_noseqprep
+# bamfile=/global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/CT_1A/filtered.sorted.CT_1A.bam
 
-/global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
+# /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
 
 sample=CT_1A_se_noseqprep
-bamfile=/global/scratch/users/pierrj/eccDNA/pipeline_tests/single_end_test/filtered.sorted.CT_1A.bam
+bamfile=/global/scratch/users/pierrj/eccDNA/pipeline_tests/single_end_test/filtered.sorted.CT_1A.singleend.bam
 
 /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
 
@@ -33,6 +33,7 @@ MAPFILE="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contig
 
 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${READONE} -r ${READTWO} -1 tmp.seqprep.${SAMPLE}_R1.fastq.gz -2 tmp.seqprep.${SAMPLE}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s tmp.merged.${SAMPLE}.fastq.gz
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq tmp.seqprep.${SAMPLE}_R1.fastq.gz tmp.seqprep.${SAMPLE}_R2.fastq.gz
+cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --nextseq-trim=20 -o tmp.trimmed.merged.${SAMPLE}.fastq tmp.merged.${SAMPLE}.fastq.gz
 cat tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq > tmp.trimmed.seqprep.${SAMPLE}.fastq
 bwa mem -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
 bwa mem -t ${THREADS} ${GENOME_DB} tmp.trimmed.merged.${SAMPLE}.fastq -o tmp.merged.trimmed.${SAMPLE}_bwamem.sam
