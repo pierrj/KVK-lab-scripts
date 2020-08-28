@@ -3,7 +3,7 @@ import collections
 import sys
 
 input_file = str(sys.argv[1])
-score_cutoff = str(sys.argv[2])
+score_cutoff = float(sys.argv[2])
 output_name = str(sys.argv[3])
 
 with open(input_file) as file:
