@@ -12,6 +12,8 @@ names(geneList) <- geneNames
 
 GOdata <- new("topGOdata", ontology = args[3], allGenes = geneList, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
+GOdata
+
 test.stat <- new("classicCount", testStatistic = GOFisherTest, name = "Fisher test")
 resultFisher <- getSigGroups(GOdata, test.stat)
 
