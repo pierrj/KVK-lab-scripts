@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts b:e:s:o:f: option
+while getopts b:e:s:o: option
 do
 case "${option}"
 in
@@ -7,7 +7,6 @@ b) BEDFILE=${OPTARG};;
 e) ELEMENT=${OPTARG};;
 s) SPLIT_READ_FILE=${OPTARG};;
 o) OUTPUTNAME=${OPTARG};;
-f) FILTERED_BAMFILE=${OPTARG};;
 esac
 done
 
