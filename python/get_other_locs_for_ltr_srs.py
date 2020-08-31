@@ -55,7 +55,7 @@ for i in range(len(ltr_and_other)):
         ltr_and_other_read_locs.append(srs_dict[ltr_and_other[i]][k])
 ltr_and_other_read_locs_tuples = [tuple(l) for l in ltr_and_other_read_locs]
 ltr_srs_tuples = [tuple(l) for l in ltr_srs]
-ltrs_other_readloc_only = list(set(ltr_srs_and_other_half_tuples) - set(ltr_srs_tuples))
+ltrs_other_readloc_only = list(set(ltr_and_other_read_locs_tuples) - set(ltr_srs_tuples))
 
 with open(ltr_and_other_output_file, 'w', newline = '') as output:
     w = csv.writer(output, delimiter = '\t')
