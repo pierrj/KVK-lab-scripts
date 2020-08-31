@@ -28,8 +28,8 @@ bedtools intersect -wa -a ${ELEMENT}.${OUTPUTNAME}.other_overlap_srs.bed -b tmp.
 
 ltr_and_ltr_count=$(wc -l ${ELEMENT}.${OUTPUTNAME}.ltr_and_ltr_overlap_srs.bed | awk '{print $1/2}')
 
-ltr_and_internal_count=$(wc -l ${ELEMENT}.${OUTPUTNAME}.ltr_and_internal_overlap_srs.bed)
+ltr_and_internal_count=$(wc -l ${ELEMENT}.${OUTPUTNAME}.ltr_and_internal_overlap_srs.bed | awk '{print $1}')
 
-total=$(( ltr_and_ltr_count + ltr_and_internal_count))
+total=$((ltr_and_ltr_count+ltr_and_internal_count))
 
 echo -e ${ELEMENT}'\t'${total}
