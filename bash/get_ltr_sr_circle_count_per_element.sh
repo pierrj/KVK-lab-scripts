@@ -22,7 +22,7 @@ bedtools intersect -wa -bed -abam ${SPLIT_READ_FILE} -b tmp.LTR.${ELEMENT}.${OUT
 
 bedtools bamtobed -i ${SPLIT_READ_FILE} > ${OUTPUTNAME}.allsrs.bed
 
-/global/home/users/pierrj/git/python/get_other_locs_for_ltr_srs.py ${ELEMENT}.${OUTPUTNAME}.ltr_overlap_srs.bed ${OUTPUTNAME}.allsrs.bed ${ELEMENT}.${OUTPUTNAME}.ltr_and_ltr_overlap_srs.bed ${ELEMENT}.${OUTPUTNAME}.other_overlap_srs.bed
+python /global/home/users/pierrj/git/python/get_other_locs_for_ltr_srs.py ${ELEMENT}.${OUTPUTNAME}.ltr_overlap_srs.bed ${OUTPUTNAME}.allsrs.bed ${ELEMENT}.${OUTPUTNAME}.ltr_and_ltr_overlap_srs.bed ${ELEMENT}.${OUTPUTNAME}.other_overlap_srs.bed
 
 bedtools intersect -wa -a ${ELEMENT}.${OUTPUTNAME}.other_overlap_srs.bed -b tmp.INTERNAL.${ELEMENT}.${OUTPUTNAME}.filtered.bed > ${ELEMENT}.${OUTPUTNAME}.ltr_and_internal_overlap_srs.bed
 
