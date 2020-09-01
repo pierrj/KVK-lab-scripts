@@ -8,8 +8,6 @@ b) FILTERED_BAMFILE=${OPTARG};;
 esac
 done
 
-samtools view -b ${FILTERED_BAMFILE} $(cat ${MAPFILE} | tr "\n" " ") > tmp.filtered.sorted.allmapq.${SAMPLE}.bam
-
 samtools view -f 65 -F 4 ${FILTERED_BAMFILE} > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam
 file='1'
 awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0}' tmp.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam > tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam
