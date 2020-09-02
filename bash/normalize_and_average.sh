@@ -40,9 +40,20 @@ do
     fi
 done < ${MAPFILE}
 
+if [[ "${COLUMN}" -eq 3 ]]
+then
 awk -v OFS='\t' '{print $1, $2}' ${sample}.normalized_binned > tmp_normalize_and_average_first_two_columns ## THIS LINE MEANS ALL OF THE FILES IN A RUN SHOULD BE MAPPED TO THE SAME GENOME
 cut -f4- ${MAPFILE} | sort | uniq > tmp_normalize_and_average_bio_rep_mapfile
+elif [[ "${COLUMN}" -eq 2 ]]
+then
+awk -v OFS='\t' '{print $1}' ${sample}.normalized_binned > tmp_normalize_and_average_first_column ## THIS LINE MEANS ALL OF THE FILES IN A RUN SHOULD BE MAPPED TO THE SAME GENOME
+cut -f4- ${MAPFILE} | sort | uniq > tmp_normalize_and_average_bio_rep_mapfile
+else
+echo "invalid column number"
+fi
 
+if [[ "${COLUMN}" -eq 3 ]]
+then
 while read line; 
 do
     bio_rep=$(echo "$line" | cut -f1)
@@ -50,14 +61,39 @@ do
     paste $(find . -maxdepth 1 -name "*normalized_binned.${bio_rep}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > tmp_normalize_and_average.${bio_rep}.normalized_binned.${treatment}
     paste tmp_normalize_and_average_first_two_columns tmp_normalize_and_average.${bio_rep}.normalized_binned.${treatment} > ${bio_rep}.normalized_binned 
 done < tmp_normalize_and_average_bio_rep_mapfile
+elif [[ "${COLUMN}" -eq 2 ]]
+then
+while read line; 
+do
+    bio_rep=$(echo "$line" | cut -f1)
+    treatment=$(echo "$line" | cut -f2)
+    paste $(find . -maxdepth 1 -name "*normalized_binned.${bio_rep}*" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > tmp_normalize_and_average.${bio_rep}.normalized_binned.${treatment}
+    paste tmp_normalize_and_average_first_column tmp_normalize_and_average.${bio_rep}.normalized_binned.${treatment} > ${bio_rep}.normalized_binned 
+done < tmp_normalize_and_average_bio_rep_mapfile
+else
+echo "invalid column number"
+fi
 
 cut -f5- ${MAPFILE} | sort | uniq > tmp_normalize_and_average_treatment_mapfile
 
+if [[ "${COLUMN}" -eq 3 ]]
+then
 while read line; 
 do
     treatment=$(echo "$line")
     paste $(find . -maxdepth 1 -name "*.normalized_binned.${treatment}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > tmp_normalize_and_average.${treatment}.normalized_binned
     paste tmp_normalize_and_average_first_two_columns tmp_normalize_and_average.${treatment}.normalized_binned > ${treatment}.normalized_binned 
 done < tmp_normalize_and_average_treatment_mapfile
+elif [[ "${COLUMN}" -eq 2 ]]
+then
+while read line; 
+do
+    treatment=$(echo "$line")
+    paste $(find . -maxdepth 1 -name "*.normalized_binned.${treatment}" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > tmp_normalize_and_average.${treatment}.normalized_binned
+    paste tmp_normalize_and_average_first_column tmp_normalize_and_average.${treatment}.normalized_binned > ${treatment}.normalized_binned 
+done < tmp_normalize_and_average_treatment_mapfile
+else
+echo "invalid column number"
+fi
 
 rm tmp_normalize_and_average*
