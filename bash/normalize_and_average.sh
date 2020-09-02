@@ -1,11 +1,13 @@
 #!/bin/bash
-while getopts m:f:b: option
+while getopts m:f:b:c:n: option
 do
 case "${option}"
 in
 m) MAPFILE=${OPTARG};;
-f) SCALING_FACTOR=${OPTARG};; ## for scaling data so numbers arent so gross, usually 1000000
-b) BIN_SIZE=${OPTARG};; ## this is for averaging bins to a certain size, should be optional as well, usually 100
+f) SCALING_FACTOR=${OPTARG};; ## for scaling data so numbers arent so gross, usually 1000000, if normalize option is n then the input number is not used
+b) BIN_SIZE=${OPTARG};; ## this is for averaging bins to a certain size, should be optional as well, usually 100 for bedfiles or 1 for ltr_splitreads
+c) COLUMN=${OPTARG};; ## column where the data is (2 for ltr, 3 for genome coverage)
+n) NORMALIZE_OPTION=${OPTARG};; ## if f, normalize to file, if n, normalize to number
 esac
 done
 
@@ -16,9 +18,26 @@ do
     sample=$(echo "$line" | cut -f3)
     bio_rep=$(echo "$line" | cut -f4)
     treatment=$(echo "$line" | cut -f5)
+    if [[ "${NORMALIZE_OPTION}" == "f" ]]
+    then
     normalize_factor=$(samtools view -c -F 4 -F 2048 ${normalize_file} | awk -v S=${SCALING_FACTOR} '{print $1/S}' )
+    elif [[ "${NORMALIZE_OPTION}" == "n" ]]
+    then
+    normalize_factor=$(($normalize_file))
+    else
+    echo "invalid normalize option"
+    fi
+    if [[ "${COLUMN}" -eq 3 ]]
+    then
     awk -v N=${normalize_factor} -v B=${BIN_SIZE} -v OFS='\t' '{sum+=$3} NR%B==0 {print $1, $2, sum/B/N; sum =0}' ${target_file} > ${sample}.normalized_binned
     cut -f3 ${sample}.normalized_binned > tmp_normalize_and_average.${sample}.normalized_binned.${bio_rep}.${treatment}
+    elif [[ "${COLUMN}" -eq 2 ]]
+    then
+    awk -v N=${normalize_factor} -v B=${BIN_SIZE} -v OFS='\t' '{sum+=$2} NR%B==0 {print $1, sum/B/N; sum =0}' ${target_file} > ${sample}.normalized_binned
+    cut -f2 ${sample}.normalized_binned > tmp_normalize_and_average.${sample}.normalized_binned.${bio_rep}.${treatment}
+    else
+    echo "invalid column number"
+    fi
 done < ${MAPFILE}
 
 awk -v OFS='\t' '{print $1, $2}' ${sample}.normalized_binned > tmp_normalize_and_average_first_two_columns ## THIS LINE MEANS ALL OF THE FILES IN A RUN SHOULD BE MAPPED TO THE SAME GENOME

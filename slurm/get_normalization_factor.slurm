@@ -19,4 +19,4 @@ if [ -f "${slope_file}" ]; then
     rm ${slope_file}
 fi
 
-/global/home/users/pierrj/git/bash/get_normalization_factor.sh -m ${spike_mapfile} -s CT_1A -b sorted.mergedandpe.CT_1A_bwamem.bam -t ${SLURM_NTASKS} -o ${slope_file}
+/global/home/users/pierrj/git/bash/get_normalize_ratio.sh -m ${spike_mapfile} -s CT_1A -b CT_1A.sorted.mergedandpe.bwamem.bam -t ${SLURM_NTASKS}

@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts m:s:b:t:o: option
+while getopts m:s:b:t: option
 do
 case "${option}"
 in
@@ -7,7 +7,6 @@ m) SPIKE_MAPFILE=${OPTARG};;
 s) SAMPLE=${OPTARG};;
 b) BAMFILE=${OPTARG};; ## needs index too
 t) THREADS=${OPTARG};;
-o) SLOPE_FILE=${OPTARG};;
 esac
 done
 
@@ -38,4 +37,4 @@ END{
 # for(i=1;i<=NR;i++) print x[i],a*x[i]+b;
 }' spike_normalization_countable_${SAMPLE})
 
-echo -e ${SAMPLE}'\t'${slope} >> ${SLOPE_FILE}
+echo -e ${SAMPLE}'\t'${slope}
