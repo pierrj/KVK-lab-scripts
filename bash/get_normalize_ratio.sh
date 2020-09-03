@@ -20,7 +20,7 @@ echo ${spike} > tmp.mapfile_${spike}
 samtools view -b -q 1 ${BAMFILE} $(cat tmp.mapfile_${spike} | tr "\n" " ") > tmp.filtered.sorted.${SAMPLE}_${spike}.bam
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m tmp.mapfile_${spike} \
     -s ${SAMPLE}_${spike} -t ${THREADS} -b tmp.filtered.sorted.${SAMPLE}_${spike}.bam
-count=$(wc -l ${SAMPLE}_${spike}.confirmedsplitreads.bed)
+count=$(wc -l ${SAMPLE}_${spike}.confirmedsplitreads.bed | awk '{print $1}')
 echo -e ${ratio}'\t'${spike}'\t'${count} >> spike_normalization_countable_${SAMPLE}
 done < ${SPIKE_MAPFILE}
 
