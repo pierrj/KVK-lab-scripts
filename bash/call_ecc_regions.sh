@@ -138,3 +138,5 @@ awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.con
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
 rm parallel.confirmed*
+
+rm tmp.*

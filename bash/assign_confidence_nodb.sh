@@ -52,6 +52,10 @@ rm parallel.confirmed
 
 rm parallel.plusone.confirmed
 
+rm renamed.filtered.sorted.${SAMPLE}.bam
+
+rm renamed.filtered.sorted.${SAMPLE}.bam.bai
+
 ## should probably sort outputs at the end
 
 ## need to delete temporary files
