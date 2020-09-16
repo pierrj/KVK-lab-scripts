@@ -18,9 +18,13 @@ cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
 
 mv mapfile_for_normalize_and_average mapfile_for_normalize_and_average_ltrs_totalreads
 
-## global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t CT_1A.sr_count_per_element -n slope_file -y t
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t CT_1A.sr_count_per_element -n slope_file -y t
 
 mv mapfile_for_normalize_and_average mapfile_for_normalize_and_average_ltrs_spikenormalized
+
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t CT_1A.sr_count_per_element -n CT_1A.sorted.mergedandpe.bwamem.bam -y e
+
+mv mapfile_for_normalize_and_average mapfile_for_normalize_and_average_ltrs_wholelibrarynormalized
 
 cd results/ltr_splitreads_readnormalized
 
@@ -28,4 +32,8 @@ cd results/ltr_splitreads_readnormalized
 
 cd ../ltr_splitreads_spikenormalized
 
-## /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ../../mapfile_for_normalize_and_average_ltrs_totalreads -f 1000000 -b 1 -c 2 -n f
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ../../mapfile_for_normalize_and_average_ltrs_spikenormalized -f 1000000 -b 1 -c 2 -n n
+
+cd ../ltr_splitreads_wholelibrarynormalized
+
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ../../mapfile_for_normalize_and_average_ltrs_wholelibrarynormalized -f 1000000 -b 1 -c 2 -n f
