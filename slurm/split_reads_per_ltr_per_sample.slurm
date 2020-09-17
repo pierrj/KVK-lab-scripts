@@ -22,4 +22,4 @@ split_read_file=SRs.no_orientation.allmapq.${sample}.bam
     -m /global/scratch/users/pierrj/repeatmasker/moryzae_final/mapfile_elements \
     -s ${split_read_file} -o ${sample}
 cd ..
-done < mapfile_CT_PQ
+done < mapfile_IF
