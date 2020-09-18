@@ -21,4 +21,4 @@ samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
 
 rm tmp*
-rm ${SAMPLE}.sorted.mergedandpe.bwamem.bam
+rm ${SAMPLE}.mergedandpe.bwamem.bam
