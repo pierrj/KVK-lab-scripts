@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 while read sample
 do
 cd ${sample}
-bedtools genomecov -d -ibam ${SAMPLE}.sorted.mergedandpe.bwamem.bam > ${SAMPLE}.genomecoverage.bed
+bedtools genomecov -d -ibam ${sample}.sorted.mergedandpe.bwamem.bam > ${sample}.genomecoverage.bed
 cd ..
 done < mapfile
 
