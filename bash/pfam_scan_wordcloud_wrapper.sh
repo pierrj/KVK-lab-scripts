@@ -12,10 +12,18 @@ t) THREADS=${THREADS};;
 esac
 done
 
+if [ -f "${OUTPUT_NAME}.subset.CDS.fasta" ]; then
+    rm ${OUTPUT_NAME}.subset.CDS.fasta
+fi
+
 while read geneid;
 do
 grep -A1 gene=${geneid} ${CDS_FASTA} >> ${OUTPUT_NAME}.subset.CDS.fasta
 done < ${SUBSET_GENE_IDS}
+
+if [ -f "${OUTPUT_NAME}.all.CDS.fasta" ]; then
+    rm ${OUTPUT_NAME}.all.CDS.fasta
+fi
 
 while read geneid;
 do
