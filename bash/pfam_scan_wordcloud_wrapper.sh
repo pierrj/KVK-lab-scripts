@@ -31,6 +31,6 @@ pfam_scan.pl -cpu 24 -outfile ${OUTPUT_NAME}.all.pfamscan.out -dir ${PFAM_DIR} -
 
 /global/home/users/pierrj/git/python/parse_pfam_scan_output.py ${OUTPUT_NAME}.subset.pfamscan.kparse.out ${OUTPUT_NAME}.all.pfamscan.kparse.out ${OUTPUT_NAME}.total.forwordcloud ${OUTPUT_NAME}.normalized.forwordcloud
 
-/global/home/users/pierrj/git/R/make_wordcloud.R ${OUTPUT_NAME}.total.forwordcloud ${OUTPUT_NAME}.total.wordcloud
+Rscript --vanilla /global/home/users/pierrj/git/R/make_wordcloud.R ${OUTPUT_NAME}.total.forwordcloud ${OUTPUT_NAME}.total.wordcloud
 
-/global/home/users/pierrj/git/R/make_wordcloud.R ${OUTPUT_NAME}.normalized.forwordcloud ${OUTPUT_NAME}.normalized.wordcloud
+Rscript --vanilla /global/home/users/pierrj/git/R/make_wordcloud.R ${OUTPUT_NAME}.normalized.forwordcloud ${OUTPUT_NAME}.normalized.wordcloud
