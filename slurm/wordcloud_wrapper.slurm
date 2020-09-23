@@ -18,5 +18,6 @@ ALL_GENE_IDS=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumin
 OUTPUT_NAME=G3_nevereverfound
 PFAM_DIR=/global/scratch/users/pierrj/pfam
 CDS_FASTA=/global/scratch/users/pierrj/references/GUY11_PacBio_merge_KROJ_renamed.CDS.fasta
+THREADS=${SLURM_NTASKS}
 
-/global/home/users/pierrj/git/bash/pfam_scan_wordcloud_wrapper.sh -g ${SUBSET_GENE_IDS} -a ${ALL_GENE_IDS} -n ${OUTPUT_NAME} -p ${PFAM_DIR} -c ${CDS_FASTA}
+/global/home/users/pierrj/git/bash/pfam_scan_wordcloud_wrapper.sh -g ${SUBSET_GENE_IDS} -a ${ALL_GENE_IDS} -n ${OUTPUT_NAME} -p ${PFAM_DIR} -c ${CDS_FASTA} -t ${THREADS}
