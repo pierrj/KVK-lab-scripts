@@ -37,6 +37,6 @@ bedfile=/global/scratch/users/pierrj/repeatmasker/moryzae_ltr_parts/guy11_genome
 /global/home/users/pierrj/git/bash/generate_coverageplot_withhighlighting.sh -m ${mapfile} \
     -s ${sample} -c ${covfile} -b ${bedfile}
 
-y_max=$(awk '{print $3}' ${SAMPLE}.normalized_binned.filtered | sort -nr | head -1 | awk '{print $0/1000}' | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}' | awk '{print $0*1000}')
+y_max=$(awk '{print $3}' ${sample}.normalized_binned.filtered | sort -nr | head -1 | awk '{print $0/1000}' | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}' | awk '{print $0*1000}')
 
 echo ${y_max}
