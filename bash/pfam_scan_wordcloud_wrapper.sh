@@ -8,7 +8,7 @@ a) ALL_GENE_IDS=${OPTARG};;
 n) OUTPUT_NAME=${OPTARG};;
 p) PFAM_DIR=${OPTARG};;
 c) CDS_FASTA=${OPTARG};;
-t) THREADS=${THREADS};;
+t) THREADS=${OPTARG};;
 esac
 done
 
