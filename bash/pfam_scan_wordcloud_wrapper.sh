@@ -38,7 +38,7 @@ pfam_scan.pl -cpu ${THREADS} -outfile ${OUTPUT_NAME}.all.pfamscan.out -dir ${PFA
 
 /global/scratch/users/pierrj/scripts/plant_rgenes/processing_scripts/K-parse_Pfam_domains_v3.1.pl -p ${OUTPUT_NAME}.all.pfamscan.out -e 0.001 -o ${OUTPUT_NAME}.all.pfamscan.kparse.out
 
-/global/home/users/pierrj/git/python/parse_pfam_scan_output.py ${OUTPUT_NAME}.subset.pfamscan.kparse.out ${OUTPUT_NAME}.all.pfamscan.kparse.out ${OUTPUT_NAME}.total.forwordcloud ${OUTPUT_NAME}.normalized.forwordcloud
+python /global/home/users/pierrj/git/python/parse_pfam_scan_output.py ${OUTPUT_NAME}.subset.pfamscan.kparse.out ${OUTPUT_NAME}.all.pfamscan.kparse.out ${OUTPUT_NAME}.total.forwordcloud ${OUTPUT_NAME}.normalized.forwordcloud
 
 Rscript --vanilla /global/home/users/pierrj/git/R/make_wordcloud.R ${OUTPUT_NAME}.total.forwordcloud ${OUTPUT_NAME}.total.wordcloud
 
