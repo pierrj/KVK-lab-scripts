@@ -62,7 +62,7 @@ cat $(find . -maxdepth 1 -name "*.hconf.genes" | xargs -r ls -1 | cut -c 3- | tr
 
 awk '{print $4}' ${GENE_BEDFILE} > ${OUTPUT_NAME}.allgenenames
 
-cat ${OUTPUT_NAME}.allhconf.genes ${OUTPUT_NAME}.allgenenames | sort | uniq -c | awk '{if ($1==1) {print $2}' > ${OUTPUT_NAME}.neverfound.genes
+cat ${OUTPUT_NAME}.allhconf.genes ${OUTPUT_NAME}.allgenenames | sort | uniq -c | awk '{if ($1==1) {print $2}}' > ${OUTPUT_NAME}.neverfound.genes
 
 if [ -d "raw_files" ]; then
     rm -r raw_files
@@ -70,7 +70,7 @@ fi
 
 mkdir raw_files
 
-mv * raw_files/
+mv * raw_files/ 2>/dev/null
 
 if [ -d "common_distance" ]; then
     rm -r common_distance
@@ -140,7 +140,7 @@ mkdir common_wordcloud
 
 cd common_wordcloud
 
-/global/home/users/pierrj/git/bash/pfam_scan_wordcloud_wrapper.sh -g ../raw_files/${OUTPUT_NAME}.common.genes -a ${ALL_GENE_IDS} -n ${OUTPUT_NAME}.common_genes -p ${PFAM_DIR} -c ${CDS_FASTA} -t ${THREADS}
+/global/home/users/pierrj/git/bash/pfam_scan_wordcloud_wrapper.sh -g ../raw_files/${OUTPUT_NAME}.common.genes -a ../raw_files/${OUTPUT_NAME}.allgenenames -n ${OUTPUT_NAME}.common_genes -p ${PFAM_DIR} -c ${CDS_FASTA} -t ${THREADS}
 
 cd ..
 
@@ -152,6 +152,6 @@ mkdir never_wordcloud
 
 cd never_wordcloud
 
-/global/home/users/pierrj/git/bash/pfam_scan_wordcloud_wrapper.sh -g ../raw_files/${OUTPUT_NAME}.neverfound.genes -a ${ALL_GENE_IDS} -n ${OUTPUT_NAME}.never_genes -p ${PFAM_DIR} -c ${CDS_FASTA} -t ${THREADS}
+/global/home/users/pierrj/git/bash/pfam_scan_wordcloud_wrapper.sh -g ../raw_files/${OUTPUT_NAME}.neverfound.genes -a ../raw_files/${OUTPUT_NAME}.allgenenames -n ${OUTPUT_NAME}.never_genes -p ${PFAM_DIR} -c ${CDS_FASTA} -t ${THREADS}
 
 cd ..
