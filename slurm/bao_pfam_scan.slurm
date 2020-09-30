@@ -15,4 +15,4 @@ source activate pfamscan
 
 pfam_scan.pl -cpu 24 -outfile /global/scratch/users/pierrj/pfam/bao_pfam_scan/bao.pfamscan.txt -dir /global/scratch/users/pierrj/pfam -fasta /global/scratch/users/pierrj/references/Guy11_augustus_raw.aa
 
-/global/scratch/users/pierrj/scripts/plant_rgenes/processing_scripts/K-parse_Pfam_domains_v3.1.pl -p bao.pfamscan.txt  -e 0.001 -obao.pfamscan.kparse.txt
+/global/scratch/users/pierrj/scripts/plant_rgenes/processing_scripts/K-parse_Pfam_domains_v3.1.pl -p bao.pfamscan.txt  -e 0.001 -o bao.pfamscan.kparse.txt

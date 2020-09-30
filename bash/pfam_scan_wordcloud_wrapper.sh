@@ -18,7 +18,7 @@ fi
 
 while read geneid;
 do
-grep -A1 gene=${geneid} ${CDS_FASTA} >> ${OUTPUT_NAME}.subset.CDS.fasta
+grep -A1 ${geneid} ${CDS_FASTA} >> ${OUTPUT_NAME}.subset.CDS.fasta
 done < ${SUBSET_GENE_IDS}
 
 if [ -f "${OUTPUT_NAME}.all.CDS.fasta" ]; then
@@ -27,7 +27,7 @@ fi
 
 while read geneid;
 do
-grep -A1 gene=${geneid} ${CDS_FASTA} >> ${OUTPUT_NAME}.all.CDS.fasta
+grep -A1 ${geneid} ${CDS_FASTA} >> ${OUTPUT_NAME}.all.CDS.fasta
 done < ${ALL_GENE_IDS}
 
 if [ -f "${OUTPUT_NAME}.subset.pfamscan.out" ]; then
