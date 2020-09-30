@@ -1,4 +1,4 @@
-library(topGO)
+suppressMessages(library(topGO))
 
 args = commandArgs(trailingOnly=TRUE)
 

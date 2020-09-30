@@ -13,6 +13,19 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/gene_analysis_wrapper/
 source activate pfamscan
 
+rm -r *
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample
+do
+cd ${sample}
+cp ecccaller_output.${sample}.renamed.details.tsv /global/scratch/users/pierrj/eccDNA/pipeline_tests/gene_analysis_wrapper/
+cd ..
+done < mapfile
+
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/gene_analysis_wrapper/
+
 PANNZER_INPUT=/global/scratch/users/pierrj/references/pannzer_GUY11_PacBio_merge_KROJ_post_repeatmasking.txt
 OUTPUT_NAME=G3
 SCORE_CUTOFF=0.6
