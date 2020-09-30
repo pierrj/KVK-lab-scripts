@@ -36,4 +36,4 @@ PFAM_DIR=/global/scratch/users/pierrj/pfam/
 CDS_FASTA=/global/scratch/users/pierrj/references/GUY11_PacBio_merge_KROJ_renamed.CDS.fasta
 THREADS=${SLURM_NTASKS}
 
-/global/home/users/pierrj/git/bash/gene_analysis_wrapper.sh -p ${PANNZER_INPUT} -n ${OUTPUT_NAME} -c ${SCORE_CUTOFF} -m ${MAPFILE} -b ${GENE_BEDFILE} -e ${TE_BEDFILE} -f ${PFAM_DIR} -a ${CDS_FASTA}-t ${THREADS}
+/global/home/users/pierrj/git/bash/gene_analysis_wrapper.sh -p ${PANNZER_INPUT} -n ${OUTPUT_NAME} -c ${SCORE_CUTOFF} -m ${MAPFILE} -b ${GENE_BEDFILE} -e ${TE_BEDFILE} -f ${PFAM_DIR} -a ${CDS_FASTA} -t ${THREADS}
