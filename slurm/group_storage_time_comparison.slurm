@@ -26,7 +26,7 @@ date +"%T"
 
 cp /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A_R1.fastq .
 
-cp /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A_R1.fastq .
+cp /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_1A_R2.fastq .
 
 date +"%T"
 
