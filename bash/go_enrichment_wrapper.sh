@@ -16,3 +16,7 @@ python /global/home/users/pierrj/git/python/parse_pannzer_output.py ${PANNZER_IN
 awk -v OFS='\t' '{print $0}' ${OUTPUT_NAME}.filtered.GO.txt > ${OUTPUT_NAME}.filtered.GO.awk.txt
 
 Rscript --vanilla /global/home/users/pierrj/git/R/go_enrichment.R ${OUTPUT_NAME}.filtered.GO.awk.txt ${SIGNIFICANT_GENES} ${GO_TERM} ${OUTPUT_NAME}.results.txt
+
+rm ${OUTPUT_NAME}.filtered.GO.awk.txt
+
+rm ${OUTPUT_NAME}.filtered.GO.txt
