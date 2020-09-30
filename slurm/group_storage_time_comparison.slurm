@@ -30,7 +30,6 @@ cp /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/RC_1A/RC_
 
 date +"%T"
 
-
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/group_storage_time_comparison
 
 date +"%T"
@@ -39,7 +38,17 @@ bwa mem -t 24 /global/scratch/users/pierrj/references/ORSA_w_organelles_bwa RC_1
 
 date +"%T"
 
+date +"%T"
+
+samtools sort tmp.bwamem_local_test > tmp.bwamem_local_test.sorted
+
+date +"%T"
+
+
 rm tmp.bwamem_local_test
+
+rm tmp.bwamem_local_test.sorted
+
 
 cd /global/home/groups/fc_kvkallow/group_storage_time_comparison
 
@@ -49,4 +58,12 @@ bwa mem -t 24 /global/scratch/users/pierrj/references/ORSA_w_organelles_bwa RC_1
 
 date +"%T"
 
+date +"%T"
+
+samtools sort tmp.bwamem_local_test > tmp.bwamem_local_test.sorted
+
+date +"%T"
+
 rm tmp.bwamem_local_test
+
+rm tmp.bwamem_local_test.sorted
