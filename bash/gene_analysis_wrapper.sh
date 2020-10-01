@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts p:n:c:m:b:e:f:a:e: option
+while getopts p:n:c:m:b:e:f:a:t: option
 do
 case "${option}"
 in
