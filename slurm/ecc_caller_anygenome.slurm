@@ -14,7 +14,7 @@ cd ${SLURM_SUBMIT_DIR}
 cd ${sample}
 
 /global/home/users/pierrj/git/bash/generate_bam_file.sh -g ${genome_bwa} \
- -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}.sra_1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}.sra_1.fastq \
+ -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
  -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
 
 /global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
