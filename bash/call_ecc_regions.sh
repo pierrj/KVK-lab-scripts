@@ -140,3 +140,5 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count p
 rm parallel.confirmed*
 
 rm tmp.*
+
+rm lengthfiltered.merged.splitreads.SRR6315407.renamed.*.bed
