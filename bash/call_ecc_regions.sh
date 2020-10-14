@@ -141,4 +141,4 @@ rm parallel.confirmed*
 
 rm tmp.*
 
-rm lengthfiltered.merged.splitreads.SRR6315407.renamed.*.bed
+rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
