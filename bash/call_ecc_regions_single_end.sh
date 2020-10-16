@@ -61,6 +61,6 @@ paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 cp lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed parallel.plusone.confirmed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
-rm parallel.confirmed*
+rm parallel.plusone.confirmed
 
-# rm tmp.*
+rm tmp.*
