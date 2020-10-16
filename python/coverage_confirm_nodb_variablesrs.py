@@ -54,9 +54,9 @@ def confidence_check(ecc):
         ecc.append('incomplete_coverage')
         ecc.append(coverage_string)
         return ecc
-    if ecc[3] == min_sr:
+    if ecc[3] <= min_sr:
         ecc.append('lowq')
-        ecc.append('only_' + str(min_sr) + '_splitread')
+        ecc.append('lessthanor_' + str(min_sr) + '_splitreads')
         ecc.append(coverage_string)
         return ecc
     # if the ecc before or after regions fall beyond the borders of the chromosome than the ecc is medium confidence
