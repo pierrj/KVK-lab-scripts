@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts g:1:s:t:m:q: option
+while getopts g:1:s:t:m: option
 do
 case "${option}"
 in
@@ -8,11 +8,9 @@ g) GENOME_DB=${OPTARG};;
 s) SAMPLE=${OPTARG};;
 t) THREADS=${OPTARG};;
 m) MAPFILE=${OPTARG};;
-q) READONE_LINK=${OPTARG};;
 esac
 done
 
-curl -O ${READONE_LINK}
 cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o tmp.trimmed.seqprep.${SAMPLE}.fastq ${READONE}
 bwa mem -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
 samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergedandpe.bwamem.bam

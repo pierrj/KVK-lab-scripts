@@ -57,3 +57,8 @@ sample=IF_1A
 mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/guy11bao_7015mito_spikeins_tweaked_osativa_worganelles_bwa"
 sbatch --job-name=$sample.ecc_caller -p savio --ntasks-per-node=20 --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm
+
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
+while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm; done < mapfile

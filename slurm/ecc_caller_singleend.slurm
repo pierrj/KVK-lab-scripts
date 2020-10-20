@@ -14,8 +14,8 @@ cd ${SLURM_SUBMIT_DIR}
 cd ${sample}
 
 /global/home/users/pierrj/git/bash/single_end_generate_bam_file.sh -g ${genome_bwa} \
- -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}.fastq.gz \
- -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile} -q ${READONE_LINK}
+ -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}.fastq \
+ -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
 
 /global/home/users/pierrj/git/bash/call_ecc_regions_single_end.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
