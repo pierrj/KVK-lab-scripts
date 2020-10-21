@@ -23,7 +23,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -43,7 +43,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -63,7 +63,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -83,7 +83,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -103,7 +103,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -123,7 +123,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -143,7 +143,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -163,7 +163,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -183,7 +183,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -203,7 +203,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -223,7 +223,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -243,7 +243,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
@@ -263,7 +263,7 @@ fi
 while read sample;
 do
     cd ${sample}
-    ecc_count=$(wc -l ecccaller_output.${sample}.renamed.details.tsv | awk '{print $1}')
+    ecc_count=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
     read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
     genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
     total=$(awk -v ECC="$ecc_count" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
