@@ -31,6 +31,8 @@ do
     cd ..
 done < mapfile
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
 cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/
 
 ecc_count_output=ecc_count_output_myrice.txt
@@ -50,6 +52,9 @@ do
     echo -e $sample'\t'$total >> ../${ecc_count_output}
     cd ..
 done < mapfile
+
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
 
 cd /global/scratch/users/pierrj/eccDNA/2018_moller/full_run
 
@@ -71,6 +76,9 @@ do
     cd ..
 done < mapfile_muscle
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
+
 cd /global/scratch/users/pierrj/eccDNA/2018_moller/full_run
 
 ecc_count_output=ecc_count_output_human_leukocytes.txt
@@ -90,6 +98,9 @@ do
     echo -e $sample'\t'$total >> ../${ecc_count_output}
     cd ..
 done < mapfile_leukocytes
+
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
 
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/full_run
 
@@ -111,6 +122,9 @@ do
     cd ..
 done < mapfile_ENA_ara_wt
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
+
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/full_run
 
 ecc_count_output=ecc_count_output_ara_epi.txt
@@ -130,6 +144,9 @@ do
     echo -e $sample'\t'$total >> ../${ecc_count_output}
     cd ..
 done < mapfile_ENA_ara_epi
+
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
 
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/full_run
 
@@ -151,6 +168,9 @@ do
     cd ..
 done < mapfile_ENA_ory_callus
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
+
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/full_run
 
 ecc_count_output=ecc_count_output_ory_leaf.txt
@@ -170,6 +190,9 @@ do
     echo -e $sample'\t'$total >> ../${ecc_count_output}
     cd ..
 done < mapfile_ENA_ory_leaf
+
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
 
 cd /global/scratch/users/pierrj/eccDNA/2017_lanciano/full_run
 
@@ -191,6 +214,9 @@ do
     cd ..
 done < mapfile_ENA_ory_seed
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
+
 cd /global/scratch/users/pierrj/eccDNA/2015_moller/full_run
 
 ecc_count_output=ecc_count_output_yeast_d.txt
@@ -210,6 +236,9 @@ do
     echo -e $sample'\t'$total >> ../${ecc_count_output}
     cd ..
 done < mapfile_d
+
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
 
 cd /global/scratch/users/pierrj/eccDNA/2015_moller/full_run
 
@@ -231,6 +260,9 @@ do
     cd ..
 done < mapfile_z
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
+
 cd /global/scratch/users/pierrj/eccDNA/2015_moller/full_run
 
 ecc_count_output=ecc_count_output_yeast_g.txt
@@ -251,6 +283,9 @@ do
     cd ..
 done < mapfile_g
 
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+
+
 cd /global/scratch/users/pierrj/eccDNA/2015_moller/full_run
 
 ecc_count_output=ecc_count_output_yeast_s.txt
@@ -270,3 +305,5 @@ do
     echo -e $sample'\t'$total >> ../${ecc_count_output}
     cd ..
 done < mapfile_s
+
+cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
