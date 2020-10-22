@@ -15,4 +15,6 @@ done
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SAMPLE}.sra
 STAR --runThreadN ${THREADS} \
     --genomeDir ${GENOME_DB} \
-    --readFilesIn ${READONE} ${READTWO}
+    --readFilesIn ${READONE} ${READTWO} \
+    --outSAMtype BAM SortedByCoordinate \
+    --outFileNamePrefix ${SAMPLE}
