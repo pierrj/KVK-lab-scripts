@@ -62,3 +62,8 @@ sbatch --job-name=$sample.ecc_caller -p savio --ntasks-per-node=20 --export=samp
 mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
 while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm; done < mapfile
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_w_organelles_bwa"
+sample=RC_2B
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome.slurm
