@@ -13,3 +13,7 @@ sbatch --job-name=$sample.starmap --export=sample=$sample,GENOME_DB=$GENOME_DB /
 sample=SRR8842990
 GENOME_DB=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_star
 sbatch --job-name=$sample.starmap --export=sample=$sample,GENOME_DB=$GENOME_DB /global/home/users/pierrj/git/slurm/star_map_from_sra_pe.slurm
+
+sample=SRR306516
+GENOME_DB=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_star
+sbatch --job-name=$sample.starmap --export=sample=$sample,GENOME_DB=$GENOME_DB /global/home/users/pierrj/git/slurm/star_map_from_sra_se.slurm
