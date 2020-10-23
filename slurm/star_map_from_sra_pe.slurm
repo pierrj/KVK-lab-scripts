@@ -15,6 +15,8 @@ cd ${sample}
 
 module load STAR
 
+module load cufflinks
+
 /global/home/users/pierrj/git/bash/star_map_from_sra_pe.sh -g ${GENOME_DB} \
  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}.sra_1.fastq -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}.sra_2.fastq \
  -s ${sample} -t ${SLURM_NTASKS}

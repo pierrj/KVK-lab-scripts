@@ -18,3 +18,4 @@ STAR --runThreadN ${THREADS} \
     --readFilesIn ${READONE} ${READTWO} \
     --outSAMtype BAM SortedByCoordinate \
     --outFileNamePrefix ${SAMPLE}.
+cufflinks --library-type fr-unstranded -o cufflinks.${sample}.dir ${SAMPLE}.Aligned.sortedByCoord.out.bam
