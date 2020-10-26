@@ -17,5 +17,6 @@ STAR --runThreadN ${THREADS} \
     --genomeDir ${GENOME_DB} \
     --readFilesIn ${READONE} ${READTWO} \
     --outSAMtype BAM SortedByCoordinate \
-    --outFileNamePrefix ${SAMPLE}.
+    --outFileNamePrefix ${SAMPLE}. \
+    --outSAMstrandField intronMotif
 cufflinks --library-type fr-unstranded -o cufflinks.${sample}.dir ${SAMPLE}.Aligned.sortedByCoord.out.bam
