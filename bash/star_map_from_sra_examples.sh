@@ -22,4 +22,4 @@ GENOME_DB=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_star
 while read sample; do sbatch --job-name=$sample.starmap_se --export=sample=$sample,GENOME_DB=$GENOME_DB /global/home/users/pierrj/git/slurm/star_map_from_sra_se.slurm; done < mapfile_se
 
 GENOME_DB=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_star
-while read sample; do sbatch --job-name=$sample.starmap_se --export=sample=$sample,GENOME_DB=$GENOME_DB /global/home/users/pierrj/git/slurm/star_map_from_sra_pe.slurm; done < mapfile_pe
+while read sample; do sbatch --job-name=$sample.starmap_pe --export=sample=$sample,GENOME_DB=$GENOME_DB /global/home/users/pierrj/git/slurm/star_map_from_sra_pe.slurm; done < mapfile_pe

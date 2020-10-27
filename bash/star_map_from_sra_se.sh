@@ -18,4 +18,4 @@ STAR --runThreadN ${THREADS} \
     --outSAMtype BAM SortedByCoordinate \
     --outFileNamePrefix ${SAMPLE}. \
     --outSAMstrandField intronMotif
-cufflinks --library-type ff-unstranded -o cufflinks.${sample}.dir ${SAMPLE}.Aligned.sortedByCoord.out.bam
+cufflinks -p ${THREADS} --library-type ff-unstranded -o cufflinks.${sample}.dir ${SAMPLE}.Aligned.sortedByCoord.out.bam
