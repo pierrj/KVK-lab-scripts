@@ -203,7 +203,7 @@ def run_braker(
                 os.path.dirname(braker_bin), 'getAnnoFastaFromJoingenes.py'
             )
 
-            command3 = '{} -g {} -o {} -t {} -3 {}'.format(
+            command3 = '{} -g {} -o {} -t {} -f {}'.format(
                 get_anno_script, adjusted_assembly,
                 os.path.splitext(gff3_braker)[0], translation_table, os.path.join(output_dir, prefix, 'braker.gtf')
             )
