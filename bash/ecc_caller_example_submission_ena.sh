@@ -27,3 +27,7 @@ while IFS=$'\t' read -r sample READONE_LINK READTWO_LINK; do sbatch --job-name=$
 mapfile="/global/scratch/users/pierrj/references/TAIR10.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/TAIR10_bwa"
 while IFS=$'\t' read -r sample READONE_LINK READTWO_LINK; do sbatch --job-name=$sample.ecc_caller_ena --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa,READONE_LINK=$READONE_LINK,READTWO_LINK=$READTWO_LINK /global/home/users/pierrj/git/slurm/ecc_caller_ena.slurm; done < mapfile_ENA_ara
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_bwa"
+while IFS=$'\t' read -r sample READONE_LINK READTWO_LINK; do sbatch --job-name=$sample.ecc_caller_ena --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa,READONE_LINK=$READONE_LINK,READTWO_LINK=$READTWO_LINK /global/home/users/pierrj/git/slurm/ecc_caller_ena.slurm; done < mapfile_ENA_ory
