@@ -41,14 +41,16 @@ while read -r dir ecc_count_output genome_file gff_file mapfile; do
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
         total_genic=$(awk -v ECC="$ecc_count_genic" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
         total_noncoding=$(awk -v ECC="$ecc_count_noncoding" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
-        total_all=$(awk -v ECC="$ecc_count_all" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
-        echo -e $sample'\t'$total_genic >> ../ecc_count_output_genic
-        echo -e $sample'\t'$total_noncoding >> ../ecc_count_output_noncoding
-        echo -e $sample'\t'$total_all >> ../ecc_count_output_all
+        total_all=$(awk -v ECC="$ecc_count_all" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepaircd
+        echo -e $sample'\t'$total_genic >> ../${ecc_count_output_genic}
+        echo -e $sample'\t'$total_noncoding >> ../${ecc_count_output_noncoding}
+        echo -e $sample'\t'$total_all >> ../${ecc_count_output_all}
         rm tmp.genes.gff
         rm tmp.genic.ecccaller_output.${sample}.renamed.details.tsv
         rm tmp.noncoding.ecccaller_output.${sample}.renamed.details.tsv
         cd ..
     done < $mapfile
-    cp ${ecc_count_output} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+    cp ${ecc_count_output_genic} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+    cp ${ecc_count_output_noncoding} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+    cp ${ecc_count_output_all} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
 done < mapfile_ecc_count
