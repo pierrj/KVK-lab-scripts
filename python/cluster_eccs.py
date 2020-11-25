@@ -58,11 +58,11 @@ for chrom in range(scaffold_number):
             cluster_subset_tupleoftuples = tuple(tuple(sub) for sub in cluster_subset_listoflists)
             representative_variants[tuple(point_of_interest)] = cluster_subset_tupleoftuples
 
-with open('merged.confirmed'+output_name, 'w', newline = '') as merged:
+with open('merged.confirmed'+outputname, 'w', newline = '') as merged:
     w = csv.writer(merged, delimiter = '\t')
     w.writerows(representative_eccs)
 
-with open('ecccaller_splitreads.' + output_name + '.tsv', 'w', newline="") as variants_dict:
+with open('ecccaller_splitreads.' + outputname + '.tsv', 'w', newline="") as variants_dict:
     w = csv.writer(variants_dict, delimiter = '\t')
     for key, value in representative_variants.items():
         w.writerow([key, value])
