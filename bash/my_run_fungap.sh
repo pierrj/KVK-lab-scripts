@@ -2,7 +2,7 @@
 cd $1
 genome=$(basename $1)
 echo start >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
-date +"%T" >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
+date '+%d/%m/%Y %H:%M:%S' >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
 
 python /Users/pierrj/fungap_local/FunGAP/fungap_patched.py \
   --output_dir fungap_out \
@@ -19,4 +19,4 @@ if [ ! -f ${1}/fungap_out/fungap_out/fungap_out.gff3 ]; then
 fi
 
 echo end >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
-date +"%T" >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
+date '+%d/%m/%Y %H:%M:%S' >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
