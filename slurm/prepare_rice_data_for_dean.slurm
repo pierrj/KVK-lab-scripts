@@ -19,11 +19,11 @@ gzip -c ${sample}_R2.fastq > /global/home/groups/fc_kvkallow/${sample}_R2.fastq.
 cd ..
 done < mapfile
 
-cd /global/scratch/users/pierrj/eccDNA/stress_experiments/infected/
+cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
 
 while read sample; do
 cd ${sample}
 gzip -c ${sample}_R1.fastq > /global/home/groups/fc_kvkallow/${sample}_R1.fastq.gz
 gzip -c ${sample}_R2.fastq > /global/home/groups/fc_kvkallow/${sample}_R2.fastq.gz
 cd ..
-done < mapfile
+done < mapfile_IF
