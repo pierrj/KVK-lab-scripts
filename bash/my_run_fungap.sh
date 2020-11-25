@@ -8,7 +8,7 @@ python /Users/pierrj/fungap_local/FunGAP/fungap_patched.py \
   --output_dir fungap_out \
   --trans_read_1 SRR8842990_1.fastq \
   --trans_read_2 SRR8842990_2.fastq \
-  --genome_assembly ${genome}.fasta  \
+  --genome_assembly ${genome}_genomic.fna  \
   --augustus_species magnaporthe_grisea  \
   --sister_proteome prot_db.faa  \
   --busco_dataset sordariomycetes_odb10 \
