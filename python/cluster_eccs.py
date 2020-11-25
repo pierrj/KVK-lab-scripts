@@ -3,6 +3,7 @@ import numpy as np
 from scipy.cluster.hierarchy import linkage
 from scipy.cluster.hierarchy import fcluster
 import csv
+import sys
 
 outputname = str(sys.argv[1])
 scaffold_number = int(sys.argv[2])
