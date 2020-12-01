@@ -77,9 +77,9 @@ paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average_lengthno
 ## look at confirmed spit reads per gene in all technical replicates
 ## normalize to limit bias against small genes which are more likely to be found in eccDNAs
 while read ECCDNA_FILE; do
-    ecc_basename=$(basename ${ECCDNA_FLE})
-    bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FLE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene #### CHECK THE COLUMNS HERE, should be gene name and count per gene
-    num_srs=$(wc -l ${ECCDNA_FLE} | awk '{print $1/100000}')
+    ecc_basename=$(basename ${ECCDNA_FILE})
+    bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene #### CHECK THE COLUMNS HERE, should be gene name and count per gene
+    num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
     paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N)}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES DOUBLE CHECK THIS
 done < ${ECCDNA_MAPFILE}
 # normalize and average across technical and biological replicates as written in previous scripts
@@ -89,27 +89,27 @@ fi
 sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk {print $1+1})
 for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${SAMPLE}.normalize_table ; done
 ECCDNA_FILE=$(head -1 ${ECCDNA_MAPFILE})
-ecc_basename=$(basename ${ECCDNA_FLE})
-/global/home/users/pierrj/git/create_mapfile_for_normalize_and_average.sh -t ${ecc_basename}.normalized.splitreadspergene -m ${SAMPLE_MAPFILE} -n ${SAMPLE}.normalize_table -y t
-/global/home/users/pierrj/git/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
+ecc_basename=$(basename ${ECCDNA_FILE})
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -t ${ecc_basename}.normalized.splitreadspergene -m ${SAMPLE_MAPFILE} -n ${SAMPLE}.normalize_table -y t
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
 mv ${SAMPLE}.normalized_binned ${SAMPLE}.normalized.splitreadspergene
 
 # make 100kb bins and count genes per bin
 samtools faidx ${GENOME_FASTA}
 cut -f1,2 ${GENOME_FASTA}.fai > ${genome_fasta_basename}.sizes
 bedtools makewindows -g ${genome_fasta_basename}.sizes -w 100000 | awk '$3-$2==100000' > ${genome_fasta_basename}.100kbins # no bins smaller than 100kb
-bedtools intersect -a ${genome_fasta_basename}.100kbins -b ${basename_gff_file}.justgenes -c -sorted > ${SAMPLE}.genesperk100kb
+bedtools intersect -a ${genome_fasta_basename}.100kbins -b ${basename_gff_file}.justgenes -c > ${SAMPLE}.genesperk100kb
 
 while read ECCDNA_FILE; do
-    ecc_basename=$(basename ${ECCDNA_FLE})
-    bedtools intersect -a ${genome_fasta_basename}.100kbbins -b ${ECCDNA_FLE} -c > ${ecc_basename}.eccsper100kb
-    num_srs=$(wc -l ${ECCDNA_FLE} | awk '{print $1/100000}')
+    ecc_basename=$(basename ${ECCDNA_FILE})
+    bedtools intersect -a ${genome_fasta_basename}.100kbbins -b ${ECCDNA_FILE} -c > ${ecc_basename}.eccsper100kb
+    num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
     awk -v N=$num_srs '{print $1, $2, $3/N}' > ${ecc_basename}.eccsper100kb.normalized ## DOUBLE CHECK COLUMN COUNT HERE
 done < ${ECCDNA_MAPFILE}
 ECCDNA_FILE=$(head -1 ${ECCDNA_MAPFILE})
-ecc_basename=$(basename ${ECCDNA_FLE})
-/global/home/users/pierrj/git/create_mapfile_for_normalize_and_average.sh -t ${ecc_basename}.eccsper100kb.normalized -m ${SAMPLE_MAPFILE} -n ${SAMPLE}.normalize_table -y t
-/global/home/users/pierrj/git/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
+ecc_basename=$(basename ${ECCDNA_FILE})
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -t ${ecc_basename}.eccsper100kb.normalized -m ${SAMPLE_MAPFILE} -n ${SAMPLE}.normalize_table -y t
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 mv ${SAMPLE}.normalized_binned ${SAMPLE}.normalized.splitreadsper100kb
 
 # look at scaffold averages instead of 100kb bins
