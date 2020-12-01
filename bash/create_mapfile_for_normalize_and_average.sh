@@ -1,10 +1,10 @@
 #!/bin/bash
-while getopts m:t:n:y: option ### THIS NEEDS TO BE FIXED ####
+while getopts m:t:n:y: option
 do
 case "${option}"
 in
 m) MAPFILE=${OPTARG};;
-t) FILE=${OPTARG};;
+t) FILE=${OPTARG};; # example file format
 n) NORMALIZE_FILE=${OPTARG};; ## example file if y option is e, otherwise table of numbers if option is t
 y) NORMALIZE_TYPE=${OPTARG};; ## can be either an example file name, e, or a table of numbers, t
 esac
