@@ -14,9 +14,10 @@ m) SAMPLE_MAPFILE=${OPTARG};;
 esac
 done
 
+genome_fasta_basename=$(basename ${GENOME_FASTA})
 
 ## index genome for STAR
-STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${GENOME_FASTA}_starindex \
+STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
     --genomeFastaFiles ${GENOME_FASTA} \
     --sjdbGTFfile ${GFF_FILE} \
     --sjdbOverhang 100 \
@@ -37,7 +38,7 @@ while read SRA; do
         /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
         /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
         STAR --runThreadN ${THREADS} \
-            --genomeDir ${GENOME_FASTA}_starindex \
+            --genomeDir ${genome_fasta_basename}_starindex \
             --readFilesIn ${SRA}.sra.fastq \
             --outSAMtype BAM SortedByCoordinate \
             --outFileNamePrefix ${SRA}. \
@@ -47,7 +48,7 @@ while read SRA; do
         /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
         /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
         STAR --runThreadN ${THREADS} \
-            --genomeDir ${GENOME_FASTA}_starindex \
+            --genomeDir ${genome_fasta_basename}_starindex \
             --readFilesIn ${SRA}.sra_1.fastq ${SRA}.sra_2.fastq \
             --outSAMtype BAM SortedByCoordinate \
             --outFileNamePrefix ${SRA}. \
@@ -89,7 +90,6 @@ mv ${SAMPLE}.normalized_binned ${SAMPLE}.normalized.splitreadspergene
 
 # make 100kb bins and count genes per bin
 samtools faidx ${GENOME_FASTA}
-genome_fasta_basename=$(basename ${GENOME_FASTA})
 cut -f1,2 ${GENOME_FASTA}.fai > ${genome_fasta_basename}.sizes
 bedtools makewindows -g ${genome_fasta_basename}.sizes -w 100000 | awk '$3-$2==100000' > ${genome_fasta_basename}.100kbins # no bins smaller than 100kb
 bedtools intersect -a ${genome_fasta_basename}.100kbins -b ${basename_gff_file}.justgenes -c -sorted > ${SAMPLE}.genesperk100kb
