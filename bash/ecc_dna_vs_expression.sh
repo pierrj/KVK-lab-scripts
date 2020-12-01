@@ -16,6 +16,12 @@ done
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
+if [ -d "${genome_fasta_basename}_starindex" ]; then
+    rm -r ${genome_fasta_basename}_starindex
+fi
+
+mkdir ${genome_fasta_basename}_starindex
+
 ## index genome for STAR
 STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
     --genomeFastaFiles ${GENOME_FASTA} \
