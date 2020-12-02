@@ -28,7 +28,8 @@ STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta
     --sjdbGTFfile ${GFF_FILE} \
     --sjdbOverhang 100 \
     --genomeSAindexNbases 11 \
-    --sjdbGTFtagExonParentTranscript Parent
+    --sjdbGTFtagExonParentTranscript ID \
+    --sjdbGTFtagExonParentGene Parent
 
 ## get exon and gene length per gene (ONLY WORKS IF YOU HAVE ONE TRANSCRIPT PER GENE AND SPECIFIC FORMAT FROM FUNGAP)
 basename_gff_file=$(basename ${GFF_FILE})
