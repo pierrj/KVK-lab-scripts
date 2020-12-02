@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts g:s:a:t:l:f:e:m: option
+while getopts g:s:a:t:l:f:e:m:n: option
 do
 case "${option}"
 in
@@ -11,6 +11,7 @@ l) LIBTYPE=${OPTARG};; ## 1 for SE or 2 for PE
 f) GFF_FILE=${OPTARG};;
 e) ECCDNA_MAPFILE=${OPTARG};;
 m) SAMPLE_MAPFILE=${OPTARG};;
+n) ECC_NORMALIZATION=${OPTARG};; ## g for gene length multiplication or a for any overlap
 esac
 done
 
@@ -82,6 +83,8 @@ paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average > ${SAMP
 if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
     rm ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 fi
+if [[ "${ECC_NORMALIZATION}" -eq g ]] ## normalize for gene length by multiplying by gene length 
+then
 while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
@@ -89,6 +92,18 @@ while read ECCDNA_FILE; do
     paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
     echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
+elif [[ "${ECC_NORMALIZATION}" -eq a ]] ## normalize for gene length by counting any overlap during bedtools intersect
+then
+while read ECCDNA_FILE; do
+    ecc_basename=$(basename ${ECCDNA_FILE})
+    bedtools intersect -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
+    num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
+    paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, $2/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
+    echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
+done < ${ECCDNA_MAPFILE}
+else
+echo "invalid normalization type"
+fi
 
 # normalize and average across technical and biological replicates as written in previous scripts
 if [ -f "${SAMPLE}.normalize_table_column" ]; then
