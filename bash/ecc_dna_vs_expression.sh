@@ -73,7 +73,7 @@ first_SRA=$(head -1 ${SRA_LIST})
 awk 'NR>4 {print $1}' ${first_SRA}.ReadsPerGene.out.tab > ${SAMPLE}.genecount_firstcolumn
 paste $(find . -maxdepth 1 -name "${SAMPLE}.RPKM.*.ReadsPerGene.out.genecolumn.tab" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") > ${SAMPLE}.genecount_table
 awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' ${SAMPLE}.genecount_table > ${SAMPLE}.genecount_table_average
-paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average_lengthnormalized > ${SAMPLE}.genecount_table_final
+paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average > ${SAMPLE}.genecount_table_final
 
 ## look at confirmed spit reads per gene in all technical replicates
 ## normalize to limit bias against small genes which are more likely to be found in eccDNAs
@@ -81,13 +81,13 @@ while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene #### CHECK THE COLUMNS HERE, should be gene name and count per gene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
-    paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N)}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES DOUBLE CHECK THIS
+    paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES DOUBLE CHECK THIS
 done < ${ECCDNA_MAPFILE}
 # normalize and average across technical and biological replicates as written in previous scripts
 if [ -f "${SAMPLE}.normalize_table" ]; then
     rm ${SAMPLE}.normalize_table
 fi
-sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk {print $1+1})
+sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
 for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${SAMPLE}.normalize_table ; done
 ECCDNA_FILE=$(head -1 ${ECCDNA_MAPFILE})
 ecc_basename=$(basename ${ECCDNA_FILE})
