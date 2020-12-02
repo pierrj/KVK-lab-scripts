@@ -136,3 +136,9 @@ paste ${SAMPLE}.genesperk100kb ${SAMPLE}.normalized.splitreadsper100kb.countcolu
 # number of genes per 100kb bins versus eccDNA forming regions (averages per scaffold)
 awk '{print $2}' ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn
 paste ${SAMPLE}.genesper100kb.scaffoldaverage ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn > ${SAMPLE}.SRsvsgenesperk100kbperscaffold
+
+Rscript --vanilla /global/home/users/pierrj/git/R/basic_scatterplot.R ${SAMPLE}.RPKMvsSRs 2 3 RPKM SRs ${SAMPLE}.RPKMvsSRs ${SAMPLE}.RPKMvsSRs 4 4
+
+Rscript --vanilla /global/home/users/pierrj/git/R/basic_scatterplot.R ${SAMPLE}.SRsvsgenesper100kb 4 5 GenesPer100kb SRs ${SAMPLE}.SRsvsgenesper100kb ${SAMPLE}.SRsvsgenesper100kb 4 4
+
+Rscript --vanilla /global/home/users/pierrj/git/R/basic_scatterplot.R ${SAMPLE}.SRsvsgenesperk100kbperscaffold 2 3 GenesPerScaffold SRs ${SAMPLE}.SRsvsgenesperk100kbperscaffold ${SAMPLE}.SRsvsgenesperk100kbperscaffold 4 4 
