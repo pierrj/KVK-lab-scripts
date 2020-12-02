@@ -16,7 +16,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 df <- data.frame(fread(args[1]))
 
-plot_title = paste(args[7], ".pdf")
+plot_title = paste(args[7], ".pdf", sep = "")
 
 pdf(file = plot_title, width = as.numeric(args[8]), height = as.numeric(args[9]))
 
