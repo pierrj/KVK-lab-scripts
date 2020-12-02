@@ -77,22 +77,25 @@ paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average > ${SAMP
 
 ## look at confirmed spit reads per gene in all technical replicates
 ## normalize to limit bias against small genes which are more likely to be found in eccDNAs
+if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
+    rm ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
+fi
 while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene #### CHECK THE COLUMNS HERE, should be gene name and count per gene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
     paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES DOUBLE CHECK THIS
+    echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
+
 # normalize and average across technical and biological replicates as written in previous scripts
-if [ -f "${SAMPLE}.normalize_table" ]; then
-    rm ${SAMPLE}.normalize_table
+if [ -f "${SAMPLE}.normalize_table_column" ]; then
+    rm ${SAMPLE}.normalize_table_column
 fi
 sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
-for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${SAMPLE}.normalize_table ; done
-ECCDNA_FILE=$(head -1 ${ECCDNA_MAPFILE})
-ecc_basename=$(basename ${ECCDNA_FILE})
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -t ${ecc_basename}.normalized.splitreadspergene -m ${SAMPLE_MAPFILE} -n ${SAMPLE}.normalize_table -y t
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
+for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${SAMPLE}.normalize_table_column ; done
+paste ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn ${SAMPLE}.normalize_table_column ${SAMPLE_MAPFILE} > ${SAMPLE}.mapfile_for_normalize_and_average
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${SAMPLE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
 mv ${SAMPLE}.normalized_binned ${SAMPLE}.normalized.splitreadspergene
 
 # make 100kb bins and count genes per bin
