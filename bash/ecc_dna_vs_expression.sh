@@ -34,8 +34,10 @@ STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta
 ## get exon and gene length per gene (ONLY WORKS IF YOU HAVE ONE TRANSCRIPT PER GENE AND SPECIFIC FORMAT FROM FUNGAP)
 basename_gff_file=$(basename ${GFF_FILE})
 grep 'exon' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
-grep 'gene' ${GFF_FILE} > ${basename_gff_file}.justgenes
-grep 'gene' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.gene_lengths
+awk '{if ($3 == "gene") print $0}' ${GFF_FILE} > ${basename_gff_file}.justgenes
+awk '{if ($3 == "gene") print $0}' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.gene_lengths
+## NEED TO TEST WITH AND WITHOUT THIS XFORMATION TO COMPARE OUTPUT
+
 
 ## download and map all reads in passed list of SRA accessions
 ## generate RPKM for each gene
@@ -82,9 +84,9 @@ if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
 fi
 while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
-    bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene #### CHECK THE COLUMNS HERE, should be gene name and count per gene
+    bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
-    paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES DOUBLE CHECK THIS
+    paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
     echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
 
@@ -104,21 +106,25 @@ cut -f1,2 ${GENOME_FASTA}.fai > ${genome_fasta_basename}.sizes
 bedtools makewindows -g ${genome_fasta_basename}.sizes -w 100000 | awk '$3-$2==100000' > ${genome_fasta_basename}.100kbins # no bins smaller than 100kb
 bedtools intersect -a ${genome_fasta_basename}.100kbins -b ${basename_gff_file}.justgenes -c > ${SAMPLE}.genesperk100kb
 
+if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
+    rm ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
+fi
 while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
-    bedtools intersect -a ${genome_fasta_basename}.100kbbins -b ${ECCDNA_FILE} -c > ${ecc_basename}.eccsper100kb
+    bedtools intersect -a ${genome_fasta_basename}.100kbins -b ${ECCDNA_FILE} -c > ${ecc_basename}.eccsper100kb
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
-    awk -v N=$num_srs '{print $1, $2, $3/N}' > ${ecc_basename}.eccsper100kb.normalized ## DOUBLE CHECK COLUMN COUNT HERE
+    awk -v N=$num_srs '{print $1, $2, $4/N}' ${ecc_basename}.eccsper100kb > ${ecc_basename}.eccsper100kb.normalized
+    echo ${ecc_basename}.eccsper100kb.normalized >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
-ECCDNA_FILE=$(head -1 ${ECCDNA_MAPFILE})
-ecc_basename=$(basename ${ECCDNA_FILE})
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -t ${ecc_basename}.eccsper100kb.normalized -m ${SAMPLE_MAPFILE} -n ${SAMPLE}.normalize_table -y t
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
+
+# normalize and average across technical and biological replicates as written in previous scripts
+paste ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn ${SAMPLE}.normalize_table_column ${SAMPLE_MAPFILE} > ${SAMPLE}.mapfile_for_normalize_and_average
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${SAMPLE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 mv ${SAMPLE}.normalized_binned ${SAMPLE}.normalized.splitreadsper100kb
 
 # look at scaffold averages instead of 100kb bins
 awk '{seen[$1]+=$4; count[$1]++} END{for (x in seen)print x, seen[x]/count[x]}' ${SAMPLE}.genesperk100kb | sort -k1,1 > ${SAMPLE}.genesper100kb.scaffoldaverage
-awk '{seen[$1]+=$4; count[$1]++} END{for (x in seen)print x, seen[x]/count[x]}' ${SAMPLE}.normalized.splitreadsper100kb | sort -k1,1 > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage
+awk '{seen[$1]+=$3; count[$1]++} END{for (x in seen)print x, seen[x]/count[x]}' ${SAMPLE}.normalized.splitreadsper100kb | sort -k1,1 > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage
 
 ## generate output files
 # gene splitreads versus RPKM
@@ -128,8 +134,5 @@ paste ${SAMPLE}.genecount_table_final ${SAMPLE}.normalized.splitreadspergene.cou
 awk '{print $3}' ${SAMPLE}.normalized.splitreadsper100kb > ${SAMPLE}.normalized.splitreadsper100kb.countcolumn
 paste ${SAMPLE}.genesperk100kb ${SAMPLE}.normalized.splitreadsper100kb.countcolumn > ${SAMPLE}.SRsvsgenesper100kb
 # number of genes per 100kb bins versus eccDNA forming regions (averages per scaffold)
-awk '{print $4}' ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn
+awk '{print $2}' ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn
 paste ${SAMPLE}.genesper100kb.scaffoldaverage ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn > ${SAMPLE}.SRsvsgenesperk100kbperscaffold
-
-
-## DOUBLE CHECK THAT GENE EXON LENGTHS AND READS PER GENE LINE UP PERFECTLY
