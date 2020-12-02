@@ -83,7 +83,7 @@ paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average > ${SAMP
 if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
     rm ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 fi
-if [[ "${ECC_NORMALIZATION}" == g ]] ## normalize for gene length by multiplying by gene length 
+if [[ "${ECC_NORMALIZATION}" == "g" ]] ## normalize for gene length by multiplying by gene length 
 then
 while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
@@ -92,7 +92,7 @@ while read ECCDNA_FILE; do
     paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, ($2*$3)/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
     echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
-elif [[ "${ECC_NORMALIZATION}" == a ]] ## normalize for gene length by counting any overlap during bedtools intersect
+elif [[ "${ECC_NORMALIZATION}" == "a" ]] ## normalize for gene length by counting any overlap during bedtools intersect
 then
 while read ECCDNA_FILE; do
     ecc_basename=$(basename ${ECCDNA_FILE})
