@@ -26,3 +26,9 @@ module load STAR
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
     -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE} -n a
+
+/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/multiplicative_normalization
+
+/global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
+    -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
+    -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE} -n g

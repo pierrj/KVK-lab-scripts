@@ -139,7 +139,7 @@ mv ${SAMPLE}.normalized_binned ${SAMPLE}.normalized.splitreadsper100kb
 
 # look at scaffold averages instead of 100kb bins
 awk -v OFS='\t' '{seen[$1]+=$4; count[$1]++} END{for (x in seen)print x, seen[x]/count[x]}' ${SAMPLE}.genesperk100kb | sort -k1,1 > ${SAMPLE}.genesper100kb.scaffoldaverage
-awk -v OFS='\t''{seen[$1]+=$3; count[$1]++} END{for (x in seen)print x, seen[x]/count[x]}' ${SAMPLE}.normalized.splitreadsper100kb | sort -k1,1 > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage
+awk -v OFS='\t' '{seen[$1]+=$3; count[$1]++} END{for (x in seen)print x, seen[x]/count[x]}' ${SAMPLE}.normalized.splitreadsper100kb | sort -k1,1 > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage
 
 ## generate output files
 # gene splitreads versus RPKM
