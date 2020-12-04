@@ -12,6 +12,11 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 source activate pfamscan
 
+module remove r
+
+module load r/3.4.2
+
+
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/gene_analysis_wrapper/
 
 while read treatment; do
@@ -24,7 +29,7 @@ while read treatment; do
     while read sample
     do
     cd ${sample}
-    cp ecccaller_output.${sample}.renamed.details.tsv /global/scratch/users/pierrj/eccDNA/pipeline_tests/gene_analysis_wrapper/
+    cp ecccaller_output.${sample}.renamed.details.tsv /global/scratch/users/pierrj/eccDNA/pipeline_tests/gene_analysis_wrapper/${treatment}
     cd ..
     done < mapfile_${treatment}
 
