@@ -157,18 +157,6 @@ def run_braker(
             logger_txt.debug('[Run] %s', command1)
             os.system(command1)
 
-            logger_txt.debug('PATCHED IN BY PIERRE JOUBERT')
-            logger_txt.debug('PATH IS ABSOLUTE')
-
-            command_gtf2gff = '/usr/local/maker/bin/genemark_gtf2gff3 {} > {}'.format(
-                os.path.join(output_dir, prefix, 'braker.gtf'), os.path.join(output_dir, prefix, 'braker.gff3')
-            )
-            logger_txt.debug('[Run] %s', command_gtf2gff)
-            os.system(command_gtf2gff)
-
-            logger_txt.debug('PATCHED IN BY PIERRE JOUBERT')
-            logger_txt.debug('PATH IS ABSOLUTE')
-
             # Change file name
             command2 = 'mv {} {}'.format(
                 os.path.join(output_dir, prefix, 'braker.gff3'), gff3_braker)
@@ -201,6 +189,23 @@ def run_braker(
             )
             logger_txt.debug('[Run] %s', command4)
             os.system(command4)
+
+            logger_txt.debug('PATCHED IN BY PIERRE JOUBERT')
+            logger_txt.debug('PATH IS ABSOLUTE')
+
+            command_gtf2gff = '/usr/local/maker/bin/genemark_gtf2gff3 {} > {}'.format(
+                os.path.join(output_dir, prefix, 'braker.gtf'), os.path.join(output_dir, prefix, 'braker.gff3')
+            )
+            logger_txt.debug('[Run] %s', command_gtf2gff)
+            os.system(command_gtf2gff)
+
+            command2 = 'mv {} {}'.format(
+                os.path.join(output_dir, prefix, 'braker.gff3'), gff3_braker)
+            logger_txt.debug('[Run] %s', command2)
+            os.system(command2)
+
+            logger_txt.debug('PATCHED IN BY PIERRE JOUBERT')
+            logger_txt.debug('PATH IS ABSOLUTE')
 
             braker_out = os.path.join(
                 output_dir, prefix, 'braker_{}.faa'.format(prefix))
