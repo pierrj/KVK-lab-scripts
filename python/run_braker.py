@@ -191,10 +191,13 @@ def run_braker(
             os.system(command4)
 
             logger_txt.debug('PATCHED IN BY PIERRE JOUBERT')
-            logger_txt.debug('PATH IS ABSOLUTE')
 
-            command_gtf2gff = '/usr/local/maker/bin/genemark_gtf2gff3 {} > {}'.format(
-                os.path.join(output_dir, prefix, 'braker.gtf'), os.path.join(output_dir, prefix, 'braker.gff3')
+            maker_bin = D_CONF['MAKER_PATH']
+            get_genemark_gtf2gff3 = os.path.join(
+            maker_bin, 'genemark_gtf2gff3')
+
+            command_gtf2gff = '{} {} > {}'.format(
+                get_genemark_gtf2gff3, os.path.join(output_dir, prefix, 'braker.gtf'), os.path.join(output_dir, prefix, 'braker.gff3')
             )
             logger_txt.debug('[Run] %s', command_gtf2gff)
             os.system(command_gtf2gff)
@@ -205,7 +208,6 @@ def run_braker(
             os.system(command2)
 
             logger_txt.debug('PATCHED IN BY PIERRE JOUBERT')
-            logger_txt.debug('PATH IS ABSOLUTE')
 
             braker_out = os.path.join(
                 output_dir, prefix, 'braker_{}.faa'.format(prefix))
