@@ -4,7 +4,7 @@ genome=$(basename $1)
 echo start >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
 date '+%d/%m/%Y %H:%M:%S' >> /Users/pierrj/fungap_runs/moryzae_genomes/annotation_run_tracker/${genome}_run_tracker
 
-python /Users/pierrj/fungap_local/FunGAP/fungap_patched.py \
+python /Users/pierrj/fungap_local/FunGAP/fungap.py \
   --output_dir fungap_out \
   --trans_read_1 SRR8842990_1.fastq \
   --trans_read_2 SRR8842990_2.fastq \
