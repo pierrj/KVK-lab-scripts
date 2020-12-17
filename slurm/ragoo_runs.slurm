@@ -29,7 +29,7 @@ cp ${GFF_FILE} .
 python /global/scratch/users/pierrj/scripts/RaGOO/ragoo.py guy11_genome_baoetal2017.fasta moryzae_${genome}_ref.fasta -m /global/scratch/users/pierrj/software/minimap2/minimap2-2.17_x64-linux/minimap2 -b -gff ${GFF_FILE_BASENAME}
 ls ragoo_output/orderings/* > orderings.fofn
 samtools faidx ragoo_output/chimera_break/guy11_genome_baoetal2017.intra.chimera.broken.fa
-python /global/scratch/users/pierrj/scripts/RaGOO/lift_over.py ragoo_output/chimera_break/G3_all.common.genes.intra.chimera_broken.gff orderings.fofn ragoo_output/chimera_break/guy11_genome_baoetal2017.intra.chimera.broken.fa.fai > genes.ragoo.gff
+python /global/scratch/users/pierrj/scripts/RaGOO/lift_over.py ragoo_output/chimera_break/ctvspqhotgene.inter.chimera_broken.gff orderings.fofn ragoo_output/chimera_break/guy11_genome_baoetal2017.intra.chimera.broken.fa.fai > genes.ragoo.gff
 cp genes.ragoo.gff ${genome}.liftover.gff
 cp ragoo_output/ragoo.fasta ${genome}.ragoo.fasta
 cd ..
