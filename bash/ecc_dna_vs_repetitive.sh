@@ -14,6 +14,7 @@ esac
 done
 
 # make 100kb bins and count repeats per bin
+genome_fasta_basename=$(basename ${GENOME_FASTA})
 samtools faidx ${GENOME_FASTA}
 cut -f1,2 ${GENOME_FASTA}.fai > ${genome_fasta_basename}.sizes
 bedtools makewindows -g ${genome_fasta_basename}.sizes -w 100000 | awk '$3-$2==100000' > ${genome_fasta_basename}.100kbins # no bins smaller than 100kb
