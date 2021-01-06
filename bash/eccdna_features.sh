@@ -93,3 +93,41 @@ paste ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn ${SAMPLE}.normalize
 mv ${SAMPLE}.normalized_binned ${SAMPLE}.ecc_density
 
 ## get length distribution histogram
+
+## determine max_max_length
+if [ -f "${SAMPLE}.ecc_maxlength" ]; then
+    rm ${SAMPLE}.ecc_maxlength
+fi
+while read ECCDNA_FILE; do
+    basename_eccdna_file=$(basename ${ECCDNA_FILE})
+    max_length=$(awk '{print $3-$2}' ${ECCDNA_FILE} | sort -k1,1nr | head -1)
+    echo max_length >> ${SAMPLE}.ecc_maxlength
+done < ${ECCDNA_MAPFILE_SRS}
+bin_size=100
+max_max_length=$(sort -k1,1nr ${SAMPLE}.ecc_maxlength | head -1 | awk -v b="$bin_size" '{print $0/b}' | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}' | awk -v b="$bin_size" '{print $0*b}')
+
+if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
+    rm ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
+fi
+while read ECCDNA_FILE; do
+    basename_eccdna_file=$(basename ${ECCDNA_FILE})
+    awk '{print $3-$2}' ${ECCDNA_FILE} > ${basename_eccdna_file}.ecc_lengths
+    python /global/home/users/pierrj/git/python/get_density.py ${basename_eccdna_file}.ecc_lengths $bin_size $max_max_length ${basename_eccdna_file}.ecc_lengths_density ## PATH NEEDS TO BE FIXED
+    echo ${basename_eccdna_file}.ecc_lengths_density >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
+done < ${ECCDNA_MAPFILE_SRS}
+if [ -f "${SAMPLE}.normalize_table_column" ]; then
+    rm ${SAMPLE}.normalize_table_column
+fi
+sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
+for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${SAMPLE}.normalize_table_column ; done
+paste ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn ${SAMPLE}.normalize_table_column ${SAMPLE_MAPFILE} > ${SAMPLE}.mapfile_for_normalize_and_average
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${SAMPLE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
+mv ${SAMPLE}.normalized_binned ${SAMPLE}.ecc_density
+
+## make density histogram
+
+## average densities
+
+## but need defined bin sizes say 100 bp
+
+## get flanking repeats stuff

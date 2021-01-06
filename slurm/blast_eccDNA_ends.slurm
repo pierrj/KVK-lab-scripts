@@ -20,7 +20,7 @@ do
     awk -v OFS='\t' '{ print $1, $3-50, $3+50, $4}' eccDNA > eccDNA_end
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccDNA_start.fasta -bed eccDNA_start
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccDNA_end.fasta -bed eccDNA_end
-    blastn -query eccDNA_start.fasta -subject eccDNA_end.fasta -task blastn-short -strand 'plus' -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput
+    blastn -query eccDNA_start.fasta -subject eccDNA_end.fasta -task blastn-short -strand 'plus' -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
     if [ -s blastoutput ]
     then
         echo -e $eccDNA'\t'$(awk '{print $7}' blastoutput ) >> homology_table_100
