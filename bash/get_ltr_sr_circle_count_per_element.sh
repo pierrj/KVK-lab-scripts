@@ -20,6 +20,7 @@ grep INTERNAL tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed > tmp.INTERNAL.${ELEMENT
 ## maybe this means I need to differentiate between actual split reads and reads overlapping two features right next to each other?
 bedtools intersect -wa -bed -abam ${SPLIT_READ_FILE} -b tmp.LTR.${ELEMENT}.${OUTPUTNAME}.filtered.bed | sort | uniq > ${ELEMENT}.${OUTPUTNAME}.ltr_overlap_srs.bed
 
+## MAKE SURE THE FACT THAT READS 1 AND READS2 ARENT MERGED TOGETHER AT SOME POINT HERE!!!!
 bedtools bamtobed -i ${SPLIT_READ_FILE} > ${OUTPUTNAME}.allsrs.bed
 
 python /global/home/users/pierrj/git/python/get_other_locs_for_ltr_srs.py ${ELEMENT}.${OUTPUTNAME}.ltr_overlap_srs.bed ${OUTPUTNAME}.allsrs.bed ${ELEMENT}.${OUTPUTNAME}.ltr_and_ltr_overlap_srs.bed ${ELEMENT}.${OUTPUTNAME}.other_overlap_srs.bed

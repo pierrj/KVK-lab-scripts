@@ -11,6 +11,9 @@ p) PAV_FILE=${OPTARG};; ## file of genes (must match gene names in gff file) and
 esac
 done
 
+awk '{if ($3 == "gene") print $0}' ${GFF_FILE} > ${basename_gff_file}.justgenes
+awk '{if ($3 == "gene") print $0}' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.gene_lengths
+
 ## look at confirmed spit reads per gene in all technical replicates
 ## normalize to limit bias against small genes which are more likely to be found in eccDNAs
 if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
@@ -19,7 +22,6 @@ fi
 if [[ "${ECC_NORMALIZATION}" == "g" ]] ## normalize for gene length by multiplying by gene length 
 then
 while read ECCDNA_FILE; do
-    echo "multiplicative normalization"
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
@@ -29,7 +31,6 @@ done < ${ECCDNA_MAPFILE}
 elif [[ "${ECC_NORMALIZATION}" == "a" ]] ## normalize for gene length by counting any overlap during bedtools intersect
 then
 while read ECCDNA_FILE; do
-    echo "anyoverlap normalization"
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')

@@ -86,7 +86,6 @@ fi
 if [[ "${ECC_NORMALIZATION}" == "g" ]] ## normalize for gene length by multiplying by gene length 
 then
 while read ECCDNA_FILE; do
-    echo "multiplicative normalization"
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
@@ -96,7 +95,6 @@ done < ${ECCDNA_MAPFILE}
 elif [[ "${ECC_NORMALIZATION}" == "a" ]] ## normalize for gene length by counting any overlap during bedtools intersect
 then
 while read ECCDNA_FILE; do
-    echo "anyoverlap normalization"
     ecc_basename=$(basename ${ECCDNA_FILE})
     bedtools intersect -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
