@@ -40,7 +40,15 @@ representative_variants = {}
 for chrom in range(scaffold_number): # this is much faster than looking through all of the entries for all scaffolds at once
     scaffold_subset = parallel_confirmed_dict[chrom]
     scaffold_subset_startend =  scaffold_subset[["start", "end"]]
-    if scaffold_subset_startend.empty: # some scaffolds don't have any entries
+    if scaffold_subset_startend.empty : # some scaffolds don't have any entries
+        continue
+    else if len(scaffold_subset_startend) == 1: # or only one
+        clustered = 'no'
+        rep_start = scaffold_subset.iloc[0]['start']
+        rep_end = scaffold_subset.iloc[0]['end']
+        split_read_count = scaffold_subset.iloc[0]['splitreads']
+        point_of_interest = [chrom, rep_start, rep_end, split_read_count ,clustered]
+        representative_eccs.append(point_of_interest)
         continue
     else:
         linkage_for_scaffold = linkage(scaffold_subset_startend) # hierarchical clustering
