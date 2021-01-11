@@ -42,7 +42,7 @@ for chrom in range(scaffold_number): # this is much faster than looking through 
     scaffold_subset_startend =  scaffold_subset[["start", "end"]]
     if scaffold_subset_startend.empty : # some scaffolds don't have any entries
         continue
-    else if len(scaffold_subset_startend) == 1: # or only one
+    elif len(scaffold_subset_startend) == 1: # or only one
         clustered = 'no'
         rep_start = scaffold_subset.iloc[0]['start']
         rep_end = scaffold_subset.iloc[0]['end']
