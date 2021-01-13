@@ -18,14 +18,12 @@ SAMPLE=G3_1A
 THREADS=20
 MAPFILE="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 GENOME_DB="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-FILTERED_BAMFILE=${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
+samtools sort -n ${SAMPLE}.sorted.mergedandpe.bwamem.bam > name_sorted.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
-samtools sort -n ${SAMPLE}.sorted.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
+samtools index name_sorted.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
-samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
-
-samtools view -b -F 256 ${SAMPLE}.sorted.mergedandpe.bwamem.bam > primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
+samtools view -b -F 256 name_sorted.${SAMPLE}.sorted.mergedandpe.bwamem.bam > primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
 /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${SAMPLE} -b primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
@@ -63,8 +61,8 @@ awk -v OFS='\t' '{
     }
 }'  tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.2.${SAMPLE}.sam
 
-samtools view -b -f 65 -F 4 ${FILTERED_BAMFILE} > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam
-samtools view -b -f 129 -F 4 ${FILTERED_BAMFILE} > tmp.filtered.sorted.allmapq.mapped.2.${SAMPLE}.bam
+samtools view -b -f 65 -F 4 name_sorted.${SAMPLE}.sorted.mergedandpe.bwamem.bam > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam
+samtools view -b -f 129 -F 4 name_sorted.${SAMPLE}.sorted.mergedandpe.bwamem.bam > tmp.filtered.sorted.allmapq.mapped.2.${SAMPLE}.bam
 
 java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar FilterSamReads \
         INPUT=tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam \
