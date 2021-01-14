@@ -8,7 +8,7 @@ with open('split_line_fix.'+output_number, 'w', newline = '') as confirmed:
     w = csv.writer(confirmed, delimiter = '\t')
     if output_number == 1:
         pass
-    else output_number != 1:
+    else:
         with open(file_name, newline = '') as file:
             file_reader = csv.reader(file, delimiter = '\t')
             for row in file_reader:
