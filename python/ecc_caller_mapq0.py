@@ -52,12 +52,10 @@ def process_split_read(read):
         loc = 'end'
     else:
         return False ## if regexp doesn't work then just drop the split
-    if matches_sums['M'] > matches_sums['other']:
+    if matches_sums['M'] >= matches_sums['other']:
         split_read_side_one.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
     elif matches_sums['M'] < matches_sums['other']:
         split_read_side_two.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
-    else:
-        print("shit can't tell which read is which")
     return True
 
 def choose_split_reads(split_read_side_one, split_read_side_two_pre):
