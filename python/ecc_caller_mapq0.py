@@ -61,6 +61,8 @@ def process_split_read(read):
     return True
 
 def choose_split_reads(split_read_side_one, split_read_side_two_pre):
+    if len(split_read_side_two) == 0:
+        return False
     split_read_side_two = np.array(split_read_side_two_pre, dtype=object)
     combos = []
     for i in range(len(split_read_side_one)):
