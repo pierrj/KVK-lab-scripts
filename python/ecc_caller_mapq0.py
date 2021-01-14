@@ -105,13 +105,12 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
         except ValueError:
             densities.append(0)
     densities_sum = sum(densities)
+    if densities_sum == 0: ## any of the options possible?
+        return False
     densities_array = np.array(densities)
     densities_ratio = densities_array/densities_sum
     choice = random.choices(combos, densities_ratio, k=1)[0]
-    if densities_sum != 0: ## any of the options possible?
-        return choice
-    else:
-        return False
+    return choice
 
 for k in range(10):
     with open(split_reads, newline = '') as file:
