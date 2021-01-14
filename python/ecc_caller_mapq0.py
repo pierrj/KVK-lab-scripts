@@ -13,7 +13,7 @@ import sys
 known_srs_length = str(sys.argv[1])
 split_reads = str(sys.argv[2])
 column_cutoff = int(sys.argv[3])
-output_number = str(sys.argv[5])
+output_number = str(sys.argv[4])
 
 with open(known_srs_length, newline = '') as file: ## this is for each individual technical replicate
     file_reader = csv.reader(file, delimiter = '\t')
