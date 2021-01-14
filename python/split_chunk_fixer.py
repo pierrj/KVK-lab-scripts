@@ -14,7 +14,7 @@ with open('split_line_fix.'+str(output_number), 'w', newline = '') as confirmed:
             for row in file_reader:
                 current_line = row
                 first_read = current_line[3]
-                while current_line[3] == current_read:
+                while current_line[3] == first_read:
                     w.writerow(current_line)
                     current_line = next(file_reader)
                 break
