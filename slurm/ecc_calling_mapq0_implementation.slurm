@@ -19,7 +19,7 @@ READTWO=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_
 SAMPLE=G3_1A
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 
-/global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g \
+/global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g ${GENOME_DB} \
     -1 ${READONE} \
     -2 ${READTWO} \
     -s ${SAMPLE} \
