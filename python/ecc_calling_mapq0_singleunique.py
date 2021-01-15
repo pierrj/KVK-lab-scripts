@@ -10,7 +10,6 @@ import sys
 known_srs_length = str(sys.argv[1])
 split_reads = str(sys.argv[2])
 column_cutoff = int(sys.argv[3])
-output_number = str(sys.argv[4])
 
 with open(known_srs_length, newline = '') as file: ## this is for each individual technical replicate
     file_reader = csv.reader(file, delimiter = '\t')
@@ -49,9 +48,9 @@ def process_split_read(read):
         loc = 'end'
     else:
         return False ## if regexp doesn't work then just drop the split
-    if matches_sums['M'] >= matches_sums['other']:
+    if read[4] != 0:
         split_read_side_one.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
-    elif matches_sums['M'] < matches_sums['other']:
+    else:
         split_read_side_two.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
     return True
 
@@ -109,21 +108,22 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
     choice = random.choices(combos, densities_ratio, k=1)[0]
     return choice
 
-with open(split_reads, newline = '') as file:
-    file_reader = csv.reader(file, delimiter = '\t')
-    with open('mapq0_choices.'+output_number, 'w', newline = '') as confirmed:
-        w = csv.writer(confirmed, delimiter = '\t')
-        for row in file_reader:
-            current_line = row
-            current_read = current_line[3]
-            split_read_side_one = []
-            split_read_side_two = []
-            while current_line[3] == current_read:
-                process_split_read(current_line)
-                try:
-                    current_line = next(file_reader)
-                except StopIteration:
-                    break
-            choice = choose_split_reads(split_read_side_one, split_read_side_two)
-            if choice:
-                w.writerow([choice[0], choice[1], choice[2]])
+for k in range(10):
+    with open(split_reads, newline = '') as file:
+        file_reader = csv.reader(file, delimiter = '\t')
+        with open('singleunique_choices', 'w', newline = '') as confirmed:
+            w = csv.writer(confirmed, delimiter = '\t')
+            for row in file_reader:
+                current_line = row
+                current_read = current_line[3]
+                split_read_side_one = []
+                split_read_side_two = []
+                while current_line[3] == current_read:
+                    process_split_read(current_line)
+                    try:
+                        current_line = next(file_reader)
+                    except StopIteration:
+                        break
+                choice = choose_split_reads(split_read_side_one, split_read_side_two)
+                if choice:
+                    w.writerow([choice[0], choice[1], choice[2]])
