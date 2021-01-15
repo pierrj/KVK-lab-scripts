@@ -124,10 +124,4 @@ paste ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn ${SAMPLE}.normalize
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${SAMPLE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
 mv ${SAMPLE}.normalized_binned ${SAMPLE}.ecc_density
 
-## make density histogram
-
-## average densities
-
-## but need defined bin sizes say 100 bp
-
 ## get flanking repeats stuff
