@@ -19,8 +19,6 @@ done
 
 # then to add to call_ecc_regions
 
-## START CALLING ECC_REGIONS WITH ONLY UNIQUELY MAPPED READS
-
 samtools view -f 81 -F 4 ${FILTERED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
 splitread_file="reverseread1.${SAMPLE}.sam"
 awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
@@ -164,16 +162,11 @@ cat $(find . -maxdepth 1 -name "parallel.confirmed*" | xargs -r ls -1 | tr "\n" 
 
 mv parallel.confirmed unique_parallel.confirmed
 
-## END CALLING ECC_DNAS WITHOUT MAPQ0 READS
+# rm parallel.confirmed*
+# rm tmp.*
+# rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
 
-rm parallel.confirmed*
-rm tmp.*
-rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
-
-## START CALLING ECC_DNAS WITH MAPQ0 READS
-
-## get dsn file
-
+## get length distribution file
 
 awk '{print $3-$2}' unique_parallel.confirmed > dsn.unique_parallel.confirmed
 
@@ -281,6 +274,8 @@ for i in $(seq 1 1 $((THREADS-1))); do
     cat ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${i}.bed split_line_fix.${next} > multimapped_splitreads.${i}.bed
 done
 
+cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${THREADS}.bed multimapped_splitreads.${THREADS}.bed
+
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_calling_mapq0.py dsn.unique_parallel.confirmed  multimapped_splitreads.${i}.bed 50000 {} ::: $(seq -w 1 ${THREADS})
 
 python /global/home/users/pierrj/git/python/ecc_calling_mapq0_singleunique.py dsn.unique_parallel.confirmed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.bed 50000
@@ -325,8 +320,6 @@ cat unique_parallel.confirmed mapq0_parallel.confirmed > parallel.confirmed
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
-
-# rename and finalize parallel.confirmed
 
 # rm dsn.unique_parallel.confirmed
 # rm unique_parallel.confirmed
