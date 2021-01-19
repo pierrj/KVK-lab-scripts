@@ -47,7 +47,7 @@ samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
 # filter using names of contigs in mapfile
 samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
-samtools view -q 1 -F 256 filtered.sorted.${SAMPLE}.bam > uniq.filtered.sorted.${SAMPLE}.bam
+samtools view -b -q 1 -F 256 filtered.sorted.${SAMPLE}.bam > uniq.filtered.sorted.${SAMPLE}.bam
 
 # COMMENTS MISSING
 samtools sort -n -@ ${THREADS} filtered.sorted.${SAMPLE}.bam > multimapped.filtered.name_sorted.${SAMPLE}.bam
