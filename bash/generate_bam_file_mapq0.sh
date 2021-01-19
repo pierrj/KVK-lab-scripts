@@ -28,6 +28,7 @@ echo ${GENOME_DB}
 echo ${READONE}
 echo ${READTWO}
 echo ${SAMPLE}
+echo ${THREADS}
 echo ${MAPFILE}
 
 # cutadapt uses specific adapters here, will be replaced with trimmomatic which predicts adapters automatically eventually
