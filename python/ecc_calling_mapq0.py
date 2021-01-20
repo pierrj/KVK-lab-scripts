@@ -43,12 +43,20 @@ def process_split_read(read):
     elif str(read[5]) == '+':
         sense = 'forward'
     string = read[6]
-    if re.match(start_pattern, string):
-        loc = 'start'
-    elif re.match(end_pattern, string):
-        loc = 'end'
-    else:
-        return False ## if regexp doesn't work then just drop the split
+    if sense == 'forward':
+        if re.match(start_pattern, string):
+            loc = 'start'
+        elif re.match(end_pattern, string):
+            loc = 'end'
+        else:
+            return False
+    elif sense == 'reverse':
+        if re.match(start_pattern, string):
+            loc = 'end'
+        elif re.match(end_pattern, string):
+            loc = 'start'
+        else:
+            return False ## if regexp doesn't work then just drop the split
     if matches_sums['M'] >= matches_sums['other']:
         split_read_side_one.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
     elif matches_sums['M'] < matches_sums['other']:
@@ -69,6 +77,7 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
         # start and end pairs
         # properly oriented (eccDNA vs intron)
         # total of read lengths is around 150
+        ### I THINK THIS IF STATEMENT DOESNT DO ANYTHING BUT WHATEVER
         if ((split_read_first_side[3] == 'forward' and split_read_first_side[5] == 'start') or 
             (split_read_first_side[3] == 'reverse' and split_read_first_side[5] == 'end')):
                 reduced = split_read_side_two[np.logical_and.reduce((split_read_side_two[:, 0] == split_read_first_side[0],
