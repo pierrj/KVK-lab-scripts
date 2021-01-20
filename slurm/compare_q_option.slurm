@@ -51,7 +51,7 @@ awk -v OFS='\t' '{
 
 samtools view -f 256 test_mapping.sam | awk '{print $5}' | sort | uniq -c > mapqs_counts
 
-samtools view test_mapping.sam | awk '{print $1}' | sort | uniq -c | wc -l > total_read_count
+samtools view test_mapping.sam | awk '{print $1}' | uniq -c | wc -l > total_read_count
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/compare_q_option/yesqoption
 
@@ -88,4 +88,4 @@ awk -v OFS='\t' '{
 
 samtools view -f 256 test_mapping.sam | awk '{print $5}' | sort | uniq -c > mapqs_counts
 
-samtools view test_mapping.sam | awk '{print $1}' | sort | uniq -c | wc -l > total_read_count
+samtools view test_mapping.sam | awk '{print $1}' | uniq -c | wc -l > total_read_count
