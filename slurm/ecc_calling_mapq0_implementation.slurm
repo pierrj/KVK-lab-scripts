@@ -18,10 +18,18 @@ READONE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_
 READTWO=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/G3_1A_R2.fastq
 SAMPLE=G3_1A
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
+FILTERED_BAMFILE=uniq.filtered.sorted.G3_1A.bam
+FILTERED_BAMFILE_QSORTED=multimapped.filtered.name_sorted.G3_1A.bam
 
-/global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g ${GENOME_DB} \
-    -1 ${READONE} \
-    -2 ${READTWO} \
+# /global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g ${GENOME_DB} \
+#     -1 ${READONE} \
+#     -2 ${READTWO} \
+#     -s ${SAMPLE} \
+#     -t ${SLURM_NTASKS} \
+#     -m ${MAPFILE}
+
+/global/home/users/pierrj/git/bash/ecc_caller_mapq0.sh -m ${MAPFILE} \
     -s ${SAMPLE} \
     -t ${SLURM_NTASKS} \
-    -m ${MAPFILE}
+    -b ${FILTERED_BAMFILE} \
+    -q ${FILTERED_BAMFILE_QSORTED}
