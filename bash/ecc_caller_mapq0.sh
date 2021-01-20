@@ -267,14 +267,17 @@ cat ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.1.bed
 
 split --number=l/${THREADS} --numeric-suffixes=1 --additional-suffix=.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.
 
-for i in $(seq 1 1 $THREADS); do
+for i in $(seq -w 1 1 $THREADS); do
     python /global/home/users/pierrj/git/python/split_chunk_fixer.py ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${i}.bed ${i}
 done
 
-for i in $(seq 1 1 $((THREADS-1))); do
-    next=$(($i+1))
+seq -w 1 1 $((THREADS-1)) > tmp.seq
+seq -w 2 1 ${THREADS} > tmp.seq_plusone
+paste tmp.seq tmp.seq_plusone > tmp.seqs
+
+while IFS=$'\t' read -r i next; do
     cat ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${i}.bed split_line_fix.${next} > multimapped_splitreads.${i}.bed
-done
+done < tmp.seqs
 
 cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${THREADS}.bed multimapped_splitreads.${THREADS}.bed
 
