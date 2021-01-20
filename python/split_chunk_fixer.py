@@ -2,9 +2,9 @@ import csv
 import sys
 
 file_name = str(sys.argv[1])
-output_number = int(sys.argv[2])
+output_number = str(sys.argv[2])
 
-with open('split_line_fix.'+str(output_number), 'w', newline = '') as confirmed:
+with open('split_line_fix.'+output_number, 'w', newline = '') as confirmed:
     w = csv.writer(confirmed, delimiter = '\t')
     if output_number == 1:
         pass
