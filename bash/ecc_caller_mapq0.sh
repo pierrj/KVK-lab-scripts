@@ -164,7 +164,9 @@ cat $(find . -maxdepth 1 -name "parallel.confirmed*" | xargs -r ls -1 | tr "\n" 
 
 mv parallel.confirmed unique_parallel.confirmed
 
-# rm parallel.confirmed*
+## MAKE SURE PARALLEL.CONFRMED MERGING WORKS WELL
+
+rm parallel.confirmed*
 # rm tmp.*
 # rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
 
@@ -326,6 +328,7 @@ paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
+rm parallel.confirmed*
 # rm dsn.unique_parallel.confirmed
 # rm unique_parallel.confirmed
 # rm 
