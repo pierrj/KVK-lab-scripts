@@ -281,7 +281,7 @@ done < tmp.seqs
 
 cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${THREADS}.bed multimapped_splitreads.${THREADS}.bed
 
-parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_calling_mapq0.py dsn.unique_parallel.confirmed  multimapped_splitreads.${i}.bed 50000 {} ::: $(seq -w 1 ${THREADS})
+parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_calling_mapq0.py dsn.unique_parallel.confirmed  multimapped_splitreads.{}.bed 50000 {} ::: $(seq -w 1 ${THREADS})
 
 python /global/home/users/pierrj/git/python/ecc_calling_mapq0_singleunique.py dsn.unique_parallel.confirmed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.bed 50000
 
