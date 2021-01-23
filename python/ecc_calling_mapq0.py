@@ -58,9 +58,9 @@ def process_split_read(read):
         else:
             return False ## if regexp doesn't work then just drop the split
     if matches_sums['M'] >= matches_sums['other']:
-        split_read_side_one.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
+        split_read_side_one.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M'], matches_sums['other']]])
     elif matches_sums['M'] < matches_sums['other']:
-        split_read_side_two.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M']])
+        split_read_side_two.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M'], matches_sums['other']]])
     return True
 
 def choose_split_reads(split_read_side_one, split_read_side_two_pre):
@@ -77,7 +77,6 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
         # start and end pairs
         # properly oriented (eccDNA vs intron)
         # total of read lengths is around 150
-        ### I THINK THIS IF STATEMENT DOESNT DO ANYTHING BUT WHATEVER
         if ((split_read_first_side[3] == 'forward' and split_read_first_side[5] == 'start') or 
             (split_read_first_side[3] == 'reverse' and split_read_first_side[5] == 'end')):
                 reduced = split_read_side_two[np.logical_and.reduce((split_read_side_two[:, 0] == split_read_first_side[0],
@@ -85,8 +84,7 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
                                        abs(split_read_side_two[:,1] - split_read_first_side[1]) < column_cutoff,
                                         split_read_side_two[:, 5] != split_read_first_side[5],
                                         split_read_side_two[:,1] < split_read_first_side[1],
-                                        split_read_side_two[:,6] + split_read_first_side[6] > 140,
-                                        split_read_side_two[:,6] + split_read_first_side[6] < 160))]
+                                        np.isclose((split_read_side_two[:,6] + split_read_first_side[6]).astype(int), (split_read_side_two[:,7] + split_read_first_side[7]).astype(int), atol=10))]
         if ((split_read_first_side[3] == 'forward' and split_read_first_side[5] == 'end') or
             (split_read_first_side[3] == 'reverse' and split_read_first_side[5] == 'start')):
                 reduced = split_read_side_two[np.logical_and.reduce((split_read_side_two[:, 0] == split_read_first_side[0],
@@ -94,8 +92,7 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
                                        abs(split_read_side_two[:,1] - split_read_first_side[1]) < column_cutoff,
                                         split_read_side_two[:, 5] != split_read_first_side[5],
                                         split_read_side_two[:,1] > split_read_first_side[1],
-                                        split_read_side_two[:,6] + split_read_first_side[6] > 140,
-                                        split_read_side_two[:,6] + split_read_first_side[6] < 160))]
+                                        np.isclose((split_read_side_two[:,6] + split_read_first_side[6]).astype(int), (split_read_side_two[:,7] + split_read_first_side[7]).astype(int), atol=10)))]
         if len(reduced) != 0:
             for ii in range(len(reduced)):
                 split_read_second_side = reduced[ii]
