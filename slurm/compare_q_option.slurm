@@ -30,7 +30,7 @@ FILTERED_BAMFILE=test_mapping_no_a.bam
 
 /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s G3_1A -b ${FILTERED_BAMFILE}
 
-samtools view SRs.no_orientation.allmapq.G3_1A.bam | awk -v OFS='\t' '{print $1, $5}' | sort -k1,1 > SRs_and_qscore_sorted
+awk -v OFS='\t' '{print $1, $5}' tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam | sort -k1,1 > SRs_and_qscore_sorted.1
 
 awk -v OFS='\t' '{
     prev=$0; f1=$1; f2=$2
@@ -47,7 +47,26 @@ awk -v OFS='\t' '{
     else if ($2 == 0 && f2 == 0) {
         print "both_mapq0"
     }
-}'  SRs_and_qscore_sorted | sort | uniq -c > count
+}'  SRs_and_qscore_sorted.1 | sort | uniq -c > count.1
+
+awk -v OFS='\t' '{print $1, $5}' tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.2.${SAMPLE}.sam | sort -k1,1 > SRs_and_qscore_sorted.2
+
+awk -v OFS='\t' '{
+    prev=$0; f1=$1; f2=$2
+    getline 
+    if ($2 != 0 && f2 != 0) {
+        print "no_mapq0"
+    }
+    else if ($2 != 0 && f2 == 0) {
+        print "one_mapq0"
+    }
+    else if ($2 == 0 && f2 != 0) {
+        print "one_mapq0"
+    }
+    else if ($2 == 0 && f2 == 0) {
+        print "both_mapq0"
+    }
+}'  SRs_and_qscore_sorted.2 | sort | uniq -c > count.2
 
 samtools view -f 256 test_mapping.sam | awk '{print $5}' | sort | uniq -c > mapqs_counts
 
@@ -89,3 +108,33 @@ awk -v OFS='\t' '{
 samtools view -f 256 test_mapping.sam | awk '{print $5}' | sort | uniq -c > mapqs_counts
 
 samtools view test_mapping.sam | awk '{print $1}' | uniq -c | wc -l > total_read_count
+
+
+
+
+
+awk -v OFS='\t' '{
+    prev=$0; f1=$1; f2=$2
+    getline 
+    if ($2 != 0 && f2 == 0) {
+        print $1
+    }
+    else if ($2 == 0 && f2 != 0) {
+        print $1
+    }
+}'  SRs_and_qscore_sorted.1 > names_one_mapq0
+
+awk -v OFS='\t' '{
+    prev=$0; f1=$1; f2=$2
+    getline 
+    if ($2 != 0 && f2 == 0) {
+        print $1
+    }
+    else if ($2 == 0 && f2 != 0) {
+        print $1
+    }
+}'  SRs_and_qscore_sorted.1 > names_one_mapq0
+
+ comm -23 names_one_mapq0 ../noqoption/names_one_mapq0 | head -10
+
+ 
