@@ -84,7 +84,7 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
                                        abs(split_read_side_two[:,1] - split_read_first_side[1]) < column_cutoff,
                                         split_read_side_two[:, 5] != split_read_first_side[5],
                                         split_read_side_two[:,1] < split_read_first_side[1],
-                                        np.isclose((split_read_side_two[:,6] + split_read_first_side[6]).astype(int), (split_read_side_two[:,7] + split_read_first_side[7]).astype(int), atol=10))]
+                                        np.isclose((split_read_side_two[:,6] + split_read_first_side[6]).astype(int), (split_read_side_two[:,7] + split_read_first_side[7]).astype(int), atol=10)))]
         if ((split_read_first_side[3] == 'forward' and split_read_first_side[5] == 'end') or
             (split_read_first_side[3] == 'reverse' and split_read_first_side[5] == 'start')):
                 reduced = split_read_side_two[np.logical_and.reduce((split_read_side_two[:, 0] == split_read_first_side[0],
