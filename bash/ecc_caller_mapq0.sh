@@ -168,8 +168,8 @@ mv parallel.confirmed unique_parallel.confirmed
 ## MAKE SURE PARALLEL.CONFRMED MERGING WORKS WELL
 
 rm parallel.confirmed*
-# rm tmp.*
-# rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
+rm tmp.*
+rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
 
 ## get length distribution file
 
@@ -330,14 +330,14 @@ awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.con
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
 rm parallel.confirmed*
-# rm dsn.unique_parallel.confirmed
-# rm unique_parallel.confirmed
-# rm 
-# rm tmp.*
-# rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.*.bed
-# rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed
-# rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.*.bed
-# rm mapq0_choices.*
-# rm mapq0_choices
-# rm mapq0_single_unique_choices.bed
-# rm primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
+rm dsn.unique_parallel.confirmed
+rm unique_parallel.confirmed
+rm 
+rm tmp.*
+rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.*.bed
+rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed
+rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.*.bed
+rm mapq0_choices.*
+rm mapq0_choices
+rm mapq0_single_unique_choices.bed
+rm primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
