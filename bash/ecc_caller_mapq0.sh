@@ -168,8 +168,6 @@ mv parallel.confirmed unique_parallel.confirmed
 ## MAKE SURE PARALLEL.CONFRMED MERGING WORKS WELL
 
 rm parallel.confirmed*
-rm tmp.*
-rm lengthfiltered.merged.splitreads.${SAMPLE}.renamed.*.bed
 
 ## get length distribution file
 
