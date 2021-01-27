@@ -13,7 +13,7 @@
 cd ${SLURM_SUBMIT_DIR}
 cd ${sample}
 
-/global/home/users/pierrj/git/bash/generate_bam_file.sh -g ${genome_bwa} \
+/global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g ${genome_bwa} \
     -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R1.fastq \
     -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_R2.fastq \
     -s ${sample} \

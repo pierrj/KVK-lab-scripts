@@ -24,13 +24,6 @@ done
 # -t threads
 # -m mapfile with names of contigs of interest, as written in the fasta file used to make bwa genome database
 
-echo ${GENOME_DB}
-echo ${READONE}
-echo ${READTWO}
-echo ${SAMPLE}
-echo ${THREADS}
-echo ${MAPFILE}
-
 # cutadapt uses specific adapters here, will be replaced with trimmomatic which predicts adapters automatically eventually
 # nextseq-trim option is necessary for nextseq data
 cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq ${READONE} ${READTWO}
