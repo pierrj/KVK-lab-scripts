@@ -11,6 +11,25 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 
-cp -r illumina illumina_pre_mapq0_ecc_calling
+while read sample; do
+cd ${sample}
+    mv ${sample}_R1.fastq ../${sample}_R1.fastq
+    mv ${sample}_R2.fastq ../${sample}_R1.fastq
+cd ..
+done < mapfile
+
+while read sample; do
+cd ${sample}
+    rm -r *
+cd ..
+done < mapfile
+
+
+while read sample; do
+cd ${sample}
+    mv ../${sample}_R1.fastq ${sample}_R1.fastq
+    mv ../${sample}_R2.fastq ${sample}_R2.fastq
+cd ..
+done < mapfile
