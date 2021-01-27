@@ -15,21 +15,13 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 
 while read sample; do
 cd ${sample}
-    mv ${sample}_R1.fastq ../${sample}_R1.fastq
-    mv ${sample}_R2.fastq ../${sample}_R1.fastq
-cd ..
-done < mapfile
-
-while read sample; do
-cd ${sample}
     rm -r *
 cd ..
 done < mapfile
 
-
 while read sample; do
 cd ${sample}
-    mv ../${sample}_R1.fastq ${sample}_R1.fastq
-    mv ../${sample}_R2.fastq ${sample}_R2.fastq
+    cp ../../illumina_pre_mapq0_ecc_calling/${sample}/${sample}_R1.fastq .
+    cp ../../illumina_pre_mapq0_ecc_calling/${sample}/${sample}_R2.fastq .
 cd ..
 done < mapfile
