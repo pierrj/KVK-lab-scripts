@@ -23,21 +23,23 @@ FILTERED_BAMFILE_QSORTED=multimapped.filtered.name_sorted.G3_1A.bam
 CONFIRMED_SPLITREAD=G3_1A.confirmedsplitreads.bed
 NO_SECONDARY=no_secondary.filtered.sorted.G3_1A.bam
 
-/global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g ${GENOME_DB} \
-    -1 ${READONE} \
-    -2 ${READTWO} \
-    -s ${SAMPLE} \
-    -t ${SLURM_NTASKS} \
-    -m ${MAPFILE}
+# /global/home/users/pierrj/git/bash/generate_bam_file_mapq0.sh -g ${GENOME_DB} \
+#     -1 ${READONE} \
+#     -2 ${READTWO} \
+#     -s ${SAMPLE} \
+#     -t ${SLURM_NTASKS} \
+#     -m ${MAPFILE}
 
-/global/home/users/pierrj/git/bash/ecc_caller_mapq0.sh -m ${MAPFILE} \
-    -s ${SAMPLE} \
-    -t ${SLURM_NTASKS} \
-    -b ${FILTERED_BAMFILE} \
-    -q ${FILTERED_BAMFILE_QSORTED}
+# /global/home/users/pierrj/git/bash/ecc_caller_mapq0.sh -m ${MAPFILE} \
+#     -s ${SAMPLE} \
+#     -t ${SLURM_NTASKS} \
+#     -b ${FILTERED_BAMFILE} \
+#     -q ${FILTERED_BAMFILE_QSORTED}
 
-/global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${MAPFILE} \
-    -s ${SAMPLE} \
-    -t ${SLURM_NTASKS} \
-    -b ${NO_SECONDARY} \
-    -r ${CONFIRMED_SPLITREAD}
+# /global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${MAPFILE} \
+#     -s ${SAMPLE} \
+#     -t ${SLURM_NTASKS} \
+#     -b ${NO_SECONDARY} \
+#     -r ${CONFIRMED_SPLITREAD}
+
+python /global/home/users/pierrj/git/python/ecc_calling_mapq0_singleunique.py dsn.unique_parallel.confirmed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.bed 50000
