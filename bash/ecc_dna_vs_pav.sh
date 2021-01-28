@@ -1,4 +1,4 @@
-while getopts g:s:a:t:l:f:e:m:n: option
+while getopts s:f:e:m:n:p: option
 do
 case "${option}"
 in
