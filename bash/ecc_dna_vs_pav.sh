@@ -11,6 +11,8 @@ p) PAV_FILE=${OPTARG};; ## file of genes (must match gene names in gff file) and
 esac
 done
 
+basename_gff_file=$(basename ${GFF_FILE})
+
 awk '{if ($3 == "gene") print $0}' ${GFF_FILE} > ${basename_gff_file}.justgenes
 awk '{if ($3 == "gene") print $0}' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.gene_lengths
 
