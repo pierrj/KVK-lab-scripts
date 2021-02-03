@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts p:n:c:m:b:e:f:a:t: option
+while getopts p:n:c:m:b:e:f:a:t:i: option
 do
 case "${option}"
 in
@@ -12,57 +12,32 @@ e) TE_BEDFILE=${OPTARG};;
 f) PFAM_DIR=${OPTARG};;
 a) CDS_FASTA=${OPTARG};;
 t) THREADS=${OPTARG};;
+i) SAMPLE_MAPFILE=${OPTARG};;
 esac
 done
 
-while read SAMPLE
-do
-    awk '$6=="hconf" && $3-$2>1000' ecccaller_output.${SAMPLE}.renamed.details.tsv > ecccaller_output.${SAMPLE}.hconf.renamed.details.tsv
-    line_count=$(wc -l ecccaller_output.${SAMPLE}.hconf.renamed.details.tsv | awk '{print int($1/100)}') 
-    sr_count_cutoff=$(sort -k4,4nr ecccaller_output.${SAMPLE}.hconf.renamed.details.tsv | head -${line_count} | tail -1 | awk '{print $4}')
-    awk -v CUTOFF=${sr_count_cutoff} '$4>=CUTOFF' ecccaller_output.${SAMPLE}.hconf.renamed.details.tsv > ecccaller_output.${SAMPLE}.common.renamed.details.tsv
+if [ -f "${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn" ]; then
+    rm ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
+fi
+while read SAMPLE; do
+    bedtools intersect -f 1 -wa -c -a ${GENE_BEDFILE} -b ${SAMPLE}.confirmedsplitreads.bed | awk -v OFS='\t' '{print $4, $5}' > ${SAMPLE}.splitreadspergene
+    num_srs=$(wc -l ${SAMPLE}.confirmedsplitreads.bed | awk '{print $1/100000}')
+    awk -v N=$num_srs '{print $1, $2/N}' ${SAMPLE}.splitreadspergene > ${SAMPLE}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
+    echo ${SAMPLE}.normalized.splitreadspergene >> ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
 done < ${MAPFILE}
 
-## TO GENERATE BIOREP MAPFILE IF STANDARD FILES ARE SET
-
-awk '{print substr($1, 0,4)}' ${MAPFILE} | sort | uniq > tmp_biorepmapfile
-
-while read bio_rep; 
-do
-    cat $(find . -maxdepth 1 -name "ecccaller_output.${bio_rep}*.common.renamed.details.tsv" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") > ecccaller_output.${bio_rep}.common.renamed.details.tsv
-done < tmp_biorepmapfile
-
-while read bio_rep; 
-do
-    bedtools intersect -f 1 -wa -c -a ${GENE_BEDFILE} -b ecccaller_output.${bio_rep}.common.renamed.details.tsv | awk '{if ($5!=0) {print $4}}' > ${bio_rep}.common.genes
-done < tmp_biorepmapfile
-
-if [ -f "${OUTPUT_NAME}.common.genes" ]; then
-    rm ${OUTPUT_NAME}.common.genes
+if [ -f "${OUTPUT_NAME}.normalize_table_column" ]; then
+    rm ${OUTPUT_NAME}.normalize_table_column
 fi
+sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
+for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${OUTPUT_NAME}.normalize_table_column ; done
+paste ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn ${OUTPUT_NAME}.normalize_table_column ${SAMPLE_MAPFILE} > ${OUTPUT_NAME}.mapfile_for_normalize_and_average
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${OUTPUT_NAME}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
+mv ${OUTPUT_NAME}.normalized_binned ${OUTPUT_NAME}.normalized.splitreadspergene
 
-cat $(find . -maxdepth 1 -name "*.common.genes" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | sort | uniq -c | awk '$1==3 {print $2}' > ${OUTPUT_NAME}.common.genes
+sort -k2,2nr ${OUTPUT_NAME}.normalized.splitreadspergene | head -1000 | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
 
-while read bio_rep; 
-do
-    cat $(find . -maxdepth 1 -name "ecccaller_output.${bio_rep}*.hconf.renamed.details.tsv" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") > ecccaller_output.${bio_rep}.hconf.renamed.details.tsv
-done < tmp_biorepmapfile
-
-while read bio_rep; 
-do
-    bedtools intersect -f 1 -wa -c -a ${GENE_BEDFILE} -b ecccaller_output.${bio_rep}.hconf.renamed.details.tsv | awk '{if ($5!=0) {print $4}}' > ${bio_rep}.hconf.genes
-done < tmp_biorepmapfile
-
-
-if [ -f "${OUTPUT_NAME}.hconf.genes" ]; then
-    rm ${OUTPUT_NAME}.hconf.genes
-fi
-
-cat $(find . -maxdepth 1 -name "*.hconf.genes" | xargs -r ls -1 | cut -c 3- | tr "\n" " ") | sort | uniq > ${OUTPUT_NAME}.allhconf.genes
-
-awk '{print $4}' ${GENE_BEDFILE} > ${OUTPUT_NAME}.allgenenames
-
-cat ${OUTPUT_NAME}.allhconf.genes ${OUTPUT_NAME}.allgenenames | sort | uniq -c | awk '{if ($1==1) {print $2}}' > ${OUTPUT_NAME}.neverfound.genes
+awk '$3==0' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.neverfound.genes
 
 if [ -d "raw_files" ]; then
     rm -r raw_files
