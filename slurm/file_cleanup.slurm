@@ -10,12 +10,11 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress
+cd /global/scratch/users/pierrj/eccDNA/2015_moller/full_run
 while read sample
 do
-cd ${sample}
-rm *
-cp ../${sample}_R1.fastq .
-cp ../${sample}_R2.fastq .
+cd $sample
+rm -r *
+cp ../$sample.fastq $sample.fastq
 cd ..
-done < mapfile
+done < mapfiles
