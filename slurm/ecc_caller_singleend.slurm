@@ -18,7 +18,7 @@ cd ${sample}
  -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile}
 
 /global/home/users/pierrj/git/bash/call_ecc_regions_single_end.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
+    -s ${sample} -t ${SLURM_NTASKS} -b uniq.filtered.sorted.${sample}.bam -q multimapped.filtered.name_sorted.${sample}.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence_singleend.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam -r ${sample}.confirmedsplitreads.bed
+    -s ${sample} -t ${SLURM_NTASKS} -b no_secondary.filtered.sorted.${sample}.bam -r ${sample}.confirmedsplitreads.bed
