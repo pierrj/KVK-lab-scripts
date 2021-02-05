@@ -26,7 +26,7 @@ awk -v OFS='\t' '{print $1-1, $2, $3}' parallel.plusone.confirmed > parallel.con
 
 ## this is a little messy
 
-python /global/home/users/pierrj/git/python/merge_eccs.py ${SAMPLE} ${chrom_count}
+python /global/home/users/pierrj/git/python/cluster_eccs.py ${SAMPLE} ${chrom_count} 10
 
 shuf merged.confirmed > shuf.merged.confirmed
 

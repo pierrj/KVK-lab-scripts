@@ -17,4 +17,4 @@ cd $sample
 rm -r *
 cp ../$sample.fastq $sample.fastq
 cd ..
-done < mapfiles
+done < mapfile
