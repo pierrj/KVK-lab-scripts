@@ -17,8 +17,11 @@ cd ${sample}
  -1 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_1.fastq.gz -2 ${SLURM_SUBMIT_DIR}/${sample}/${sample}_2.fastq.gz \
  -s ${sample} -t ${SLURM_NTASKS} -m ${mapfile} -q ${READONE_LINK} -w ${READTWO_LINK}
 
-/global/home/users/pierrj/git/bash/call_ecc_regions.sh -m ${mapfile} \
-    -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam
+/global/home/users/pierrj/git/bash/ecc_caller_mapq0.sh -m ${mapfile} \
+    -s ${sample} \
+    -t ${SLURM_NTASKS} \
+    -b uniq.filtered.sorted.${sample}.bam \
+    -q multimapped.filtered.name_sorted.${sample}.bam
 
 /global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b filtered.sorted.${sample}.bam -r ${sample}.confirmedsplitreads.bed
