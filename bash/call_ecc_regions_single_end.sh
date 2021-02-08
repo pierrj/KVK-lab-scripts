@@ -65,7 +65,6 @@ awk -v OFS='\t' '$3-$2<50000' merged.splitreads.${SAMPLE}.bed > lengthfiltered.m
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
 for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
 
 cp lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed unique_parallel.confirmed
@@ -96,7 +95,7 @@ awk -v OFS='\t' '{
     }
 }'  tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam
 
-samtools view -b -f 65 -F 4 ${FILTERED_BAMFILE_QSORTED} > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam
+samtools view -b -F 4 ${FILTERED_BAMFILE_QSORTED} > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam
 
 java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar FilterSamReads \
         INPUT=tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam \
