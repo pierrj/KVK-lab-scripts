@@ -146,8 +146,7 @@ cp mapq0_single_unique_choices.renamed.bed mapq0_parallel.confirmed
 cat unique_parallel.confirmed mapq0_parallel.confirmed > parallel.confirmed
 
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
-awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
-awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
 rm parallel.confirmed*
 rm dsn.unique_parallel.confirmed
