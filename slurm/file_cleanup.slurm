@@ -17,3 +17,11 @@ cd $sample
 rm -r *
 cd ..
 done < mapfile
+
+
+while read sample
+do
+cd $sample
+rm -r *
+cd ..
+done < mapfile
