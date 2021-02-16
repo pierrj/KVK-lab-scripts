@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/structural_variation_smoking_gun
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/structural_variation_smoking_gun/anyoverlap
 
 GFF_FILE=guy11_fungap_out_12_28_20.genes.gff3
 ECC_MAPFILE=G3.eccmapfile_details
@@ -19,7 +19,7 @@ while read sample; do
     sample_base=$(basename ${sample})
     awk -v OFS='\t' '{if ($6 == "hconf") {print $1, $2, $3 }}' ${sample} > hconf.${sample_base}
     sort -k1,1 -k2,2n hconf.${sample_base} | awk -v OFS='\t' '{print $1, $2, $3, FNR}' > named_sorted.${sample_base}
-    bedtools intersect -F 1 -wa -c -a named_sorted.${sample_base} -b ${GFF_FILE} | awk '{if ($5 == 3){print $4}}' > triads_names.${sample_base}
+    bedtools intersect -wa -c -a named_sorted.${sample_base} -b ${GFF_FILE} | awk '{if ($5 == 3){print $4}}' > triads_names.${sample_base}
     if [ -f "triads_splitreads.${sample_base}" ]; then
         rm triads_splitreads.${sample_base}
     fi
