@@ -45,7 +45,7 @@ ECC_MAPFILE=G3.eccmapfile
 ## if confirmed splitreads
 while read sample; do
     sample_base=$(basename ${sample})
-    sort -k1,1 -k2,2n ${sample_base} | awk -v OFS='\t' '{print $1, $2, substr($3, 1, length($3)-1), FNR}' > named_sorted.${sample_base}
+    sort -k1,1 -k2,2n ${sample} | awk -v OFS='\t' '{print $1, $2, substr($3, 1, length($3)-1), FNR}' > named_sorted.${sample_base}
     bedtools intersect -F 1 -wa -c -a named_sorted.${sample_base} -b ${GFF_FILE} | awk '{if ($5 == 3){print $4}}' > triads_names.${sample_base}
     if [ -f "triads_splitreads.${sample_base}" ]; then
         rm triads_splitreads.${sample_base}
