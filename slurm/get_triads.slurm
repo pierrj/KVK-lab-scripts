@@ -46,14 +46,14 @@ ECC_MAPFILE=G3.eccmapfile
 while read sample; do
     sample_base=$(basename ${sample})
     sort -k1,1 -k2,2n ${sample} | awk -v OFS='\t' '{print $1, $2, substr($3, 1, length($3)-1), FNR}' > named_sorted.${sample_base}
-    bedtools intersect -F 1 -wa -c -a named_sorted.${sample_base} -b ${GFF_FILE} | awk '{if ($5 == 3){print $4}}' > triads_names.${sample_base}
+    bedtools intersect -wa -c -a named_sorted.${sample_base} -b ${GFF_FILE} | awk '{if ($5 == 3){print $4}}' > triads_names.${sample_base}
     if [ -f "triads_splitreads.${sample_base}" ]; then
         rm triads_splitreads.${sample_base}
     fi
     while read splitread; do
         awk -v s=${splitread} '$4 == s' named_sorted.${sample_base} >> triads_splitreads.${sample_base}
     done < triads_names.${sample_base}
-    bedtools intersect -F 1 -wa -wb -a triads_splitreads.${sample_base} -b ${GFF_FILE} | sort -k4,4n -k8,8n | awk '{print substr($13,4,10)".t1"}' > triads_genes.${sample_base}
+    bedtools intersect -wa -wb -a triads_splitreads.${sample_base} -b ${GFF_FILE} | sort -k4,4n -k8,8n | awk '{print substr($13,4,10)".t1"}' > triads_genes.${sample_base}
     awk -v OFS='\t' '{if (NR%3==1) {
         first=$0
         getline
