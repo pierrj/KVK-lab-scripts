@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_re_check
 
 while read genome; do
 blastn -query ${genome}_missing_genes.fasta -db genomes/${genome}.blastdb \
