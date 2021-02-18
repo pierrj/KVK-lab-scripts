@@ -37,7 +37,7 @@ while read -r dir ecc_count_output genome_file gff_file mapfile; do
         ecc_count_genic=$(awk ' $6 != "lowq" ' tmp.genic.ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
         ecc_count_noncoding=$(awk ' $6 != "lowq" ' tmp.noncoding.ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
         ecc_count_all=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
-        read_count=$(samtools view -c filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
+        read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
         total_genic=$(awk -v ECC="$ecc_count_genic" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
         total_noncoding=$(awk -v ECC="$ecc_count_noncoding" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
