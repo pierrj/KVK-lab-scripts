@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2020 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import csv
 import re
 import random
@@ -7,10 +28,19 @@ import statsmodels.api as sm
 import scipy.interpolate
 import sys
 
+## USAGE ##
+# this python script uses an input distribution of eccDNAs called using uniquely mapped reads to probabilistically call putative eccDNAs with multi-mapped reads
+# this script specifically works on split reads with one side that is uniquely mapped
+# options
+# "known_srs_length" - input list of lengths of eccDNAs called using uniquely mapped reads
+# "split_reads" - input list of multi-mapped split reads with secondary alignments
+# "column_cutoff" - maximum length of output eccDNAs, usually determined by the maximum size of a molecule that can come out of a filtration column during circleseq library prep
+
 known_srs_length = str(sys.argv[1])
 split_reads = str(sys.argv[2])
 column_cutoff = int(sys.argv[3])
 
+# open the lengths of uniquely mapped eccDNAs and calculate a kernel density estimate
 with open(known_srs_length, newline = '') as file: ## this is for each individual technical replicate
     file_reader = csv.reader(file, delimiter = '\t')
     dsn_list = [int(row[0]) for row in file_reader]
@@ -25,10 +55,13 @@ xs = np.linspace(0,kde_max,1000)
 densities = density(xs)
 y_interp = scipy.interpolate.interp1d(xs,densities)
 
-## define process split reads
+## define regex for processing split reads
 start_pattern = "^([0-9]+)M.*[HS]$"
 end_pattern = ".*[HS]([0-9]+)M$"
 
+# use regex to grab the matches and nonmatches to the genome and count them
+# side one the uniquely mapped side, side two is the multimapped side
+# do this for each split read, to calculate all potential combinations of side one and side two later
 def process_split_read(read):
     matches = re.findall(r'(\d+)([A-Z]{1})', read[6])
     matches_sums = {'M': 0, 'other': 0}
@@ -54,6 +87,9 @@ def process_split_read(read):
         split_read_side_two.append([read[0], int(read[1]), int(read[2]), sense, read[6], loc, matches_sums['M'], matches_sums['other']])
     return True
 
+# go through all possible split read combinations and filter down to a subset that represent eccDNAs
+# then, of all of the possible combinations, randomly choose one
+# random choice is weighted based off KDE from uniquely mapped eccDNAs above
 def choose_split_reads(split_read_side_one, split_read_side_two_pre):
     if len(split_read_side_two_pre) == 0:
         return False
@@ -106,22 +142,23 @@ def choose_split_reads(split_read_side_one, split_read_side_two_pre):
     choice = random.choices(combos, densities_ratio, k=1)[0]
     return choice
 
-for k in range(10):
-    with open(split_reads, newline = '') as file:
-        file_reader = csv.reader(file, delimiter = '\t')
-        with open('singleunique_choices', 'w', newline = '') as confirmed:
-            w = csv.writer(confirmed, delimiter = '\t')
-            for row in file_reader:
-                current_line = row
-                current_read = current_line[3]
-                split_read_side_one = []
-                split_read_side_two = []
-                while current_line[3] == current_read:
-                    process_split_read(current_line)
-                    try:
-                        current_line = next(file_reader)
-                    except StopIteration:
-                        break
-                choice = choose_split_reads(split_read_side_one, split_read_side_two)
-                if choice:
-                    w.writerow([choice[0], choice[1], choice[2]])
+# run code without opening whole files into memory
+# write chosen split reads
+with open(split_reads, newline = '') as file:
+    file_reader = csv.reader(file, delimiter = '\t')
+    with open('singleunique_choices', 'w', newline = '') as confirmed:
+        w = csv.writer(confirmed, delimiter = '\t')
+        for row in file_reader:
+            current_line = row
+            current_read = current_line[3]
+            split_read_side_one = []
+            split_read_side_two = []
+            while current_line[3] == current_read:
+                process_split_read(current_line)
+                try:
+                    current_line = next(file_reader)
+                except StopIteration:
+                    break
+            choice = choose_split_reads(split_read_side_one, split_read_side_two)
+            if choice:
+                w.writerow([choice[0], choice[1], choice[2]])

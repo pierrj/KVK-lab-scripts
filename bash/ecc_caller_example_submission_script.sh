@@ -116,3 +116,33 @@ while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$samp
 mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
 while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm; done < mapfile
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_bwa"
+while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm; done < mapfile
+
+mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
+genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
+sample=1000DCAT
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm
+
+mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
+genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
+sample=glp-1
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm
+
+mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/Celegans_WBcel235_genomic.contignames"
+genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/Celegans_WBcel235_complete_bwa"
+sample=L1GexoII
+sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm
+
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_bwa"
+sample=RC_3A
+sbatch --job-name=$sample.ecc_caller --partition=savio2_bigmem --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm
+
+mapfile="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_no_organelles.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_bwa"
+sample=RC_3C
+sbatch --job-name=$sample.ecc_caller --partition=savio2_bigmem --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm

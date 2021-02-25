@@ -40,10 +40,14 @@ samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
 # filter using names of contigs in mapfile
 samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.sorted.${SAMPLE}.bam
+
+# filter to only primary alignments
 samtools view -b -F 256 filtered.sorted.${SAMPLE}.bam > no_secondary.filtered.sorted.${SAMPLE}.bam
+
+# filter to only uniquely mapped alignments
 samtools view -b -q 1 no_secondary.filtered.sorted.${SAMPLE}.bam > uniq.filtered.sorted.${SAMPLE}.bam
 
-# COMMENTS MISSING
+# sort by read name for subsampling reads later
 samtools sort -n -@ ${THREADS} filtered.sorted.${SAMPLE}.bam > multimapped.filtered.name_sorted.${SAMPLE}.bam
 
 

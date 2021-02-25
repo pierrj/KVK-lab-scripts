@@ -15,5 +15,5 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_re_check
 while read genome; do
 blastn -query ${genome}_missing_genes.fasta -db genomes/${genome}.blastdb \
     -num_threads ${SLURM_NTASKS} -outfmt "6 qacc sacc evalue qlen qstart qend sstart send  stitle " \
-    -max_target_seqs 1 | awk '{if (($6-$5)/$4>0.25) {print $1}}' | sort | uniq > ${genome}.not_missing_genes
+    -max_target_seqs 1 | awk '{print $1}' | sort | uniq > ${genome}.not_missing_genes
 done < moryzae_oryza_genomes_mapfile

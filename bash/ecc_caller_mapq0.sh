@@ -12,13 +12,23 @@ q) FILTERED_BAMFILE_QSORTED=${OPTARG};; ## THIS SHOULD BE QNAME SORTED AND INCLU
 esac
 done
 
-## full implementation of ecc_calling_with_mapq0
+## USAGE ##
+# call eccDNA forming regions using split reads and opposite facing read pairs
+# options:
+# -m mapfile with names of contigs of interest, as written in the fasta file used to make bwa genome database
+# -s sample name/output prefix
+# -t threads
+# -b coordinate sorted bamfile of mapped reads, only primary alignments
+# -q qname sorted bamfile, including secondary alignments
 
-## add stuff to generate_bam_file of course
-# need to sort by coord then sort by qname too which will take forever but hopefully threading samtools sort will help
+## The first section of this scripts only process uniquely mapped reads
 
-# then to add to call_ecc_regions
-
+# divide up reads from bam file based on their orientation to ensure that both sides of split read are mapped in the same direction
+# filter to split reads
+# filter split reads so that either side of the junction is at least 20 bp
+# make sure split reads appear only twice, clearly representing an eccDNA junction
+# make sure split reads map to the same chromosome (split reads mapping to different chromosomes would need to be analyzed using a different pipeline because opposite facing read pairs wouldn't make sense)
+# make sure split read halves are properly oriented to that they represent eccDNA junctions and not potential introns ( ---> gap --- is an eccDNA junction vs --- gap ---> is an intron)
 samtools view -f 81 -F 4 ${FILTERED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
 splitread_file="reverseread1.${SAMPLE}.sam"
 awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
@@ -108,7 +118,7 @@ cat tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMP
     tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reversemerged.${SAMPLE}.sam \
     tmp.oriented.samechromosome.exactlytwice.qualityfiltered.forwardmerged.${SAMPLE}.sam > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
-
+# verify that the match lengths on either side match up so that only proper split reads are looked on
 python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
 # converting to bed file
@@ -165,16 +175,15 @@ cat $(find . -maxdepth 1 -name "parallel.confirmed*" | xargs -r ls -1 | tr "\n" 
 
 mv parallel.confirmed unique_parallel.confirmed
 
-## MAKE SURE PARALLEL.CONFRMED MERGING WORKS WELL
-
 rm parallel.confirmed*
 
-## get length distribution file
+## get length distribution of eccDNAs from uniquely mapped reads
 
 awk '{print $3-$2}' unique_parallel.confirmed > dsn.unique_parallel.confirmed
 
 ## primary only bc of the exactly twice filter
-
+# for multimapped read we want to broaden our scope of split reads
+# here we are including any split read that matches the required quality filter regardless of how they are oriented to each other
 samtools view -b -F 256 ${FILTERED_BAMFILE_QSORTED} > primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
 samtools view -f 65 -F 4 primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam > tmp.primary_only.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam
@@ -187,6 +196,7 @@ file='2'
 awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0}' tmp.primary_only.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam > tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam > tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam
 
+# sort split reads by how many ends are multi-mapped
 awk -v OFS='\t' '{
     prev=$0; f1=$1 ; f5=$5
     getline 
@@ -221,11 +231,12 @@ awk -v OFS='\t' '{
     }
 }'  tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.2.${SAMPLE}.sam
 
+
+# split bamfiles with all reads and all alignments into read one and read 2
 samtools view -b -f 65 -F 4 ${FILTERED_BAMFILE_QSORTED} > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam
 samtools view -b -f 129 -F 4 ${FILTERED_BAMFILE_QSORTED} > tmp.filtered.sorted.allmapq.mapped.2.${SAMPLE}.bam
 
-## this path needs to be fixed
-
+# use picard filter sam reads to extract split reads identified above and all their possible secondary alignnents
 java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar FilterSamReads \
         INPUT=tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam \
         OUTPUT=${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bam \
@@ -254,6 +265,7 @@ java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.
         FILTER=includeReadList \
         SORT_ORDER=unsorted
 
+# convert to bed files and merge
 bedtools bamtobed -cigar -i ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bed
 bedtools bamtobed -cigar -i ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.2.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.2.bed
 
@@ -264,8 +276,7 @@ cat ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.be
 cat ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.1.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.2.bed > ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed
 
 
-# split files and fix chunks so that a read name isnt present in two chunks
-
+# split files into chunks for parallelization and fix chunks so that a read name isnt present in two chunks
 split --number=l/${THREADS} --numeric-suffixes=1 --additional-suffix=.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.
 
 for i in $(seq -w 1 1 $THREADS); do
@@ -282,17 +293,16 @@ done < tmp.seqs
 
 cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${THREADS}.bed multimapped_splitreads.${THREADS}.bed
 
+# run through python script which calls putative eccdna forming regions from multimapping reads based off the length distribution from uniquely mapped eccDNAs
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_calling_mapq0.py dsn.unique_parallel.confirmed  multimapped_splitreads.{}.bed 50000 {} ::: $(seq -w 1 ${THREADS})
 
 python /global/home/users/pierrj/git/python/ecc_calling_mapq0_singleunique.py dsn.unique_parallel.confirmed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.bed 50000
 
-# merge all chunks together then confirm
-
+# merge all chunks together then confirm as before
 cat mapq0_choices.* singleunique_choices > mapq0_single_unique_choices.bed
 
 
-# reget opposite facing reads but with mapq0s as well this time
-
+# reget opposite facing reads as before but with mapq0s as well this time
 samtools view primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam | awk '{ if (($2 == 81 || $2 == 83 || $2 == 145 || $2 == 147 ) && $9 > 0) print $0 ; else if (($2 == 97 || $2 == 99 || $2 == 161 || $2 == 163) && $9 <0) print $0}' | cat <(samtools view -H ${FILTERED_BAMFILE}) - | samtools view -b -h - > tmp.outwardfacing.${SAMPLE}.bam
 bedtools bamtobed -i tmp.outwardfacing.${SAMPLE}.bam | sort -k 4,4 > tmp.outwardfacing.${SAMPLE}.bed
 mv tmp.outwardfacing.${SAMPLE}.bed tmp.outwardfacing.${SAMPLE}.bed.old
