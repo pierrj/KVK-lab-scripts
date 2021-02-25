@@ -19,8 +19,8 @@ cd ..
 export ECC_CALLER_PYTHON_SCRIPTS=ecc_caller/python_scripts/
 export ECC_CALLER_PICARD=/clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/
 
-/ecc_caller/generate_bam_file.sh -g genome_bwa -1 R1.fastq -2 R2.fastq -s output_name -t n_threads -m mapfile
+ecc_caller/generate_bam_file.sh -g genome_bwa -1 R1.fastq -2 R2.fastq -s output_name -t n_threads -m mapfile
 
-/ecc_caller/call_ecc_regions.sh -m mapfile -s output_name -t n_threads -b uniq.filtered.sorted.output_name.bam -q multimapped.filtered.name_sorted.output_name.bam
+ecc_caller/call_ecc_regions.sh -m mapfile -s output_name -t n_threads -b uniq.filtered.sorted.output_name.bam -q multimapped.filtered.name_sorted.output_name.bam
 
-/ecc_caller/assign_confidence.sh -m mapfile -s output_name -t n_threads -b no_secondary.filtered.sorted.output_name.bam -r output_name.confirmedsplitreads.bed
+ecc_caller/assign_confidence.sh -m mapfile -s output_name -t n_threads -b no_secondary.filtered.sorted.output_name.bam -r output_name.confirmedsplitreads.bed
