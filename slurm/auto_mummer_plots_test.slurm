@@ -20,6 +20,12 @@ ISOLATE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/moryza
 SUBDIR=test_plot_script
 SUBDIR_OUTPUT=test_plot_output
 
+if [ -d "${SUBDIR_OUTPUT}" ]; then
+    rm -r ${SUBDIR_OUTPUT}
+fi
+
+mkdir ${SUBDIR_OUTPUT}
+
 while read plot; do
     bedtools getfasta -fi ${REFERENCE} -bed ${SUBDIR}/guy11_alignment_${plot}.bed -fo ${SUBDIR}/guy11_alignment_${plot}.fasta
     bedtools getfasta -fi ${ISOLATE} -bed ${SUBDIR}/genome_alignment_${plot}.bed -fo ${SUBDIR}/genome_alignment_${plot}.fasta
