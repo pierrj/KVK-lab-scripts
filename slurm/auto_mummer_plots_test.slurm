@@ -49,7 +49,7 @@ while read plot; do
     bedtools genomecov -d -i ${SUBDIR_TMP}/${plot}.bed -g ${SUBDIR_TMP}/guy11_alignment_${plot}.genomesize > ${SUBDIR_TMP}/${plot}.genomecov
     total_size=$(wc -l ${SUBDIR_TMP}/${plot}.genomecov | awk '{print $1}')
     size_zeroes=$(awk '$3==0' ${SUBDIR_TMP}/${plot}.genomecov | wc -l | awk '{print $1}')
-    percent_zeroes=$(awk -v var1=$size_zeroes -v var2=$total_size 'BEGIN { print  ( var1 / var2 ) }')
+    percent_zeroes=$(awk -v var1=$size_zeroes -v var2=$total_size 'BEGIN { OFMT="%f";print  ( var1 / var2 ) }')
     if (( $(echo "$percent_zeroes < 0.1" |bc -l) ))
     then
         mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
