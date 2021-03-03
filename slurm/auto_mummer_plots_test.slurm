@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=auto_mummer_plots_test
 #SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio2
+#SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks-per-node=20
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -48,7 +48,7 @@ while read plot; do
     show-coords ${SUBDIR_TMP}/${plot}.delta | tail -n +6 | awk -v OFS='\t' '{print $12, $1, $2}' | sort -k1,1 -k2,2n >  ${SUBDIR_TMP}/${plot}.bed
     bedtools genomecov -d -i ${SUBDIR_TMP}/${plot}.bed -g ${SUBDIR_TMP}/guy11_alignment_${plot}.genomesize > ${SUBDIR_TMP}/${plot}.genomecov
     total_size=$(wc -l ${SUBDIR_TMP}/${plot}.genomecov | awk '{print $1}')
-    size_zeroes=$(awk '$2==0' ${SUBDIR_TMP}/${plot}.genomecov | wc -l | awk '{print $1}')
+    size_zeroes=$(awk '$3==0' ${SUBDIR_TMP}/${plot}.genomecov | wc -l | awk '{print $1}')
     percent_zeroes=$(awk -v var1=$size_zeroes -v var2=$total_size 'BEGIN { print  ( var1 / var2 ) }')
     if (( $(echo "$percent_zeroes < 0.1" |bc -l) ))
     then
