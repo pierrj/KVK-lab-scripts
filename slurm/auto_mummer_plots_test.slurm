@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/test_auto_plotting
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/with_repeats/
 
 source activate mummer
 module load gnuplot
@@ -19,7 +19,7 @@ module load imagemagick
 REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.fasta
 REFERENCE_CHROMSIZE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.chromsizes
 ISOLATE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/moryzae_70-15_ref.fasta
-SUBDIR_INPUT=input_bed
+SUBDIR_INPUT=promising_translocations
 SUBDIR_TMP=tmp_dir
 SUBDIR_OUTPUT=output_jpgs
 
