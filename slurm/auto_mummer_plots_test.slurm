@@ -22,6 +22,7 @@ ISOLATE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/moryza
 SUBDIR_INPUT=promising_translocations
 SUBDIR_TMP=tmp_dir
 SUBDIR_OUTPUT=output_jpgs
+PERCENT_ZEROES_FILTER=1
 
 if [ -d "${SUBDIR_OUTPUT}" ]; then
     rm -r ${SUBDIR_OUTPUT}
@@ -50,7 +51,7 @@ while read plot; do
     total_size=$(wc -l ${SUBDIR_TMP}/${plot}.genomecov | awk '{print $1}')
     size_zeroes=$(awk '$3==0' ${SUBDIR_TMP}/${plot}.genomecov | wc -l | awk '{print $1}')
     percent_zeroes=$(awk -v var1=$size_zeroes -v var2=$total_size 'BEGIN { OFMT="%f";print  ( var1 / var2 ) }')
-    if (( $(echo "$percent_zeroes < 0.1" |bc -l) ))
+    if (( $(echo "$percent_zeroes < ${PERCENT_ZEROES_FILTER}" |bc -l) ))
     then
         mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
         ps2pdf ${SUBDIR_TMP}/${plot}.ps ${SUBDIR_TMP}/${plot}.pdf
