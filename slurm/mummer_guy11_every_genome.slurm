@@ -20,6 +20,7 @@ OUTPUT_DIR_SIZES=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mumm
 OUTPUT_DIR_BEDS=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/output_beds_rev
 OUTPUT_DIR_COORDS=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/output_coords_rev
 TMP_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/tmp_rev
+GENOMES_PATH=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/
 
 if [ -d "${OUTPUT_DIR_SIZES}" ]; then
     rm -r ${OUTPUT_DIR_SIZES}
@@ -59,7 +60,6 @@ while read genome; do
     tail -n+6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${OUTPUT_DIR_COORDS}/${genome}.processed_output.coords
 done < ${MAPFILE}
 
-GENOMES_PATH=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/
 OUTPUT_DIR_SIZES=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/output_sizes
 OUTPUT_DIR_BEDS=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/output_beds
 OUTPUT_DIR_COORDS=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/output_coords
