@@ -51,11 +51,11 @@ while read genome; do
     nucmer -p ${TMP_DIR}/${genome} ${GENOMES_PATH}/${genome}_genomic.fna ${GENOMES_PATH}/guy11_genome_baoetal2017.fasta
     show-coords ${TMP_DIR}/${genome}.delta > ${TMP_DIR}/${genome}.coords
     tail -n +6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $12, $1, $2}' | sort -k1,1 -k2,2n >  ${TMP_DIR}/${genome}.bed
-    bedtools genomecov -bga -i ${TMP_DIR}/${genome}.bed -g ${OUTPUT_DIR_SIZES}/$(basename ${REFERENCE}).genomesize | awk '$2!=0' | awk -v OFS='\t' '{if ($4==1) { print $1, $2, $3, $3-$2}}' > ${TMP_DIR}/single_alignment_regions.${genome}.bed
+    bedtools genomecov -bga -i ${TMP_DIR}/${genome}.bed -g ${OUTPUT_DIR_SIZES}/$(basename ${genome}).genomesize | awk '$2!=0' | awk -v OFS='\t' '{if ($4==1) { print $1, $2, $3, $3-$2}}' > ${TMP_DIR}/single_alignment_regions.${genome}.bed
     tail -n +6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $12, $1, $2, $13, $4, $5}' | sort -k1,1 -k2,2n > ${TMP_DIR}/${genome}.alignments.bed
     bedtools intersect -f 1 -wa -wb -a ${TMP_DIR}/single_alignment_regions.${genome}.bed -b ${TMP_DIR}/${genome}.alignments.bed > ${TMP_DIR}/${genome}.single_coverage.bed
-    bedtools genomecov -bga -i ${TMP_DIR}/${genome}.bed -g ${OUTPUT_DIR_SIZES}/$(basename ${REFERENCE}).genomesize | awk '$2!=0' | awk -v OFS='\t' '{if ($4==0) { print $1, $2, $3,  $3-$2, "no_match"}}' > ${TMP_DIR}/${genome}.no_match.bed
-    bedtools genomecov -bga -i ${TMP_DIR}/${genome}.bed -g ${OUTPUT_DIR_SIZES}/$(basename ${REFERENCE}).genomesize | awk '$2!=0' | awk -v OFS='\t' '{if ($4>1) { print $1, $2, $3,  $3-$2, "repetitive"}}' > ${TMP_DIR}/${genome}.repetitive.bed
+    bedtools genomecov -bga -i ${TMP_DIR}/${genome}.bed -g ${OUTPUT_DIR_SIZES}/$(basename ${genome}).genomesize | awk '$2!=0' | awk -v OFS='\t' '{if ($4==0) { print $1, $2, $3,  $3-$2, "no_match"}}' > ${TMP_DIR}/${genome}.no_match.bed
+    bedtools genomecov -bga -i ${TMP_DIR}/${genome}.bed -g ${OUTPUT_DIR_SIZES}/$(basename ${genome}).genomesize | awk '$2!=0' | awk -v OFS='\t' '{if ($4>1) { print $1, $2, $3,  $3-$2, "repetitive"}}' > ${TMP_DIR}/${genome}.repetitive.bed
     cat ${TMP_DIR}/${genome}.repetitive.bed ${TMP_DIR}/${genome}.no_match.bed ${TMP_DIR}/${genome}.single_coverage.bed | sort -k1,1 -k2,2n > ${OUTPUT_DIR_BEDS}/${genome}.processed_output.bed
     tail -n+6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${OUTPUT_DIR_COORDS}/${genome}.processed_output.coords
 done < ${MAPFILE}
