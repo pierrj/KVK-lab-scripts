@@ -40,7 +40,7 @@ while read genome ; do
     mkdir ${SUBDIR_TMP}
     alignment_number=$(ls -1 | wc -l | awk '{print ($1-1)/2}')
     seq 0 ${alignment_number} > ${SUBDIR_TMP}/mapfile
-    ISOLATE=${GENOME_DIR}/${genome})_genomic.fna
+    ISOLATE=${GENOME_DIR}/${genome}_genomic.fna
     while read plot; do
         bedtools getfasta -fi ${REFERENCE} -bed guy11_${plot}.bed -fo ${SUBDIR_TMP}/guy11_${plot}.fasta
         samtools faidx ${SUBDIR_TMP}/guy11_${plot}.fasta
@@ -56,7 +56,7 @@ while read genome ; do
         then
             mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
             ps2pdf ${SUBDIR_TMP}/${plot}.ps ${SUBDIR_TMP}/${plot}.pdf
-            convert -density 150 ${SUBDIR_TMP}/${plot}.pdf -quality 90 ${SUBDIR_OUTPUT}/${d}_${plot}.jpg
+            convert -density 150 ${SUBDIR_TMP}/${plot}.pdf -quality 90 ../${SUBDIR_OUTPUT}/${genome}_${plot}.jpg
         fi
     done < ${SUBDIR_TMP}/mapfile
     cd ..
