@@ -25,10 +25,14 @@ if [ -d "${SUBDIR_OUTPUT}" ]; then
     rm -r ${SUBDIR_OUTPUT}
 fi
 
+
+
+ls -1 | grep -v genome_mapfile > genome_mapfile
+
 mkdir ${SUBDIR_OUTPUT}
 
-for d in */ ; do
-    cd $d
+while read genome ; do
+    cd ${genome}
     SUBDIR_TMP=tmp
     if [ -d "${SUBDIR_TMP}" ]; then
         rm -r ${SUBDIR_TMP}
@@ -36,7 +40,7 @@ for d in */ ; do
     mkdir ${SUBDIR_TMP}
     alignment_number=$(ls -1 | wc -l | awk '{print ($1-1)/2}')
     seq 0 ${alignment_number} > ${SUBDIR_TMP}/mapfile
-    ISOLATE=${GENOME_DIR}/$(basename ${d})_genomic.fna
+    ISOLATE=${GENOME_DIR}/${genome})_genomic.fna
     while read plot; do
         bedtools getfasta -fi ${REFERENCE} -bed guy11_${plot}.bed -fo ${SUBDIR_TMP}/guy11_${plot}.fasta
         samtools faidx ${SUBDIR_TMP}/guy11_${plot}.fasta
@@ -56,4 +60,4 @@ for d in */ ; do
         fi
     done < ${SUBDIR_TMP}/mapfile
     cd ..
-done
+done < genome_mapfile
