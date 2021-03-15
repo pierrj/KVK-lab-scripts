@@ -38,7 +38,7 @@ while read genome ; do
         rm -r ${SUBDIR_TMP}
     fi
     mkdir ${SUBDIR_TMP}
-    alignment_number=$(ls -1 | wc -l | awk '{print ($1-1)/2}')
+    alignment_number=$(ls -1 | wc -l | awk '{print ($1-1)/2-1}')
     seq 0 ${alignment_number} > ${SUBDIR_TMP}/mapfile
     ISOLATE=${GENOME_DIR}/${genome}_genomic.fna
     while read plot; do
