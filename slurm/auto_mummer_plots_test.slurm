@@ -19,7 +19,7 @@ module load imagemagick
 REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.fasta
 REFERENCE_CHROMSIZE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.chromsizes
 ISOLATE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/moryzae_70-15_ref.fasta
-SUBDIR_INPUT=promising_translocations
+SUBDIR_INPUT=mummer_parse_output
 SUBDIR_TMP=tmp_dir
 SUBDIR_OUTPUT=output_jpgs
 PERCENT_ZEROES_FILTER=1

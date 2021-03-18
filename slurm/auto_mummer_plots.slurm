@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/promising_translocations_re
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/test_auto_plotting/all_v_all_clean_nomaxmatch/mummer_parse_output
 
 source activate mummer
 module load gnuplot
@@ -27,12 +27,12 @@ fi
 
 
 
-ls -1 | grep -v genome_mapfile > genome_mapfile
+ls -1 | grep -v genome_mapfile | awk '{print substr($1,9)}'> genome_mapfile
 
 mkdir ${SUBDIR_OUTPUT}
 
 while read genome ; do
-    cd ${genome}
+    cd guy11_v_${genome}
     SUBDIR_TMP=tmp
     if [ -d "${SUBDIR_TMP}" ]; then
         rm -r ${SUBDIR_TMP}
@@ -45,8 +45,8 @@ while read genome ; do
         bedtools getfasta -fi ${REFERENCE} -bed guy11_${plot}.bed -fo ${SUBDIR_TMP}/guy11_${plot}.fasta
         samtools faidx ${SUBDIR_TMP}/guy11_${plot}.fasta
         cut -f1,2 ${SUBDIR_TMP}/guy11_${plot}.fasta.fai > ${SUBDIR_TMP}/guy11_${plot}.genomesize
-        bedtools getfasta -fi ${ISOLATE} -bed genome_${plot}.bed -fo ${SUBDIR_TMP}/genome_${plot}.fasta
-        nucmer -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/guy11_${plot}.fasta ${SUBDIR_TMP}/genome_${plot}.fasta
+        bedtools getfasta -fi ${ISOLATE} -bed ${genome}_${plot}.bed -fo ${SUBDIR_TMP}/${genome}_${plot}.fasta
+        nucmer -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/guy11_${plot}.fasta ${SUBDIR_TMP}/${genome}_${plot}.fasta
         show-coords ${SUBDIR_TMP}/${plot}.delta | tail -n +6 | awk -v OFS='\t' '{print $12, $1, $2}' | sort -k1,1 -k2,2n >  ${SUBDIR_TMP}/${plot}.bed
         bedtools genomecov -d -i ${SUBDIR_TMP}/${plot}.bed -g ${SUBDIR_TMP}/guy11_${plot}.genomesize > ${SUBDIR_TMP}/${plot}.genomecov
         total_size=$(wc -l ${SUBDIR_TMP}/${plot}.genomecov | awk '{print $1}')
