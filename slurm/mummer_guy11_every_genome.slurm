@@ -91,7 +91,7 @@ cut -f1,2 ${REFERENCE}.fai > ${OUTPUT_DIR_SIZES}/$(basename ${REFERENCE}).genome
 while read genome; do
     samtools faidx ${GENOMES_PATH}/${genome}_genomic.fna
     cut -f1,2 ${GENOMES_PATH}/${genome}_genomic.fna.fai > ${OUTPUT_DIR_SIZES}/$(basename ${genome}).genomesize
-    nucmer --maxmatch -p ${TMP_DIR}/${genome} ${GENOMES_PATH}/guy11_genome_baoetal2017.fasta ${GENOMES_PATH}/${genome}_genomic.fna
-    show-coords ${TMP_DIR}/${genome}.delta > ${TMP_DIR}/${genome}.coords
+    /global/scratch/pierrj/mummer_4/bin/nucmer -t ${SLURM_NTASKS} --maxmatch -p ${TMP_DIR}/${genome} ${GENOMES_PATH}/guy11_genome_baoetal2017.fasta ${GENOMES_PATH}/${genome}_genomic.fna
+    /global/scratch/pierrj/mummer_4/bin/show-coords ${TMP_DIR}/${genome}.delta > ${TMP_DIR}/${genome}.coords
     tail -n+6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${OUTPUT_DIR_COORDS}/${genome}.processed_output.coords
 done < ${MAPFILE}
