@@ -29,7 +29,7 @@ if [ -f "jobqueue" ]; then
 fi
 
 while read genome; do
-    echo "/global/home/users/pierrj/git/python/ecc_sv_finder.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
+    echo "python /global/home/users/pierrj/git/python/ecc_sv_finder.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
 done < ${MAPFILE}
 
 parallel -j 24 < jobqueue
