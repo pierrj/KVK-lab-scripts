@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/sv-callers/snakemake
 
 source activate wf
 
-snakemake -C echo_run=1 --use-conda --latency-wait 30 --jobs 14 \
+snakemake -R -C echo_run=1 --use-conda --latency-wait 30 --jobs 14 \
     --cluster "sbatch \
     --partition=savio2 \
     --account=fc_kvkallow \
