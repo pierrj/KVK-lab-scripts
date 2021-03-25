@@ -38,7 +38,7 @@ file_exts:
 # format: PATH,SAMPLE1,SAMPLE2
 #   paired SAMPLE1(tumor)/SAMPLE2(normal) files used for somatic analysis while
 #   single SAMPLE1 file used for germline or tumor-only analysis (Manta only)
-samples:
+samples: samples.csv
 
 # settings or requirements per SV caller
 callers:
