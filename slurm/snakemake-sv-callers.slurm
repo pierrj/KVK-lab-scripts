@@ -20,11 +20,12 @@ READTWO=${SAMPLE}.sra_2.fastq
 SNAKEMAKE_DIR=/global/scratch/users/pierrj/sv-callers_runs/guy11_v_AG038
 GIT_REPO=/global/home/users/pierrj/git
 ANALYSIS_YAML=snakemake/analysis.yaml
+SAMPLES_CSV=snakemake/samples.csv
 
 cd ${SNAKEMAKE_DIR}/data/fasta
 
 if [ ! -f "${REFERENCE}.fai" ]; then
-    samtools index ${REFERENCE}
+    samtools faidx ${REFERENCE}
 fi
 
 if [ ! -f "${REFERENCE}.bwt" ]; then
@@ -45,6 +46,10 @@ if [ ! -f "${SAMPLE}_bwamem.bam" ]; then
         M=${SAMPLE}_bwamem.marked_dup_metrics
 fi
 
+if [ ! -f "${SAMPLE}_bwamem.bam.bai" ]; then
+    samtools index ${SAMPLE}_bwamem.bam
+fi
+
 source ~/.bashrc
 conda activate wf
 
@@ -55,5 +60,6 @@ git pull
 cd ${SNAKEMAKE_DIR}
 
 cp ${GIT_REPO}/${ANALYSIS_YAML} analysis.yaml
+cp ${GIT_REPO}/${SAMPLES_CSV} samples.csv
 
 snakemake --use-conda --latency-wait 30 --jobs 14 --cluster "sbatch --partition=savio2 --account=fc_kvkallow --qos=savio_normal --nodes=1 --cpus-per-task={threads} --time=72:00:00 --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out --job-name=smk.{rule} --mail-user=pierrj@berkeley.edu --mail-type=ALL"
