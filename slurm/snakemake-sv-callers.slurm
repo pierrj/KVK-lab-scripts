@@ -34,20 +34,20 @@ fi
 
 cd ${SNAKEMAKE_DIR}/data/bam/${SAMPLE}
 
-if [ ! -f "${SAMPLE}_bwamem.bam" ]; then
-    bwa mem -t ${SLURM_NTASKS} ${GENOME_DB} ${READONE} ${READTWO} -o ${SAMPLE}_bwamem.preprocessed
+if [ ! -f "${SAMPLE}.bam" ]; then
+    bwa mem -t ${SLURM_NTASKS} ${GENOME_DB} ${READONE} ${READTWO} -o ${SAMPLE}.preprocessed
     java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar SortSam \
-        I=${SAMPLE}_bwamem.preprocessed \
-        O=${SAMPLE}_bwamem.sorted \
+        I=${SAMPLE}.preprocessed \
+        O=${SAMPLE}.sorted \
         SORT_ORDER=coordinate
     java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar MarkDuplicates \
-        I=${SAMPLE}_bwamem.sorted \
-        O=${SAMPLE}_bwamem.bam \
-        M=${SAMPLE}_bwamem.marked_dup_metrics
+        I=${SAMPLE}.sorted \
+        O=${SAMPLE}.bam \
+        M=${SAMPLE}.marked_dup_metrics
 fi
 
-if [ ! -f "${SAMPLE}_bwamem.bam.bai" ]; then
-    samtools index ${SAMPLE}_bwamem.bam
+if [ ! -f "${SAMPLE}.bam.bai" ]; then
+    samtools index ${SAMPLE}.bam
 fi
 
 source ~/.bashrc
