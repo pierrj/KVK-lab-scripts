@@ -19,7 +19,7 @@ READONE=${SAMPLE}.sra_1.fastq
 READTWO=${SAMPLE}.sra_2.fastq
 SNAKEMAKE_DIR=/global/scratch/users/pierrj/sv-callers_runs/guy11_v_AG038
 GIT_REPO=/global/home/users/pierrj/git
-ANALYSIS_YAML=snakemake/guy11_v_AG038.analysis.yaml
+ANALYSIS_YAML=snakemake/analysis.yaml
 
 cd ${SNAKEMAKE_DIR}/data/fasta
 
@@ -42,7 +42,7 @@ if [ ! -f "${SAMPLE}_bwamem.bam" ]; then
     java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar SortSam \
         I=${SAMPLE}_bwamem.marked_duplicates \
         O=${SAMPLE}_bwamem.bam \
-        SORT_ODER=coordinate
+        SORT_ORDER=coordinate
 fi
 
 source ~/.bashrc
