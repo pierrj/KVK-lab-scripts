@@ -15,7 +15,7 @@ mode: s
 genome: data/fasta/guy11_genome_baoetal2017.fasta
 
 # filepath of the exclusion list in BED format
-exclusion_list: none
+exclusion_list: none.bed
 exclude_regions: 0 # use the list (1) or don't (0)
 
 # file extensions used by the workflow
