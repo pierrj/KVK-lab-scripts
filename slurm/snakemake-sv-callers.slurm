@@ -14,7 +14,7 @@
 cd /global/scratch/users/pierrj/sv-callers/snakemake
 
 source ~/.bashrc
-conda activate snakemake
+conda activate wf
 
 snakemake -R -C echo_run=0 --use-conda --latency-wait 30 --jobs 14 \
     --cluster "sbatch \
