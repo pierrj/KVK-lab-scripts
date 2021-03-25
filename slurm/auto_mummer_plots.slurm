@@ -10,7 +10,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/test_auto_plotting/translocation_tests/mummer_parse_output
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all
 
 source activate mummer
 module load gnuplot
