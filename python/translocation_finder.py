@@ -47,8 +47,6 @@ def get_candidate_translocations(match_list_processed, query_genomesize_file, to
     for i in range(len(match_list_processed)):
         matches_per_scaffold = match_list_processed[i]
         for g in range(len(matches_per_scaffold)):
-            if g % 1000 == 0:
-                print(g)
             match = matches_per_scaffold[g]
             start_match = min(match[1], match[2])
             end_match = max(match[1], match[2])
