@@ -12,7 +12,7 @@ enable_callers:
 mode: s
 
 # filepath of the reference genome in FASTA format
-genome: data/fasta/guy11_genome_baoetal2017.fasta
+genome: data/fasta/moryzae_70-15_ref_with_mito.fasta
 
 # filepath of the exclusion list in BED format
 exclusion_list: none.bed
