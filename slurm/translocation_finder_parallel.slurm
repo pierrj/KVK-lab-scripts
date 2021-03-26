@@ -47,4 +47,4 @@ GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now
 SUBDIR_OUTPUT=output_jpgs
 PERCENT_ZEROES_FILTER=0.1
 
-global/home/users/pierrj/git/bash/auto_mummer_plot/sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
+global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
