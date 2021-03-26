@@ -221,7 +221,7 @@ quer_name = str(sys.argv[6])
 print('started '+quer_name)
 
 match_list = get_match_lists(processed_matches_file, ref_genomesize_file)
-translocations = get_translocations(match_list, query_genomsize_file, 40,0.1)
+translocations = get_candidate_translocations(match_list, quer_genomesize_file, 40,0.1)
 
 if len(translocations) > 0:
     ref_genomesize_dict, quer_genomesize_dict = get_genomesize_dicts(ref_genomesize_file, quer_genomesize_file)
