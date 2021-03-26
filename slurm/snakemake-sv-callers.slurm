@@ -12,9 +12,9 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
-REFERENCE="guy11_genome_baoetal2017.fasta"
+REFERENCE="moryzae_70-15_ref_with_mito.fasta"
 SAMPLE=ERR4757126
-GENOME_DB=/global/scratch/users/pierrj/sv-callers_runs/guy11_v_AG038/data/fasta/guy11_genome_baoetal2017.fasta
+GENOME_DB=/global/scratch/users/pierrj/sv-callers_runs/guy11_v_AG038/data/fasta/moryzae_70-15_ref_with_mito.fasta
 READONE=${SAMPLE}.sra_1.fastq
 READTWO=${SAMPLE}.sra_2.fastq
 SNAKEMAKE_DIR=/global/scratch/users/pierrj/sv-callers_runs/guy11_v_AG038
