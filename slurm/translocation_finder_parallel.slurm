@@ -15,24 +15,24 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11
 
 ## NEED TO MAKE THIS DIR AND COPY FILES
 
-MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/mapfile
+MAPFILE=/global/scratch/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all/new_new_mapfile
 COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all/output_coords
 SIZES_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all/output_sizes
 OUTPUT_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all/translocation_finder_output
 
-if [ -d "${OUTPUT_DIR}" ]; then
-    rm -r ${OUTPUT_DIR}
-fi
+# if [ -d "${OUTPUT_DIR}" ]; then
+#     rm -r ${OUTPUT_DIR}
+# fi
 
-mkdir ${OUTPUT_DIR}
+# mkdir ${OUTPUT_DIR}
 
-if [ -f "jobqueue" ]; then
-    rm "jobqueue"
-fi
+# if [ -f "jobqueue" ]; then
+#     rm "jobqueue"
+# fi
 
-while read genome; do
-    echo "python /global/home/users/pierrj/git/python/translocation_finder.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
-done < ${MAPFILE}
+# while read genome; do
+#     echo "python /global/home/users/pierrj/git/python/translocation_finder.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
+# done < ${MAPFILE}
 
 parallel -j 24 < jobqueue
 
