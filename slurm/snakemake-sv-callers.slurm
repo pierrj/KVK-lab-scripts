@@ -53,6 +53,8 @@ fi
 source ~/.bashrc
 conda activate wf
 
+module purge
+
 cd ${GIT_REPO}
 
 git pull
