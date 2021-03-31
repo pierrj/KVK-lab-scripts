@@ -5,7 +5,6 @@ echo_run: 0
 enable_callers:
     - manta
     - delly
-    - lumpy
     - gridss
 
 # (s)ingle-sample or (p)aired-samples analysis
