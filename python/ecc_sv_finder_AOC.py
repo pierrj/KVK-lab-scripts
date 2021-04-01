@@ -3,6 +3,7 @@ import numpy as np
 import os
 import shutil
 from os import listdir
+import sys
 
 def get_match_lists(match_file, genomesize_file):
     ref_scaffold_length_dict = {}
