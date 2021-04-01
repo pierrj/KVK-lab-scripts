@@ -34,6 +34,8 @@ done < ${MAPFILE}
 
 parallel -j 24 < jobqueue
 
+cd ${OUTPUT_DIR}
+
 source activate mummer
 module load gnuplot
 module load imagemagick
