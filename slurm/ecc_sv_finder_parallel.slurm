@@ -11,7 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all_AOC
 
 MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/mapfile
 COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_coords
@@ -29,7 +29,18 @@ if [ -f "jobqueue" ]; then
 fi
 
 while read genome; do
-    echo "python /global/home/users/pierrj/git/python/ecc_sv_finder.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
+    echo "python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
 done < ${MAPFILE}
 
 parallel -j 24 < jobqueue
+
+source activate mummer
+module load gnuplot
+module load imagemagick
+
+REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.fasta
+GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes
+SUBDIR_OUTPUT=output_jpgs
+PERCENT_ZEROES_FILTER=1
+
+/global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}

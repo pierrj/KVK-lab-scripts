@@ -29,3 +29,14 @@ while read gene; do
     /global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
     cd ..
 done < gene_mapfile
+
+# for d in */ ; do
+#     cd $d
+#         d_basename=$(basename $d)
+#             cd output_jpgs
+#             for f in *; do
+#                 cp ${f} /global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all/all_jpgs/${d_basename}_${f}
+#             done
+#         cd ..
+#     cd ..
+# done
