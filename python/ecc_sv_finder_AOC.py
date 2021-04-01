@@ -162,10 +162,14 @@ def find_translocation_all_possible(start_match, end_match, match_length, matche
             subset_downstream_plus = subset_downstream[subset_downstream[:,4] - subset_downstream[:,5] < 0]
             subset_upstream_minus = subset_upstream[subset_upstream[:,4] - subset_upstream[:,5] > 0]
             subset_downstream_minus = subset_downstream[subset_downstream[:,4] - subset_downstream[:,5] > 0]
-            bests_plus = [[upstream_plus, downstream_plus] for downstream_plus in subset_downstream_plus for upstream_plus in subset_upstream_plus]
-            bests_minus = [[upstream_minus, downstream_minus] for downstream_minus in subset_downstream_minus for upstream_minus in subset_upstream_minus]
-            bests.extend(bests_plus)
-            bests.extend(bests_minus)
+            for upstream_plus in subset_upstream_plus:
+                subset_downstream_plus_subset = subset_downstream_plus[abs(upstream_plus[5]-subset_downstream_plus[:,4]) <= tolerance]
+                for downstream_plus in subset_downstream_plus_subset:
+                    bests.append([upstream_plus, downstream_plus])
+            for upstream_minus in subset_upstream_minus:
+                subset_downstream_minus_subset = subset_downstream_minus[abs(upstream_minus[5]-subset_downstream_minus[:,4]) <= tolerance]
+                for downstream_minus in subset_downstream_minus_subset:
+                    bests.append([upstream_minus, downstream_minus])
     return bests
 
 def get_genomesize_dicts(reference_genomesize, query_genomesize):
@@ -194,9 +198,9 @@ def write_alignments(final_alignments, reference_genomesize, query_genomesize, o
         end_ref = max([alignment_1[1], alignment_1[2]])
         start_quer_1 = min([alignment_1[4], alignment_1[5]])
         end_quer_1 = max([alignment_1[4], alignment_1[5]])
-        if alignment_1[4] - alignment_1[5] > 0:
+        if other_chrom_1[4] - other_chrom_1[5] > 0:
             match_order = '-'
-        elif alignment_1[4] - alignment_1[5] < 0 :
+        elif other_chrom_1[4] - other_chrom_1[5] < 0 :
             match_order = '+'
         if match_order == '-':
             start_quer_2 = other_chrom_2[4]
