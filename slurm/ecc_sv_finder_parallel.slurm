@@ -16,7 +16,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all_
 MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/mapfile
 COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_coords
 SIZES_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_sizes
-OUTPUT_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/ecc_sv_finder_output
+OUTPUT_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all_AOC/ecc_sv_finder_output
 
 if [ -d "${OUTPUT_DIR}" ]; then
     rm -r ${OUTPUT_DIR}
