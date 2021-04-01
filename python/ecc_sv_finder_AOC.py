@@ -55,8 +55,6 @@ def get_promising_alignments(match_list_processed,tolerance):
     for i in range(len(match_list_processed)):
         scaffold = match_list_processed[i]
         for g in range(len(scaffold)):
-            if g % 1000 == 0:
-                print(g)
             match = scaffold[g]
             ## either end is within 100 bp of end
             ## or start is within 100 bp of end
@@ -110,8 +108,6 @@ def get_final_alignments(promising_alignments, match_list, ref_genomesize_file, 
             scaffold_length_dict[row[0]] = int(row[1])
     translocations = []
     for i in range(len(promising_alignments)):
-        if i % 1000 == 0:
-            print(i)
         alignment = promising_alignments[i]
         alignment_1 = alignment[0]
         alignment_2 = alignment[1]
@@ -167,7 +163,6 @@ def find_translocation_all_possible(start_match, end_match, match_length, matche
             subset_downstream_minus = subset_downstream[subset_downstream[:,4] - subset_downstream[:,5] > 0]
             bests_plus = [[upstream_plus, downstream_plus] for downstream_plus in subset_downstream_plus for upstream_plus in subset_upstream_plus]
             bests_minus = [[upstream_minus, downstream_minus] for downstream_minus in subset_downstream_minus for upstream_minus in subset_upstream_minus]
-            len_pre = len(bests)
             bests.extend(bests_plus)
             bests.extend(bests_minus)
     return bests
