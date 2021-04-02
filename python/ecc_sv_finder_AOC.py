@@ -84,10 +84,10 @@ def get_promising_alignments(match_list_processed,tolerance):
                     nearby_on_same_chrom_match_is_second = nearby_on_same_chrom_match_is_second[nearby_on_same_chrom_match_is_second[:,4] - nearby_on_same_chrom_match_is_second[:,5] > 0]
                     nearby_on_same_chrom_match_is_first = nearby_on_same_chrom_match_is_first[nearby_on_same_chrom_match_is_first[:,4:6].max(axis=1) > max([match[4], match[5]])]
                     nearby_on_same_chrom_match_is_second = nearby_on_same_chrom_match_is_second[nearby_on_same_chrom_match_is_second[:,4:6].max(axis=1) < max([match[4], match[5]])]
-                nearby_on_same_chrom_match_is_first = nearby_on_same_chrom_match_is_first[numpy_get_overlap_percent([match[1], match[2]], nearby_on_same_chrom_match_is_first[:,1:3] ,0.1)]
-                nearby_on_same_chrom_match_is_first = nearby_on_same_chrom_match_is_first[numpy_get_overlap_percent([match[4], match[5]], nearby_on_same_chrom_match_is_first[:,4:6] ,0.1)]
-                nearby_on_same_chrom_match_is_second = nearby_on_same_chrom_match_is_second[numpy_get_overlap_percent([match[1], match[2]], nearby_on_same_chrom_match_is_second[:,1:3] ,0.1)]
-                nearby_on_same_chrom_match_is_second = nearby_on_same_chrom_match_is_second[numpy_get_overlap_percent([match[4], match[5]], nearby_on_same_chrom_match_is_second[:,4:6] ,0.1)]
+                nearby_on_same_chrom_match_is_first = nearby_on_same_chrom_match_is_first[numpy_get_overlap_percent([match[1], match[2]], nearby_on_same_chrom_match_is_first[:,1:3] ,0.2)]
+                nearby_on_same_chrom_match_is_first = nearby_on_same_chrom_match_is_first[numpy_get_overlap_percent([match[4], match[5]], nearby_on_same_chrom_match_is_first[:,4:6] ,0.2)]
+                nearby_on_same_chrom_match_is_second = nearby_on_same_chrom_match_is_second[numpy_get_overlap_percent([match[1], match[2]], nearby_on_same_chrom_match_is_second[:,1:3] ,0.2)]
+                nearby_on_same_chrom_match_is_second = nearby_on_same_chrom_match_is_second[numpy_get_overlap_percent([match[4], match[5]], nearby_on_same_chrom_match_is_second[:,4:6] ,0.2)]
                 for ecc_match in nearby_on_same_chrom_match_is_first:
                     if [match.tolist(), ecc_match.tolist()] not in promising_alignments:
                         promising_alignments.append([match.tolist(), ecc_match.tolist()])
@@ -140,24 +140,24 @@ def find_translocation_all_possible(start_match, end_match, match_length, matche
             subset_upstream = upstream_matches[upstream_matches[:,3] == scaffold]
             subset_downstream = downstream_matches[downstream_matches[:,3] == scaffold]
             # we only care about matches that are longer than the translocation length or start/end at the scaffold borders
-            subset_upstream = subset_upstream[np.logical_or.reduce((subset_upstream[:,4] <= tolerance,
-                                                           subset_upstream[:,5] <= tolerance,
-                                                           subset_upstream[:,4] >= scaffold_end-tolerance,
-                                                           subset_upstream[:,5] >= scaffold_end-tolerance,
-                                                           subset_upstream[:,1] <= tolerance,
-                                                           subset_upstream[:,2] <= tolerance,
-                                                           subset_upstream[:,1] >= subset_upstream[:,6]-tolerance,
-                                                           subset_upstream[:,2] >= subset_upstream[:,6]-tolerance, 
-                                                           abs(subset_upstream[:,4] - subset_upstream[:,5]) >= 1000))]
-            subset_downstream = subset_downstream[np.logical_or.reduce((subset_downstream[:,4] <= tolerance,
-                                                           subset_downstream[:,5] <= tolerance,
-                                                           subset_downstream[:,4] >= scaffold_end-tolerance,
-                                                           subset_downstream[:,5] >= scaffold_end-tolerance,
-                                                           subset_downstream[:,1] <= tolerance,
-                                                           subset_downstream[:,2] <= tolerance,
-                                                           subset_downstream[:,1] >= subset_downstream[:,6]-tolerance,
-                                                           subset_downstream[:,2] >= subset_downstream[:,6]-tolerance, 
-                                                           abs(subset_downstream[:,4] - subset_downstream[:,5]) >= 1000))]
+            # subset_upstream = subset_upstream[np.logical_or.reduce((subset_upstream[:,4] <= tolerance,
+            #                                                subset_upstream[:,5] <= tolerance,
+            #                                                subset_upstream[:,4] >= scaffold_end-tolerance,
+            #                                                subset_upstream[:,5] >= scaffold_end-tolerance,
+            #                                                subset_upstream[:,1] <= tolerance,
+            #                                                subset_upstream[:,2] <= tolerance,
+            #                                                subset_upstream[:,1] >= subset_upstream[:,6]-tolerance,
+            #                                                subset_upstream[:,2] >= subset_upstream[:,6]-tolerance, 
+            #                                                abs(subset_upstream[:,4] - subset_upstream[:,5]) >= 1000))]
+            # subset_downstream = subset_downstream[np.logical_or.reduce((subset_downstream[:,4] <= tolerance,
+            #                                                subset_downstream[:,5] <= tolerance,
+            #                                                subset_downstream[:,4] >= scaffold_end-tolerance,
+            #                                                subset_downstream[:,5] >= scaffold_end-tolerance,
+            #                                                subset_downstream[:,1] <= tolerance,
+            #                                                subset_downstream[:,2] <= tolerance,
+            #                                                subset_downstream[:,1] >= subset_downstream[:,6]-tolerance,
+            #                                                subset_downstream[:,2] >= subset_downstream[:,6]-tolerance, 
+            #                                                abs(subset_downstream[:,4] - subset_downstream[:,5]) >= 1000))]
             subset_upstream_plus = subset_upstream[subset_upstream[:,4] - subset_upstream[:,5] < 0]
             subset_downstream_plus = subset_downstream[subset_downstream[:,4] - subset_downstream[:,5] < 0]
             subset_upstream_minus = subset_upstream[subset_upstream[:,4] - subset_upstream[:,5] > 0]
@@ -192,12 +192,13 @@ def write_alignments(final_alignments, reference_genomesize, query_genomesize, o
     for i in range(len(final_alignments)):
         alignment = final_alignments[i]
         alignment_1 = alignment[0]
-        other_chrom_1 = alignment[1]
-        other_chrom_2 = alignment[2]
-        start_ref = min([alignment_1[1], alignment_1[2]])
-        end_ref = max([alignment_1[1], alignment_1[2]])
-        start_quer_1 = min([alignment_1[4], alignment_1[5]])
-        end_quer_1 = max([alignment_1[4], alignment_1[5]])
+        alignment_2 = alignment[1]
+        other_chrom_1 = alignment[2]
+        other_chrom_2 = alignment[3]
+        start_ref = min([alignment_1[1], alignment_1[2], alignment_2[1], alignment_2[2]])
+        end_ref = max([alignment_1[1], alignment_1[2], alignment_2[1], alignment_2[2]])
+        start_quer_1 = min([alignment_1[4], alignment_1[5], alignment_2[4], alignment_2[5]])
+        end_quer_1 = max([alignment_1[4], alignment_1[5], alignment_2[4], alignment_2[5]])
         if other_chrom_1[4] - other_chrom_1[5] > 0:
             match_order = '-'
         elif other_chrom_1[4] - other_chrom_1[5] < 0 :
@@ -251,8 +252,8 @@ quer_name = str(sys.argv[6])
 print('started '+quer_name)
 
 match_list = get_match_lists(processed_matches_file, ref_genomesize_file)
-promising_list = get_promising_alignments(match_list, 40)
-final_list = get_final_alignments(promising_list, match_list, ref_genomesize_file, quer_genomesize_file, 40, 0.1)
+promising_list = get_promising_alignments(match_list, 200)
+final_list = get_final_alignments(promising_list, match_list, ref_genomesize_file, quer_genomesize_file, 200, 0.1)
 
 if len(final_list) > 0:
     ref_genomesize_dict, quer_genomesize_dict = get_genomesize_dicts(ref_genomesize_file, quer_genomesize_file)
