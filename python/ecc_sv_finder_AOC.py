@@ -252,8 +252,8 @@ quer_name = str(sys.argv[6])
 print('started '+quer_name)
 
 match_list = get_match_lists(processed_matches_file, ref_genomesize_file)
-promising_list = get_promising_alignments(match_list, 200)
-final_list = get_final_alignments(promising_list, match_list, ref_genomesize_file, quer_genomesize_file, 200, 0.1)
+promising_list = get_promising_alignments(match_list, 100)
+final_list = get_final_alignments(promising_list, match_list, ref_genomesize_file, quer_genomesize_file, 100, 0.1)
 
 if len(final_list) > 0:
     ref_genomesize_dict, quer_genomesize_dict = get_genomesize_dicts(ref_genomesize_file, quer_genomesize_file)
