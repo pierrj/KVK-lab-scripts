@@ -12,7 +12,8 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all_repeatmasked/
 
-source activate mummer
+source ~/.bashrc
+conda activate mummer
 module load repeatmasker/4.1.1
 
 MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/mapfile
@@ -93,6 +94,8 @@ RM_LIB=repbase_plus_guy11_modeler_rm_database.fasta
 #     tail -n+6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${OUTPUT_DIR_COORDS}/${genome}.processed_output.coords
 # done < ${MAPFILE}
 
+conda deactivate
+
 COORDS_DIR=output_coords
 SIZES_DIR=output_sizes
 OUTPUT_DIR=translocation_finder_output
@@ -114,6 +117,8 @@ done < ${MAPFILE}
 parallel -j 24 < jobqueue
 
 cd ${OUTPUT_DIR}
+
+conda activate mummer
 
 module load gnuplot
 module load imagemagick
