@@ -12,7 +12,6 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all_repeatmasked/
 
-
 source activate mummer
 module load repeatmasker/4.1.1
 
@@ -61,38 +60,38 @@ OUTPUT_DIR_COORDS=output_coords
 TMP_DIR=tmp
 RM_LIB=repbase_plus_guy11_modeler_rm_database.fasta
 
-if [ -d "${OUTPUT_DIR_SIZES}" ]; then
-    rm -r ${OUTPUT_DIR_SIZES}
-fi
+# if [ -d "${OUTPUT_DIR_SIZES}" ]; then
+#     rm -r ${OUTPUT_DIR_SIZES}
+# fi
 
-if [ -d "${OUTPUT_DIR_BEDS}" ]; then
-    rm -r ${OUTPUT_DIR_BEDS}
-fi
+# if [ -d "${OUTPUT_DIR_BEDS}" ]; then
+#     rm -r ${OUTPUT_DIR_BEDS}
+# fi
 
-if [ -d "${OUTPUT_DIR_COORDS}" ]; then
-    rm -r ${OUTPUT_DIR_COORDS}
-fi
+# if [ -d "${OUTPUT_DIR_COORDS}" ]; then
+#     rm -r ${OUTPUT_DIR_COORDS}
+# fi
 
-if [ -d "${TMP_DIR}" ]; then
-    rm -r ${TMP_DIR}
-fi
+# if [ -d "${TMP_DIR}" ]; then
+#     rm -r ${TMP_DIR}
+# fi
 
-mkdir ${OUTPUT_DIR_SIZES}
-mkdir ${OUTPUT_DIR_BEDS}
-mkdir ${TMP_DIR}
-mkdir ${OUTPUT_DIR_COORDS}
+# mkdir ${OUTPUT_DIR_SIZES}
+# mkdir ${OUTPUT_DIR_BEDS}
+# mkdir ${TMP_DIR}
+# mkdir ${OUTPUT_DIR_COORDS}
 
-samtools faidx ${REFERENCE}
-cut -f1,2 ${REFERENCE}.fai > ${OUTPUT_DIR_SIZES}/$(basename ${REFERENCE}).genomesize
-RepeatMasker -gff -nolow -no_is -norna -pa 24 -lib ${RM_LIB} -dir . ${REFERENCE}
-while read genome; do
-    samtools faidx ${GENOMES_PATH}/${genome}_genomic.fna
-    cut -f1,2 ${GENOMES_PATH}/${genome}_genomic.fna.fai > ${OUTPUT_DIR_SIZES}/$(basename ${genome}).genomesize
-    RepeatMasker -gff -nolow -no_is -norna -pa 24 -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
-    /global/scratch/pierrj/mummer_4/bin/nucmer -t ${SLURM_NTASKS} --maxmatch -p ${TMP_DIR}/${genome} $(basename ${REFERENCE}).masked ${genome}_genomic.fna.masked
-    /global/scratch/pierrj/mummer_4/bin/show-coords ${TMP_DIR}/${genome}.delta > ${TMP_DIR}/${genome}.coords
-    tail -n+6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${OUTPUT_DIR_COORDS}/${genome}.processed_output.coords
-done < ${MAPFILE}
+# samtools faidx ${REFERENCE}
+# cut -f1,2 ${REFERENCE}.fai > ${OUTPUT_DIR_SIZES}/$(basename ${REFERENCE}).genomesize
+# RepeatMasker -gff -nolow -no_is -norna -pa 24 -lib ${RM_LIB} -dir . ${REFERENCE}
+# while read genome; do
+#     samtools faidx ${GENOMES_PATH}/${genome}_genomic.fna
+#     cut -f1,2 ${GENOMES_PATH}/${genome}_genomic.fna.fai > ${OUTPUT_DIR_SIZES}/$(basename ${genome}).genomesize
+#     RepeatMasker -gff -nolow -no_is -norna -pa 24 -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
+#     /global/scratch/pierrj/mummer_4/bin/nucmer -t ${SLURM_NTASKS} --maxmatch -p ${TMP_DIR}/${genome} $(basename ${REFERENCE}).masked ${genome}_genomic.fna.masked
+#     /global/scratch/pierrj/mummer_4/bin/show-coords ${TMP_DIR}/${genome}.delta > ${TMP_DIR}/${genome}.coords
+#     tail -n+6 ${TMP_DIR}/${genome}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${OUTPUT_DIR_COORDS}/${genome}.processed_output.coords
+# done < ${MAPFILE}
 
 COORDS_DIR=output_coords
 SIZES_DIR=output_sizes
@@ -116,7 +115,6 @@ parallel -j 24 < jobqueue
 
 cd ${OUTPUT_DIR}
 
-source activate mummer
 module load gnuplot
 module load imagemagick
 
