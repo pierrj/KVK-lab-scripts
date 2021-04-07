@@ -13,26 +13,26 @@
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all_AOC
 
-MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/mapfile
-COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_coords
-SIZES_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_sizes
-OUTPUT_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all_AOC/ecc_sv_finder_output
+# MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes/mapfile
+# COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_coords
+# SIZES_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all/output_sizes
+# OUTPUT_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finder/guy11_v_all_AOC/ecc_sv_finder_output
 
-if [ -d "${OUTPUT_DIR}" ]; then
-    rm -r ${OUTPUT_DIR}
-fi
+# if [ -d "${OUTPUT_DIR}" ]; then
+#     rm -r ${OUTPUT_DIR}
+# fi
 
-mkdir ${OUTPUT_DIR}
+# mkdir ${OUTPUT_DIR}
 
-if [ -f "jobqueue" ]; then
-    rm "jobqueue"
-fi
+# if [ -f "jobqueue" ]; then
+#     rm "jobqueue"
+# fi
 
-while read genome; do
-    echo "python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
-done < ${MAPFILE}
+# while read genome; do
+#     echo "python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${SIZES_DIR}/${genome}.genomesize ${OUTPUT_DIR} guy11 ${genome}" >> jobqueue
+# done < ${MAPFILE}
 
-parallel -j 24 < jobqueue
+# parallel -j 24 < jobqueue
 
 cd ${OUTPUT_DIR}
 
@@ -43,6 +43,6 @@ module load imagemagick
 REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.fasta
 GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes
 SUBDIR_OUTPUT=output_jpgs
-PERCENT_ZEROES_FILTER=1
+PERCENT_ZEROES_FILTER=0.2
 
 /global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
