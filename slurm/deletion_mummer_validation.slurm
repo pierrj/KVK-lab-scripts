@@ -22,12 +22,12 @@ GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now
 SUBDIR_OUTPUT=output_jpgs
 PERCENT_ZEROES_FILTER=1
 
-for gene_dir in */ ; do
-    gene=$(basename ${gene_dir})
-    cd ${gene}
-    /global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
-    cd ..
-done
+# for gene_dir in */ ; do
+#     gene=$(basename ${gene_dir})
+#     cd ${gene}
+#     /global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
+#     cd ..
+# done
 
 # for d in */ ; do
 #     cd $d
@@ -50,7 +50,7 @@ for gene_dir in */ ; do
                 tail -n+6 0.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${gene}_${genome}.processed_output.coords
                 python /global/home/users/pierrj/git/python/process_candidate_deletions.py ${gene}_${genome}.processed_output.coords ../guy11_geneloc.bed ../${gene}_${genome}.deletion.bed 40 ${gene} ${genome}
                 if [ -f "../${gene}_${genome}.deletion.bed" ]; then
-                    cp ../${gene}_${genome}.deletion.bed /global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all/all_deletions/${gene}_${genome}.deletion.bed
+                    cp ../${gene}_${genome}.deletion.bed /global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_deletions/${gene}_${genome}.deletion.bed
                 fi
             cd ..
         cd ..
