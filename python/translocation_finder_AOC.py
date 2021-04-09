@@ -52,13 +52,14 @@ def get_candidate_translocations(match_list_processed, query_genomesize_file, to
             end_match = max(match[1], match[2])
             match_length = end_match - start_match
             match_scaffold = match[3]
-            bests = find_translocation_all_possible(start_match, end_match, match_length, matches_per_scaffold, match_scaffold,
-                                                scaffold_length_dict, tolerance, isclose_percent)
-            if len(bests) > 0:
-                for best in bests:
-                    best_1 = best[0]
-                    best_2 = best[1]
-                    translocations.append([match, best_1, best_2])
+            if match_length >= 250:
+                bests = find_translocation_all_possible(start_match, end_match, match_length, matches_per_scaffold, match_scaffold,
+                                                    scaffold_length_dict, tolerance, isclose_percent)
+                if len(bests) > 0:
+                    for best in bests:
+                        best_1 = best[0]
+                        best_2 = best[1]
+                        translocations.append([match, best_1, best_2])
     return translocations
 
 def find_translocation_all_possible(start_match, end_match, match_length, matches_per_scaffold, match_scaffold, 
