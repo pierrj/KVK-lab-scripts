@@ -23,6 +23,7 @@ SUBDIR_OUTPUT=output_jpgs
 PERCENT_ZEROES_FILTER=1
 ALL_JPGS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_jpgs
 ALL_COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_coords
+ALL_GENELOCS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_genelocs
 
 if [ -d "${ALL_JPGS_DIR}" ]; then
     rm -r ${ALL_JPGS_DIR}
@@ -31,6 +32,14 @@ fi
 if [ -d "${ALL_COORDS_DIR}" ]; then
     rm -r ${ALL_COORDS_DIR}
 fi
+
+if [ -d "${ALL_GENELOCS_DIR}" ]; then
+    rm -r ${ALL_GENELOCS_DIR}
+fi
+
+mkdir ${ALL_JPGS_DIR}
+mkdir ${ALL_COORDS_DIR}
+mkdir ${ALL_GENELOCS_DIR}
 
 for gene_dir in */ ; do
     gene=$(basename ${gene_dir})
@@ -59,6 +68,7 @@ for gene_dir in */ ; do
                 show-coords 0.delta > 0.coords
                 tail -n+6 0.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${gene}_${genome}.processed_output.coords
                 cp ${gene}_${genome}.processed_output.coords ${ALL_COORDS_DIR}/${gene}_${genome}.processed_output.coords
+                cp ../guy11_geneloc.bed ${ALL_GENELOCS_DIR}/${gene}_${genome}.gene_loc
             cd ..
         cd ..
     done < genome_mapfile
