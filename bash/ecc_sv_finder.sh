@@ -18,6 +18,11 @@ quer=$(basename ${QUERY})
 
 ## two different versions of mummer used which is awk
 
+if [ -d "${TMP_DIR}" ]; then
+    rm -r ${TMP_DIR}
+fi
+mkdir ${TMP_DIR}
+
 samtools faidx ${REFERENCE}
 cut -f1,2 ${REFERENCE}.fai > ${TMP_DIR}/${ref}.genomesize
 samtools faidx ${QUERY}
