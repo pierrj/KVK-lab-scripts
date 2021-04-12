@@ -19,6 +19,7 @@ THREADS=${SLURM_NTASKS}
 OUTPUT_NAME=test
 PERCENT_ZEROES_FILTER=1.0
 OUTPUT_DIR=output_jpgs
+TMP_DIR=test_tmp
 
 source ~/.bashrc
 conda activate mummer
@@ -26,4 +27,4 @@ conda activate mummer
 module load gnuplot
 module load imagemagick
 
-/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR}
+/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
