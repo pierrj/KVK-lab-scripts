@@ -90,7 +90,22 @@ module load imagemagick
 
 REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.fasta
 GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes
-SUBDIR_OUTPUT=output_jpgs
+SUBDIR_OUTPUT=/global/scratch/users/pierrj/eccDNA/pipeline_tests/translocation_finder/guy11_v_all_repeatmasked/translocation_finder_output_rev/output_jpgs
 PERCENT_ZEROES_FILTER=0.1
 
-/global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
+if [ -d "${SUBDIR_OUTPUT}" ]; then
+    rm -r ${SUBDIR_OUTPUT}
+fi
+
+ls -1 | grep -v genome_mapfile | awk '{print substr($1,0,length($1)-8)}'> genome_mapfile
+
+mkdir ${SUBDIR_OUTPUT}
+
+while read reference;
+do
+## turn query name into path to genome
+    reference_path=${GENOMES_PATH}/${reference}_genomic.fna
+    cd ${reference}_v_guy11
+    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${reference_path} -q ${REFERENCE}  -e ${reference} -u guy11 -o ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
+    cd ..
+done < genome_mapfile
