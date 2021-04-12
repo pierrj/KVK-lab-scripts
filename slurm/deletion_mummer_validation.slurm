@@ -11,7 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/gene_deletion_output
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/gene_deletion_output_all_false_positives
 
 source activate mummer
 module load gnuplot
@@ -21,9 +21,9 @@ REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy1
 GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes
 SUBDIR_OUTPUT=output_jpgs
 PERCENT_ZEROES_FILTER=1
-ALL_JPGS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_jpgs
-ALL_COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_coords
-ALL_GENELOCS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/all_genelocs
+ALL_JPGS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/jpgs_small_deletions
+ALL_COORDS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/coords_small_deletions
+ALL_GENELOCS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/deletion_mummer_plots/guy11_v_all_redo_with_qc/genelocs_small_deletions
 
 if [ -d "${ALL_JPGS_DIR}" ]; then
     rm -r ${ALL_JPGS_DIR}
