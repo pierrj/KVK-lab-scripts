@@ -12,6 +12,7 @@ p) PERCENT_ZEROES_FILTER=${OPTARG};;
 esac
 done
 
+output_realpath=$(realpath ${SUBDIR_OUTPUT})
 SUBDIR_TMP=tmp
 if [ -d "${SUBDIR_TMP}" ]; then
     rm -r ${SUBDIR_TMP}
