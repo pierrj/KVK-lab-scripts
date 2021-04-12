@@ -65,21 +65,21 @@ COORDS_DIR=output_coords_rev
 SIZES_DIR=output_sizes_rev
 OUTPUT_DIR=translocation_finder_output_rev
 
-if [ -d "${OUTPUT_DIR}" ]; then
-    rm -r ${OUTPUT_DIR}
-fi
+# if [ -d "${OUTPUT_DIR}" ]; then
+#     rm -r ${OUTPUT_DIR}
+# fi
 
-mkdir ${OUTPUT_DIR}
+# mkdir ${OUTPUT_DIR}
 
-if [ -f "jobqueue" ]; then
-    rm "jobqueue"
-fi
+# if [ -f "jobqueue" ]; then
+#     rm "jobqueue"
+# fi
 
-while read genome; do
-    echo "python /global/home/users/pierrj/git/python/translocation_finder_AOC.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/${genome}.genomesize ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${OUTPUT_DIR} ${genome}  guy11" >> jobqueue
-done < ${MAPFILE}
+# while read genome; do
+#     echo "python /global/home/users/pierrj/git/python/translocation_finder_AOC.py ${COORDS_DIR}/${genome}.processed_output.coords ${SIZES_DIR}/${genome}.genomesize ${SIZES_DIR}/guy11_genome_baoetal2017.fasta.genomesize ${OUTPUT_DIR} ${genome}  guy11" >> jobqueue
+# done < ${MAPFILE}
 
-parallel -j 24 < jobqueue
+# parallel -j 24 < jobqueue
 
 cd ${OUTPUT_DIR}
 
@@ -106,6 +106,6 @@ do
 ## turn query name into path to genome
     reference_path=${GENOMES_PATH}/${reference}_genomic.fna
     cd ${reference}_v_guy11
-    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${reference_path} -q ${REFERENCE}  -e ${reference} -u guy11 -o ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
+    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${reference_path} -q ${REFERENCE} -e ${reference} -u guy11 -o ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
     cd ..
 done < genome_mapfile
