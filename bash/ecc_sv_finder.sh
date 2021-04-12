@@ -39,5 +39,6 @@ if [ -d "${OUTPUT_DIR}" ]; then
     rm -r ${OUTPUT_DIR}
 fi
 mkdir ${OUTPUT_DIR}
+output_realpath=$(realpath ${OUTPUT_DIR})
 cd ${TMP_DIR}/${ref}_v_${quer}
-/global/home/users/pierrj/git/bash/mummerplotter.sh -r ${REFERENCE} -q ${QUERY}  -e ${ref} -u ${quer} -o ${OUTPUT_DIR} -p ${PERCENT_ZEROES_FILTER}
+/global/home/users/pierrj/git/bash/mummerplotter.sh -r ${REFERENCE} -q ${QUERY}  -e ${ref} -u ${quer} -o ${output_realpath} -p ${PERCENT_ZEROES_FILTER}
