@@ -26,4 +26,4 @@ conda activate mummer
 module load gnuplot
 module load imagemagick
 
-/global/home/users/pierrj/git/bash/mummerplotter.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR}
+/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR}
