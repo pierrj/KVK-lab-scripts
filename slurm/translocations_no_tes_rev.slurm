@@ -2,7 +2,7 @@
 #SBATCH --job-name=translocations_no_tes_rev
 #SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
-#SBATCH --qos=savio_normal2
+#SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
 #SBATCH --time=72:00:00
