@@ -35,10 +35,12 @@ python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${TMP_DIR}/${OU
 
 ## mummer plot stuff here
 
-if [ -d "${OUTPUT_DIR}" ]; then
-    rm -r ${OUTPUT_DIR}
+if [ -d "${TMP_DIR}/${ref}_v_${quer}" ]; then
+    output_realpath=$(realpath ${OUTPUT_DIR})
+    if [ -d "${output_realpath}" ]; then
+        rm -r ${output_realpath}
+    fi
+    mkdir ${output_realpath}
+    cd ${TMP_DIR}/${ref}_v_${quer}
+    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${REFERENCE} -q ${QUERY}  -e ${ref} -u ${quer} -o ${output_realpath} -p ${PERCENT_ZEROES_FILTER}
 fi
-mkdir ${OUTPUT_DIR}
-output_realpath=$(realpath ${OUTPUT_DIR})
-cd ${TMP_DIR}/${ref}_v_${quer}
-/global/home/users/pierrj/git/bash/mummerplotter.sh -r ${REFERENCE} -q ${QUERY}  -e ${ref} -u ${quer} -o ${output_realpath} -p ${PERCENT_ZEROES_FILTER}
