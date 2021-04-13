@@ -106,6 +106,6 @@ do
 ## turn query name into path to genome
     reference_path=${GENOMES_PATH}/${reference}_genomic.fna
     cd ${reference}_v_guy11
-    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${reference_path} -q ${REFERENCE} -e ${reference} -u guy11 -o ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
+    /global/home/users/pierrj/git/bash/mummerplotter_extract_coord.sh -r ${reference_path} -q ${REFERENCE} -e ${reference} -u guy11 -o ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
     cd ..
 done < genome_mapfile
