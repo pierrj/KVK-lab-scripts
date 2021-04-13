@@ -18,7 +18,7 @@ GENOMES=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sor
 MORYZAE_GENOME=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/Magor1_AssemblyScaffolds_Repeatmasked.fasta
 PERCENT_ZEROES_FILTER=1.0
 
-ls -1 | grep -v mapfile_taxa | awk '{print substr($1,0,length($1)-37})' > mapfile_taxa
+ls -1 | grep -v mapfile_taxa | awk '{print substr($1,0,length($1)-37)}' > mapfile_taxa
 
 if [ -f "jobqueue" ]; then
     rm "jobqueue"
