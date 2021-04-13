@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=translocations_no_tes_rev
 #SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal2
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
