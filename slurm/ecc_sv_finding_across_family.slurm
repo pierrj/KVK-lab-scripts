@@ -13,6 +13,11 @@
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/
 
+source ~/.bashrc
+conda activate mummer
+
+module load gnuplot
+module load imagemagick
 
 GENOMES=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/
 MORYZAE_GENOME=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/Magor1_AssemblyScaffolds_Repeatmasked.fasta
