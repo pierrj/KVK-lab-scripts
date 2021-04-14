@@ -11,16 +11,16 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae_notrepeatmasked/
 
 module load gnuplot
 module load imagemagick
 
-GENOMES=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/
-MORYZAE_GENOME=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae/Magor1_AssemblyScaffolds_Repeatmasked.fasta
+GENOMES=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae_notrepeatmasked/
+MORYZAE_GENOME=/global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_sv_finding_in_sordariomycetidae_notrepeatmasked/Magor1_AssemblyScaffolds.fasta
 PERCENT_ZEROES_FILTER=1.0
 
-# ls -1 | grep -v mapfile_taxa | awk '{print substr($1,0,length($1)-37)}' > mapfile_taxa
+# ls -1 | grep -v mapfile_taxa | grep -v Magor1_AssemblyScaffolds_Repeatmasked.fasta | awk '{print substr($1,0,length($1)-24)}' > mapfile_taxa
 
 if [ -f "jobqueue" ]; then
     rm "jobqueue"
