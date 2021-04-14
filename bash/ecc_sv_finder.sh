@@ -23,9 +23,13 @@ if [ -d "${TMP_DIR}" ]; then
 fi
 mkdir ${TMP_DIR}
 
-samtools faidx ${REFERENCE}
+if [ ! -f "${REFERENCE}.fai" ]; then
+    samtools faidx ${REFERENCE}
+fi
 cut -f1,2 ${REFERENCE}.fai > ${TMP_DIR}/${ref}.genomesize
-samtools faidx ${QUERY}
+if [ ! -f "${QUERY}.fai" ]; then
+    samtools faidx ${QUERY}
+fi
 cut -f1,2 ${QUERY}.fai > ${TMP_DIR}/${quer}.genomesize
 /global/scratch/pierrj/mummer_4/bin/nucmer -t ${THREADS} --maxmatch -p ${TMP_DIR}/${OUTPUT_NAME} ${REFERENCE} ${QUERY}
 /global/scratch/pierrj/mummer_4/bin/show-coords ${TMP_DIR}/${OUTPUT_NAME}.delta > ${TMP_DIR}/${OUTPUT_NAME}.coords
