@@ -41,10 +41,12 @@ python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${TMP_DIR}/${OU
 
 if [ -d "${TMP_DIR}/${ref}_v_${quer}" ]; then
     output_realpath=$(realpath ${OUTPUT_DIR})
+    reference_realpath=$(realpath ${REFERENCE})
+    query_realpath=$(realpath ${QUERY})
     if [ -d "${output_realpath}" ]; then
         rm -r ${output_realpath}
     fi
     mkdir ${output_realpath}
     cd ${TMP_DIR}/${ref}_v_${quer}
-    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${REFERENCE} -q ${QUERY}  -e ${ref} -u ${quer} -o ${output_realpath} -p ${PERCENT_ZEROES_FILTER}
+    /global/home/users/pierrj/git/bash/mummerplotter.sh -r ${reference_realpath} -q ${query_realpath}  -e ${ref} -u ${quer} -o ${output_realpath} -p ${PERCENT_ZEROES_FILTER}
 fi
