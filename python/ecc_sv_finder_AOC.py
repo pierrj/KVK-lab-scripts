@@ -15,7 +15,10 @@ def get_match_lists(match_file, genomesize_file):
     with open(match_file, newline = '') as file:
             file_reader = csv.reader(file, delimiter = '\t')
             for row in file_reader:
-                match_lists.append([row[4], int(row[0]),int(row[1]), row[5], int(row[2]), int(row[3]), ref_scaffold_length_dict[row[4]]])
+                try:
+                    match_lists.append([row[4], int(row[0]),int(row[1]), row[5], int(row[2]), int(row[3]), ref_scaffold_length_dict[row[4]]])
+                except KeyError:
+                    print(processed_matches_file, ref_genomesize_file, quer_genomesize_file, output_directory, ref_name, quer_name)
     ## index and sort
     num_lines = sum(1 for line in open(genomesize_file))
     match_lists_indexed = [[] for i in range(num_lines)]
