@@ -25,7 +25,7 @@ while read plot; do
     samtools faidx ${SUBDIR_TMP}/${ref}_${plot}.fasta
     cut -f1,2 ${SUBDIR_TMP}/${ref}_${plot}.fasta.fai > ${SUBDIR_TMP}/${ref}_${plot}.genomesize
     bedtools getfasta -fi ${QUERY} -bed ${quer}_${plot}.bed -fo ${SUBDIR_TMP}/${quer}_${plot}.fasta
-    /global/scratch/pierrj/mummer_4/bin/nucmer -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${ref}_${plot}.fasta ${SUBDIR_TMP}/${quer}_${plot}.fasta
+    /global/scratch/pierrj/mummer_4/bin/nucmer --maxmatch -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${ref}_${plot}.fasta ${SUBDIR_TMP}/${quer}_${plot}.fasta
     /global/scratch/pierrj/mummer_4/bin/show-coords ${SUBDIR_TMP}/${plot}.delta | tail -n +6 | awk -v OFS='\t' '{print $12, $1, $2}' | sort -k1,1 -k2,2n >  ${SUBDIR_TMP}/${plot}.bed
     bedtools genomecov -d -i ${SUBDIR_TMP}/${plot}.bed -g ${SUBDIR_TMP}/${ref}_${plot}.genomesize > ${SUBDIR_TMP}/${plot}.genomecov
     total_size=$(wc -l ${SUBDIR_TMP}/${plot}.genomecov | awk '{print $1}')
