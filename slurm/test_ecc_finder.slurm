@@ -11,7 +11,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/yeast_test
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/magor_test
 
 REFERENCE=guy11_genome_baoetal2017.fasta
 QUERY=Magor1_AssemblyScaffolds.fasta
