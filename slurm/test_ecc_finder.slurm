@@ -13,13 +13,13 @@
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/yeast_test
 
-REFERENCE=EC1118_yeast.fasta
-QUERY=M22_yeast.fasta
+REFERENCE=guy11_genome_baoetal2017.fasta
+QUERY=Magor1_AssemblyScaffolds.fasta
 THREADS=${SLURM_NTASKS}
-OUTPUT_NAME=1118_v_22
+OUTPUT_NAME=guy11_v_magor
 PERCENT_ZEROES_FILTER=1.0
-OUTPUT_DIR=118_v_22_jpg
-TMP_DIR=1118_v_22_tmp
+OUTPUT_DIR=guy11_v_magor_jpg
+TMP_DIR=guy11_v_magor_tmp
 
 source ~/.bashrc
 conda activate mummer
@@ -30,12 +30,12 @@ module load imagemagick
 /global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
 
 
-REFERENCE=M22_yeast.fasta
-QUERY=EC1118_yeast.fasta
-THREADS=${SLURM_NTASKS}
-OUTPUT_NAME=22_v_1118
-PERCENT_ZEROES_FILTER=1.0
-OUTPUT_DIR=22_v_1118_jpg
-TMP_DIR=22_v_1118_tmp
+# REFERENCE=M22_yeast.fasta
+# QUERY=EC1118_yeast.fasta
+# THREADS=${SLURM_NTASKS}
+# OUTPUT_NAME=22_v_1118
+# PERCENT_ZEROES_FILTER=1.0
+# OUTPUT_DIR=22_v_1118_jpg
+# TMP_DIR=22_v_1118_tmp
 
-/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
+# /global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
