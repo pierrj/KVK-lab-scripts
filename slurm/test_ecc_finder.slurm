@@ -27,7 +27,7 @@ conda activate mummer
 module load gnuplot
 module load imagemagick
 
-/global/home/users/pierrj/git/bash/ecc_sv_finder_maxmatch.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
+/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
 
 
 REFERENCE=M22_yeast.fasta
@@ -38,4 +38,4 @@ PERCENT_ZEROES_FILTER=1.0
 OUTPUT_DIR=22_v_1118_jpg
 TMP_DIR=22_v_1118_tmp
 
-/global/home/users/pierrj/git/bash/ecc_sv_finder_maxmatch.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
+/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
