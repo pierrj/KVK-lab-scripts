@@ -21,8 +21,7 @@ PERCENT_ZEROES_FILTER=1.0
 OUTPUT_DIR=guy11_v_neuro_jpg
 TMP_DIR=guy11_v_neuro_tmp
 
-source ~/.bashrc
-conda activate mummer
+source /global/scratch/users/pierrj/spaced_anchor/mugsy/mugsyenv.sh
 
 module load gnuplot
 module load imagemagick
@@ -39,3 +38,22 @@ module load imagemagick
 # TMP_DIR=22_v_1118_tmp
 
 # /global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
+
+if [ -d "${TMP_DIR}" ]; then
+    rm -r ${TMP_DIR}
+fi
+mkdir ${TMP_DIR}
+
+if [ ! -f "${REFERENCE}.fai" ]; then
+    samtools faidx ${REFERENCE}
+fi
+cut -f1,2 ${REFERENCE}.fai > ${TMP_DIR}/${ref}.genomesize
+if [ ! -f "${QUERY}.fai" ]; then
+    samtools faidx ${QUERY}
+fi
+cut -f1,2 ${QUERY}.fai > ${TMP_DIR}/${quer}.genomesize
+mugsy --directory . --prefix ${OUTPUT_NAME} ${REFERENCE} ${QUERY}
+/global/scratch/pierrj/mummer_4/bin/show-coords ${OUTPUT_NAME}.guy11_genome_baoetal2017.delta > ${TMP_DIR}/${OUTPUT_NAME}.coords
+tail -n+6 ${OUTPUT_NAME}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${TMP_DIR}/${OUTPUT_NAME}.processed_output.coords
+
+python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${TMP_DIR}/${OUTPUT_NAME}.processed_output.coords ${TMP_DIR}/${ref}.genomesize ${TMP_DIR}/${quer}.genomesize ${TMP_DIR} ${ref} ${quer}
