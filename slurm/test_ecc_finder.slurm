@@ -11,15 +11,15 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/magor_test
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/magor_neurospora_test
 
 REFERENCE=guy11_genome_baoetal2017.fasta
-QUERY=Magor1_AssemblyScaffolds.fasta
+QUERY=Neucr2_AssemblyScaffolds.fasta
 THREADS=${SLURM_NTASKS}
-OUTPUT_NAME=guy11_v_magor
+OUTPUT_NAME=guy11_v_neuro
 PERCENT_ZEROES_FILTER=1.0
-OUTPUT_DIR=guy11_v_magor_jpg
-TMP_DIR=guy11_v_magor_tmp
+OUTPUT_DIR=guy11_v_neuro_jpg
+TMP_DIR=guy11_v_neuro_tmp
 
 source ~/.bashrc
 conda activate mummer
