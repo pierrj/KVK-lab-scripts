@@ -18,6 +18,6 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression
 
 SRA=SRR8842990
 
-bwa mem –T 19 guy11_genome_baoetal2017.fasta ${SRA}.sra_1.fastq ${SRA}.sra_2.fastq > ${SRA}.sam
+bwa mem –T 19 -t ${SLURM_NTASKS} guy11_genome_baoetal2017.fasta ${SRA}.sra_1.fastq ${SRA}.sra_2.fastq > ${SRA}.sam
 
-perl /global/scratch/users/pierrj/ciri2/CIRI_v2.0.5/CIRI_v2.0.5.pl -I ${SRA}.sam -O ${SRA}.ciri_out -F guy11_genome_baoetal2017.fasta
+perl /global/scratch/users/pierrj/ciri2/CIRI_v2.0.5/CIRI_v2.0.5.pl -T ${SLURM_NTASKS} -I ${SRA}.sam -O ${SRA}.ciri_out -F guy11_genome_baoetal2017.fasta
