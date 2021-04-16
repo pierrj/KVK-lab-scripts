@@ -11,23 +11,20 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/magor_neurospora_test
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/test_ecc_sv_finder_script/magor_geagr
 
-REFERENCE=guy11_genome_baoetal2017.fasta
-QUERY=Neucr2_AssemblyScaffolds.fasta
+REFERENCE=Magor1_AssemblyScaffolds.fasta
+QUERY=Gaegr1_AssemblyScaffolds.fasta
 THREADS=${SLURM_NTASKS}
-OUTPUT_NAME=guy11_v_neuro
+OUTPUT_NAME=magor_gaegr
 PERCENT_ZEROES_FILTER=1.0
-OUTPUT_DIR=guy11_v_neuro_jpg
-TMP_DIR=guy11_v_neuro_tmp
+OUTPUT_DIR=${OUTPUT_NAME}_jpg
+TMP_DIR=${OUTPUT_NAME}_tmp
 
 source /global/scratch/users/pierrj/spaced_anchor/mugsy/mugsyenv.sh
 
 module load gnuplot
 module load imagemagick
-
-/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
-
 
 # REFERENCE=M22_yeast.fasta
 # QUERY=EC1118_yeast.fasta
@@ -38,7 +35,8 @@ module load imagemagick
 # TMP_DIR=22_v_1118_tmp
 
 # /global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${REFERENCE} -q ${QUERY} -t ${THREADS} -n ${OUTPUT_NAME} -p ${PERCENT_ZEROES_FILTER} -o ${OUTPUT_DIR} -m ${TMP_DIR}
-
+ref=magor
+quer=gaer
 if [ -d "${TMP_DIR}" ]; then
     rm -r ${TMP_DIR}
 fi
@@ -53,7 +51,9 @@ if [ ! -f "${QUERY}.fai" ]; then
 fi
 cut -f1,2 ${QUERY}.fai > ${TMP_DIR}/${quer}.genomesize
 mugsy --directory . --prefix ${OUTPUT_NAME} ${REFERENCE} ${QUERY}
-/global/scratch/pierrj/mummer_4/bin/show-coords ${OUTPUT_NAME}.guy11_genome_baoetal2017.delta > ${TMP_DIR}/${OUTPUT_NAME}.coords
-tail -n+6 ${OUTPUT_NAME}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${TMP_DIR}/${OUTPUT_NAME}.processed_output.coords
+/global/scratch/pierrj/mummer_4/bin/show-coords ${OUTPUT_NAME}.Magor1_AssemblyScaffolds.delta > ${TMP_DIR}/${OUTPUT_NAME}.coords
+tail -n+6 ${TMP_DIR}/${OUTPUT_NAME}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${TMP_DIR}/${OUTPUT_NAME}.processed_output.coords
+
+
 
 python /global/home/users/pierrj/git/python/ecc_sv_finder_AOC.py ${TMP_DIR}/${OUTPUT_NAME}.processed_output.coords ${TMP_DIR}/${ref}.genomesize ${TMP_DIR}/${quer}.genomesize ${TMP_DIR} ${ref} ${quer}
