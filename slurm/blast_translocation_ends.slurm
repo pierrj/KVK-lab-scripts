@@ -23,7 +23,8 @@ do
     awk -v OFS='\t' '{ print $1, $3-50, $3+50}' translocation > translocation_end
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo translocation_start.fasta -bed translocation_start
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo translocation_end.fasta -bed translocation_end
-    blastn -query translocation_start.fasta -subject translocation_end.fasta -task blastn-short -strand 'plus' -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
+    blastn -query translocation_start.fasta -subject translocation_end.fasta -task blastn-short > blastoutput ## add -word_size 4 here and test
+    cat blastoutput
     if [ -f blastoutput ]
     then
         echo -e $translocation'\t'$(awk '{print $7}' blastoutput ) >> homology_table_100

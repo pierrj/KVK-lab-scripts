@@ -17,3 +17,19 @@ for i in {1..1000}; do
     bedtools shuffle -i sorted.all.confirmedsplitreads.bed -g guy11_genome_baoetal2017.chromsizes > shuffled
     python /global/home/users/pierrj/git/python/check_hotspot_ecc_and_deletions.py uniq_deletions.bed shuffled
 done
+
+for i in {1..1000}; do 
+    bedtools shuffle -i uniq_deletions.bed -g guy11_genome_baoetal2017.chromsizes > shuffled
+    python /global/home/users/pierrj/git/python/check_overlap_ecc_and_deletions.py shuffled sorted.uniq.all.confirmedsplitreads.bed
+done
+
+for i in {1..1000}; do 
+    bedtools shuffle -i uniq_deletions_real.bed -g guy11_genome_baoetal2017.chromsizes > shuffled
+    python /global/home/users/pierrj/git/python/check_hotspot_ecc_and_deletions.py shuffled sorted.all.confirmedsplitreads.bed
+done
+
+
+for i in {1..1000}; do 
+    bedtools shuffle -i uniq_small_deletions.bed -g guy11_genome_baoetal2017.chromsizes > shuffled
+    python /global/home/users/pierrj/git/python/check_overlap_ecc_and_deletions.py shuffled sorted.uniq.all.confirmedsplitreads.bed
+done

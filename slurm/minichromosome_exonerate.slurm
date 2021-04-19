@@ -15,20 +15,20 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/minichromosomes
 
 module load exonerate
 
-# isolate=FR13
+isolate=FR13
 
-# exonerate --model protein2genome guy11_fungap_out_prot.faa ${isolate}_minichromosome.fasta --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > ${isolate}_genes.gff
+exonerate --model protein2genome guy11_fungap_out_prot.faa ${isolate}_no_minichrom.fasta --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > ${isolate}_genes_core.gff
 
-# awk '$3=="gene"' ${isolate}_genes.gff | awk '$19>70' | awk '{print $13}' > ${isolate}_genes_on_minichromosome
+awk '$3=="gene"' ${isolate}_genes_core.gff | awk '$19>70' | awk '{print $13}' > ${isolate}_genes_on_core
 
 isolate=CD156
 
-exonerate --model protein2genome guy11_fungap_out_prot.faa ${isolate}_minichromosome.fasta --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > ${isolate}_genes.gff
+exonerate --model protein2genome guy11_fungap_out_prot.faa ${isolate}_no_minichrom.fasta --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > ${isolate}_genes_core.gff
 
-awk '$3=="gene"' ${isolate}_genes.gff | awk '$19>70' | awk '{print $13}' > ${isolate}_genes_on_minichromosome
+awk '$3=="gene"' ${isolate}_genes_core.gff | awk '$19>70' | awk '{print $13}' > ${isolate}_genes_on_core
 
 isolate=US71
 
-exonerate --model protein2genome guy11_fungap_out_prot.faa ${isolate}_minichromosome.fasta --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > ${isolate}_genes.gff
+exonerate --model protein2genome guy11_fungap_out_prot.faa ${isolate}_no_minichrom.fasta --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > ${isolate}_genes_core.gff
 
-awk '$3=="gene"' ${isolate}_genes.gff | awk '$19>70' | awk '{print $13}' > ${isolate}_genes_on_minichromosome
+awk '$3=="gene"' ${isolate}_genes_core.gff | awk '$19>70' | awk '{print $13}' > ${isolate}_genes_on_core
