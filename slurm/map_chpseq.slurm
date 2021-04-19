@@ -14,4 +14,4 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merg
 
 while read sample; do
     bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
-done < mapfile
+done < mapfile_input
