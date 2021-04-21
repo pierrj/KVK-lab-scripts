@@ -15,8 +15,16 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/acs_finding
 
 module load meme
 
-if [ -d eccs_notes ]; then
-    rm -r eccs_notes
+if [ -f permute_fimo_out.txt]; then
+    rm permute_fimo_out.txt
 fi
-
-fimo -o eccs_notes acs_meme.txt notes.sorted.uniq.all.confirmedsplitreads.fasta
+for i in {1..100}; do 
+    echo $i
+    if [ -d shuffled_fimo ]; then
+        rm -r shuffled_fimo
+    fi
+    bedtools shuffle -i notes.sorted.uniq.all.confirmedsplitreads.bed -g guy11_genome_baoetal2017.chromsizes -excl guy11_genome_baoetal2017.fasta.out.gff > shuffled
+    bedtools getfasta -fi guy11_genome_baoetal2017.fasta -bed shuffled > shuffled.fasta
+    fimo --verbosity 1 -o shuffled_fimo acs_meme.txt shuffled.fasta
+    awk '$6>=17' shuffled_fimo/fimo.txt | awk '{print $2}' | sort | uniq | wc -l >> permute_fimo_out.txt
+done
