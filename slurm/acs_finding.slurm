@@ -15,4 +15,8 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/acs_finding
 
 module load meme
 
+if [ -d eccs_notes ]; then
+    rm -r eccs_notes
+fi
+
 fimo -o eccs_notes acs_meme.txt notes.sorted.uniq.all.confirmedsplitreads.fasta
