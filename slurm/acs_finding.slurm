@@ -15,4 +15,4 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/acs_finding
 
 module load meme
 
-fimo -o eccs_notes acs_meme.txt notes.sorted.uniq.all.confirmedsplitreads.bed
+fimo -o eccs_notes acs_meme.txt notes.sorted.uniq.all.confirmedsplitreads.fasta
