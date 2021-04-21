@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/acs_finding
 
 module load meme
 
-if [ -f permute_fimo_out.txt]; then
+if [ -f permute_fimo_out.txt ]; then
     rm permute_fimo_out.txt
 fi
 for i in {1..100}; do 
