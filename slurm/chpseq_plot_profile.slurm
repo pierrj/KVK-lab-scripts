@@ -12,16 +12,17 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged
 
+source activate deeptools
 
-while read biorep treatment; do
-    samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
-    samtools index sorted.${treatment}_${biorep}.sam.bam
-done < biorep_treament
+# while read biorep treatment; do
+#     samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
+#     samtools index sorted.${treatment}_${biorep}.sam.bam
+# done < biorep_treament
 
-while read biorep treatment; do
-    samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
-    samtools index sorted.${treatment}_${biorep}.sam.bam
-done < control_biorep_treament
+# while read biorep treatment; do
+#     samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
+#     samtools index sorted.${treatment}_${biorep}.sam.bam
+# done < control_biorep_treament
 
 cd ../deeptools
 
@@ -37,4 +38,4 @@ while read biorep treatment; do
               -out ${treatment}_${biorep}.png \
               --numPlotsPerRow 1 \
               --plotTitle "${treatment} ${biorep} eccDNAs"
-done < biorep_treatment
+done < biorep_treament
