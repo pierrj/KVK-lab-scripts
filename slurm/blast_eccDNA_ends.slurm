@@ -26,13 +26,14 @@ do
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_start.fasta -bed eccdna_start
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_end.fasta -bed eccdna_end
     blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
-    if [ -f blastoutput ]
+    if [ -s blastoutput ]
     then
-        echo -e $(awk '{print $7}' blastoutput ) >> homology_table_10000_shuffled
-        rm blastoutput
+        echo $(awk '{print $7}' blastoutput ) >> homology_table_10000_shuffled
+        
     else
-        echo -e "0" >> homology_table_10000_shuffled
+        echo "0" >> homology_table_10000_shuffled
     fi
+    rm blastoutput
 done < 10000_random.bed
 
 ## blastn -query eccDNA_start.fasta -subject eccDNA_end.fasta -task blastn-short -perc_identity 100
