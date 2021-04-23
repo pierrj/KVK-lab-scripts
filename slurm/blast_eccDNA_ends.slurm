@@ -27,7 +27,6 @@ do
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_start.fasta -bed eccdna_start
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_end.fasta -bed eccdna_end
     blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
-    cat blastoutput
     if [ -f blastoutput ]
     then
         echo -e $(awk '{print $7}' blastoutput ) >> homology_table_100
