@@ -29,7 +29,7 @@ cd ../deeptools
 while read biorep treatment; do
     bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
     computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
-                              -R ../acetylated_genes.bed ../nonacetylated_genes.bed \
+                              -R ../sorted.uniq.all.confirmedsplitreads.bed ../shuffled_eccs.bed \
                               --beforeRegionStartLength 300 \
                               --regionBodyLength 1000 \
                               --afterRegionStartLength 300 \
