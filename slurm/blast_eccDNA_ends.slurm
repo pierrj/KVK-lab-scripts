@@ -11,8 +11,10 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/homology/
 
-if [ -f "homology_table_10000_shuffled" ]; then
-    rm homology_table_10000_shuffled
+
+OUTPUT_TABLE=homology_table_10000
+if [ -f "${OUTPUT_TABLE}" ]; then
+    rm ${OUTPUT_TABLE}
 fi
 
 while read eccdna;
@@ -28,12 +30,12 @@ do
     blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
     if [ -s blastoutput ]
     then
-        echo $(awk '{print $7}' blastoutput ) >> homology_table_10000_shuffled
+        echo $(awk '{print $7}' blastoutput ) >> ${OUTPUT_TABLE}
         
     else
-        echo "0" >> homology_table_10000_shuffled
+        echo "0" >> ${OUTPUT_TABLE}
     fi
     rm blastoutput
-done < 10000_random.bed
+done < 10000_random_eccs.bed
 
 ## blastn -query eccDNA_start.fasta -subject eccDNA_end.fasta -task blastn-short -perc_identity 100
