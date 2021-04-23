@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --job-name=chpseq_plot_profile
-#SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
