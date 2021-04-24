@@ -11,6 +11,8 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/gc
 
+source activate deeptools
+
 computeMatrix scale-regions -S log2ratio_gc.bw \
                             -R ../sorted.uniq.all.confirmedsplitreads.bed ../shuffled_eccs.bed \
                             --beforeRegionStartLength 300 \
