@@ -32,9 +32,11 @@ while read biorep treatment; do
                               --beforeRegionStartLength 300 \
                               --regionBodyLength 1000 \
                               --afterRegionStartLength 300 \
-                              --skipZeros -o ${treatment}_${biorep}.mat.gz 
-    plotProfile -m ${treatment}_${biorep}.mat.gz \
-              -out ${treatment}_${biorep}.png \
+                              --skipZeros -o /tmp/${treatment}_${biorep}.mat.gz 
+    plotProfile -m /tmp/${treatment}_${biorep}.mat.gz \
+              -out /tmp/${treatment}_${biorep}.png \
               --numPlotsPerRow 1 \
               --plotTitle "${treatment} ${biorep} eccDNAs"
 done < biorep_treament
+
+mv /tmp/* /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/
