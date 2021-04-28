@@ -4,7 +4,7 @@
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
-#SBATCH --time=24:00:00
+#SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
@@ -13,7 +13,7 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/gc
 
 source activate deeptools
 
-computeMatrix scale-regions -S log2ratio_gc.bw \
+computeMatrix scale-regions -S guy11_genome_baoetal2017.50bpwindows.bw \
                             -R ../sorted.uniq.all.confirmedsplitreads.bed ../shuffled_eccs.bed \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
