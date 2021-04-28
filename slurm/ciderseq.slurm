@@ -22,6 +22,10 @@ SAMPLE=G3_1A
 
 THREADS=${SLURM_NTASKS}
 
+if [ -d "${SAMPLE}_pacbio.fastq.dir" ]; then
+    rm -r "${SAMPLE}_pacbio.fastq.dir"
+fi
+
 python3 /global/scratch/users/pierrj/ciderseq2/cs-tools.py split --mode deconcat --format fastq --numjobs ${THREADS} --cluster "srun --ntasks=1" /global/scratch/users/pierrj/ciderseq2/ciderseq_config.json ${SAMPLE}_pacbio.fastq
 python3 /global/scratch/users/pierrj/ciderseq2/cs-tools.py join --clean /global/scratch/users/pierrj/ciderseq2/ciderseq_config.json ${SAMPLE}_pacbio.fastq
 python3 /global/scratch/users/pierrj/ciderseq2/cs-tools.py plot /global/scratch/users/pierrj/ciderseq2/ciderseq_config.json ${SAMPLE}_pacbio.fastq
