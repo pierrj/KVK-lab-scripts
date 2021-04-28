@@ -12,6 +12,10 @@
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all/G3_1A
 
+module remove python
+
+source activate ciderseq
+
 module load muscle
 
 SAMPLE=G3_1A
