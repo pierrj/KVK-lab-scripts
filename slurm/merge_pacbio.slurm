@@ -16,5 +16,3 @@ while read barcode; do
     bamtools merge -in SMRTcell_1/SMRTcell_1_demux.AJI_${barcode}--OF_PacF${barcode}.bam -in SMRTcell_2/SMRTcell_2_demux.AJI_${barcode}--OF_PacF${barcode}.bam -in SMRTcell_3/SMRTcell_3_demux.AJI_${barcode}--OF_PacF${barcode}.bam -out SMRTcell_all/merged_demux.AJI_${barcode}--OF_PacF${barcode}.bam
     samtools view -c SMRTcell_all/merged_demux.AJI_${barcode}--OF_PacF${barcode}.bam
 done < barcodelist
-
-SMRTcell_1_demux.AJI_18--OF_PacF19.bam
