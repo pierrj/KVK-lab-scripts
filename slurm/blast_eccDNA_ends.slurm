@@ -12,7 +12,7 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/homology/
 
 
-OUTPUT_TABLE=100k_random_eccs_homology
+OUTPUT_TABLE=100k_random_eccs_homology_90perc
 if [ -f "${OUTPUT_TABLE}" ]; then
     rm ${OUTPUT_TABLE}
 fi
@@ -27,7 +27,7 @@ do
     awk -v OFS='\t' '{ print $1, $3-10, $3+10}' eccdna > eccdna_end
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_start.fasta -bed eccdna_start
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_end.fasta -bed eccdna_end
-    blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
+    blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 90 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
     if [ -s blastoutput ]
     then
         echo $(awk '{print $7}' blastoutput ) >> ${OUTPUT_TABLE}
@@ -38,7 +38,7 @@ do
     rm blastoutput
 done < 100k_random_eccs.bed
 
-OUTPUT_TABLE=100k_random_regions_homology
+OUTPUT_TABLE=100k_random_regions_homology_90perc
 if [ -f "${OUTPUT_TABLE}" ]; then
     rm ${OUTPUT_TABLE}
 fi
@@ -53,7 +53,7 @@ do
     awk -v OFS='\t' '{ print $1, $3-10, $3+10}' eccdna > eccdna_end
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_start.fasta -bed eccdna_start
     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_end.fasta -bed eccdna_end
-    blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 100 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
+    blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 90 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
     if [ -s blastoutput ]
     then
         echo $(awk '{print $7}' blastoutput ) >> ${OUTPUT_TABLE}
