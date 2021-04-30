@@ -12,7 +12,7 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/homology/
 
 
-OUTPUT_TABLE=100k_random_eccs_homology_90perc
+OUTPUT_TABLE=eccs_homology_90_perc
 if [ -f "${OUTPUT_TABLE}" ]; then
     rm ${OUTPUT_TABLE}
 fi
@@ -36,9 +36,9 @@ do
         echo "0" >> ${OUTPUT_TABLE}
     fi
     rm blastoutput
-done < 100k_random_eccs.bed
+done < sorted.uniq.all.confirmedsplitreads.bed
 
-OUTPUT_TABLE=100k_random_regions_homology_90perc
+OUTPUT_TABLE=random_homology_90_perc
 if [ -f "${OUTPUT_TABLE}" ]; then
     rm ${OUTPUT_TABLE}
 fi
@@ -62,7 +62,7 @@ do
         echo "0" >> ${OUTPUT_TABLE}
     fi
     rm blastoutput
-done < 100k_random_regions.bed
+done < shuffle_eccs.bed
 
 
 ## blastn -query eccDNA_start.fasta -subject eccDNA_end.fasta -task blastn-short -perc_identity 100
