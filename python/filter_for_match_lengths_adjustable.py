@@ -53,6 +53,6 @@ with open(input_file, newline = '') as file:
                     matches_sums_row2['other'] += int(matches_row2[i][0])
             read_length_matches = matches_sums_row1['M'] + matches_sums_row2['M']
             read_length_nonmatches = matches_sums_row1['other'] + matches_sums_row2['other']
-            if math.isclose(read_length_matches,read_length_nonmatches, abs_tol=tolerance, rtol=0):
+            if math.isclose(read_length_matches,read_length_nonmatches, abs_tol=tolerance):
                 w.writerow(row1)
                 w.writerow(row2)
