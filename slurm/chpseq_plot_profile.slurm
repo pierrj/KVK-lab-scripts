@@ -9,7 +9,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/tracks
 
 source activate deeptools
 
@@ -23,20 +23,43 @@ source activate deeptools
 #     samtools index sorted.${treatment}_${biorep}.sam.bam
 # done < control_biorep_treament
 
-cd ../deeptools
+biorep=1
 
-while read biorep treatment; do
-    bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
-    computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
-                              -R ../sorted.uniq.all.confirmedsplitreads.bed ../shuffled_eccs.bed \
-                              --beforeRegionStartLength 300 \
-                              --regionBodyLength 1000 \
-                              --afterRegionStartLength 300 \
-                              --skipZeros -o /tmp/${treatment}_${biorep}.mat.gz 
-    plotProfile -m /tmp/${treatment}_${biorep}.mat.gz \
-              -out /tmp/${treatment}_${biorep}.png \
-              --numPlotsPerRow 1 \
-              --plotTitle "${treatment} ${biorep} eccDNAs"
-done < biorep_treament
+treatment=H3K27ac
+bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
+computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
+                            -R  all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons acetylated_genes nonacetylated_genes all_genes \
+                            --beforeRegionStartLength 300 \
+                            --regionBodyLength 1000 \
+                            --afterRegionStartLength 300 \
+                            --skipZeros -o ${treatment}_${biorep}.mat.gz 
+plotProfile -m ${treatment}_${biorep}.mat.gz \
+            -out ${treatment}_${biorep}.png \
+            --numPlotsPerRow 1 \
+            --plotTitle "${treatment} ${biorep} eccDNAs"
 
-mv /tmp/* /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/
+treatment=H3K27me3
+bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
+computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
+                            -R  all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons methylated_genes nonmethylated_genes all_genes \
+                            --beforeRegionStartLength 300 \
+                            --regionBodyLength 1000 \
+                            --afterRegionStartLength 300 \
+                            --skipZeros -o ${treatment}_${biorep}.mat.gz 
+plotProfile -m ${treatment}_${biorep}.mat.gz \
+            -out ${treatment}_${biorep}.png \
+            --numPlotsPerRow 1 \
+            --plotTitle "${treatment} ${biorep} eccDNAs"
+
+treatment=H3K36me3
+bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
+computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
+                            -R  all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons all_genes \
+                            --beforeRegionStartLength 300 \
+                            --regionBodyLength 1000 \
+                            --afterRegionStartLength 300 \
+                            --skipZeros -o ${treatment}_${biorep}.mat.gz 
+plotProfile -m ${treatment}_${biorep}.mat.gz \
+            -out ${treatment}_${biorep}.png \
+            --numPlotsPerRow 1 \
+            --plotTitle "${treatment} ${biorep} eccDNAs"
