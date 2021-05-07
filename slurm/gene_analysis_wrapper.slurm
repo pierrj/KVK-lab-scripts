@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --job-name=eccDNA_gene_analysis_wrapper
-#SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -28,14 +27,14 @@ while read sample; do
 cp /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.confirmedsplitreads.bed .
 done < mapfile
 
-PANNZER_INPUT=/global/scratch/users/pierrj/references/pannzer_GUY11_PacBio_merge_KROJ_post_repeatmasking.txt
+PANNZER_INPUT=/global/scratch/pierrj/references/pannzer_output_fungap_guy11_12_28_20.txt
 OUTPUT_NAME=G3
 SCORE_CUTOFF=0.6
 MAPFILE=mapfile
-GENE_BEDFILE=/global/scratch/users/pierrj/references/GUY11_PacBio_merge_KROJ_renamed.just_genes.post_repeatmasking.T0name.bed
+GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed
 TE_BEDFILE=/global/scratch/users/pierrj/references/GUY11_pacbio_ET_KROJ.features.justtranpsons.bed
 PFAM_DIR=/global/scratch/users/pierrj/pfam/
-CDS_FASTA=/global/scratch/users/pierrj/references/GUY11_PacBio_merge_KROJ_renamed.CDS.fasta
+CDS_FASTA=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20_prot.faa
 THREADS=${SLURM_NTASKS}
 SAMPLE_MAPFILE=G3.sample_mapfile
 
