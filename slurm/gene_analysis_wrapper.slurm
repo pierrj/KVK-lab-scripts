@@ -27,7 +27,7 @@ while read sample; do
 cp /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.confirmedsplitreads.bed .
 done < mapfile
 
-PANNZER_INPUT=/global/scratch/pierrj/references/pannzer_output_fungap_guy11_12_28_20.txt
+PANNZER_INPUT=/global/scratch/users/pierrj/references/pannzer_output_fungap_guy11_12_28_20.txt
 OUTPUT_NAME=G3
 SCORE_CUTOFF=0.6
 MAPFILE=mapfile
