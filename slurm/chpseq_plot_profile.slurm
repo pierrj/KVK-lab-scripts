@@ -9,7 +9,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/tracks
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/tracks2
 
 source activate deeptools
 
@@ -28,7 +28,7 @@ biorep=1
 treatment=H3K27ac
 bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
-                            -R  all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons acetylated_genes nonacetylated_genes all_genes \
+                            -R  all_eccs genomic_baseline large_eccs uniquely_mapped_eccs acetylated_genes nonacetylated_genes \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
@@ -41,7 +41,7 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
 treatment=H3K27me3
 bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
-                            -R  all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons methylated_genes nonmethylated_genes all_genes \
+                            -R  all_eccs genomic_baseline large_eccs uniquely_mapped_eccs methylated_genes nonmethylated_genes all_genes \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
@@ -54,7 +54,7 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
 treatment=H3K36me3
 bamCompare -b1 ../samples_merged/sorted.${treatment}_${biorep}.sam.bam -b2 ../samples_merged/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -S log2ratio_${treatment}_${biorep}.bw \
-                            -R  all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons all_genes \
+                            -R  all_eccs genomic_baseline large_eccs uniquely_mapped_eccs all_genes \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
