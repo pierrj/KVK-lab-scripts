@@ -9,12 +9,12 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/gc
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/tracks
 
 source activate deeptools
 
 computeMatrix scale-regions -S guy11_genome_baoetal2017.50bpwindows.bw \
-                            -R ../sorted.uniq.all.confirmedsplitreads.bed ../shuffled_eccs.bed \
+                            -R all_eccs genomic_baseline non-ltr_eccs ltr_eccs ltr_retrotransposons all_transposons all_genes \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
