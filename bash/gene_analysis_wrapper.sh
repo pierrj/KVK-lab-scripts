@@ -40,7 +40,7 @@ mv ${OUTPUT_NAME}.normalized_binned ${OUTPUT_NAME}.normalized.splitreadspergene
 top_ten_percent=$(awk '$3!=0' ${OUTPUT_NAME}.normalized.splitreadspergene | wc -l | awk '{print int($1/10)}')
 sort -k2,2nr ${OUTPUT_NAME}.normalized.splitreadspergene | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
 
-awk '$3==0' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.neverfound.genes
+awk '{ if ($3==0) {print $1}}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.neverfound.genes
 
 awk '{print $1}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.allgenenames
 
