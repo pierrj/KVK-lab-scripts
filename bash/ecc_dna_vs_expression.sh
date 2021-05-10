@@ -11,7 +11,7 @@ l) LIBTYPE=${OPTARG};; ## 1 for SE or 2 for PE
 f) GFF_FILE=${OPTARG};;
 e) ECCDNA_MAPFILE=${OPTARG};;
 m) SAMPLE_MAPFILE=${OPTARG};;
-n) ECC_NORMALIZATION=${OPTARG};; ## g for gene length multiplication or a for any overlap
+n) ECC_NORMALIZATION=${OPTARG};; ## g for gene length multiplication or a for any overlap or n for no normalization
 esac
 done
 
@@ -99,6 +99,15 @@ while read ECCDNA_FILE; do
     bedtools intersect -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
     paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, $2/N}' > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
+    echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
+done < ${ECCDNA_MAPFILE}
+elif [[ "${ECC_NORMALIZATION}" == "n" ]] ## dont normalize, only count full overlaps
+then
+while read ECCDNA_FILE; do
+    ecc_basename=$(basename ${ECCDNA_FILE})
+    bedtools intersect -f 1 -wa -c -a ${basename_gff_file}.justgenes -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $9, $10}' > ${ecc_basename}.splitreadspergene
+    num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
+    paste ${ecc_basename}.splitreadspergene ${basename_gff_file}.gene_lengths | awk -v N=$num_srs '{print $1, $2/N}' > ${ecc_basename}.normalized.splitreadspergene
     echo ${ecc_basename}.normalized.splitreadspergene >> ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
 else
