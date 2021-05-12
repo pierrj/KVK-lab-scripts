@@ -12,31 +12,31 @@
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/homology/
 
 
-OUTPUT_TABLE=eccs_homology_90_perc
-if [ -f "${OUTPUT_TABLE}" ]; then
-    rm ${OUTPUT_TABLE}
-fi
+# OUTPUT_TABLE=eccs_homology_90_perc
+# if [ -f "${OUTPUT_TABLE}" ]; then
+#     rm ${OUTPUT_TABLE}
+# fi
 
-while read eccdna;
-do
-    echo $eccdna > eccdna
-    ## problem here with eccs at start and ends of scaffolds but oh well
-    ## problem here with really small eccs as well
-    ## problem here with TE eccDNAs
-    awk -v OFS='\t' '{ print $1, $2-10, $2+10}' eccdna > eccdna_start
-    awk -v OFS='\t' '{ print $1, $3-10, $3+10}' eccdna > eccdna_end
-    bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_start.fasta -bed eccdna_start
-    bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_end.fasta -bed eccdna_end
-    blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 90 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
-    if [ -s blastoutput ]
-    then
-        echo $(awk '{print $7}' blastoutput ) >> ${OUTPUT_TABLE}
+# while read eccdna;
+# do
+#     echo $eccdna > eccdna
+#     ## problem here with eccs at start and ends of scaffolds but oh well
+#     ## problem here with really small eccs as well
+#     ## problem here with TE eccDNAs
+#     awk -v OFS='\t' '{ print $1, $2-10, $2+10}' eccdna > eccdna_start
+#     awk -v OFS='\t' '{ print $1, $3-10, $3+10}' eccdna > eccdna_end
+#     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_start.fasta -bed eccdna_start
+#     bedtools getfasta -fi /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta -fo eccdna_end.fasta -bed eccdna_end
+#     blastn -query eccdna_start.fasta -subject eccdna_end.fasta -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 90 -outfmt  "6 qseqid sseqid qstart qend sstart send length" > blastoutput ## add -word_size 4 here and test
+#     if [ -s blastoutput ]
+#     then
+#         echo $(awk '{print $7}' blastoutput ) >> ${OUTPUT_TABLE}
         
-    else
-        echo "0" >> ${OUTPUT_TABLE}
-    fi
-    rm blastoutput
-done < sorted.uniq.all.confirmedsplitreads.bed
+#     else
+#         echo "0" >> ${OUTPUT_TABLE}
+#     fi
+#     rm blastoutput
+# done < sorted.uniq.all.confirmedsplitreads.bed
 
 OUTPUT_TABLE=random_homology_90_perc
 if [ -f "${OUTPUT_TABLE}" ]; then
