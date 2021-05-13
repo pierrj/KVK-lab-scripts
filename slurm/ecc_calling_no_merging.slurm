@@ -16,7 +16,7 @@ sample=G3_1A
 mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 
 
-/global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
+/global/home/users/pierrj/git/bash/assign_confidence_nodb_nomerge.sh -m ${mapfile} \
     -s ${sample} \
     -t ${SLURM_NTASKS} \
     -b no_secondary.filtered.sorted.${sample}.bam \
