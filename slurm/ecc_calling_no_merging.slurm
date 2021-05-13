@@ -12,7 +12,12 @@
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_calling_no_merging
 
-THREADS=${SLURM_NTASKS}
-SAMPLE=G3_1A
+sample=G3_1A
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 
-parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/coverage_confirm_nodb_nomerge.py ${SAMPLE} {} renamed.filtered.sorted.${SAMPLE}.bam ::: $(seq -w 1 ${THREADS})
+
+/global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
+    -s ${sample} \
+    -t ${SLURM_NTASKS} \
+    -b no_secondary.filtered.sorted.${sample}.bam \
+    -r ${sample}.confirmedsplitreads.bed

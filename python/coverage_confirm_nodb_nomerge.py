@@ -120,11 +120,19 @@ with open('ecccaller_output.' + output_name + '.details.tsv'+output_number, 'w',
 with open('ecccaller_output.' + output_name + '.bed'+output_number, 'w', newline = '') as bed:
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
-        if confidence_flat_merged_list[i][5] == 'lowq':
+        if confidence_flat_merged_list[i][4] == 'lowq':
             color = '255,0,0'
-        if confidence_flat_merged_list[i][5] == 'conf':
+        if confidence_flat_merged_list[i][4] == 'conf':
             color = '255,255,0'
-        if confidence_flat_merged_list[i][5] == 'hconf':
+        if confidence_flat_merged_list[i][4] == 'hconf':
             color = '0,255,0'
         row = [confidence_flat_merged_list[i][0]+1, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], i, 0, '+', confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2], color ]
         w.writerow(row)
+
+# write bed version of all splitreads from conf and hconf eccdnas
+with open('ecccaller_output.splitreads.' + output_name + '.bed'+output_number, 'w', newline = '') as bed:
+    w = csv.writer(bed, delimiter = '\t')
+    for i in range(len(confidence_flat_merged_list)):
+        row = [confidence_flat_merged_list[i][0]+1, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2]]
+        for k in range(confidence_flat_merged_list[i][3]):
+            w.writerow(row)
