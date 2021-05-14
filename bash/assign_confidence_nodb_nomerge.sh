@@ -59,6 +59,10 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count e
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.${SAMPLE}.bed > ecccaller_output.${SAMPLE}.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count ecccaller_output.splitreads.${SAMPLE}.bed > ecccaller_output.splitreads.${SAMPLE}.renamed.bed
 
+sort -k1,1 -k2,2n ecccaller_output.${SAMPLE}.renamed.details.tsv > ${SAMPLE}.ecc_caller_out.details.txt
+sort -k1,1 -k2,2n ecccaller_output.${SAMPLE}.renamed.bed > ${SAMPLE}.ecc_caller_out.genomebrowser.bed
+sort -k1,1 -k2,2n ecccaller_output.splitreads.${SAMPLE}.renamed.bed > ${SAMPLE}.ecc_caller_out.splitreads.bed
+
 # clean up tmp files
 rm ecccaller_output.${SAMPLE}.details.tsv*
 rm ecccaller_output.${SAMPLE}.bed*
@@ -68,5 +72,10 @@ rm parallel.plusone.confirmed
 rm renamed.filtered.sorted.${SAMPLE}.bam
 rm renamed.filtered.sorted.${SAMPLE}.bam.bai
 rm merged.confirmed*
+rm shuf.merged.confirmed
+rm tmp.*
+rm ecccaller_output.${SAMPLE}.renamed.details.tsv
+rm ecccaller_output.${SAMPLE}.renamed.bed
+rm ecccaller_output.splitreads.${SAMPLE}.renamed.bed
 
 ## should probably sort outputs at the end

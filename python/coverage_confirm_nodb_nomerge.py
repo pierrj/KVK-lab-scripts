@@ -134,5 +134,6 @@ with open('ecccaller_output.splitreads.' + output_name + '.bed'+output_number, '
     w = csv.writer(bed, delimiter = '\t')
     for i in range(len(confidence_flat_merged_list)):
         row = [confidence_flat_merged_list[i][0]+1, confidence_flat_merged_list[i][1], confidence_flat_merged_list[i][2]]
-        for k in range(confidence_flat_merged_list[i][3]):
-            w.writerow(row)
+        if confidence_flat_merged_list[i][4] != "lowq":
+            for k in range(confidence_flat_merged_list[i][3]):
+                w.writerow(row)
