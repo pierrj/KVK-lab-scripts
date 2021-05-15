@@ -14,7 +14,7 @@ MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contign
 SAMPLE=G3_1A
 THREADS=20
 FILTERED_BAMFILE=uniq.filtered.sorted.G3_1A.bam
-
+FILTERED_BAMFILE_QSORTED=multimapped.filtered.name_sorted.G3_1A.bam
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A
 
