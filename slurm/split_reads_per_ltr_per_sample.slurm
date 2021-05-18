@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/stress_experiments/mag_stress/
 while read sample
 do
 cd ${sample}
-bamfile=filtered.sorted.${sample}.bam
+bamfile=no_secondary.filtered.sorted.${sample}.bam
 /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
 split_read_file=SRs.no_orientation.allmapq.${sample}.bam
 /global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b /global/scratch/users/pierrj/repeatmasker/moryzae_final/copia_int_renamed.only_LTRs_of_interest.identitycutoff.bed \
@@ -23,3 +23,17 @@ split_read_file=SRs.no_orientation.allmapq.${sample}.bam
     -s ${split_read_file} -o ${sample}
 cd ..
 done < mapfile_IF
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample
+do
+cd ${sample}
+bamfile=no_secondary.filtered.sorted.${sample}.bam
+/global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
+split_read_file=SRs.no_orientation.allmapq.${sample}.bam
+/global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b /global/scratch/users/pierrj/repeatmasker/moryzae_final/copia_int_renamed.only_LTRs_of_interest.identitycutoff.bed \
+    -m /global/scratch/users/pierrj/repeatmasker/moryzae_final/mapfile_elements \
+    -s ${split_read_file} -o ${sample}
+cd ..
+done < mapfile
