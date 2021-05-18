@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --job-name=split_reads_per_ltr_per_sample
-#SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
