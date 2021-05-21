@@ -25,7 +25,7 @@ cd ${sample}
     -b uniq.filtered.sorted.${sample}.bam \
     -q multimapped.filtered.name_sorted.${sample}.bam
 
-/global/home/users/pierrj/git/bash/assign_confidence_nodb.sh -m ${mapfile} \
+/global/home/users/pierrj/git/bash/assign_confidence_nodb_nomerge.sh -m ${mapfile} \
     -s ${sample} \
     -t ${SLURM_NTASKS} \
     -b no_secondary.filtered.sorted.${sample}.bam \
