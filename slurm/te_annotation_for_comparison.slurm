@@ -58,14 +58,14 @@ REFERENCE=TAIR10.fasta
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
-awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff arabidopsis_copia_locs.bed
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > arabidopsis_copia_locs.bed
 
 RM_LIB=arabidopsis_gypsy_ltr_seq.fasta
 REFERENCE=TAIR10.fasta
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
-awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff arabidopsis_gypsy_locs.bed
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > arabidopsis_gypsy_locs.bed
 
 
 
@@ -111,14 +111,14 @@ REFERENCE=Scer_S288C.fasta
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
-awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff yeast_copia_locs.bed
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > yeast_copia_locs.bed
 
 RM_LIB=yeast_gypsy_ltr_seq.fasta
 REFERENCE=Scer_S288C.fasta
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
-awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff yeast_gypsy_locs.bed
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > yeast_gypsy_locs.bed
 
 
 ## for moryzae, probably use wickersoft called LTR-TEs I think
@@ -156,11 +156,11 @@ REFERENCE=guy11_genome_baoetal2017.fasta
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
-awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff moryzae_copia_locs.bed
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > moryzae_copia_locs.bed
 
 RM_LIB=moryzae_gypsy_ltr_seq.fasta
 REFERENCE=guy11_genome_baoetal2017.fasta
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
-awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff moryzae_gypsy_locs.bed
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > moryzae_gypsy_locs.bed
