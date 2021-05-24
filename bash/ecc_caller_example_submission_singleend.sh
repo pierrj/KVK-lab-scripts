@@ -38,3 +38,7 @@ while read sample; do sbatch --job-name=$sample.ecc_caller_single_end --export=s
 mapfile="/global/scratch/users/pierrj/references/Scer_S288C.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/Scer_S288C_bwa"
 while read sample; do sbatch --job-name=$sample.ecc_caller_single_end --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_assign_confidence_singleend_only.slurm; done < mapfile
+
+mapfile="/global/scratch/users/pierrj/references/Scer_S288C.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/Scer_S288C_bwa"
+while read sample; do sbatch --job-name=$sample.ecc_caller_single_end --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_singleend.slurm; done < mapfile
