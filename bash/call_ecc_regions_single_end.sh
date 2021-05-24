@@ -67,7 +67,7 @@ for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
 
-cp lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed unique_parallel.confirmed
+awk -v OFS='\t' '{print $1, $2, $3}' lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed > unique_parallel.confirmed
 
 awk '{print $3-$2}' unique_parallel.confirmed > dsn.unique_parallel.confirmed
 
