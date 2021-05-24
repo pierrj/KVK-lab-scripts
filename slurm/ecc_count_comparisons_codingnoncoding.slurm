@@ -12,45 +12,55 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 cd /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
 
-while read -r dir ecc_count_output genome_file gff_file mapfile; do
+if [ -f "ecc_count_comparison.txt" ]; then
+    rm ecc_count_comparison.txt
+fi
+
+while read -r dir ecc_count_output genome_file gff_file mapfile copia_file gypsy_file; do
     cd $dir
-    echo $ecc_count_output 1>&2
-    ecc_count_output_genic=ecc_count_${ecc_count_output}_genic.txt
-    ecc_count_output_noncoding=ecc_count_${ecc_count_output}_noncoding.txt
-    ecc_count_output_all=ecc_count_${ecc_count_output}_all.txt
-    if [ -f "ecc_count_${ecc_count_output}_genic.txt" ]; then
-        rm ecc_count_${ecc_count_output}_genic.txt
-    fi
-    if [ -f "ecc_count_${ecc_count_output}_noncoding.txt" ]; then
-        rm ecc_count_${ecc_count_output}_noncoding.txt
-    fi
-    if [ -f "ecc_count_${ecc_count_output}_all.txt" ]; then
-        rm ecc_count_${ecc_count_output}_all.txt
-    fi   
     while read sample;
     do
         cd ${sample}
         echo $sample 1>&2
         awk '{if ($3 == "gene") print $0}' ${gff_file} > tmp.genes.gff
-        bedtools intersect -u -f 0.5 -a ecccaller_output.${sample}.renamed.details.tsv -b tmp.genes.gff > tmp.genic.ecccaller_output.${sample}.renamed.details.tsv
-        bedtools intersect -v -f 0.5 -a ecccaller_output.${sample}.renamed.details.tsv -b tmp.genes.gff > tmp.noncoding.ecccaller_output.${sample}.renamed.details.tsv
-        ecc_count_genic=$(awk ' $6 != "lowq" ' tmp.genic.ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
-        ecc_count_noncoding=$(awk ' $6 != "lowq" ' tmp.noncoding.ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
-        ecc_count_all=$(awk ' $6 != "lowq" ' ecccaller_output.${sample}.renamed.details.tsv | wc -l | awk '{print $1}')
-        read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million reads
+        awk ' $5 != "lowq" ' ${sample}.ecc_caller_out.details.txt > ${sample}.ecc_caller_out.details.nolowq.txt
+        bedtools intersect -u -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > genic_eccs
+        bedtools intersect -v -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > noncoding_eccs
+        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
+            awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+            awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > copia_eccs
+        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${gypsy_file} | \
+            awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+            awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > gypsy_eccs
+        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b $(cat ${copia_file} ${gypsy_file}) | \
+            awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+            awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > micro_dnas
+        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b $(cat ${copia_file} ${gypsy_file}) | \
+            awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+            awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | sort -k1,1 -k2,2n | awk '$3-$2 > 400' > large_eccdnas
+        ecc_count_genic=$(wc -l genic_eccs | awk '{print $1}')
+        ecc_count_noncoding=$(wc -l noncoding_eccs | awk '{print $1}')
+        ecc_count_copia=$(wc -l copia_eccs | awk '{print $1}')
+        ecc_count_gypsy=$(wc -l gypsy_eccs | awk '{print $1}')
+        ecc_count_all=$(wc -l ${sample}.ecc_caller_out.details.nolowq.txt | awk '{print $1}')
+        read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam | awk '{print $1/1000000}') ## million mapped reads
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum/1000000;}' ${genome_file} ) ## megabasepairs
-        total_genic=$(awk -v ECC="$ecc_count_genic" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
-        total_noncoding=$(awk -v ECC="$ecc_count_noncoding" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepair
-        total_all=$(awk -v ECC="$ecc_count_all" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepaircd
-        echo -e $sample'\t'$total_genic >> ../${ecc_count_output_genic}
-        echo -e $sample'\t'$total_noncoding >> ../${ecc_count_output_noncoding}
-        echo -e $sample'\t'$total_all >> ../${ecc_count_output_all}
+        normalized_count_all=$(awk -v ECC="$ecc_count_all" -v READ="$read_count" -v SIZE="$genome_size" 'BEGIN{print ECC/READ/SIZE}') ## ecc regions/millionreads/megabasepaircd
+        coding_bp=$(awk '{SUM+=$5-$4}END{print SUM}' tmp.genes.gff)
+        coding_perc=$(awk -v c="$coding_bp" -v s="$genome_size" 'BEGIN{print c/(s*1000000)}')
+        copia_bp=$(awk '{SUM+=$3-$2}END{print SUM}' ${copia_file})
+        copia_perc=$(awk -v c="$copia_bp" -v s="$genome_size" 'BEGIN{print c/(s*1000000)}')
+        gypsy_bp=$(awk '{SUM+=$3-$2}END{print SUM}' ${gypsy_file})
+        gypsy_perc=$(awk -v c="$gypsy_bp" -v s="$genome_size" 'BEGIN{print c/(s*1000000)}')
+        echo -e $sample'\t'$ecc_count_genic'\t'$ecc_count_noncoding'\t'$ecc_count_copia'\t'$ecc_count_gypsy'\t'$ecc_count_all'\t'$normalized_count_all'\t'$coding_perc'\t'$copia_perc'\t'$gypsy_perc >> /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/ecc_count_comparison.txt
         rm tmp.genes.gff
-        rm tmp.genic.ecccaller_output.${sample}.renamed.details.tsv
-        rm tmp.noncoding.ecccaller_output.${sample}.renamed.details.tsv
+        rm ${sample}.ecc_caller_out.details.nolowq.txt
+        rm genic_eccs
+        rm noncoding_eccs
+        rm copia_eccs
+        rm gypsy_eccs
+        rm micro_dnas
+        rm large_eccdnas
         cd ..
     done < $mapfile
-    cp ${ecc_count_output_genic} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
-    cp ${ecc_count_output_noncoding} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
-    cp ${ecc_count_output_all} /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/
 done < mapfile_ecc_count
