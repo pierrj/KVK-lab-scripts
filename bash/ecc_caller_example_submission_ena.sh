@@ -38,8 +38,8 @@ while IFS=$'\t' read -r sample READONE_LINK READTWO_LINK; do sbatch --job-name=$
 
 mapfile="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_no_organelles.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_bwa"
-while read sample; do sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_assign_confidence_only.slurm; done < mapfile_ara
+while read sample; do sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_assign_confidence_only.slurm; done < mapfile_ory
 
 mapfile="/global/scratch/users/pierrj/references/TAIR10.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/TAIR10_bwa"
-while read sample; do sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_assign_confidence_only.slurm; done < mapfile_ory
+while read sample; do sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_assign_confidence_only.slurm; done < mapfile_ara
