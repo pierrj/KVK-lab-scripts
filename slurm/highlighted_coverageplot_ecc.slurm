@@ -36,7 +36,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t G3_1A.genomecoverage.bed -n G3.normalization_table.total_splitreads -y t
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 10000 -b 100 -c 3 -n n
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 100 -c 3 -n n
 
 mapfile=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 sample=G3
