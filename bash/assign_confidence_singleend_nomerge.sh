@@ -26,7 +26,7 @@ awk -v OFS='\t' '{print $1-1, $2, $3}' parallel.plusone.confirmed > parallel.con
 
 ## this is a little messy
 
-sort -k1,1n -k2,2n parallel.confirmed | uniq -c | awk -v OFS='\t' '{print $2, $3, substr($4,0,length($4)-1), $1}' > merged.confirmed
+sort -k1,1n -k2,2n parallel.confirmed | uniq -c | awk -v OFS='\t' '{print $2, $3, $4, $1}' > merged.confirmed
 
 shuf merged.confirmed > shuf.merged.confirmed
 

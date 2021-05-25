@@ -39,7 +39,7 @@ awk -v OFS='\t' '{print $1-1, $2, $3}' parallel.plusone.confirmed > parallel.con
 
 # uses hierarchical clustering to merge highly similar confirmed eccDNA forming regions together
 # see cluster_eccs.py for more info
-sort -k1,1n -k2,2n parallel.confirmed | uniq -c | awk -v OFS='\t' '{print $2, $3, $4, $1}' > merged.confirmed
+sort -k1,1n -k2,2n parallel.confirmed | uniq -c | awk -v OFS='\t' '{print $2, $3, substr($4,0,length($4)-1), $1}' > merged.confirmed
 
 # split confirmed eccDNA forming regions into chunks to be used with GNU parallel
 # then assign confidence to eccDNAs based off split read counts and read coverage
