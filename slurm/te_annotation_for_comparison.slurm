@@ -18,9 +18,9 @@ wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/433/935/GCF_001433935.1_IR
 
 gunzip GCF_001433935.1_IRGSP-1.0_rm.out.gz
 
-awk -v OFS='\t' '{if ($11 ~ /Copia/) {print $5, $6, $7, $10}}' GCF_001433935.1_IRGSP-1.0_rm.out > copia_elements_rice.bed
+awk -v OFS='\t' '{if ($11 ~ /Copia/) {print $5, $6, $7, $10}}' GCF_001433935.1_IRGSP-1.0_rm.out > rice_copia_locs.bed
 
-awk -v OFS='\t' '{if ($11 ~ /Gypsy/) {print $5, $6, $7, $10}}' GCF_001433935.1_IRGSP-1.0_rm.out > gypsy_elements_rice.bed
+awk -v OFS='\t' '{if ($11 ~ /Gypsy/) {print $5, $6, $7, $10}}' GCF_001433935.1_IRGSP-1.0_rm.out > rice_gypsy_locs.bed
 
 
 
