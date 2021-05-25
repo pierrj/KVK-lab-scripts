@@ -27,7 +27,7 @@ fi
 
 while read sample; do
 cd ${sample}
-total=$(wc -l ${sample}.ecc_caller_out.splitreads.bed | awk '{print $1}')
+total=$(wc -l ${sample}.ecc_caller_out.splitreads.bed | awk '{print $1/100000}')
 echo -e ${sample}'\t'${total} >> ../G3.normalization_table.total_splitreads
 cd ..
 done < mapfile
