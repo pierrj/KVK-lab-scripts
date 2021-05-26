@@ -15,9 +15,25 @@ cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/repeat_comparison_wrapper/
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 SAMPLE=G3
 THREADS=${SLURM_NTASKS}
-REPEAT_FILE=/global/scratch/users/pierrj/references/GUY11_pacbio_ET_KROJ.gff
-ECCDNA_MAPFILE=G3.eccmapfile
+REPEAT_FILE=/global/scratch/pierrj/eccDNA/pipeline_tests/ltr_ecc_filter/non_ltr_repeatmasker_output/guy11_genome_baoetal2017.fasta.out.gff
 SAMPLE_MAPFILE=G3.sample_mapfile
+
+
+
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/large_eccdnas/G3.large_eccdnas_mapfile
+
+
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/large_eccdnas/
+
+/global/home/users/pierrj/git/bash/ecc_dna_vs_repetitive.sh -g ${GENOME_FASTA} \
+    -s ${SAMPLE} -t ${THREADS} -f ${REPEAT_FILE} \
+    -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE}
+
+
+
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/micro_dnas/G3.micro_dnas_mapfile
+
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/micro_dnas/
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_repetitive.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -t ${THREADS} -f ${REPEAT_FILE} \
