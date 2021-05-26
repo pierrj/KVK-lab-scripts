@@ -14,17 +14,98 @@
 
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 SAMPLE=G3
-SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/infected_accessions_rnaseq
+SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/zhang_et_al_rnaseq_accessions.txt
 THREADS=${SLURM_NTASKS}
 LIB_TYPE=1
-GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap.gff3
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.eccmapfile
+GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
+copia_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_copia_locs.bed
+gypsy_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_gypsy_locs.bed
 
 module load STAR
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/rerunning_stuff_for_thesis_committee/SRs_vs_expression/infection
+
+
+
+
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/large_eccdnas/G3.large_eccdnas_mapfile
+
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
+fi
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample; do
+cd ${sample}
+    bedtools intersect -wao -a ${sample}.ecc_caller_out.splitreads.bed -b ${copia_file} | \
+        awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
+        bedtools intersect -wao -a - -b ${gypsy_file} | \
+        awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > large_eccdnas
+    realpath large_eccdnas >> ${ECCDNA_MAPFILE}
+cd ..
+done < mapfile
+
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/large_eccdnas
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
     -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE} -n a
+
+
+
+
+
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/micro_dnas/G3.micro_dnas_mapfile
+
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
+fi
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample; do
+cd ${sample}
+    bedtools intersect -wao -a ${sample}.ecc_caller_out.splitreads.bed -b ${copia_file} | \
+        awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
+        bedtools intersect -wao -a - -b ${gypsy_file} | \
+        awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > micro_dnas
+    realpath micro_dnas >> ${ECCDNA_MAPFILE}
+cd ..
+done < mapfile
+
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/micro_dnas
+
+/global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
+    -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
+    -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE} -n a
+
+
+
+
+
+
+
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/gene_containing_eccdnas/G3.all_eccdnas_mapfile
+
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
+fi
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample; do
+cd ${sample}
+    realpath ${sample}.ecc_caller_out.splitreads.bed >> ${ECCDNA_MAPFILE}
+cd ..
+done < mapfile
+
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/gene_containing_eccdnas
+
+/global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
+    -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
+    -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE} -n n
