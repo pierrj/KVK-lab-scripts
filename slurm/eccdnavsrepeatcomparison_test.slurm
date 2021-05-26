@@ -20,7 +20,7 @@ SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_compari
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/large_eccdnas/G3.large_eccdnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/large_eccdnas/G3.large_eccdnas_mapfile
 
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/large_eccdnas/
@@ -31,7 +31,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/micro_dnas/G3.micro_dnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/micro_dnas/G3.micro_dnas_mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/micro_dnas/
 
