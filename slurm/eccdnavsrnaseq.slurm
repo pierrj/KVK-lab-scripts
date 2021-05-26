@@ -14,7 +14,7 @@
 
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 SAMPLE=G3
-SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/zhang_et_al_rnaseq_accessions.txt
+SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/infected_accessions_rnaseq
 THREADS=${SLURM_NTASKS}
 LIB_TYPE=1
 GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
@@ -28,7 +28,7 @@ module load STAR
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/large_eccdnas/G3.large_eccdnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/large_eccdnas/G3.large_eccdnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
     rm ${ECCDNA_MAPFILE}
@@ -48,7 +48,7 @@ cd ${sample}
 cd ..
 done < mapfile
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/large_eccdnas
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/large_eccdnas/
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
@@ -58,7 +58,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdna
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/micro_dnas/G3.micro_dnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/micro_dnas/G3.micro_dnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
     rm ${ECCDNA_MAPFILE}
@@ -78,7 +78,7 @@ cd ${sample}
 cd ..
 done < mapfile
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/micro_dnas
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/micro_dnas/
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
@@ -90,7 +90,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdna
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/gene_containing_eccdnas/G3.all_eccdnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/gene_containing_eccdnasG3.all_eccdnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
     rm ${ECCDNA_MAPFILE}
@@ -104,7 +104,7 @@ cd ${sample}
 cd ..
 done < mapfile
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/expression_v_eccdnas/gene_containing_eccdnas
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/gene_containing_eccdnasgene_containing_eccdnas
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
