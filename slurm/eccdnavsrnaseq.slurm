@@ -90,7 +90,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/gene_containing_eccdnasG3.all_eccdnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/gene_containing_eccdnas/G3.all_eccdnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
     rm ${ECCDNA_MAPFILE}
@@ -104,7 +104,7 @@ cd ${sample}
 cd ..
 done < mapfile
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/gene_containing_eccdnasgene_containing_eccdnas
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/gene_containing_eccdnas
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
