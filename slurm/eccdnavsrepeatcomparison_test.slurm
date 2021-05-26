@@ -16,7 +16,7 @@ GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fa
 SAMPLE=G3
 THREADS=${SLURM_NTASKS}
 REPEAT_FILE=/global/scratch/pierrj/eccDNA/pipeline_tests/ltr_ecc_filter/non_ltr_repeatmasker_output/guy11_genome_baoetal2017.fasta.out.gff
-SAMPLE_MAPFILE=G3.sample_mapfile
+SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
 
 
 
