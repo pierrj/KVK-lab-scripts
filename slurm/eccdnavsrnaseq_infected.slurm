@@ -82,7 +82,6 @@ cd ${sample}
 cd ..
 done < mapfile
 
-
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/micro_dnas/
 
 /global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
