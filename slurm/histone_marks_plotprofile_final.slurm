@@ -84,6 +84,8 @@ while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_purecu
 sort -k1,1 -k2,2n ltr_eccdnas_all | uniq > ltr_eccdnas_all_uniq
 mv ltr_eccdnas_all ltr_eccdnas
 
+NEED TRACKS THOUGH
+
 source activate deeptools
 
 data_dir=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/

@@ -44,12 +44,12 @@ while read -r dir genome_file gff_file copia_file gypsy_file mapfile; do
             bedtools intersect -wao -a - -b ${gypsy_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
             awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > tmp.large_eccdnas
-        ecc_count_genic=$(wc -l genic_eccs | awk '{print $1}')
-        ecc_count_noncoding=$(wc -l noncoding_eccs | awk '{print $1}')
-        ecc_count_copia=$(wc -l copia_eccs | awk '{print $1}')
-        ecc_count_gypsy=$(wc -l gypsy_eccs | awk '{print $1}')
-        ecc_count_micro=$(wc -l micro_dnas | awk '{print $1}')
-        ecc_count_large=$(wc -l large_eccdnas | awk '{print $1}')
+        ecc_count_genic=$(wc -l tmp.genic_eccs | awk '{print $1}')
+        ecc_count_noncoding=$(wc -l tmp.noncoding_eccs | awk '{print $1}')
+        ecc_count_copia=$(wc -l tmp.copia_eccs | awk '{print $1}')
+        ecc_count_gypsy=$(wc -l tmp.gypsy_eccs | awk '{print $1}')
+        ecc_count_micro=$(wc -l tmp.micro_dnas | awk '{print $1}')
+        ecc_count_large=$(wc -l tmp.large_eccdnas | awk '{print $1}')
         ecc_count_all=$(wc -l ${sample}.ecc_caller_out.details.nolowq.txt | awk '{print $1}')
         read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam | awk '{print $1}') ## mapped reads
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum;}' ${genome_file} ) ## basepairs
