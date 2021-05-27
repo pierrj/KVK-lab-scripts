@@ -20,8 +20,19 @@ SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_compari
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/large_eccdnas/G3.large_eccdnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/large_eccdnas/G3.large_eccdnas_mapfile
 
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
+fi
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample; do
+cd ${sample}
+    realpath large_eccdnas_splitreads >> ${ECCDNA_MAPFILE}
+cd ..
+done < mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/large_eccdnas/
 
@@ -31,7 +42,19 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/micro_dnas/G3.micro_dnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/micro_dnas/G3.micro_dnas_mapfile
+
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
+fi
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample; do
+cd ${sample}
+    realpath micro_dnas_splitreads >> ${ECCDNA_MAPFILE}
+cd ..
+done < mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/repeats_v_eccdnas/micro_dnas/
 
