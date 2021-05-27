@@ -24,26 +24,26 @@ while read -r dir genome_file gff_file copia_file gypsy_file mapfile; do
         echo $sample 1>&2
         awk '{if ($3 == "gene") print $0}' ${gff_file} > tmp.genes.gff
         awk ' $5 != "lowq" ' ${sample}.ecc_caller_out.details.txt > ${sample}.ecc_caller_out.details.nolowq.txt
-        bedtools intersect -u -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > genic_eccs
-        bedtools intersect -v -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > noncoding_eccs
+        bedtools intersect -u -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > tmp.genic_eccs
+        bedtools intersect -v -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > tmp.noncoding_eccs
         bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-            awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > copia_eccs
+            awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > tmp.copia_eccs
         bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${gypsy_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-            awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > gypsy_eccs
+            awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > tmp.gypsy_eccs
         bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
             awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
             bedtools intersect -wao -a - -b ${gypsy_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-            awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > micro_dnas
+            awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > tmp.micro_dnas
         bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
             awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
             bedtools intersect -wao -a - -b ${gypsy_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-            awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > large_eccdnas
+            awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > tmp.large_eccdnas
         ecc_count_genic=$(wc -l genic_eccs | awk '{print $1}')
         ecc_count_noncoding=$(wc -l noncoding_eccs | awk '{print $1}')
         ecc_count_copia=$(wc -l copia_eccs | awk '{print $1}')
@@ -61,13 +61,12 @@ while read -r dir genome_file gff_file copia_file gypsy_file mapfile; do
             '\t'$read_count'\t'$genome_size\
             '\t'$coding_bp'\t'$copia_bp'\t'$gypsy_bp >> /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/ecc_count_comparison.txt
         rm tmp.genes.gff
-        rm ${sample}.ecc_caller_out.details.nolowq.txt
-        rm genic_eccs
-        rm noncoding_eccs
-        rm copia_eccs
-        rm gypsy_eccs
-        rm micro_dnas
-        rm large_eccdnas
+        rm tmp.genic_eccs
+        rm tmp.noncoding_eccs
+        rm tmp.copia_eccs
+        rm tmp.gypsy_eccs
+        rm tmp.micro_dnas
+        rm tmp.large_eccdnas
         cd ..
     done < $mapfile
 done < mapfile_ecc_count
