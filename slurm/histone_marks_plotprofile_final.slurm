@@ -60,9 +60,29 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/histone_marks
 
+if [ -f "large_eccdnas_all" ]; then
+    rm large_eccdnas_all
+fi
 
+while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/large_eccdnas >> large_eccdnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+sort -k1,1 -k2,2n large_eccdnas_all | uniq > large_eccdnas_all_uniq
+mv large_eccdnas_all_uniq large_eccdnas
 
+if [ -f "micro_dnas_all" ]; then
+    rm micro_dnas_all
+fi
 
+while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/micro_dnas >> micro_dnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+sort -k1,1 -k2,2n micro_dnas_all | uniq > micro_dnas_all_uniq
+mv micro_dnas_all_uniq large_eccdnas
+
+if [ -f "ltr_eccdnas_all" ]; then
+    rm ltr_eccdnas_all
+fi
+
+while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs >> ltr_eccdnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+sort -k1,1 -k2,2n ltr_eccdnas_all | uniq > ltr_eccdnas_all_uniq
+mv ltr_eccdnas_all ltr_eccdnas
 
 source activate deeptools
 
