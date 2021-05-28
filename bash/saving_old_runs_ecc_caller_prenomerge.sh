@@ -58,3 +58,11 @@ cp ecccaller_output.${sample}.renamed.bed /global/scratch/users/pierrj/eccDNA/20
 cp ecccaller_output.${sample}.renamed.details.tsv /global/scratch/users/pierrj/eccDNA/2015_moller/full_run/outputs_pre_nomerge
 cd ..
 done < mapfile
+
+while read sample
+do
+cd ${sample}
+cp ecccaller_output.${sample}.renamed.bed /global/scratch/pierrj/eccDNA/stress_experiments/rice_control/old_outputs
+cp ecccaller_output.${sample}.renamed.details.tsv /global/scratch/pierrj/eccDNA/stress_experiments/rice_control/old_outputs
+cd ..
+done < mapfile

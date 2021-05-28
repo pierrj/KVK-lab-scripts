@@ -16,6 +16,15 @@ i) SAMPLE_MAPFILE=${OPTARG};;
 esac
 done
 
+echo "THE START OF THIS SCRIPT IS OUTDATED PLEASE DONT USE"
+echo "THE START OF THIS SCRIPT IS OUTDATED PLEASE DONT USE"
+
+echo "THE START OF THIS SCRIPT IS OUTDATED PLEASE DONT USE"
+
+echo "THE START OF THIS SCRIPT IS OUTDATED PLEASE DONT USE"
+
+
+
 if [ -f "${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn" ]; then
     rm ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
 fi
