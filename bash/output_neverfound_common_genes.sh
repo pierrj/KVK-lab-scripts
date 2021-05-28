@@ -14,10 +14,11 @@ if [ -f "${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn" ]; then
     rm ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
 fi
 while read ECCDNA_FILE; do
-    bedtools intersect -f 1 -wa -c -a ${GENE_BEDFILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${SAMPLE}.splitreadspergene
+    ecc_basename=$(basename ${ECCDNA_FILE})
+    bedtools intersect -f 1 -wa -c -a ${GENE_BEDFILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadspergene
     num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
-    awk -v N=$num_srs '{print $1, $2/N}' ${SAMPLE}.splitreadspergene > ${SAMPLE}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
-    echo ${SAMPLE}.normalized.splitreadspergene >> ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
+    awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadspergene > ${ecc_basename}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
+    echo ${ecc_basename}.normalized.splitreadspergene >> ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
 done < ${ECCDNA_MAPFILE}
 
 if [ -f "${OUTPUT_NAME}.normalize_table_column" ]; then
@@ -31,9 +32,9 @@ mv ${OUTPUT_NAME}.normalized_binned ${OUTPUT_NAME}.normalized.splitreadspergene
 
 ## maybe something besides 1000 here?
 # maybe top 10% of found genes like this
-top_ten_percent=$(awk '$3!=0' ${OUTPUT_NAME}.normalized.splitreadspergene | wc -l | awk '{print int($1/10)}')
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized.splitreadspergene | wc -l | awk '{print int($1/10)}')
 sort -k2,2nr ${OUTPUT_NAME}.normalized.splitreadspergene | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
 
-awk '{ if ($3==0) {print $1}}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.neverfound.genes
+awk '{ if ($2==0) {print $1}}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.neverfound.genes
 
 awk '{print $1}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.allgenenames
