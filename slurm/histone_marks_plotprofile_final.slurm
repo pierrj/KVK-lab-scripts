@@ -90,7 +90,7 @@ GENOME=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 
 cat ltr_eccdnas large_eccdnas micro_dnas > all_eccdnas
-bedtools shuffle -i bedtools shuffle -i all_eccdnas -g ${GENOME_CHROMSIZES} > genome_baseline
+bedtools shuffle -i all_eccdnas -g ${GENOME_CHROMSIZES} > genome_baseline
 
 cp /global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed ltr_tes
 
@@ -106,10 +106,10 @@ grep '>' ${GENOME} | awk -v OFS='\t' '{print substr($1, 2), substr($6,7, length(
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' rename_mapfile methyl_peaks_zhang_etal.bed > methyl_peaks_zhang_etal.renamed.bed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' rename_mapfile acetylation_peaks_zhang_etal.bed > acetylation_peaks_zhang_etal.renamed.bed
 
-bedtools intersect -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../acetylation_peaks_zhang_etal.renamed.bed > acetylated_genes
-bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../acetylation_peaks_zhang_etal.renamed.bed > nonacetylated_genes
-bedtools intersect -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../methyl_peaks_zhang_etal.renamed.bed > methylated_genes
-bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../methyl_peaks_zhang_etal.renamed.bed > nonmethylated_genes
+bedtools intersect -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b acetylation_peaks_zhang_etal.renamed.bed > acetylated_genes
+bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b acetylation_peaks_zhang_etal.renamed.bed > nonacetylated_genes
+bedtools intersect -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b methyl_peaks_zhang_etal.renamed.bed > methylated_genes
+bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b methyl_peaks_zhang_etal.renamed.bed > nonmethylated_genes
 
 source activate deeptools
 
@@ -156,20 +156,15 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
             --numPlotsPerRow 1 \
             --plotTitle "${treatment} ${biorep} eccDNAs"
 
-
-GENOME=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
-
 bedtools makewindows -g ${GENOME_CHROMSIZES} -w 50 > guy11_genome_baoetal2017.50bpwindows
 
 bedtools nuc -fi ${GENOME} -bed guy11_genome_baoetal2017.50bpwindows > guy11_genome_baoetal2017.50bpwindows.nuc_out
 
 awk -v OFS='\t' '{ if (NR > 1) {print $1, $2, $3, $5}}' guy11_genome_baoetal2017.50bpwindows.nuc_out > guy11_genome_baoetal2017.50bpwindows.bg
 
-bedGraphToBigWig guy11_genome_baoetal2017.50bpwindows.bg guy11_genome_baoetal2017.chromsizes guy11_genome_baoetal2017.50bpwindows.bw
+bedGraphToBigWig guy11_genome_baoetal2017.50bpwindows.bg ${GENOME_CHROMSIZES} guy11_genome_baoetal2017.50bpwindows.bw
 
-data_dir=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/gc/
-
-computeMatrix scale-regions -p ${SLRUM_NTASKS} -S ${data_dir}/guy11_genome_baoetal2017.50bpwindows.bw \
+computeMatrix scale-regions -p ${SLRUM_NTASKS} -S guy11_genome_baoetal2017.50bpwindows.bw \
                             -R genome_baseline all_genes ltr_tes large_eccdnas micro_dnas ltr_eccdnas \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
