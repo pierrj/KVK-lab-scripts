@@ -60,6 +60,8 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/histone_marks
 
+## make tracks
+
 if [ -f "large_eccdnas_all" ]; then
     rm large_eccdnas_all
 fi
@@ -74,7 +76,7 @@ fi
 
 while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/micro_dnas >> micro_dnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 sort -k1,1 -k2,2n micro_dnas_all | uniq > micro_dnas_all_uniq
-mv micro_dnas_all_uniq large_eccdnas
+mv micro_dnas_all_uniq micro_dnas
 
 if [ -f "ltr_eccdnas_all" ]; then
     rm ltr_eccdnas_all
@@ -84,7 +86,30 @@ while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_purecu
 sort -k1,1 -k2,2n ltr_eccdnas_all | uniq > ltr_eccdnas_all_uniq
 mv ltr_eccdnas_all ltr_eccdnas
 
-NEED TRACKS THOUGH
+GENOME=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
+
+cat ltr_eccdnas large_eccdnas micro_dnas > all_eccdnas
+bedtools shuffle -i bedtools shuffle -i all_eccdnas -g ${GENOME_CHROMSIZES} > genome_baseline
+
+cp /global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed ltr_tes
+
+cp /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed all_genes
+
+
+cp /global/scratch/pierrj/eccDNA/pipeline_tests/histone_marks/methyl_peaks_zhang_etal.txt .
+cp /global/scratch/pierrj/eccDNA/pipeline_tests/histone_marks/acetylation_peaks_zhang_etal.txt .
+head -n-1 methyl_peaks_zhang_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > methyl_peaks_zhang_etal.bed
+head -n-1 acetylation_peaks_zhange_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > acetylation_peaks_zhang_etal.bed
+grep '>' ${GENOME} | awk -v OFS='\t' '{print substr($1, 2), substr($6,7, length($6)-7)}' > rename_mapfile
+
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' rename_mapfile methyl_peaks_zhang_etal.bed > methyl_peaks_zhang_etal.renamed.bed
+awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' rename_mapfile acetylation_peaks_zhang_etal.bed > acetylation_peaks_zhang_etal.renamed.bed
+
+bedtools intersect -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../acetylation_peaks_zhang_etal.renamed.bed > acetylated_genes
+bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../acetylation_peaks_zhang_etal.renamed.bed > nonacetylated_genes
+bedtools intersect -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../methyl_peaks_zhang_etal.renamed.bed > methylated_genes
+bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed -b ../methyl_peaks_zhang_etal.renamed.bed > nonmethylated_genes
 
 source activate deeptools
 
@@ -95,7 +120,7 @@ biorep=1
 treatment=H3K27ac
 bamCompare -p ${SLRUM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -p ${SLRUM_NTASKS} -S log2ratio_${treatment}_${biorep}.bw \
-                            -R genomic_baseline all_genes confident_ltr_tes ltr_eccdnas micro_dnas large_eccdnas acetylated_genes nonacetylated_genes \
+                            -R genome_baseline all_genes ltr_tes large_eccdnas micro_dnas ltr_eccdnas acetylated_genes nonacetylated_genes \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
@@ -108,7 +133,7 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
 treatment=H3K27me3
 bamCompare -p ${SLRUM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -p ${SLRUM_NTASKS} -S log2ratio_${treatment}_${biorep}.bw \
-                            -R  genomic_baseline all_genes confident_ltr_tes ltr_eccdnas micro_dnas large_eccdnas methylated_genes nonmethylated_genes \
+                            -R  genome_baseline all_genes ltr_tes large_eccdnas micro_dnas ltr_eccdnas methylated_genes nonmethylated_genes \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
@@ -121,7 +146,7 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
 treatment=H3K36me3
 bamCompare -p ${SLRUM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -p ${SLRUM_NTASKS} -S log2ratio_${treatment}_${biorep}.bw \
-                            -R  genomic_baseline all_genes confident_ltr_tes ltr_eccdnas micro_dnas large_eccdnas \
+                            -R  genome_baseline all_genes ltr_tes large_eccdnas micro_dnas ltr_eccdnas \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
@@ -132,20 +157,20 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
             --plotTitle "${treatment} ${biorep} eccDNAs"
 
 
+GENOME=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 
+bedtools makewindows -g ${GENOME_CHROMSIZES} -w 50 > guy11_genome_baoetal2017.50bpwindows
 
-# bedtools makewindows -g guy11_genome_baoetal2017.chromsizes -w 50 > guy11_genome_baoetal2017.50bpwindows
+bedtools nuc -fi ${GENOME} -bed guy11_genome_baoetal2017.50bpwindows > guy11_genome_baoetal2017.50bpwindows.nuc_out
 
-# bedtools nuc -fi guy11_genome_baoetal2017.fasta -bed guy11_genome_baoetal2017.50bpwindows > guy11_genome_baoetal2017.50bpwindows.nuc_out
+awk -v OFS='\t' '{ if (NR > 1) {print $1, $2, $3, $5}}' guy11_genome_baoetal2017.50bpwindows.nuc_out > guy11_genome_baoetal2017.50bpwindows.bg
 
-# awk -v OFS='\t' '{ if (NR > 1) {print $1, $2, $3, $5}}' guy11_genome_baoetal2017.50bpwindows.nuc_out > guy11_genome_baoetal2017.50bpwindows.bg
-
-# bedGraphToBigWig guy11_genome_baoetal2017.50bpwindows.bg guy11_genome_baoetal2017.chromsizes guy11_genome_baoetal2017.50bpwindows.bw
+bedGraphToBigWig guy11_genome_baoetal2017.50bpwindows.bg guy11_genome_baoetal2017.chromsizes guy11_genome_baoetal2017.50bpwindows.bw
 
 data_dir=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/gc/
 
 computeMatrix scale-regions -p ${SLRUM_NTASKS} -S ${data_dir}/guy11_genome_baoetal2017.50bpwindows.bw \
-                            -R genomic_baseline all_genes common_genes neverfound_genes \
+                            -R genome_baseline all_genes ltr_tes large_eccdnas micro_dnas ltr_eccdnas \
                             --beforeRegionStartLength 300 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 300 \
