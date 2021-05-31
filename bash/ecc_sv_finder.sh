@@ -23,11 +23,6 @@ if [ -d "${TMP_DIR}" ]; then
 fi
 mkdir ${TMP_DIR}
 
-if [ -d "${OUTPUT_DIR}" ]; then
-    rm -r ${OUTPUT_DIR}
-fi
-mkdir ${OUTPUT_DIR}
-
 
 if [ ! -f "${REFERENCE}.fai" ]; then
     samtools faidx ${REFERENCE}
