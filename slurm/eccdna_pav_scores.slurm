@@ -31,7 +31,7 @@ blastn -query ${genome}_missing_genes.fasta -db ${GENOME_BLASTDB_DIR}/${genome}.
     -max_target_seqs 1 | awk '{print $1}' | sort | uniq > not_missing_genes/${genome}.not_missing_genes
 done < ${GENOMES_MAPFILE}
 
-python /global/home/users/pierrj/git/python/pav_quantification_missing_genes_first_pass.py  guy11_vs_others not_missing_genes ${GENE_GFF} pav_scores_per_gene
+python /global/home/users/pierrj/git/python/pav_quantification_missing_genes_second_pass.py  guy11_vs_others not_missing_genes ${GENE_GFF} pav_scores_per_gene
 
 ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav/G3.all_eccdnas_mapfile
 
