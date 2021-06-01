@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/commo
 GENE_GFF=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 GENE_CDS=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.genes.fasta
 GENOMES_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_re_check/moryzae_oryza_genomes_mapfile
-GENOME_BLASTDB_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/genomes
+GENOME_BLASTDB_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_re_check/genomes
 
 python /global/home/users/pierrj/git/python/pav_quantification_missing_genes_first_pass.py guy11_vs_others ${GENE_GFF} ${GENE_CDS}
 
