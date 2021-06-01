@@ -136,7 +136,7 @@ bedtools shuffle -i all_eccdnas -g ${GENOME_CHROMSIZES} > genome_baseline
 cp /global/scratch/pierrj/eccDNA/pipeline_tests/histone_marks/methyl_peaks_zhang_etal.txt .
 cp /global/scratch/pierrj/eccDNA/pipeline_tests/histone_marks/acetylation_peaks_zhang_etal.txt .
 head -n-1 methyl_peaks_zhang_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > methyl_peaks_zhang_etal.bed
-head -n-1 acetylation_peaks_zhange_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > acetylation_peaks_zhang_etal.bed
+head -n-1 acetylation_peaks_zhang_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > acetylation_peaks_zhang_etal.bed
 grep '>' ${GENOME} | awk -v OFS='\t' '{print substr($1, 2), substr($6,7, length($6)-7)}' > rename_mapfile
 
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' rename_mapfile methyl_peaks_zhang_etal.bed > methyl_peaks_zhang_etal.renamed.bed
