@@ -29,33 +29,34 @@ CDS_FASTA=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20_prot
 THREADS=${SLURM_NTASKS}
 SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_comparison/G3.sample_mapfile
 
-if [ -f "${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn" ]; then
-    rm ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
+
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/G3.all_eccdnas_mapfile
+
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
 fi
-while read SAMPLE; do
-    bedtools intersect -f 1 -wa -c -a ${GENE_BEDFILE} -b ${SAMPLE}.confirmedsplitreads.bed | awk -v OFS='\t' '{print $4, $5}' > ${SAMPLE}.splitreadspergene
-    num_srs=$(wc -l ${SAMPLE}.confirmedsplitreads.bed | awk '{print $1/100000}')
-    awk -v N=$num_srs '{print $1, $2/N}' ${SAMPLE}.splitreadspergene > ${SAMPLE}.normalized.splitreadspergene ## NORMALIZE TO DEAL WITH FAVORING OF SMALLER GENES TEST THIS LATER
-    echo ${SAMPLE}.normalized.splitreadspergene >> ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn
-done < ${MAPFILE}
 
-if [ -f "${OUTPUT_NAME}.normalize_table_column" ]; then
-    rm ${OUTPUT_NAME}.normalize_table_column
-fi
-sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
-for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${OUTPUT_NAME}.normalize_table_column ; done
-paste ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn ${OUTPUT_NAME}.normalize_table_column ${SAMPLE_MAPFILE} > ${OUTPUT_NAME}.mapfile_for_normalize_and_average
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${OUTPUT_NAME}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-mv ${OUTPUT_NAME}.normalized_binned ${OUTPUT_NAME}.normalized.splitreadspergene
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
-top_ten_percent=$(awk '$3!=0' ${OUTPUT_NAME}.normalized.splitreadspergene | wc -l | awk '{print int($1/10)}')
-sort -k2,2nr ${OUTPUT_NAME}.normalized.splitreadspergene | head -${top_ten_percent} | awk '{print $1}' > common/${OUTPUT_NAME}.common.genes
+while read sample; do
+cd ${sample}
+    realpath ${sample}.ecc_caller_out.splitreads.bed >> ${ECCDNA_MAPFILE}
+cd ..
+done < mapfile
 
-awk '{ if ($3==0) {print $1}}' ${OUTPUT_NAME}.normalized.splitreadspergene > neverfound/${OUTPUT_NAME}.neverfound.genes
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis
 
-awk '{print $1}' ${OUTPUT_NAME}.normalized.splitreadspergene > common/${OUTPUT_NAME}.allgenenames
+/global/home/users/pierrj/git/bash/output_neverfound_common_genes.sh -n ${OUTPUT_NAME} \
+    -b ${GENE_BEDFILE} -i ${SAMPLE_MAPFILE} -e ${ECCDNA_MAPFILE}
 
-awk '{print $1}' ${OUTPUT_NAME}.normalized.splitreadspergene > neverfound/${OUTPUT_NAME}.allgenenames
+
+cp ${OUTPUT_NAME}.common.genes common/${OUTPUT_NAME}.common.genes
+
+cp ${OUTPUT_NAME}.neverfound.genes neverfound/${OUTPUT_NAME}.neverfound.genes
+
+cp ${OUTPUT_NAME}.allgenenames common/${OUTPUT_NAME}.allgenenames
+
+cp ${OUTPUT_NAME}.allgenenames neverfound/${OUTPUT_NAME}.allgenenames
 
 cp ${GENE_BEDFILE} common/
 cp ${GENE_BEDFILE} neverfound/
