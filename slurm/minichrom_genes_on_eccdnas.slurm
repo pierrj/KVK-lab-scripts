@@ -12,6 +12,8 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/
 
+module load STAR
+
 cp /global/scratch/pierrj/eccDNA/pipeline_tests/minichromosomes/GCA_900474655.3_FR13_genome_polished_no_mito_genomic.fna .
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' GCA_900474655.3_FR13_genome_polished_no_mito_genomic.fna > GCA_900474655.3_FR13_genome_polished_no_mito_genomic.fna.singleline
 echo -e UEMA03000009.1'\n'UEMA03000023.1 > FR13_minichrom_scaffolds
@@ -90,6 +92,16 @@ cd ${sample}
     realpath ${sample}.ecc_caller_out.splitreads.bed >> ${ECCDNA_MAPFILE}
 cd ..
 done < mapfile
+
+GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+SAMPLE=G3
+SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/zhang_et_al_rnaseq_accessions.txt
+THREADS=${SLURM_NTASKS}
+LIB_TYPE=1
+GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
+SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
+GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.renamed.bed
+OUTPUT_NAME=G3
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/
 
