@@ -35,6 +35,10 @@ python /global/home/users/pierrj/git/python/pav_quantification_missing_genes_sec
 
 ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav/G3.all_eccdnas_mapfile
 
+if [ -f "${ECCDNA_MAPFILE}" ]; then
+    rm ${ECCDNA_MAPFILE}
+fi
+
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
 while read sample; do
