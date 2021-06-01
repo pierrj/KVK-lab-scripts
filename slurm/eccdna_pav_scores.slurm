@@ -37,5 +37,15 @@ done < mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav
 
+GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+SAMPLE=G3
+SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/zhang_et_al_rnaseq_accessions.txt
+THREADS=${SLURM_NTASKS}
+LIB_TYPE=1
+GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
+SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
+GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.renamed.bed
+OUTPUT_NAME=G3
+
 /global/home/users/pierrj/git/bash/output_neverfound_common_genes.sh -n ${OUTPUT_NAME} \
     -b ${GENE_BEDFILE} -i ${SAMPLE_MAPFILE} -e ${ECCDNA_MAPFILE}
