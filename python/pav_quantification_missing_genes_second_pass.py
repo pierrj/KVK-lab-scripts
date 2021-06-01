@@ -43,7 +43,6 @@ for i in range(len(list_of_files)):
     genomes_dict[genome] = list(set(guy11_gene_list) - set(found_genes_list))
 
 list_of_files = listdir(directory_missinggenes)
-list_of_files.remove('GCA_002368485.1_ASM236848v1.not_missing_genes')
 
 genome_dict_actually_missing = {}
 for i in range(len(list_of_files)):
