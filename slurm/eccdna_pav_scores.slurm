@@ -14,14 +14,22 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/commo
 
 GENE_GFF=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 GENE_CDS=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.genes.fasta
+GENOMES_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_re_check/moryzae_oryza_genomes_mapfile
+GENOME_BLASTDB_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/genomes
 
 python /global/home/users/pierrj/git/python/pav_quantification_missing_genes_first_pass.py guy11_vs_others ${GENE_GFF} ${GENE_CDS}
 
+if [ -d "not_missing_genes" ]; then
+    rm -r not_missing_genes
+fi
+
+mkdir not_missing_genes
+
 while read genome; do
-blastn -query ${genome}_missing_genes.fasta -db genomes/${genome}.blastdb \
+blastn -query ${genome}_missing_genes.fasta -db ${GENOME_BLASTDB_DIR}/${genome}.blastdb \
     -num_threads ${SLURM_NTASKS} -outfmt "6 qacc sacc evalue qlen qstart qend sstart send  stitle " \
     -max_target_seqs 1 | awk '{print $1}' | sort | uniq > not_missing_genes/${genome}.not_missing_genes
-done < moryzae_oryza_genomes_mapfile
+done < ${GENOMES_MAPFILE}
 
 python /global/home/users/pierrj/git/python/pav_quantification_missing_genes_first_pass.py  guy11_vs_others not_missing_genes ${GENE_GFF} pav_scores_per_gene
 
