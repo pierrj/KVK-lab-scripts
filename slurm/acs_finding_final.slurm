@@ -25,6 +25,9 @@ fi
 while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/large_eccdnas >> large_eccdnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 sort -k1,1 -k2,2n large_eccdnas_all | uniq > large_eccdnas_all_uniq
 
+if [ -d fimo_out ]; then
+    rm -r fimo_out
+fi
 
 bedtools getfasta -fi ${GENOME_FASTA} -bed large_eccdnas_all_uniq > large_eccdnas_all_uniq.fasta
 fimo --verbosity 1 -o fimo_out acs_meme.txt large_eccdnas_all_uniq.fasta
@@ -69,6 +72,9 @@ fi
 while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/micro_dnas >> micro_dnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 sort -k1,1 -k2,2n micro_dnas_all | uniq > micro_dnas_all_uniq
 
+if [ -d fimo_out ]; then
+    rm -r fimo_out
+fi
 
 bedtools getfasta -fi ${GENOME_FASTA} -bed micro_dnas_all_uniq > micro_dnas_all_uniq.fasta
 fimo --verbosity 1 -o fimo_out acs_meme.txt micro_dnas_all_uniq.fasta
