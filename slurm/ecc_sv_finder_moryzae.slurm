@@ -30,8 +30,8 @@ RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM
 
 while read genome;
 do
-    echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r guy11_genome_baoetal2017.fasta.masked -q ${genome}.masked -t 1 -n moryzae_v_${genome} -p ${PERCENT_ZEROES_FILTER} -o moryzae_v_${genome}_jpg -m moryzae_v_${genome}_tmp" >> jobqueue
-    echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${genome}.masked -q guy11_genome_baoetal2017.fasta.masked -t 1 -n ${genome}_v_moryzae -p ${PERCENT_ZEROES_FILTER} -o ${genome}_v_moryzae_jpg -m ${genome}_v_moryzae_tmp" >> jobqueue
+    echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r guy11_genome_baoetal2017.fasta.masked -q ${genome}_genomic.fna.masked -t 1 -n moryzae_v_${genome} -p ${PERCENT_ZEROES_FILTER} -o moryzae_v_${genome}_jpg -m moryzae_v_${genome}_tmp" >> jobqueue
+    echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${genome}_genomic.fna.masked -q guy11_genome_baoetal2017.fasta.masked -t 1 -n ${genome}_v_moryzae -p ${PERCENT_ZEROES_FILTER} -o ${genome}_v_moryzae_jpg -m ${genome}_v_moryzae_tmp" >> jobqueue
 done < ${MAPFILE}
 
 parallel -j ${SLURM_NTASKS} < jobqueue
