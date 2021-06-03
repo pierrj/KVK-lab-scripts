@@ -10,7 +10,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina_if_v_g3
 
 gff_file=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 copia_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_copia_locs.bed
