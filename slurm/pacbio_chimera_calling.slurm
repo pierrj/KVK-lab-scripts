@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=pacbio_ecc_calling
+#SBATCH --job-name=pacbio_chimera_calling
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -36,15 +36,15 @@
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all
 
 while read sample; do
-    cp ${sample}/${sample}_pacbio.bam /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio
+    cp ${sample}/${sample}_pacbio.bam /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/structural_variation/chimeras
 done < mapfile
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/structural_variation/chimeras
+
+GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.renamed.bed
 
 while read sample; do
     samtools fastq /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all/${sample}/${sample}_pacbio.bam > ${sample}_pacbio.fastq
     /global/scratch/users/pierrj/minimap2/minimap2 -ax asm20 /global/scratch/users/pierrj/eccDNA/pipeline_tests/ecc_calling_pacbio/guy11_genome_baoetal2017.mmi ${sample}_pacbio.fastq > ${sample}_aligned.bam
-    samtools view -F 4 ${sample}_aligned.bam | awk '{print $2}' > ${sample}_aligned_samflags
-    bedtools bamtobed -cigar -i ${sample}_aligned.bam | paste - ${sample}_aligned_samflags > ${sample}_aligned.bed
-    python /global/home/users/pierrj/git/python/ecc_caller_pacbio.py ${sample}_aligned.bed ${sample}_pacbio_eccs.bed 20 50000
+    /global/home/users/pierrj/git/bash/get_chimeric_eccs.sh -s ${sample} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/uniq.filtered.sorted.${sample}.bam -p ${sample}_aligned.bam -g ${GENE_BEDFILE}
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all/mapfile

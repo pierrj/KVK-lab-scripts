@@ -1,11 +1,12 @@
 #!/bin/bash
-while getopts s:b:p: option
+while getopts s:b:p:g: option
 do
 case "${option}"
 in
 s) SAMPLE=${OPTARG};;
-b) FILTERED_BAMFILE=${OPTARG};;
-p) PACBIO_MAPPED=${OPTARG};; ## THIS SHOULD BE COORDINATE SORTED AND INCLUDE ONLY ONE RECORD PER ALIGNMENT AND IT SHOULD NOT INCLUDE MAPQ0 READS
+b) FILTERED_BAMFILE=${OPTARG};;## THIS SHOULD BE COORDINATE SORTED AND INCLUDE ONLY ONE RECORD PER ALIGNMENT AND IT SHOULD NOT INCLUDE MAPQ0 READS
+p) PACBIO_MAPPED=${OPTARG};;
+g) GENE_BEDFILE=${OPTARG};;
 esac
 done
 
@@ -72,4 +73,4 @@ bedtools bamtobed -i tmp.match_length_filtered.diff_chrom.exactlytwice.qualityfi
     }
 }' > ${SAMPLE}.chimeric_ecc_splitreads.bed
 
-python /global/home/users/pierrj/git/python/get_chimeric_eccdnas.py ${SAMPLE}_aligned_pacbio.bed ${SAMPLE}.chimeric_ecc_splitreads.bed ${SAMPLE}_chimeric_eccs.bed ${SAMPLE} 20 50000
+python /global/home/users/pierrj/git/python/get_chimeric_eccdnas_with_genes.py ${SAMPLE}_aligned_pacbio.bed ${SAMPLE}.chimeric_ecc_splitreads.bed ${SAMPLE}_chimeric_eccs_partial_circles ${SAMPLE}_chimeric_eccs_full_circles ${SAMPLE}_chimeric_junctions_with_genes ${SAMPLE} 20 50000 ${GENE_BEDFILE}
