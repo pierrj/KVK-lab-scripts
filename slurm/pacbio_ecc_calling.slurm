@@ -33,7 +33,7 @@
 
 # 
 
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all
 
 while read sample; do
     cp ${sample}/${sample}_pacbio.sam /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio

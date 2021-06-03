@@ -5,8 +5,8 @@ import re
 
 pacbio_alignments = sys.argv[1]
 output = sys.argv[2]
-tolerance = sys.argv[3]
-column_cutoff = sys.argv[4]
+tolerance = int(sys.argv[3])
+column_cutoff = int(sys.argv[4])
 
 # use regex to grab the matches and nonmatches to the genome and count them
 def process_cigar(cigar, sense):
