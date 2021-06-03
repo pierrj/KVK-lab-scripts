@@ -166,3 +166,10 @@ while read sample; do sbatch --job-name=$sample.ecc_caller_sra --export=sample=$
 mapfile="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_no_organelles.contignames"
 genome_bwa="/global/scratch/users/pierrj/references/ORSA_IRGSP-1.0_bwa"
 while read sample; do sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_assign_confidence_only.slurm; done < mapfile_re
+
+
+## now with spiked controls and rice and moryzae
+
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/guy11bao_7015mito_spikeins_tweaked_osativa_worganelles_bwa"
+while read sample; do sbatch --job-name=$sample.ecc_caller --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_anygenome_withmapq0.slurm; done < mapfile

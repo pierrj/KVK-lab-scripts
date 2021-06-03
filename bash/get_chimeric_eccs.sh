@@ -72,4 +72,4 @@ bedtools bamtobed -i tmp.match_length_filtered.diff_chrom.exactlytwice.qualityfi
     }
 }' > ${SAMPLE}.chimeric_ecc_splitreads.bed
 
-python /global/home/users/pierrj/git/python/get_chimeric_eccdnas.py ${SAMPLE}_aligned_pacbio.bed ${SAMPLE}.chimeric_ecc_splitreads.bed ${SAMPLE}_chimeric_eccs.bed G3_1A 20 50000
+python /global/home/users/pierrj/git/python/get_chimeric_eccdnas.py ${SAMPLE}_aligned_pacbio.bed ${SAMPLE}.chimeric_ecc_splitreads.bed ${SAMPLE}_chimeric_eccs.bed ${SAMPLE} 20 50000
