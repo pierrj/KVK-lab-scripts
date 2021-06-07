@@ -6,8 +6,8 @@ from os import listdir
 
 directory_coords = str(sys.argv[1])
 directory_gene_locs = str(sys.argv[2])
-output = str(sys.argv[3])
-tolerance = int(sys.argv[4])
+tolerance = int(sys.argv[3])
+output = str(sys.argv[4])
 
 def find_ranges(iterable):
     """Yield range of consecutive numbers."""
