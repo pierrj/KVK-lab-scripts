@@ -13,12 +13,12 @@
 
 
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
-SAMPLE=G3
+SAMPLE=IF
 SRA_LIST=/global/scratch/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/zhang_et_al_rnaseq_accessions.txt
 THREADS=${SLURM_NTASKS}
 LIB_TYPE=1
 GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
-SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
+SAMPLE_MAPFILE=/global/scratch/pierrj/eccDNA/magnaporthe_pureculture/illumina_if_v_g3/sample_mapfile_IF
 copia_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_copia_locs.bed
 gypsy_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_gypsy_locs.bed
 
