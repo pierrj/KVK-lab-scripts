@@ -71,6 +71,8 @@ for i in $(seq 0 99); do
     parallel --colsep '\t' 'blastn -query <(echo -e \>test"\n"{1}) -subject <(echo -e \>test"\n"{2}) -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 90 -outfmt  "6 length" | awk "{print}; END {if (NR<1) {print 0}}"' < eccdnas_starts_and_ends.seq > ${OUTPUT_TABLE}
 done
 
+paste $(find . -maxdepth 1 -name "${INPUT_FILE}_shuffle_*_outputtable" | xargs -r ls -1 | tr "\n" " ") > ${INPUT_FILE}_shuffle_outputtable
+
 INPUT_FILE=micro_dnas_all_uniq
 OUTPUT_TABLE=micro_dnas_observed_homology
 GENOME=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
@@ -113,3 +115,5 @@ for i in $(seq 0 99); do
     paste nonames_eccdna_starts.seq nonames_eccdna_ends.seq > eccdnas_starts_and_ends.seq
     parallel --colsep '\t' 'blastn -query <(echo -e \>test"\n"{1}) -subject <(echo -e \>test"\n"{2}) -word_size 4 -task blastn-short -max_hsps 1 -perc_identity 90 -outfmt  "6 length" | awk "{print}; END {if (NR<1) {print 0}}"' < eccdnas_starts_and_ends.seq > ${OUTPUT_TABLE}
 done
+
+paste $(find . -maxdepth 1 -name "${INPUT_FILE}_shuffle_*_outputtable" | xargs -r ls -1 | tr "\n" " ") > ${INPUT_FILE}_shuffle_outputtable
