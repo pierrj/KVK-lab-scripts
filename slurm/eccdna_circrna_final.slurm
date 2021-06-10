@@ -35,3 +35,5 @@ while read biorep; do
     bwa mem -T 19 -t ${SLURM_NTASKS} ${GENOME_FILE} zhang_${biorep}.fastq -o zhang_${biorep}.sam
     perl /global/scratch/users/pierrj/ciri2/CIRI_v2.0.5/CIRI_v2.0.5.pl -T ${SLURM_NTASKS} -I zhang_${biorep}.sam -O zhang_${biorep}.ciri_out -F ${GENOME_FILE}
 done < bioreps
+
+cat zhang_1.ciri_out zhang_2.ciri_out zhang_3.ciri_out > zhang_all.ciri_out

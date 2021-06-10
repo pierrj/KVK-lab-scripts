@@ -18,7 +18,10 @@ cd /global/scratch/users/pierrj/diamond/guy11_avr_locs
 # avrs from Kim et al 2019
 ../diamond blastp -d guy11_fungap_12_28_20_prot -q M.oryzae.AVRs.fasta -o matches.tsv
 
-awk -v OFS='\t' '{ if ($3>=50.0) {print $1, $2}}' matches.tsv > known_effectors_fungap_names
+
+## filter out identity less than 50%, then make sure each fungap gene only has the best match assigned to it
+awk '$3>=50.0' matches.tsv | awk '$2 != "gene_09984.t1" && $1 != "AvrPita2" && $1 != "Pwl3" && !($1 == "AvrPita3" && $2 == "gene_10084.t1")' \
+ | awk -v OFS='\t' '{print $1, $2}' > known_effectors_fungap_names
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common
 
