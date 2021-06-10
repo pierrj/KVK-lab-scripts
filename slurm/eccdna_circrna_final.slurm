@@ -37,3 +37,20 @@ while read biorep; do
 done < bioreps
 
 cat zhang_1.ciri_out zhang_2.ciri_out zhang_3.ciri_out > zhang_all.ciri_out
+
+if [ -f "all.ecc_caller_out.details.nolowq.txt" ]; then
+    rm all.ecc_caller_out.details.nolowq.txt
+fi
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+
+while read sample; do
+cd ${sample}
+    cat ${sample}.ecc_caller_out.details.nolowq.txt >> /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas/all.ecc_caller_out.details.nolowq.txt
+cd ..
+done < mapfile
+
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas
+
+sort -k1,1 -k2,2n all.ecc_caller_out.details.nolowq.txt | awk -v OFS='\t' '{print $1, $2, $3}' | uniq > noduplicates.all.ecc_caller_out.details.nolowq.txt
