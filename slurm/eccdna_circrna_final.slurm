@@ -36,7 +36,7 @@ while read biorep; do
     perl /global/scratch/users/pierrj/ciri2/CIRI_v2.0.5/CIRI_v2.0.5.pl -T ${SLURM_NTASKS} -I zhang_${biorep}.sam -O zhang_${biorep}.ciri_out -F ${GENOME_FILE}
 done < bioreps
 
-cat zhang_1.ciri_out zhang_2.ciri_out zhang_3.ciri_out > zhang_all.ciri_out
+cat zhang_1.ciri_out zhang_2.ciri_out zhang_3.ciri_out | awk -v OFS='\t' '{print $2, $3, $4}' | sort -k1,1 -k2,2n | uniq | head -n-1 > zhang_all.ciri_out
 
 if [ -f "all.ecc_caller_out.details.nolowq.txt" ]; then
     rm all.ecc_caller_out.details.nolowq.txt

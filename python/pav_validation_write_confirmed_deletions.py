@@ -17,8 +17,8 @@ def find_ranges(iterable):
         else:
             yield group[0], group[-1]
 
-coords_directory_list = listdir(directory_coords)
-genelocs_directory_list = listdir(directory_gene_locs)
+coords_directory_list = sorted(listdir(directory_coords))
+genelocs_directory_list = sorted(listdir(directory_gene_locs))
 
 confirmed_deletions = []
 unconfirmed_deletions = []

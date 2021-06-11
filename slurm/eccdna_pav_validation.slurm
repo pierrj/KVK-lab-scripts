@@ -82,4 +82,4 @@ for gene_dir in */ ; do
 done
 
 
-python /global/home/users/pierrj/git/python/pav_validation_write_confirmed_deletions.py ${ALL_COORDS_DIR} ${ALL_GENELOCS_DIR} 40 all_small_deletions.bed
+python /global/home/users/pierrj/git/python/pav_validation_write_confirmed_deletions.py ${ALL_COORDS_DIR} ${ALL_GENELOCS_DIR} all_small_deletions.bed

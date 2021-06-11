@@ -11,7 +11,7 @@ directory_gffs = str(sys.argv[3])
 directory_sizes = str(sys.argv[4])
 output_directory = str(sys.argv[5])
 
-list_of_files = listdir(directory_orthogroups)
+list_of_files = sorted(listdir(directory_orthogroups))
 list_of_files.remove('guy11_fungap_out_prot__v__Neurospora_crassa.NC12.pep.all.tsv')
 list_of_files.remove('guy11_fungap_out_prot__v__GCA_002368485.1_ASM236848v1_fungap_out_prot.tsv')
 
@@ -56,11 +56,11 @@ for genome in genome_dict_actually_missing.keys():
         pav_final[genome_dict_actually_missing[genome][i]] -= 1
 
 gff_directory = directory_gffs 
-list_of_genomes = listdir(gff_directory)
+list_of_genomes = sorted(listdir(gff_directory))
 list_of_genomes.remove('guy11_fungap_out.gff3')
 list_of_genomes.remove('GCA_002368485.1_ASM236848v1_fungap_out.gff3')
 orthologs_directory = directory_orthogroups
-list_of_orthologs = listdir(orthologs_directory)
+list_of_orthologs = sorted(listdir(orthologs_directory))
 list_of_orthologs.remove('guy11_fungap_out_prot__v__Neurospora_crassa.NC12.pep.all.tsv')
 list_of_orthologs.remove('guy11_fungap_out_prot__v__GCA_002368485.1_ASM236848v1_fungap_out_prot.tsv')
 
@@ -279,7 +279,7 @@ for l in range(len(lost_genes)):
            neighbors_translated_with_locs[i][1][0] == neighbors_translated_with_locs[i][2][0]):
             gene_deletion_dict[missing_gene_of_interest].append(neighbors_translated_with_locs[i])
 
-list_of_genome_sizes = listdir(directory_sizes)
+list_of_genome_sizes = sorted(listdir(directory_sizes))
 genomesize_dict = {}
 for i in range(len(list_of_genome_sizes)):
     size = list_of_genome_sizes[i]
