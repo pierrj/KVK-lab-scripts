@@ -6,8 +6,7 @@ from os import listdir
 
 directory_coords = str(sys.argv[1])
 directory_gene_locs = str(sys.argv[2])
-tolerance = int(sys.argv[3])
-output = str(sys.argv[4])
+output = str(sys.argv[3])
 
 def find_ranges(iterable):
     """Yield range of consecutive numbers."""
@@ -52,9 +51,6 @@ for i in range(len(coords_directory_list)):
         end_deletion = deletion[1]
         if (start_deletion > start_gene and start_deletion < end_gene ) or (end_deletion > start_gene and end_deletion < end_gene) or (start_deletion < start_gene and end_deletion > end_gene):
             matching_deletion.append(deletion)
-            print(gene)
-            print(gene_loc_list)
-            print(deletion)
     for deletion in matching_deletion:
         confirmed_deletions.append([gene_loc_list[0], deletion[0]+start_region, deletion[1]+start_region, gene, genome])
 
