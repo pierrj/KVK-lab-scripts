@@ -36,5 +36,6 @@ while read plot; do
         /global/scratch/pierrj/mummer_4/bin/mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
         /global/home/users/pierrj/ps2pdf/usr/bin/ps2pdf ${SUBDIR_TMP}/${plot}.ps ${SUBDIR_TMP}/${plot}.pdf
         convert -density 150 ${SUBDIR_TMP}/${plot}.pdf -quality 90 ${output_realpath}/${ref}_v_${quer}_${plot}.jpg
+        cp ${SUBDIR_TMP}/${plot}.pdf ${output_realpath}/${ref}_v_${quer}_${plot}.pdf
     fi
 done < ${SUBDIR_TMP}/mapfile
