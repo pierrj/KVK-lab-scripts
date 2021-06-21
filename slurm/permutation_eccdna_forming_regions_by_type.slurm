@@ -24,7 +24,7 @@ fi
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
-while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${group_file} >> ${file}; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${group_file} >> /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas/${file}; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas
@@ -60,7 +60,7 @@ fi
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
-while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${group_file} >> ${file}; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${group_file} >> /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas/${file}; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas
@@ -95,7 +95,7 @@ fi
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
-while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${group_file} >> ${file}; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${group_file} >> /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas/${file}; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/circrnas
