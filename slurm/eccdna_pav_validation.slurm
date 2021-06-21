@@ -83,3 +83,5 @@ done
 
 
 python /global/home/users/pierrj/git/python/pav_validation_write_confirmed_deletions.py ${ALL_COORDS_DIR} ${ALL_GENELOCS_DIR} all_small_deletions.bed
+
+awk -v OFS='\t' '{print $1, $2, $3}' all_small_deletions.bed | sort -k1,1 -k2,2n | uniq > uniq.all_small_deletions.bed

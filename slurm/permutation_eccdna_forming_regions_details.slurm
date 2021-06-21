@@ -36,8 +36,8 @@ splitreadcount_steps=$(wc -l  all.ecc_caller_out.details.nolowq.txt | awk '{prin
 
 
 for k in $(seq 0 99); do
-    if [ -f "regions_found_rarefaction_${k}" ]; then
-        rm regions_found_rarefaction_${k}
+    if [ -f "details_regions_found_rarefaction_${k}" ]; then
+        rm details_regions_found_rarefaction_${k}
     fi
     for i in `seq ${splitreadcount_steps} ${splitreadcount_steps} ${splitreadcount}`; do
         shuf all.ecc_caller_out.details.nolowq.txt | head -n ${i} | sort -k1,1 -k2,2n | uniq | wc -l >> details_regions_found_rarefaction_${k}
