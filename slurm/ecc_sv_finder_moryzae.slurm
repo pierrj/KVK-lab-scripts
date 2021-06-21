@@ -28,6 +28,10 @@ done < ${MAPFILE}
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
 
+if [ -f "jobqueue" ]; then
+    rm jobqueue
+fi
+
 while read genome;
 do
     echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r guy11_genome_baoetal2017.fasta.masked -q ${genome}_genomic.fna.masked -t 1 -n moryzae_v_${genome} -p ${PERCENT_ZEROES_FILTER} -o moryzae_v_${genome}_jpg -m moryzae_v_${genome}_tmp" >> jobqueue
