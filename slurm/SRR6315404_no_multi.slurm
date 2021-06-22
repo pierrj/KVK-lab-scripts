@@ -24,4 +24,4 @@ mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_00000140
     -s ${sample} \
     -t ${SLURM_NTASKS} \
     -b /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/no_secondary.filtered.sorted.${sample}.bam \
-    -r ${sample}.confirmedsplitreads.bed
+    -r ${sample}.unique.confirmedsplitreads.bed
