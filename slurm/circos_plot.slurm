@@ -17,6 +17,9 @@ COPIA_FILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryza
 GYPSY_FILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_gypsy_locs.bed
 REPEAT_FILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_all_tes_wrepeats.bed
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
+EFFECTOR_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justeffectors.bed
+PAV_SCORES=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav/pav_scores_per_gene
+RPKM_FILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/micro_dnas/G3.RPKMvsSRs
 
 bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bpwindows
 
@@ -24,27 +27,12 @@ bedtools makewindows -g ${CHROM_SIZES} -w 10000 > guy11_genome_baoetal2017.10kbp
 
 ## tracks to make
 
-# gene density
+# effector locs
 
-input_file=${GENE_BEDFILE}
-track=gene_density
+input_file=${EFFECTOR_BEDFILE}
+track=effector_locs
 
-bedtools coverage -a guy11_genome_baoetal2017.10kbpwindows -b ${input_file} -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
-
-max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
-
-awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2, $3, $4/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
-
-# repeat density
-
-input_file=${REPEAT_FILE}
-track=repeat_density
-
-bedtools coverage -a guy11_genome_baoetal2017.10kbpwindows -b ${input_file} -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
-
-max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
-
-awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2, $3, $4/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
 # gypsy locs
 
@@ -59,6 +47,23 @@ input_file=${COPIA_FILE}
 track=copia_locs
 
 grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# PAV per gene
+input_file=${PAV_SCORES}
+track=pav_per_gene
+
+paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_file}) | awk -v OFS='\t' '{if ($4 == 162) {print substr($1,11,2), $2, $3, 1} else {print substr($1,11,2), $2, $3, 0}}' > ${track}
+
+# expression
+
+input_file=${RPKM_FILE}
+track=rpkm
+
+paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_file}) | awk -v OFS='\t' '{print $1, $2, $3, log($4)/log(10)}' > ${track}_old
+
+max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
+
+awk -v OFS='\t' '{print $1, $2, $3, $4/max}' ${track}_old > ${track}
 
 # large ecc density
 
@@ -92,7 +97,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
-awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
@@ -132,7 +137,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
-awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
@@ -172,7 +177,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
-awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
