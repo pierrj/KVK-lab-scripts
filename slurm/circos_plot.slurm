@@ -59,11 +59,7 @@ paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_fil
 input_file=${RPKM_FILE}
 track=rpkm
 
-paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_file}) | awk -v OFS='\t' '{print $1, $2, $3, log($4)/log(10)}' > ${track}_old
-
-max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
-
-awk -v OFS='\t' '{print $1, $2, $3, $4/max}' ${track}_old > ${track}
+paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_file}) | awk -v OFS='\t' '{OFMT="%f"; print substr($1,11,2), $2, $3, log($4)/log(10)}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
 # large ecc density
 
@@ -101,9 +97,7 @@ awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
-max=$(awk '{print $3}' ${track}_old | sort -k1,1n | tail -1)
-
-awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+awk -v OFS='\t' '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
 # micro dna density
 
@@ -141,9 +135,7 @@ awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
-max=$(awk '{print $3}' ${track}_old | sort -k1,1n | tail -1)
-
-awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+awk -v OFS='\t' '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
 # ltr ecc density
 
@@ -181,6 +173,4 @@ awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
-max=$(awk '{print $3}' ${track}_old | sort -k1,1n | tail -1)
-
-awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+awk -v OFS='\t' '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
