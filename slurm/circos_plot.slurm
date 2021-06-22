@@ -20,6 +20,8 @@ CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chr
 
 bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bpwindows
 
+bedtools makewindows -g ${CHROM_SIZES} -w 10000 > guy11_genome_baoetal2017.10kbpwindows
+
 ## tracks to make
 
 # gene density
@@ -27,7 +29,7 @@ bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bp
 input_file=${GENE_BEDFILE}
 track=gene_density
 
-bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows -b ${input_file} -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
+bedtools coverage -a guy11_genome_baoetal2017.10kbpwindows -b ${input_file} -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
 
 max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
 
@@ -38,7 +40,7 @@ awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2, $3, $4/max}' 
 input_file=${REPEAT_FILE}
 track=repeat_density
 
-bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows -b ${input_file} -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
+bedtools coverage -a guy11_genome_baoetal2017.10kbpwindows -b ${input_file} -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
 
 max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
 

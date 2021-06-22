@@ -39,3 +39,17 @@ do
 done < ${MAPFILE}
 
 parallel -j ${SLURM_NTASKS} < jobqueue
+
+if [ -d "output_pdfs" ]; then
+    rm -r output_pdfs
+fi
+
+mkdir output_pdfs
+
+ls | grep jpg > output_mapfile
+
+while read output; do
+cd ${output}
+    cp *.pdf ../output_pdfs
+cd ..
+done < output_mapfile
