@@ -13,10 +13,10 @@
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 SAMPLE=G3_1A
 THREADS=20
-FILTERED_BAMFILE=uniq.filtered.sorted.G3_1A.bam
-FILTERED_BAMFILE_QSORTED=multimapped.filtered.name_sorted.G3_1A.bam
+FILTERED_BAMFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/uniq.filtered.sorted.G3_1A.bam
+FILTERED_BAMFILE_QSORTED=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A/multimapped.filtered.name_sorted.G3_1A.bam
 
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/G3_1A
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio/G3_1A_no_confirm_no_lengthfilter_nomatchlength_filter
 
 samtools view -f 81 -F 4 ${FILTERED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
 splitread_file="reverseread1.${SAMPLE}.sam"
@@ -327,3 +327,5 @@ cat unique_parallel.confirmed mapq0_parallel.confirmed > parallel.confirmed
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
+
+cat lengthfiltered.merged.splitreads.G3_1A.bed mapq0_single_unique_choices.bed | sort -k1,1 -k2,2n | uniq > mapq0_and_uniq_splitreads.allfalsepositives.bed
