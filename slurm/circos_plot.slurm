@@ -12,17 +12,168 @@
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
+GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed
+COPIA_FILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_copia_locs.bed
+GYPSY_FILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_gypsy_locs.bed
+REPEAT_FILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_all_tes_wrepeats.bed
+CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 
-bedtools makewindows -g guy11_genome_baoetal2017.chromsizes -w 1000 > guy11_genome_baoetal2017.1000bpwindows
+bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bpwindows
 
-bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows -b G3_1A.ecc_caller_out.splitreads.bed -sorted -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > eccdna_genomecoverage_G3_1A
+## tracks to make
 
-## te bed track to lines
+# gene density
 
-## gene bed track to lines
+input_file=${GENE_BEDFILE}
+track=gene_density
 
-## some sort of density plot for eccdnas/splitreads
+bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows -b ${input_file} -sorted -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
 
-## https://jokergoo.github.io/circlize_book/book/introduction.html
+max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
 
-## http://felixfan.github.io/circos/
+awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2, $3, $4/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# repeat density
+
+input_file=${REPEAT_FILE}
+track=repeat_density
+
+bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows -b ${input_file} -sorted -g guy11_genome_baoetal2017.chromsizes | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${track}_old
+
+max=$(awk '{print $4}' ${track}_old | sort -k1,1n | tail -1)
+
+awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2, $3, $4/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# gypsy locs
+
+input_file=${GYPSY_FILE}
+track=gypsy_locs
+
+grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# copia locs
+
+input_file=${COPIA_FILE}
+track=copia_locs
+
+grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# large ecc density
+
+track=large_ecc_density
+group=large_eccdnas
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample
+do
+cd ${sample}
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.1000bpwindows \
+    -b ${group}_splitreads -g ${CHROM_SIZES} | \
+    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
+cd ..
+done < mapfile
+
+if [ -f "${group}.normalization_table" ]; then
+    rm ${group}.normalization_table
+fi
+
+while read sample; do
+cd ${sample}
+total=$(wc -l ${group}_splitreads | awk '{print $1/1000000}')
+echo -e ${sample}'\t'${total} >> ../${group}.normalization_table
+cd ..
+done < mapfile
+
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+    -t G3_1A.${group}.genomecoverage.bed -n ${group}.normalization_table -y t
+
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
+
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
+
+max=$(awk '{print $3}' ${track}_old | sort -k1,1n | tail -1)
+
+awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# micro dna density
+
+track=micro_dna_density
+group=micro_dnas
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample
+do
+cd ${sample}
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.1000bpwindows \
+    -b ${group}_splitreads -g ${CHROM_SIZES} | \
+    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
+cd ..
+done < mapfile
+
+if [ -f "${group}.normalization_table" ]; then
+    rm ${group}.normalization_table
+fi
+
+while read sample; do
+cd ${sample}
+total=$(wc -l ${group}_splitreads | awk '{print $1/1000000}')
+echo -e ${sample}'\t'${total} >> ../${group}.normalization_table
+cd ..
+done < mapfile
+
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+    -t G3_1A.${group}.genomecoverage.bed -n ${group}.normalization_table -y t
+
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
+
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
+
+max=$(awk '{print $3}' ${track}_old | sort -k1,1n | tail -1)
+
+awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# ltr ecc density
+
+track=ltr_eccdna_density
+group=ltr_eccdnas
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample
+do
+cd ${sample}
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.1000bpwindows \
+    -b ${group}_splitreads -g ${CHROM_SIZES} | \
+    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
+cd ..
+done < mapfile
+
+if [ -f "${group}.normalization_table" ]; then
+    rm ${group}.normalization_table
+fi
+
+while read sample; do
+cd ${sample}
+total=$(wc -l ${group}_splitreads | awk '{print $1/1000000}')
+echo -e ${sample}'\t'${total} >> ../${group}.normalization_table
+cd ..
+done < mapfile
+
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+    -t G3_1A.${group}.genomecoverage.bed -n ${group}.normalization_table -y t
+
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
+
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
+
+max=$(awk '{print $3}' ${track}_old | sort -k1,1n | tail -1)
+
+awk -v OFS='\t' -v max=$max '{OFMT="%f";print substr($1,11,2), $2-1000, $2, $3/max}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
