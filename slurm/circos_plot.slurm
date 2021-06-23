@@ -91,7 +91,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
-awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
@@ -129,7 +129,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
-awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
@@ -167,7 +167,7 @@ done < mapfile
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
-awk -v OFS='\t' '{print $1, $2, log($3)/log(10)}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
 
 cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
 
