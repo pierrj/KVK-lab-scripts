@@ -25,3 +25,5 @@ mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_00000140
     -t ${SLURM_NTASKS} \
     -b /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/no_secondary.filtered.sorted.${sample}.bam \
     -r ${sample}.unique.confirmedsplitreads.bed
+
+cp SRR6315404.ecc_caller_out.details.txt SRR6315404.ecc_caller_out.uniq.details.txt
