@@ -21,9 +21,7 @@ EFFECTOR_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_
 PAV_SCORES=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav/pav_scores_per_gene
 RPKM_FILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/micro_dnas/G3.RPKMvsSRs
 
-bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bpwindows
-
-bedtools makewindows -g ${CHROM_SIZES} -w 10000 > guy11_genome_baoetal2017.10kbpwindows
+bedtools makewindows -g ${CHROM_SIZES} -w 100 > guy11_genome_baoetal2017.100bpwindows
 
 ## tracks to make
 
@@ -71,7 +69,7 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 while read sample
 do
 cd ${sample}
-bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.1000bpwindows \
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.100bpwindows \
     -b ${group}_splitreads -g ${CHROM_SIZES} | \
     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
 cd ..
@@ -109,7 +107,7 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 while read sample
 do
 cd ${sample}
-bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.1000bpwindows \
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.100bpwindows \
     -b ${group}_splitreads -g ${CHROM_SIZES} | \
     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
 cd ..
@@ -147,7 +145,7 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 while read sample
 do
 cd ${sample}
-bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.1000bpwindows \
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.100bpwindows \
     -b ${group}_splitreads -g ${CHROM_SIZES} | \
     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
 cd ..
