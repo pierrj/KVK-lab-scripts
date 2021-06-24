@@ -47,7 +47,7 @@ for i in $(seq 0 999); do
     done < ${ECCDNA_MAPFILE}
     /global/home/users/pierrj/git/bash/output_neverfound_common_genes.sh -n ${OUTPUT_NAME} \
         -b ${GENE_BEDFILE} -i ${SAMPLE_MAPFILE} -e ${SHUFFLED_ECCDNA_MAPFILE}
-    awk '{print $2}' ${OUTPUT_NAME}.normalized.eccspergene > ${i}.shuffled.eccspergene
+    awk '{print $2}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${i}.shuffled.eccspergene
     cp ${OUTPUT_NAME}.common.genes ${i}.shuffle.common.genes
 done
 
