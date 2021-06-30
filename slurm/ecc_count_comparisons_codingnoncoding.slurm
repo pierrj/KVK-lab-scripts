@@ -22,10 +22,14 @@ while read -r dir genome_file gff_file copia_file gypsy_file mapfile; do
     do
         cd ${sample}
         echo $sample 1>&2
-        awk '{if ($3 == "gene") print $0}' ${gff_file} > tmp.genes.gff
+        awk '{if ($3 == "exon") print $0}' ${gff_file} > tmp.exons.gff
         awk ' $5 != "lowq" ' ${sample}.ecc_caller_out.details.txt > ${sample}.ecc_caller_out.details.nolowq.txt
-        bedtools intersect -u -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > tmp.genic_eccs
-        bedtools intersect -v -f 0.5 -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.genes.gff > tmp.noncoding_eccs
+        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.exons.gff | \
+                    awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+                    awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.5) {print $0}}' | sort -k1,1 -k2,2n > tmp.genic_eccs
+        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b tmp.exons.gff | \
+                    awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
+                    awk -v OFS='\t' '{ if ($4/($3-$2) < 0.5) {print $0}}' | sort -k1,1 -k2,2n > tmp.noncoding_eccs
         bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
             awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $0}}' | sort -k1,1 -k2,2n > tmp.copia_eccs
@@ -53,14 +57,14 @@ while read -r dir genome_file gff_file copia_file gypsy_file mapfile; do
         ecc_count_all=$(wc -l ${sample}.ecc_caller_out.details.nolowq.txt | awk '{print $1}')
         read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam | awk '{print $1}') ## mapped reads
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum;}' ${genome_file} ) ## basepairs
-        coding_bp=$(awk '{SUM+=$5-$4}END{print SUM}' tmp.genes.gff)
+        coding_bp=$(awk '{SUM+=$5-$4}END{print SUM}' tmp.exons.gff)
         copia_bp=$(awk '{SUM+=$3-$2}END{print SUM}' ${copia_file})
         gypsy_bp=$(awk '{SUM+=$3-$2}END{print SUM}' ${gypsy_file})
         echo -e $sample'\t'$ecc_count_genic'\t'$ecc_count_noncoding'\t'$ecc_count_copia\
             '\t'$ecc_count_gypsy'\t'$ecc_count_micro'\t'$ecc_count_large'\t'$ecc_count_all\
             '\t'$read_count'\t'$genome_size\
             '\t'$coding_bp'\t'$copia_bp'\t'$gypsy_bp >> /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/ecc_count_comparison.txt
-        rm tmp.genes.gff
+        rm tmp.exons.gff
         rm tmp.genic_eccs
         rm tmp.noncoding_eccs
         rm tmp.copia_eccs
