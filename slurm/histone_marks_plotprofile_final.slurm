@@ -128,7 +128,8 @@ treatment=H3K27ac
 plotProfile -m ${treatment}_${biorep}.mat.gz \
             -out ${treatment}_${biorep}.pdf \
             --numPlotsPerRow 1 \
-            --plotTitle "${treatment} ${biorep} eccDNAs"
+            --plotTitle "${treatment} ${biorep} eccDNAs" \
+            --outFileNameData ${treatment}_${biorep}.tab
 
 treatment=H3K27me3
 # bamCompare -p ${SLURM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
@@ -141,7 +142,8 @@ treatment=H3K27me3
 plotProfile -m ${treatment}_${biorep}.mat.gz \
             -out ${treatment}_${biorep}.pdf \
             --numPlotsPerRow 1 \
-            --plotTitle "${treatment} ${biorep} eccDNAs"
+            --plotTitle "${treatment} ${biorep} eccDNAs" \
+            --outFileNameData ${treatment}_${biorep}.tab
 
 treatment=H3K36me3
 # bamCompare -p ${SLURM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
@@ -154,7 +156,8 @@ treatment=H3K36me3
 plotProfile -m ${treatment}_${biorep}.mat.gz \
             -out ${treatment}_${biorep}.pdf \
             --numPlotsPerRow 1 \
-            --plotTitle "${treatment} ${biorep} eccDNAs"
+            --plotTitle "${treatment} ${biorep} eccDNAs" \
+            --outFileNameData ${treatment}_${biorep}.tab
 
 # bedtools makewindows -g ${GENOME_CHROMSIZES} -w 50 > guy11_genome_baoetal2017.50bpwindows
 
@@ -173,4 +176,5 @@ plotProfile -m ${treatment}_${biorep}.mat.gz \
 plotProfile -m gc.mat.gz \
             -out gc.pdf \
             --numPlotsPerRow 1 \
-            --plotTitle "GC eccDNAs"
+            --plotTitle "GC eccDNAs" \
+            --outFileNameData gc.tab
