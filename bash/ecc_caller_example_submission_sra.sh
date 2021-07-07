@@ -57,3 +57,13 @@ mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contig
 genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
 sample="ERR2660591"
 sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+sample="ERR5060418"
+sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+sample="SRR11528297"
+sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm

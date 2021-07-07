@@ -62,7 +62,7 @@ while read -r dir genome_file gff_file copia_file gypsy_file mapfile; do
         echo -e $sample'\t'$ecc_count_genic'\t'$ecc_count_noncoding'\t'$ecc_count_copia\
             '\t'$ecc_count_gypsy'\t'$ecc_count_micro'\t'$ecc_count_large'\t'$ecc_count_all\
             '\t'$read_count'\t'$genome_size\
-            '\t'$coding_bp'\t'$copia_bp'\t'$gypsy_bp >> /global/scratch/users/pierrj/eccDNA/comparative/ecc_counts/ecc_count_comparison.txt
+            '\t'$coding_bp'\t'$copia_bp'\t'$gypsy_bp >> /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/ecc_count_comparison.txt
         rm tmp.exons.gff
         rm tmp.genic_eccs
         rm tmp.noncoding_eccs
