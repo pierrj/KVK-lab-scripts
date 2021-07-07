@@ -19,5 +19,5 @@ mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contig
 /global/home/users/pierrj/git/bash/ecc_caller_mapq0_no_rm.sh -m ${mapfile} \
     -s ${sample} \
     -t ${SLURM_NTASKS} \
-    -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/${sample}/uniq.filtered.sorted.${sample}.bam \
-    -q /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/${sample}/multimapped.filtered.name_sorted.${sample}.bam
+    -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/uniq.filtered.sorted.${sample}.bam \
+    -q /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/multimapped.filtered.name_sorted.${sample}.bam
