@@ -21,3 +21,6 @@ mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contig
     -t ${SLURM_NTASKS} \
     -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/uniq.filtered.sorted.${sample}.bam \
     -q /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/multimapped.filtered.name_sorted.${sample}.bam
+
+awk '{print $3-$2}' unique_parallel.confirmed > unique_parallel.confirmed.length_dsn
+awk '{print $3-$2}' mapq0_parallel.confirmed > mapq0_parallel.confirmed.length_dsn
