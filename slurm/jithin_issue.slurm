@@ -23,11 +23,11 @@ export ECC_CALLER_PICARD=/clusterfs/vector/home/groups/software/sl-7.x86_64/modu
 wget https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz
 gunzip hg19.fa.gz
 
-bwa mem index -p hg19_bwa hg19.fa
+bwa index -p hg19_bwa hg19.fa
 
 GENOME_BWA=hg19_bwa
 
-grep '>' guy11_genome_baoetal2017_with_70-15_mito.fasta | awk '{print substr($1,2)}' > mapfile
+grep '>' hg19.fa | awk '{print substr($1,2)}' > mapfile
 
 MAPFILE=mapfile
 
