@@ -9,9 +9,9 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/jithin_issue/SRR6315431
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/jithin_issue/SRR6315403
 
-SAMPLE=SRR6315431
+SAMPLE=SRR6315403
 THREADS=${SLURM_NTASKS}
 
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SAMPLE} -O .
