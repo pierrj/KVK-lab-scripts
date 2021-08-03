@@ -31,7 +31,8 @@ grep '>' hg19.fa | awk '{print substr($1,2)}' > mapfile
 
 MAPFILE=mapfile
 
-/global/scratch/users/pierrj/eccDNA/pipeline_tests/jithin_issue/git/ecc_caller/generate_bam_file.sh -g ${GENOME_BWA} -1 ${SAMPLE}.sra_1.fastq -2 ${SAMPLE}.sra_2.fastq -s ${SAMPLE} -t ${THREADS} -m ${MAPFILE}
+/global/scratch/users/pierrj/eccDNA/pipeline_tests/jithin_issue/git/ecc_caller/generate_bam_file.sh -g ${GENOME_BWA} -1 ${SAMPLE}.sra_1.fastq \
+    -2 ${SAMPLE}.sra_2.fastq -s ${SAMPLE} -t ${THREADS} -m ${MAPFILE}
 
 
 /global/scratch/users/pierrj/eccDNA/pipeline_tests/jithin_issue/git/ecc_caller/call_ecc_regions.sh -m ${MAPFILE} -s ${SAMPLE} -t ${THREADS} \

@@ -21,11 +21,14 @@ EFFECTOR_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_
 PAV_SCORES=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav/pav_scores_per_gene
 RPKM_FILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/micro_dnas/G3.RPKMvsSRs
 
+# make 100 bp windows for tracks
+
 bedtools makewindows -g ${CHROM_SIZES} -w 100 > guy11_genome_baoetal2017.100bpwindows
 
 ## tracks to make
 
 # effector locs
+# rename chroms for circos
 
 input_file=${EFFECTOR_BEDFILE}
 track=effector_locs
@@ -33,6 +36,7 @@ track=effector_locs
 grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
 # gypsy locs
+# rename chroms for circos
 
 input_file=${GYPSY_FILE}
 track=gypsy_locs
@@ -40,24 +44,73 @@ track=gypsy_locs
 grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
 # copia locs
+# rename chroms for circos
 
 input_file=${COPIA_FILE}
 track=copia_locs
 
 grep -v '#' ${input_file} | awk -v OFS='\t' '{print substr($1,11,2), $2, $3}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
 
+# copia and gypsy locs (combine both)
+# rename chroms for circos
+
+track=copia_and_gypsy_locs
+
+cat <(awk -v OFS='\t' '{print $1, $2, $3, 0}' copia_locs) <(awk -v OFS='\t' '{print $1, $2, $3, 1}' gypsy_locs) > ${track}
+
 # PAV per gene
+# found in all genomes is 162
+# rename chroms for circos
+
 input_file=${PAV_SCORES}
 track=pav_per_gene
 
 paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_file}) | awk -v OFS='\t' '{if ($4 == 162) {print substr($1,11,2), $2, $3, 1} else {print substr($1,11,2), $2, $3, 0}}' > ${track}
 
 # expression
+# rename chroms for circos
 
 input_file=${RPKM_FILE}
 track=rpkm
 
 paste <(awk '{print $1, $2, $3}' ${GENE_BEDFILE}) <(awk '{print $2}' ${input_file}) | awk -v OFS='\t' '{OFMT="%f"; print substr($1,11,2), $2, $3, log($4)/log(10)}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# gene_status
+
+NEVERFOUND_FILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/G3.neverfound.genes
+COMMON_FILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/G3.common.genes
+
+if [ -f "neverfound_locs" ]; then
+    rm neverfound_locs
+fi
+
+# find never found gene locs in bedfile
+
+while read gene; do
+    gene_trimmed=$(echo $gene | awk '{print substr($1, 0, length($1)-3)}')
+    grep ${gene_trimmed} ${GENE_BEDFILE} >> neverfound_locs
+done < ${NEVERFOUND_FILE}
+
+if [ -f "common_locs" ]; then
+    rm common_locs
+fi
+
+# find common gene locs in bedfile
+
+while read gene; do
+    gene_trimmed=$(echo $gene | awk '{print substr($1, 0, length($1)-3)}')
+    grep ${gene_trimmed} ${GENE_BEDFILE} >> common_locs
+done < ${COMMON_FILE}
+
+cat neverfound_locs common_locs ${GENE_BEDFILE} | sort | uniq -u > other_locs
+
+
+awk -v OFS='\t' '{print $1, $2, $3, 0}' neverfound_locs > neverfound_locs_color
+awk -v OFS='\t' '{print $1, $2, $3, 1}' other_locs > other_locs_color
+awk -v OFS='\t' '{print $1, $2, $3, 2}' common_locs > common_locs_color
+
+cat neverfound_locs_color other_locs_color common_locs_color | sort -k1,1 -k2,2n | awk -v OFS='\t' '{print substr($1,11,2), $2, $3, $4}' | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > gene_status
+
 
 # large ecc density
 
@@ -120,6 +173,44 @@ fi
 while read sample; do
 cd ${sample}
 total=$(wc -l ${group}_splitreads | awk '{print $1/1000000}')
+echo -e ${sample}'\t'${total} >> ../${group}.normalization_table
+cd ..
+done < mapfile
+
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+    -t G3_1A.${group}.genomecoverage.bed -n ${group}.normalization_table -y t
+
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
+
+awk -v OFS='\t' '{print $1, $2, $3}' G3.normalized_binned > /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/${track}_old
+
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot
+
+awk -v OFS='\t' '{OFMT="%f";print substr($1,11,2), $2-100, $2, $3}' ${track}_old | awk '{gsub ("^0*", "", $0); gsub ("/0*", "/", $0); print}' > ${track}
+
+# microdna and large ecc density
+
+track=micro_dna_and_large_dna_density
+group=micro_dnas_and_large_eccdnas
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
+
+while read sample
+do
+cd ${sample}
+bedtools coverage -a /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/guy11_genome_baoetal2017.100bpwindows \
+    -b <(cat micro_dnas_splitreads large_eccdnas_splitreads) -g ${CHROM_SIZES} | \
+    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${group}.genomecoverage.bed
+cd ..
+done < mapfile
+
+if [ -f "${group}.normalization_table" ]; then
+    rm ${group}.normalization_table
+fi
+
+while read sample; do
+cd ${sample}
+total=$(wc -l <(cat micro_dnas_splitreads large_eccdnas_splitreads) | awk '{print $1/1000000}')
 echo -e ${sample}'\t'${total} >> ../${group}.normalization_table
 cd ..
 done < mapfile
