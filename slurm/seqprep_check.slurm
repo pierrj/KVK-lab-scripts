@@ -15,7 +15,12 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/human/s
 mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
 genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
 sample=SRR6315404
+
 SAMPLE=SRR6315404
+GENOME_DB="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
+THREADS=${SLURM_NTASKS}
+READONE=${sample}.sra_1.fastq
+READTWO=${sample}.sra_2.fastq
 
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SAMPLE} -O .
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SAMPLE}.sra
