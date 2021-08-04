@@ -18,7 +18,7 @@ sample=SRR6315404
 
 SAMPLE=SRR6315404
 GENOME_DB="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
-THREADS=${SLURM_NTASKS}
+THREADS=24
 READONE=${sample}.sra_1.fastq
 READTWO=${sample}.sra_2.fastq
 
@@ -26,7 +26,7 @@ READTWO=${sample}.sra_2.fastq
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SAMPLE}.sra
 
 
-/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/rawdata/illumina/SeqPrep/SeqPrep/SeqPrep -f ${READONE} -r ${READTWO} -1 seqprep.${sample}_R1.fastq.gz -2 seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.${sample}.fastq.gz
+/global/scratch/pierrj/SeqPrep/SeqPrep -f ${READONE} -r ${READTWO} -1 seqprep.${sample}_R1.fastq.gz -2 seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.${sample}.fastq.gz
 cutadapt -j ${THREADS} --nextseq-trim=20 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.seqprep.${sample}_R1.fastq -p trimmed.seqprep.${sample}_R2.fastq seqprep.${sample}_R1.fastq.gz seqprep.${sample}_R2.fastq.gz
 cutadapt -j ${THREADS} --nextseq-trim=20 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o trimmed.merged.${sample} merged.${sample}.fastq.gz
 bwa mem -q -a -t ${THREADS} ${GENOME_DB} trimmed.seqprep.${sample}_R1.fastq trimmed.seqprep.${sample}_R2.fastq -o seqprep.trimmed.${sample}_bwamem.sam
