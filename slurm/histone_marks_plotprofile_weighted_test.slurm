@@ -26,6 +26,8 @@ fi
 while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/micro_dnas_splitreads >> micro_dnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 mv micro_dnas_all micro_dnas_weighted
 
+source activate deeptools
+
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S guy11_genome_baoetal2017.50bpwindows.bw \
                             -R large_eccdnas_weighted micro_dnas_weighted \
                             --beforeRegionStartLength 300 \
