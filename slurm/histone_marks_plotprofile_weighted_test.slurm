@@ -26,13 +26,17 @@ fi
 while read sample; do cat /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/micro_dnas_splitreads >> micro_dnas_all; done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 mv micro_dnas_all micro_dnas_weighted
 
+cp ../large_eccdnas .
+cp ../micro_dnas .
+cp ../genome_baseline .
+
 source activate deeptools
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S guy11_genome_baoetal2017.50bpwindows.bw \
-                            -R large_eccdnas_weighted micro_dnas_weighted \
-                            --beforeRegionStartLength 300 \
+                            -R large_eccdnas_weighted micro_dnas_weighted genome_baseline \
+                            --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 300 \
+                            --afterRegionStartLength 1000 \
                             --skipZeros -o gc.mat.gz
 
 plotProfile -m gc.mat.gz \
@@ -40,3 +44,18 @@ plotProfile -m gc.mat.gz \
             --numPlotsPerRow 1 \
             --plotTitle "GC eccDNAs" \
             --outFileNameData gc.tab
+
+
+
+computeMatrix scale-regions -p ${SLURM_NTASKS} -S guy11_genome_baoetal2017.50bpwindows.bw \
+                            -R large_eccdnas_weighted micro_dnas_weighted genome_baseline \
+                            --beforeRegionStartLength 1000 \
+                            --regionBodyLength 1000 \
+                            --afterRegionStartLength 1000 \
+                            --skipZeros -o gc_unweighted.mat.gz
+
+plotProfile -m gc_unweighted.mat.gz \
+            -out gc_unweighted.pdf \
+            --numPlotsPerRow 1 \
+            --plotTitle "GC eccDNAs" \
+            --outFileNameData gc_unweighted.tab
