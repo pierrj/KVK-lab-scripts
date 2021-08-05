@@ -48,7 +48,7 @@ plotProfile -m gc.mat.gz \
 
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S guy11_genome_baoetal2017.50bpwindows.bw \
-                            -R large_eccdnas_weighted micro_dnas_weighted genome_baseline \
+                            -R large_eccdnas micro_dnas genome_baseline \
                             --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 1000 \
