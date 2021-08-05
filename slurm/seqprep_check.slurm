@@ -168,7 +168,7 @@ cat tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMP
 
 ### SEQPREP QUIRK ####
 mv tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam_old
-awk '$11 !~ /^"/' tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam_old tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
+awk '$11 !~ /^"/' tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam_old > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
 # verify that the match lengths on either side match up so that only proper split reads are looked on
 python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
