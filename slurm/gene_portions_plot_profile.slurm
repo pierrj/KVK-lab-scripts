@@ -28,9 +28,9 @@ bedGraphToBigWig large_ecc_density_old_new.bg ${GENOME_CHROMSIZES} large_ecc_den
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S large_ecc_density_old.bw \
                             -R ${GENE_GTF} \
-                            --beforeRegionStartLength 1000 \
+                            --beforeRegionStartLength 10000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 1000 \
+                            --afterRegionStartLength 10000 \
                             --skipZeros -o large_eccdna.mat.gz
 
 plotProfile -m large_eccdna.mat.gz \
@@ -44,9 +44,9 @@ bedGraphToBigWig micro_dna_density_old_new.bg ${GENOME_CHROMSIZES} micro_dna_den
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S micro_dna_density_old.bw \
                             -R ${GENE_GTF} \
-                            --beforeRegionStartLength 1000 \
+                            --beforeRegionStartLength 10000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 1000 \
+                            --afterRegionStartLength 10000 \
                             --skipZeros -o micro_dna.mat.gz
 
 plotProfile -m micro_dna.mat.gz \
