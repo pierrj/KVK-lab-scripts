@@ -12,6 +12,8 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions
 
+source activate deeptools
+
 GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 GENE_GTF=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gtf
 
@@ -26,9 +28,9 @@ bedGraphToBigWig large_ecc_density_old_new.bg ${GENOME_CHROMSIZES} large_ecc_den
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S large_ecc_density_old.bw \
                             -R ${GENE_GTF} \
-                            --beforeRegionStartLength 300 \
+                            --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 300 \
+                            --afterRegionStartLength 1000 \
                             --skipZeros -o large_eccdna.mat.gz
 
 plotProfile -m large_eccdna.mat.gz \
@@ -42,9 +44,9 @@ bedGraphToBigWig micro_dna_density_old_new.bg ${GENOME_CHROMSIZES} micro_dna_den
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S micro_dna_density_old.bw \
                             -R ${GENE_GTF} \
-                            --beforeRegionStartLength 300 \
+                            --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 300 \
+                            --afterRegionStartLength 1000 \
                             --skipZeros -o micro_dna.mat.gz
 
 plotProfile -m micro_dna.mat.gz \
