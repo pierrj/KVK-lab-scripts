@@ -58,6 +58,21 @@ cp ${GENE_BEDFILE} genic
 
 bedtools complement -i genic -g ${GENOME_CHROMSIZES} | awk -v OFS='\t' '{print $1, $2, $3, NR}' > intergenic
 
+# cpg islands
+
+module load emboss
+
+cpgplot -sequence guy11_genome_baoetal2017.fasta \
+        -window 100 \
+        -minlen 200 \
+        -minoe 0.6 \
+        -minpc 50. \
+        -outfeat cpg_islands.gff \
+        -outfile guy11.plot \
+        -noplot -nocg -nopc -noobsexp
+
+awk -v OFS='\t' '{if ($1 !~ /^#/) {print $1, $4, $5, $9}}' cpg_islands.gff > cpg_islands
+
 
 if [ -f "feature_mapfile" ]; then
     rm feature_mapfile
@@ -68,6 +83,7 @@ echo upstream >> feature_mapfile
 echo downstream >> feature_mapfile
 echo genic >> feature_mapfile
 echo intergenic >> feature_mapfile
+echo cpg_islands >> feature_mapfile
 
 
 ## for large eccdnas
@@ -99,7 +115,7 @@ while read FEATURE_FILE; do
     fi
     while read ECCDNA_FILE; do
         ecc_basename=$(basename ${ECCDNA_FILE})
-        bedtools intersect -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+        bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
         num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
         awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
         echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
@@ -133,7 +149,7 @@ while read FEATURE_FILE; do
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
             bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES}> shuffled.${ecc_basename}
-            bedtools intersect -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+            bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
             echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
@@ -159,7 +175,7 @@ done < feature_mapfile
 ## for microdnas
 
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/G3.large_eccdnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/G3.micro_dnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
     rm ${ECCDNA_MAPFILE}
@@ -186,7 +202,7 @@ while read FEATURE_FILE; do
     fi
     while read ECCDNA_FILE; do
         ecc_basename=$(basename ${ECCDNA_FILE})
-        bedtools intersect -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+        bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
         num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
         awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
         echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
@@ -220,7 +236,7 @@ while read FEATURE_FILE; do
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
             bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES}> shuffled.${ecc_basename}
-            bedtools intersect -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+            bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
             echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
