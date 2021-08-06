@@ -89,8 +89,8 @@ done < mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions
 
-if [ -f "observed_averages" ]; then
-    rm observed_averages
+if [ -f "observed_averages_large" ]; then
+    rm observed_averages_large
 fi
 
 while read FEATURE_FILE; do
@@ -115,11 +115,11 @@ while read FEATURE_FILE; do
     /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
     mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
 
-    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages_large
 done < feature_mapfile
 
-if [ -f "expected_averages" ]; then
-    rm expected_averages
+if [ -f "expected_averages_large" ]; then
+    rm expected_averages_large
 fi
 
 while read FEATURE_FILE; do
@@ -151,7 +151,7 @@ while read FEATURE_FILE; do
         awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
     done
 
-    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_large
 done < feature_mapfile
 
 
@@ -176,8 +176,8 @@ done < mapfile
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions
 
-if [ -f "observed_averages" ]; then
-    rm observed_averages
+if [ -f "observed_averages_micro" ]; then
+    rm observed_averages_micro
 fi
 
 while read FEATURE_FILE; do
@@ -202,11 +202,11 @@ while read FEATURE_FILE; do
     /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
     mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
 
-    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages_micro
 done < feature_mapfile
 
-if [ -f "expected_averages" ]; then
-    rm expected_averages
+if [ -f "expected_averages_micro" ]; then
+    rm expected_averages_micro
 fi
 
 while read FEATURE_FILE; do
@@ -238,5 +238,5 @@ while read FEATURE_FILE; do
         awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
     done
 
-    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print f, sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_micro
 done < feature_mapfile
