@@ -389,21 +389,5 @@ paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
-rm parallel.confirmed*
-rm dsn.unique_parallel.confirmed
-rm unique_parallel.confirmed
-rm tmp.*
-rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.*.bed
-rm ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed
-rm mapq0_choices.*
-rm mapq0_single_unique_choices.bed
-rm primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
-rm lengthfiltered.merged.splitreads.${SAMPLE}.*
-rm mapq0_parallel.confirmed
-rm mapq0_single_unique_choices.renamed.*
-rm multimapped_splitreads.*
-rm merged.splitreads.${SAMPLE}.bed
-rm split_line_fix.*
-
 /global/home/users/pierrj/git/bash/assign_confidence_nodb_nomerge.sh -m ${mapfile} \
     -s ${sample} -t ${SLURM_NTASKS} -b no_secondary.filtered.sorted.${sample}.bam -r ${sample}.confirmedsplitreads.bed
