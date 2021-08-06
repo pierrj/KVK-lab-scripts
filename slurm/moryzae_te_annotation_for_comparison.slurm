@@ -97,6 +97,14 @@ RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM
 
 awk -v OFS='\t' '{if ($5-$4>3000 && $6 < 10) {print $1, $4, $5, $10}}' ${REFERENCE}.out.gff > moryzae_high_conf_ltr_tes_for_plotprofile.bed
 
+cp /global/scratch/users/pierrj/references/moryzae_ltr_consensus_sequences.fasta .
+
+RM_LIB=moryzae_ltr_consensus_sequences.fasta
+REFERENCE=guy11_genome_baoetal2017.fasta
+
+RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
+
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > moryzae_high_conf_ltr_tes_nolengthfilter.bed
 
 RM_LIB=repbase_plus_guy11_modeler_rm_database.fasta
 REFERENCE=guy11_genome_baoetal2017.fasta
