@@ -38,7 +38,8 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
 while read sample; do
 cd ${sample}
-    realpath large_eccdnas_splitreads >> ${ECCDNA_MAPFILE}
+    cp large_eccdnas_splitreads ${sample}.large_eccdnas_splitreads
+    realpath ${sample}.large_eccdnas_splitreads >> ${ECCDNA_MAPFILE}
 cd ..
 done < mapfile
 
@@ -62,7 +63,8 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
 while read sample; do
 cd ${sample}
-    realpath micro_dnas_splitreads >> ${ECCDNA_MAPFILE}
+    cp micro_dnas_splitreads ${sample}.micro_dnas_splitreads
+    realpath ${sample}.micro_dnas_splitreads >> ${ECCDNA_MAPFILE}
 cd ..
 done < mapfile
 
