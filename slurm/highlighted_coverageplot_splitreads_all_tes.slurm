@@ -16,7 +16,7 @@ genome_file=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chr
 
 while read sample
 do
-bedtools genomecov -d -i /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads -g ${genome_file} > ${sample}.genomecoverage.bed
+    bedtools genomecov -d -i /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads -g ${genome_file} > ${sample}.genomecoverage.bed
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 if [ -f "G3.normalization_table.total_splitreads" ]; then
@@ -24,11 +24,19 @@ if [ -f "G3.normalization_table.total_splitreads" ]; then
 fi
 
 while read sample; do
-total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
-echo -e ${sample}'\t'${total} >> G3.normalization_table.total_splitreads
+    total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
+    echo -e ${sample}'\t'${total} >> G3.normalization_table.total_splitreads
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 /global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+
+while read sample; do
+    if [ -d "${sample}" ]; then
+        rm -r ${sample}
+    fi
+    mkdir ${sample}
+    mv ${sample}.genomecoverage.bed ${sample}/${sample}.genomecoverage.bed
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t G3_1A.genomecoverage.bed -n G3.normalization_table.total_splitreads -y t
 
@@ -57,9 +65,18 @@ if [ -f "${group}.normalization_table" ]; then
 fi
 
 while read sample; do
-total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
-echo -e ${sample}'\t'${total} >> ${group}.normalization_table
+    total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
+    echo -e ${sample}'\t'${total} >> ${group}.normalization_table
 done < mapfile
+
+while read sample; do
+    if [ -d "${sample}" ]; then
+        rm -r ${sample}
+    fi
+    mkdir ${sample}
+    mv ${sample}.genomecoverage.bed ${sample}/${sample}.genomecoverage.bed
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+
 
 /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
     -t G3_1A.${group}.genomecoverage.bed -n ${group}.normalization_table -y t
