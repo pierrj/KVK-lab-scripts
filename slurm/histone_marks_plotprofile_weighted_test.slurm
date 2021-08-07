@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=histone_marks_plotprofile_weighted_test
-#SBATCH --partition=savio2
+#SBATCH --partition=savio2_bigmem
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
