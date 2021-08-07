@@ -67,7 +67,7 @@ fi
 while read sample; do
     total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
     echo -e ${sample}'\t'${total} >> ${group}.normalization_table
-done < mapfile
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 while read sample; do
     if [ -d "${sample}" ]; then
