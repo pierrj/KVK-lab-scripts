@@ -74,7 +74,7 @@ while read sample; do
         rm -r ${sample}
     fi
     mkdir ${sample}
-    mv ${sample}.genomecoverage.bed ${sample}/${sample}.genomecoverage.bed
+    mv ${sample}.${group}.genomecoverage.bed ${sample}/${sample}.${group}.genomecoverage.bed
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 
