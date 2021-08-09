@@ -60,7 +60,9 @@ source activate deeptools
 #             --plotTitle "GC eccDNAs" \
 #             --outFileNameData gc_unweighted.tab
 
+data_dir=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
 
+biorep=1
 
 treatment=H3K27ac
 bamCompare -p ${SLURM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
