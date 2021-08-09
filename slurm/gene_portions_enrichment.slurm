@@ -17,12 +17,17 @@ GENE_GFF=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed
 GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
+LTR_TE_LOCATIONS=/global/scratch/pierrj/references/te_annotations/moryzae/moryzae_copiaandgypsy_locs.bed
 
 ## first make bed files
 
 # exons
 
 grep exon ${GENE_GFF} | awk -v OFS='\t' '{print $1, $4, $5, $9}' > exons
+
+# first exon
+
+grep "e1;" exons > first_exons
 
 # introns
 
@@ -84,6 +89,7 @@ echo downstream >> feature_mapfile
 echo genic >> feature_mapfile
 echo intergenic >> feature_mapfile
 echo cpg_islands >> feature_mapfile
+echo first_exons >> feature_mapfile
 
 
 ## for large eccdnas
@@ -148,7 +154,7 @@ while read FEATURE_FILE; do
         fi
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
-            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES}> shuffled.${ecc_basename}
+            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
             bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
@@ -167,7 +173,7 @@ while read FEATURE_FILE; do
         awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
     done
 
-    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_large
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print f, sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_large
 done < feature_mapfile
 
 
@@ -235,7 +241,7 @@ while read FEATURE_FILE; do
         fi
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
-            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES}> shuffled.${ecc_basename}
+            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
             bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
