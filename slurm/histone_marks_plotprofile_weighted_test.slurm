@@ -68,9 +68,9 @@ treatment=H3K27ac
 bamCompare -p ${SLURM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S log2ratio_${treatment}_${biorep}.bw \
                             -R large_eccdnas micro_dnas large_eccdnas_weighted micro_dnas_weighted genome_baseline \
-                            --beforeRegionStartLength 300 \
+                            --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 300 \
+                            --afterRegionStartLength 1000 \
                             --skipZeros -o ${treatment}_${biorep}.mat.gz 
 plotProfile -m ${treatment}_${biorep}.mat.gz \
             -out ${treatment}_${biorep}.pdf \
@@ -82,9 +82,9 @@ treatment=H3K27me3
 bamCompare -p ${SLURM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S log2ratio_${treatment}_${biorep}.bw \
                             -R  large_eccdnas micro_dnas large_eccdnas_weighted micro_dnas_weighted genome_baseline \
-                            --beforeRegionStartLength 300 \
+                            --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 300 \
+                            --afterRegionStartLength 1000 \
                             --skipZeros -o ${treatment}_${biorep}.mat.gz 
 plotProfile -m ${treatment}_${biorep}.mat.gz \
             -out ${treatment}_${biorep}.pdf \
@@ -96,9 +96,9 @@ treatment=H3K36me3
 bamCompare -p ${SLURM_NTASKS} -b1 ${data_dir}/sorted.${treatment}_${biorep}.sam.bam -b2 ${data_dir}/sorted.Input_${biorep}.sam.bam -o log2ratio_${treatment}_${biorep}.bw -of bigwig --scaleFactorsMethod readCount
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S log2ratio_${treatment}_${biorep}.bw \
                             -R  large_eccdnas micro_dnas large_eccdnas_weighted micro_dnas_weighted genome_baseline \
-                            --beforeRegionStartLength 300 \
+                            --beforeRegionStartLength 1000 \
                             --regionBodyLength 1000 \
-                            --afterRegionStartLength 300 \
+                            --afterRegionStartLength 1000 \
                             --skipZeros -o ${treatment}_${biorep}.mat.gz 
 plotProfile -m ${treatment}_${biorep}.mat.gz \
             -out ${treatment}_${biorep}.pdf \
