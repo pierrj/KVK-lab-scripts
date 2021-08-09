@@ -31,8 +31,8 @@ FILTERED_BAMFILE_QSORTED=multimapped.filtered.name_sorted.${sample}.bam
 
 
 /global/scratch/pierrj/SeqPrep/SeqPrep -f ${READONE} -r ${READTWO} -1 seqprep.${sample}_R1.fastq.gz -2 seqprep.${sample}_R2.fastq.gz -A AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -B AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -s merged.${sample}.fastq.gz
-cutadapt -j ${THREADS} --nextseq-trim=20 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.seqprep.${sample}_R1.fastq -p trimmed.seqprep.${sample}_R2.fastq seqprep.${sample}_R1.fastq.gz seqprep.${sample}_R2.fastq.gz
-cutadapt -j ${THREADS} --nextseq-trim=20 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o trimmed.merged.${sample} merged.${sample}.fastq.gz
+cutadapt -q 10 -j ${THREADS} --nextseq-trim=20 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o trimmed.seqprep.${sample}_R1.fastq -p trimmed.seqprep.${sample}_R2.fastq seqprep.${sample}_R1.fastq.gz seqprep.${sample}_R2.fastq.gz
+cutadapt -q 10 -j ${THREADS} --nextseq-trim=20 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -o trimmed.merged.${sample} merged.${sample}.fastq.gz
 bwa mem -q -a -t ${THREADS} ${GENOME_DB} trimmed.seqprep.${sample}_R1.fastq trimmed.seqprep.${sample}_R2.fastq -o seqprep.trimmed.${sample}_bwamem.sam
 bwa mem -q -a -t ${THREADS} ${GENOME_DB} trimmed.merged.${sample} -o merged.trimmed.${sample}_bwamem.sam
 samtools view -S -b seqprep.trimmed.${sample}_bwamem.sam > seqprep.trimmed.${sample}_bwamem.bam
