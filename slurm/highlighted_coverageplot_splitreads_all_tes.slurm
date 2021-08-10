@@ -14,35 +14,35 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 
 genome_file=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 
-while read sample
-do
-    bedtools genomecov -d -i /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads -g ${genome_file} > ${sample}.genomecoverage.bed
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+# while read sample
+# do
+#     bedtools genomecov -d -i /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads -g ${genome_file} > ${sample}.genomecoverage.bed
+# done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-if [ -f "G3.normalization_table.total_splitreads" ]; then
-    rm G3.normalization_table.total_splitreads
-fi
+# if [ -f "G3.normalization_table.total_splitreads" ]; then
+#     rm G3.normalization_table.total_splitreads
+# fi
 
-while read sample; do
-    total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
-    echo -e ${sample}'\t'${total} >> G3.normalization_table.total_splitreads
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+# while read sample; do
+#     total=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/ltr_eccs_splitreads | awk '{print $1/1000000}')
+#     echo -e ${sample}'\t'${total} >> G3.normalization_table.total_splitreads
+# done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-/global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+# /global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-while read sample; do
-    if [ -d "${sample}" ]; then
-        rm -r ${sample}
-    fi
-    mkdir ${sample}
-    mv ${sample}.genomecoverage.bed ${sample}/${sample}.genomecoverage.bed
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+# while read sample; do
+#     if [ -d "${sample}" ]; then
+#         rm -r ${sample}
+#     fi
+#     mkdir ${sample}
+#     mv ${sample}.genomecoverage.bed ${sample}/${sample}.genomecoverage.bed
+# done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t G3_1A.genomecoverage.bed -n G3.normalization_table.total_splitreads -y t
+# /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile -t G3_1A.genomecoverage.bed -n G3.normalization_table.total_splitreads -y t
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 100 -c 3 -n n
+# /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 100 -c 3 -n n
 
-mv G3.normalized_binned G3.ltr_splitreads_genomecov
+# mv G3.normalized_binned G3.ltr_splitreads_genomecov
 
 
 
@@ -90,7 +90,7 @@ mv G3.normalized_binned G3.ltr_splitreads_coverage
 
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 SAMPLE=G3
-COVFILE=G3.ltr_splitreads_genomecov
+COVFILE=G3.ltr_splitreads_coverage
 
 awk -v OFS='\t' 'NR==FNR{c[$1]++;next};c[$1]' ${MAPFILE} ${COVFILE} > ${SAMPLE}.normalized_binned.filtered
 chrom_count=$(wc -l ${MAPFILE} | awk '{print $1}')
