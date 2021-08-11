@@ -149,7 +149,7 @@ while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
     fi
-    for i in {0..99}; do
+    for i in {0..9}; do
         if [ -f "${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn" ]; then
             rm ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         fi
@@ -238,7 +238,7 @@ while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
     fi
-    for i in {0..99}; do
+    for i in {0..9}; do
         if [ -f "${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn" ]; then
             rm ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         fi
