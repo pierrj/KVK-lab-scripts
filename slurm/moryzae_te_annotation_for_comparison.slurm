@@ -106,6 +106,18 @@ RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM
 
 awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > moryzae_high_conf_ltr_tes_nolengthfilter.bed
 
+cp /global/scratch/users/pierrj/references/moryzae_ltr_elements.fasta .
+
+awk '{if ($0 ~ /Moryzae_copia1_LTR/ ) {print ">Moryzae_copia1_LTR"} else {print $0}}' moryzae_ltr_elements.fasta | \
+    awk '{if ($0 ~ /Moryzae_copia1_I/ ) {print ">Moryzae_copia1_INTERNAL"} else {print $0}}' > moryzae_ltr_tes_split_by_element.fasta
+
+RM_LIB=moryzae_ltr_tes_split_by_element.fasta
+REFERENCE=guy11_genome_baoetal2017.fasta
+
+RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${REFERENCE}
+
+awk -v OFS='\t' '{print $1, $4, $5, $10}' ${REFERENCE}.out.gff > moryzae_high_conf_ltr_tes_nolengthfilter_individual_elements.bed
+
 RM_LIB=repbase_plus_guy11_modeler_rm_database.fasta
 REFERENCE=guy11_genome_baoetal2017.fasta
 

@@ -103,6 +103,8 @@ awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names $
 ## WHAT DOES THIS DO THOUGH MAYBE HAS TO DO WITH BEDTOOLS INTERSECT
 awk -v OFS='\t' '{print $1, $2, $2+99, $1"_"$2}' ${SAMPLE}.normalized_binned.filtered.renamed > binned.${SAMPLE}.normalized_binned.filtered.renamed.bed
 awk -v OFS='\t' '{print $1, $2, $3, $1"_"$2}' ${SAMPLE}.normalized_binned.filtered.renamed > ${SAMPLE}.normalized_binned.filtered.renamed.withbinnames
+echo -e 'CHROMOSOME''\t''BASE''\t''COUNT''\t''SNP' > tmp.first_row
+cat tmp.first_row ${SAMPLE}.normalized_binned.filtered.renamed.withbinnames > ${SAMPLE}.normalized_binned.filtered.renamed.withbinnames.table
 
 cp /global/scratch/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_nolengthfilter.bed .
 
