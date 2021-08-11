@@ -101,8 +101,8 @@ cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/circos_plot/micro_dna_dens
 awk -v OFS='\t' '{print $1, $2-100, $2, $3}' micro_dna_density_old_permuted > micro_dna_density_old_permuted.bg
 
 
-bedtools merge -i micro_dna_density_old_permuted.bg -c 4 -o mean -d -1 > micro_dna_density_old_permuted.bg
-bedGraphToBigWig micro_dna_density_old_permuted.bg ${GENOME_CHROMSIZES} micro_dna_density_old_permuted.bw
+bedtools merge -i micro_dna_density_old_permuted.bg -c 4 -o mean -d -1 > micro_dna_density_old_permuted_new.bg
+bedGraphToBigWig micro_dna_density_old_permuted_new.bg ${GENOME_CHROMSIZES} micro_dna_density_old_permuted.bw
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S micro_dna_density_old_permuted.bw \
                             -R ${GENE_GTF} \
