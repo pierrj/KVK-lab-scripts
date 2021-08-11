@@ -90,7 +90,7 @@ while read sample; do
 done < mapfile
 
 /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
-    -t ${sample}.${group}.permuted.genomecoverage.bed -n ${group}.normalization_table -y t
+    -t G3_1A.${group}.permuted.genomecoverage.bed -n ${group}.normalization_table -y t
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 3 -n n
 
