@@ -149,13 +149,13 @@ while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
     fi
-    for i in {0..9}; do
+    for i in {0..2}; do
         if [ -f "${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn" ]; then
             rm ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         fi
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
-            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
+            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} > shuffled.${ecc_basename}
             bedtools coverage -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             #bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
@@ -238,13 +238,13 @@ while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
     fi
-    for i in {0..9}; do
+    for i in {0..2}; do
         if [ -f "${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn" ]; then
             rm ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         fi
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
-            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
+            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} > shuffled.${ecc_basename}
             bedtools coverage -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             # bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
             num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
