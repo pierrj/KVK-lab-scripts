@@ -78,6 +78,20 @@ cpgplot -sequence guy11_genome_baoetal2017.fasta \
 
 awk -v OFS='\t' '{if ($1 !~ /^#/) {print $1, $4, $5, $9}}' cpg_islands.gff > cpg_islands
 
+# first 100 bp of genes
+
+awk -v OFS='\t' '{print $1, $2, $2+100, $4}' ${GENE_BEDFILE} > gene_first_100bp
+
+# 100 bp starting 1000 bp upstream
+
+awk '$3 == "gene"' ${GENE_GFF} | awk -v OFS='\t' '{if ($7 == "+")
+    {print $1, $4-1000, $4-900}
+    else if ($7 == "-")
+    {print $1, $5+900, $5+1000}}' | awk '$2 > 0' > 100bp_starting_1000bp_upstream_old
+    
+## to deal with cutoffs past end of genome
+bedtools slop -b 0 -i 100bp_starting_1000bp_upstream_old -g ${GENOME_CHROMSIZES} | awk -v OFS='\t' '{print $1, $2, $3, NR}' > 100bp_starting_1000bp_upstream
+
 
 if [ -f "feature_mapfile" ]; then
     rm feature_mapfile
@@ -90,6 +104,8 @@ echo genic >> feature_mapfile
 echo intergenic >> feature_mapfile
 echo cpg_islands >> feature_mapfile
 echo first_exons >> feature_mapfile
+echo gene_first_100bp >> feature_mapfile
+echo 100bp_starting_1000bp_upstream >> feature_mapfile
 
 
 ## for large eccdnas
@@ -141,27 +157,34 @@ while read FEATURE_FILE; do
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages_large
 done < feature_mapfile
 
-if [ -f "expected_averages_large" ]; then
-    rm expected_averages_large
-fi
+# shuffled
 
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
     fi
-    for i in {0..2}; do
+done < feature_mapfile
+
+for i in {0..2}; do
+    if [ -f "permuted_ecc_mapfile" ]; then
+        rm permuted_ecc_mapfile
+    fi
+    while read ECCDNA_FILE; do
+        bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
+        echo shuffled.${ecc_basename} >> permuted_ecc_mapfile
+    done < ${ECCDNA_MAPFILE}
+    while read FEATURE_FILE; do
         if [ -f "${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn" ]; then
             rm ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         fi
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
-            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} > shuffled.${ecc_basename}
-            bedtools coverage -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
-            #bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
-            num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
+            bedtools coverage -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+            #bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+            num_srs=$(wc -l ${ecc_basename} | awk '{print $1/100000}')
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
             echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
-        done < ${ECCDNA_MAPFILE}
+        done < permuted_ecc_mapfile
 
         # normalize and average across technical and biological replicates as written in previous scripts
         if [ -f "${FEATURE_FILE}.normalize_table_column" ]; then
@@ -172,16 +195,20 @@ while read FEATURE_FILE; do
         paste ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn ${FEATURE_FILE}.normalize_table_column ${SAMPLE_MAPFILE} > ${FEATURE_FILE}.mapfile_for_normalize_and_average
         /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
         mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
-        awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
-    done
 
+        awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
+    done < feature_mapfile
+done
+
+if [ -f "expected_averages_large" ]; then
+    rm expected_averages_large
+fi
+
+while read FEATURE_FILE; do
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print f, sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_large
 done < feature_mapfile
 
-
-
 ## for microdnas
-
 
 ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/G3.micro_dnas_mapfile
 
@@ -211,7 +238,7 @@ while read FEATURE_FILE; do
     while read ECCDNA_FILE; do
         ecc_basename=$(basename ${ECCDNA_FILE})
         bedtools coverage -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
-        # bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+        #bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
         num_srs=$(wc -l ${ECCDNA_FILE} | awk '{print $1/100000}')
         awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
         echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
@@ -230,27 +257,34 @@ while read FEATURE_FILE; do
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages_micro
 done < feature_mapfile
 
-if [ -f "expected_averages_micro" ]; then
-    rm expected_averages_micro
-fi
+# shuffled
 
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
     fi
-    for i in {0..2}; do
+done < feature_mapfile
+
+for i in {0..2}; do
+    if [ -f "permuted_ecc_mapfile" ]; then
+        rm permuted_ecc_mapfile
+    fi
+    while read ECCDNA_FILE; do
+        bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
+        echo shuffled.${ecc_basename} >> permuted_ecc_mapfile
+    done < ${ECCDNA_MAPFILE}
+    while read FEATURE_FILE; do
         if [ -f "${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn" ]; then
             rm ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         fi
         while read ECCDNA_FILE; do
             ecc_basename=$(basename ${ECCDNA_FILE})
-            bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} > shuffled.${ecc_basename}
-            bedtools coverage -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
-            # bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b shuffled.${ecc_basename} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
-            num_srs=$(wc -l shuffled.${ecc_basename} | awk '{print $1/100000}')
+            bedtools coverage -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+            #bedtools intersect -F 0.5 -wa -c -a ${FEATURE_FILE} -b ${ECCDNA_FILE} | awk -v OFS='\t' '{print $4, $5}' > ${ecc_basename}.splitreadsperfeature
+            num_srs=$(wc -l ${ecc_basename} | awk '{print $1/100000}')
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
             echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
-        done < ${ECCDNA_MAPFILE}
+        done < permuted_ecc_mapfile
 
         # normalize and average across technical and biological replicates as written in previous scripts
         if [ -f "${FEATURE_FILE}.normalize_table_column" ]; then
@@ -261,8 +295,15 @@ while read FEATURE_FILE; do
         paste ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn ${FEATURE_FILE}.normalize_table_column ${SAMPLE_MAPFILE} > ${FEATURE_FILE}.mapfile_for_normalize_and_average
         /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
         mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
-        awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
-    done
 
+        awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
+    done < feature_mapfile
+done
+
+if [ -f "expected_averages_micro" ]; then
+    rm expected_averages_micro
+fi
+
+while read FEATURE_FILE; do
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print f, sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_micro
 done < feature_mapfile
