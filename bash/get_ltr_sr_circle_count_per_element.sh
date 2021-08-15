@@ -55,6 +55,11 @@ bedtools coverage -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed -b ${ELEMENT}.${O
  | awk -v OFS='\t' '{print $4, $5}' > ${ELEMENT}.${OUTPUTNAME}.ltr_sr_cov_perfeature
 
 bedtools coverage -sorted -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed \
-    -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${OUTPUTNAME}/no_secondary.filtered.sorted.${OUTPUTNAME}.bam > ${ELEMENT}.${OUTPUTNAME}.read_cov_perfeature
+    -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${OUTPUTNAME}/no_secondary.filtered.sorted.${OUTPUTNAME}.bam | \
+    awk -v OFS='\t' '{print $4, $5}' > ${ELEMENT}.${OUTPUTNAME}.read_cov_perfeature
+
+bedtools coverage -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed \
+    -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${OUTPUTNAME}/ltr_eccs_splitreads | \
+    awk -v OFS='\t' '{print $4, $5}' > ${ELEMENT}.${OUTPUTNAME}.junction_sr_cov_perfeature
 
 echo -e ${ELEMENT}'\t'${total}

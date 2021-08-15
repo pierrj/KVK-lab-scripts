@@ -37,6 +37,7 @@ while read sample; do
     mkdir ${sample}
     mv ${sample}.ltr_sr_cov_perfeature ${sample}/${sample}.ltr_sr_cov_perfeature
     mv ${sample}.read_cov_perfeature ${sample}/${sample}.read_cov_perfeature
+    mv ${sample}.junction_sr_cov_perfeature ${sample}/${sample}.junction_sr_cov_perfeature
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 if [ -f "G3.normalization_table.ltr_sr_cov_perfeature" ]; then
@@ -66,11 +67,28 @@ while read sample; do
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
-    -t G3_1A.ltr_sr_cov_perfeature -n G3.normalization_table.read_cov_perfeature -y t
+    -t G3_1A.read_cov_perfeature -n G3.normalization_table.read_cov_perfeature -y t
 
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
 
 mv G3.normalized_binned read_cov_perfeature_normalized
 
 
-paste ltr_sr_cov_perfeature_normalized read_cov_perfeature_normalized > ltr_sr_and_read_cov_perfeature_normalized
+if [ -f "G3.normalization_table.junction_sr_cov_perfeature" ]; then
+    rm G3.normalization_table.junction_sr_cov_perfeature
+fi
+
+while read sample; do
+    total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.junction_sr_cov_perfeature | awk '{print $1/1000000}')
+    echo -e ${sample}'\t'${total} >> G3.normalization_table.junction_sr_cov_perfeature
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+    -t G3_1A.junction_sr_cov_perfeature -n G3.normalization_table.junction_sr_cov_perfeature -y t
+
+/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
+
+mv G3.normalized_binned junction_sr_cov_perfeature_normalized
+
+
+paste ltr_sr_cov_perfeature_normalized read_cov_perfeature_normalized junction_sr_cov_perfeature_normalized > ltr_sr_and_read_cov_and_junction_sr_perfeature_normalized
