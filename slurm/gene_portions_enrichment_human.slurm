@@ -121,17 +121,19 @@ cd /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/
 
 while read sample; do
 cd ${sample}
-    bedtools intersect -wao -a ${sample}.ecc_caller_out.splitreads.bed -b ${copia_file} | \
+    bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
         awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
         bedtools intersect -wao -a - -b ${gypsy_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > ${sample}.large_eccdnas_splitreads
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > large_eccdnas
+    sed 's/[[:space:]]*$//' ${sample}.ecc_caller_out.splitreads.bed | awk 'NR==FNR{a[$0]++;next}a[$0]' large_eccdnas - > large_eccdnas_splitreads
+    cp large_eccdnas_splitreads ${sample}.large_eccdnas_splitreads
     realpath ${sample}.large_eccdnas_splitreads >> ${ECCDNA_MAPFILE}
 cd ..
 done < mapfile_muscle
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human/
 
 if [ -f "observed_averages_large" ]; then
     rm observed_averages_large
@@ -216,7 +218,7 @@ done < feature_mapfile
 
 ## for microdnas
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/human/human.micro_dnas_mapfile
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human/human.micro_dnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
     rm ${ECCDNA_MAPFILE}
@@ -226,17 +228,19 @@ cd /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/
 
 while read sample; do
 cd ${sample}
-    bedtools intersect -wao -a ${sample}.ecc_caller_out.splitreads.bed -b ${copia_file} | \
+    bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
         awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
         bedtools intersect -wao -a - -b ${gypsy_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > ${sample}.micro_dnas_splitreads
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > ${sample}.micro_dnas
+    sed 's/[[:space:]]*$//' ${sample}.ecc_caller_out.splitreads.bed | awk 'NR==FNR{a[$0]++;next}a[$0]' micro_dnas - > micro_dnas_splitreads
+    cp micro_dnas_splitreads ${sample}.micro_dnas_splitreads
     realpath ${sample}.micro_dnas_splitreads >> ${ECCDNA_MAPFILE}
 cd ..
 done < mapfile_muscle
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human/
 
 if [ -f "observed_averages_micro" ]; then
     rm observed_averages_micro
