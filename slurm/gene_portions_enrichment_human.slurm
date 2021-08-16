@@ -123,10 +123,10 @@ while read sample; do
 cd ${sample}
     bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $1, $2, $3}}' | \
         bedtools intersect -wao -a - -b ${gypsy_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > large_eccdnas
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $1, $2, $3}}'| sort -k1,1 -k2,2n | awk '$3-$2 > 400' > large_eccdnas
     sed 's/[[:space:]]*$//' ${sample}.ecc_caller_out.splitreads.bed | awk 'NR==FNR{a[$0]++;next}a[$0]' large_eccdnas - > large_eccdnas_splitreads
     cp large_eccdnas_splitreads ${sample}.large_eccdnas_splitreads
     realpath ${sample}.large_eccdnas_splitreads >> ${ECCDNA_MAPFILE}
@@ -230,10 +230,10 @@ while read sample; do
 cd ${sample}
     bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${copia_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}' | \
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $1, $2, $3}}' | \
         bedtools intersect -wao -a - -b ${gypsy_file} | \
         awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
-        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $0}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > ${sample}.micro_dnas
+        awk -v OFS='\t' '{ if ($4/($3-$2) < 0.9) {print $1, $2, $3}}'| sort -k1,1 -k2,2n | awk '$3-$2 <= 400' > micro_dnas
     sed 's/[[:space:]]*$//' ${sample}.ecc_caller_out.splitreads.bed | awk 'NR==FNR{a[$0]++;next}a[$0]' micro_dnas - > micro_dnas_splitreads
     cp micro_dnas_splitreads ${sample}.micro_dnas_splitreads
     realpath ${sample}.micro_dnas_splitreads >> ${ECCDNA_MAPFILE}
