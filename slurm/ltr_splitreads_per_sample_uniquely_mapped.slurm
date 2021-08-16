@@ -13,7 +13,7 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/ltr_splitreads/uniquely_mapped
 
-TE_BEDFILE=/global/scratch/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_nolengthfilter_individual_elements.bed
+TE_BEDFILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
 ELEMENT_MAPFILE=/global/scratch/pierrj/repeatmasker/repeatmasker/moryzae_final/mapfile_elements
 
 while read sample
