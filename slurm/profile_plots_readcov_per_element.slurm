@@ -26,7 +26,7 @@ while read sample
 do
 eval "bedtools coverage -sorted -a ${WINDOWS} \
     -b ${READS_FILE} -g ${GENOME_CHROMSIZES}" | \
-    awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${sample}.${READS_NAME}
+    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${READS_NAME}
 done < ${MAPFILE}
 
 /global/home/users/pierrj/git/bash/generate_sample_biorep_treatment_mapfile_forme.sh -m ${MAPFILE}
@@ -44,7 +44,7 @@ if [ -f "${READS_NAME}.normalization_table" ]; then
 fi
 
 while read sample; do
-    total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.${READS_NAME} | awk '{print $1/1000000}')
+    total=$( eval "samtools view -c ${READS_FILE}" | awk '{print $1/1000000}')
     echo -e ${sample}'\t'${total} >> ${READS_NAME}.normalization_table
 done < ${MAPFILE}
 
@@ -55,7 +55,7 @@ done < ${MAPFILE}
 
 mv G3.normalized_binned ${READS_NAME}.normalized_and_average
 
-awk -v OFS='\t' '{print $1, $2, $3, $4}' ${READS_NAME}.normalized_and_average > ${READS_NAME}.normalized_and_average.bg
+awk -v OFS='\t' '{print $1, $2-10, $2, $3}' ${READS_NAME}.normalized_and_average > ${READS_NAME}.normalized_and_average.bg
 
 ## get rid of overlapping ones
 bedtools merge -i ${READS_NAME}.normalized_and_average.bg -c 4 -o mean -d -1 > ${READS_NAME}.normalized_and_average.corrected.bg
