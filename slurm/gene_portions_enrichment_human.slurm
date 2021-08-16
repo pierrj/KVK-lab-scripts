@@ -151,17 +151,14 @@ while read FEATURE_FILE; do
         awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
         echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
     done < ${ECCDNA_MAPFILE}
-
-    # normalize and average across technical and biological replicates as written in previous scripts
-    if [ -f "${FEATURE_FILE}.normalize_table_column" ]; then
-        rm ${FEATURE_FILE}.normalize_table_column
-    fi
-    sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
-    for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${FEATURE_FILE}.normalize_table_column ; done
-    paste ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn ${FEATURE_FILE}.normalize_table_column ${SAMPLE_MAPFILE} > ${FEATURE_FILE}.mapfile_for_normalize_and_average
-    /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-    mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
-
+    # ewwwwwwwwwwwwwwwwwww
+    # eval is absolutely required here to interpret the echo'ed process substitutions as if it was typed into the command line
+    # but basically, without making any temporary files, grab the second column of all files and average them, then paste the first column of one of the files
+    eval "paste $( echo $(while read sample; do
+            echo "<( awk '{print \$2}' ${sample})"
+        done < ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn | tr "\n" " ") )" | \
+        awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' | \
+        paste <( awk '{print $1}' $(head -1 ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn) ) - > ${FEATURE_FILE}.normalized.splitreadsperfeature
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages_large
 done < feature_mapfile
 
@@ -193,16 +190,14 @@ for i in {0..2}; do
             awk -v N=$num_srs '{print $1, $2/N}' ${ecc_basename}.splitreadsperfeature > ${ecc_basename}.normalized.splitreadsperfeature
             echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         done < permuted_ecc_mapfile
-
-        # normalize and average across technical and biological replicates as written in previous scripts
-        if [ -f "${FEATURE_FILE}.normalize_table_column" ]; then
-            rm ${FEATURE_FILE}.normalize_table_column
-        fi
-        sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
-        for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${FEATURE_FILE}.normalize_table_column ; done
-        paste ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn ${FEATURE_FILE}.normalize_table_column ${SAMPLE_MAPFILE} > ${FEATURE_FILE}.mapfile_for_normalize_and_average
-        /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-        mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
+    # ewwwwwwwwwwwwwwwwwww
+    # eval is absolutely required here
+    # but basically, without making any temporary files, grab the second column of all files and average them, then paste the first column of one of the files
+    eval "paste $( echo $(while read sample; do
+            echo "<( awk '{print \$2}' ${sample})"
+        done < ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn | tr "\n" " ") )" | \
+        awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' | \
+        paste <( awk '{print $1}' $(head -1 ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn) ) - > ${FEATURE_FILE}.normalized.splitreadsperfeature
 
         awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
     done < feature_mapfile
@@ -259,15 +254,14 @@ while read FEATURE_FILE; do
         echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
     done < ${ECCDNA_MAPFILE}
 
-    # normalize and average across technical and biological replicates as written in previous scripts
-    if [ -f "${FEATURE_FILE}.normalize_table_column" ]; then
-        rm ${FEATURE_FILE}.normalize_table_column
-    fi
-    sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
-    for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${FEATURE_FILE}.normalize_table_column ; done
-    paste ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn ${FEATURE_FILE}.normalize_table_column ${SAMPLE_MAPFILE} > ${FEATURE_FILE}.mapfile_for_normalize_and_average
-    /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-    mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
+    # ewwwwwwwwwwwwwwwwwww
+    # eval is absolutely required here
+    # but basically, without making any temporary files, grab the second column of all files and average them, then paste the first column of one of the files
+    eval "paste $( echo $(while read sample; do
+            echo "<( awk '{print \$2}' ${sample})"
+        done < ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn | tr "\n" " ") )" | \
+        awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' | \
+        paste <( awk '{print $1}' $(head -1 ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn) ) - > ${FEATURE_FILE}.normalized.splitreadsperfeature
 
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $2} END {print f, sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> observed_averages_micro
 done < feature_mapfile
@@ -301,15 +295,14 @@ for i in {0..2}; do
             echo ${ecc_basename}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn
         done < permuted_ecc_mapfile
 
-        # normalize and average across technical and biological replicates as written in previous scripts
-        if [ -f "${FEATURE_FILE}.normalize_table_column" ]; then
-            rm ${FEATURE_FILE}.normalize_table_column
-        fi
-        sample_count=$(wc -l ${SAMPLE_MAPFILE} | awk '{print $1+1}')
-        for (( i = 1 ; i < ${sample_count}; i++)); do echo 1 >> ${FEATURE_FILE}.normalize_table_column ; done
-        paste ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn ${FEATURE_FILE}.normalize_table_column ${SAMPLE_MAPFILE} > ${FEATURE_FILE}.mapfile_for_normalize_and_average
-        /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${FEATURE_FILE}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-        mv G3.normalized_binned ${FEATURE_FILE}.normalized.splitreadsperfeature
+    # ewwwwwwwwwwwwwwwwwww
+    # eval is absolutely required here
+    # but basically, without making any temporary files, grab the second column of all files and average them, then paste the first column of one of the files
+    eval "paste $( echo $(while read sample; do
+            echo "<( awk '{print \$2}' ${sample})"
+        done < ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn | tr "\n" " ") )" | \
+        awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' | \
+        paste <( awk '{print $1}' $(head -1 ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn) ) - > ${FEATURE_FILE}.normalized.splitreadsperfeature
 
         awk '{ sum += $2} END {print sum/NR}' ${FEATURE_FILE}.normalized.splitreadsperfeature >> ${FEATURE_FILE}.permuted
     done < feature_mapfile
