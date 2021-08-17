@@ -30,14 +30,21 @@ if [ -f "te_eccs_per_sample.txt" ]; then
 fi
 
 while read sample; do
+    if [ -f "tmp_line" ]; then
+        rm tmp_line
+    fi
+    echo ${sample} >> tmp_line
+    wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.details.nolowq.txt >> tmp_line
+    wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.splitreads.bed >> tmp_line
     while read ELEMENT; do
-        bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${ELEMENT}.bed | \
+        bedtools intersect -wao -a /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.details.nolowq.txt -b ${ELEMENT}.bed | \
             awk -v OFS='\t' '{a[$1"\t"$2"\t"$3] += $(NF)} END{for (i in a) print i, a[i]}' | \
             awk -v OFS='\t' '{ if ($4/($3-$2) >= 0.9) {print $1, $2, $3}}' | sort -k1,1 -k2,2n > ${sample}.${ELEMENT}.eccs.bed
-        sed 's/[[:space:]]*$//' ${sample}.ecc_caller_out.splitreads.bed | awk 'NR==FNR{a[$0]++;next}a[$0]' ${sample}.${ELEMENT}.eccs.bed - > ${sample}.${ELEMENT}.splitreads.bed
-        count_eccs=$(wc -l ${sample}.${ELEMENT}.eccs.bed | awk '{print $1}')
-        count_splitreads=$(wc -l ${sample}.${ELEMENT}.splitreads.bed | awk '{print $1}')
-        element_bp=$(awk '{SUM+=$3-$2}END{print SUM}' ${ELEMENT})
-        echo -e $sample'\t'$count_eccs'\t'$count_splitreads'\t'$element_bp >> te_eccs_per_sample.txt
+        sed 's/[[:space:]]*$//' /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.splitreads.bed | awk 'NR==FNR{a[$0]++;next}a[$0]' ${sample}.${ELEMENT}.eccs.bed - > ${sample}.${ELEMENT}.splitreads.bed
+        wc -l ${sample}.${ELEMENT}.eccs.bed | awk '{print $1}' >> tmp_line
+        wc -l ${sample}.${ELEMENT}.splitreads.bed | awk '{print $1}' >> tmp_line
+        awk '{SUM+=$3-$2}END{print SUM}' ${ELEMENT}.bed >> tmp_line
     done < ${ELEMENT_MAPFILE}
+    cat tmp_line | tr "\n" " " >> te_eccs_per_sample.txt
+    echo >> te_eccs_per_sample.txt
 done < ${MAPFILE}
