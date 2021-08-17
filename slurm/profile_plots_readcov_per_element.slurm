@@ -19,6 +19,8 @@ READS_NAME=readcoverage
 READS_FILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/'${sample}'/no_secondary.filtered.sorted.'${sample}'.bam
 WINDOWS=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/ltr_splitreads/profileplot/guy11_genome_baoetal2017.10bpwindows
 
+source activate deeptools
+
 bedtools makewindows -g ${GENOME_CHROMSIZES} -w 10 > guy11_genome_baoetal2017.10bpwindows
 
 ## sorted might need to be taken out here
@@ -57,26 +59,27 @@ mv G3.normalized_binned ${READS_NAME}.normalized_and_average
 
 awk -v OFS='\t' '{print $1, $2-10, $2, $3}' ${READS_NAME}.normalized_and_average > ${READS_NAME}.normalized_and_average.bg
 
+
 ## get rid of overlapping ones
 bedtools merge -i ${READS_NAME}.normalized_and_average.bg -c 4 -o mean -d -1 > ${READS_NAME}.normalized_and_average.corrected.bg
 bedGraphToBigWig ${READS_NAME}.normalized_and_average.corrected.bg ${GENOME_CHROMSIZES} ${READS_NAME}.normalized_and_average.bw
 
-# ELEMENT_MAPFILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
-# ## high confidence, full length tes here
-# TE_BEDFILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed
+ELEMENT_MAPFILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
+## high confidence, full length tes here
+TE_BEDFILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed
 
 
-# while read ELEMENT; do
-#     grep ${ELEMENT} ${TE_BEDFILE} > ${ELEMENT}.bed
-#     computeMatrix scale-regions -p ${SLURM_NTASKS} -S ${READS_NAME}.normalized_and_average.bw \
-#                             -R ${ELEMENT}.bed \
-#                             --beforeRegionStartLength 1000 \
-#                             --regionBodyLength 1000 \
-#                             --afterRegionStartLength 1000 \
-#                             --skipZeros -o ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz
-#     plotProfile -m ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz \
-#             -out ${ELEMENT}.${READS_NAME}.pdf \
-#             --numPlotsPerRow 1 \
-#             --plotTitle "${ELEMENT}" \
-#             --outFileNameData ${ELEMENT}.${READS_NAME}.normalized_and_average..tab
-# done < ${ELEMENT_MAPFILE}
+while read ELEMENT; do
+    grep ${ELEMENT} ${TE_BEDFILE} > ${ELEMENT}.bed
+    computeMatrix scale-regions -p ${SLURM_NTASKS} -S ${READS_NAME}.normalized_and_average.bw \
+                            -R ${ELEMENT}.bed \
+                            --beforeRegionStartLength 1000 \
+                            --regionBodyLength 1000 \
+                            --afterRegionStartLength 1000 \
+                            --skipZeros -o ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz
+    plotProfile -m ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz \
+            -out ${ELEMENT}.${READS_NAME}.pdf \
+            --numPlotsPerRow 1 \
+            --plotTitle "${ELEMENT}" \
+            --outFileNameData ${ELEMENT}.${READS_NAME}.normalized_and_average..tab
+done < ${ELEMENT_MAPFILE}
