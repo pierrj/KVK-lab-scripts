@@ -14,6 +14,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 
 GENE_GFF=/global/scratch/users/pierrj/references/GRCh37.p13.gff
 GENE_BEDFILE=/global/scratch/users/pierrj/references/GRCh37.p13.genes_pseudogenes
+GENE_GTF=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human/GRCh37.p13.gtf
 GENOME_CHROMSIZES=/global/scratch/pierrj/references/GRCh37.p13.chromsizes
 SAMPLE_MAPFILE=sample_mapfile
 GENOME_FILE=/global/scratch/users/pierrj/references/GRCh37.p13.fasta
@@ -94,6 +95,13 @@ awk '$3 == "gene"' ${GENE_GFF} | awk -v OFS='\t' '{if ($7 == "+")
 ## to deal with cutoffs past end of genome
 bedtools slop -b 0 -i 100bp_starting_1000bp_upstream_old -g ${GENOME_CHROMSIZES} | awk -v OFS='\t' '{print $1, $2, $3, NR}' > 100bp_starting_1000bp_upstream
 
+# five_prime_utr
+
+awk -v OFS='\t' '{ if ($3 ~ /five_prime_utr/) {print $1, $4, $5, NR}}' ${GENE_GTF} > five_prime_utr
+
+# three_prime_utr 
+awk -v OFS='\t' '{ if ($3 ~ /three_prime_utr/) {print $1, $4, $5, NR}}' ${GENE_GTF} > three_prime_utr
+
 
 if [ -f "feature_mapfile" ]; then
     rm feature_mapfile
@@ -108,6 +116,8 @@ echo cpg_islands >> feature_mapfile
 echo first_exons >> feature_mapfile
 echo gene_first_100bp >> feature_mapfile
 echo 100bp_starting_1000bp_upstream >> feature_mapfile
+echo five_prime_utr >> feature_mapfile
+echo three_prime_utr >> feature_mapfile
 
 ## for large eccdnas
 
