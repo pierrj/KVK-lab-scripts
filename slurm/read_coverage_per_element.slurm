@@ -32,6 +32,7 @@ while read sample; do
     if [ -f "tmp_line" ]; then
         rm tmp_line
     fi
+    echo ${genome_size} >> tmp_line
     echo ${sample} >> tmp_line
     samtools view -c /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam >> tmp_line
     while read ELEMENT; do
