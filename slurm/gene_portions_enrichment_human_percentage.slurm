@@ -122,6 +122,8 @@ echo three_prime_utr >> feature_mapfile
 
 ## for large eccdnas
 
+echo large
+
 ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human_percentage/human.large_eccdnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
@@ -165,6 +167,8 @@ done < feature_mapfile
 
 # shuffled
 
+echo shuffled
+
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
         rm ${FEATURE_FILE}.permuted
@@ -204,6 +208,8 @@ done < feature_mapfile
 
 ## for microdnas
 
+echo microdnas
+
 ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human_percentage/human.micro_dnas_mapfile
 
 if [ -f "${ECCDNA_MAPFILE}" ]; then
@@ -242,10 +248,12 @@ while read FEATURE_FILE; do
         percentage=$(awk -v var1=$num_intersect -v var2=$num_total 'BEGIN { print  ( var1 / var2 ) }')
         echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
     done < ${ECCDNA_MAPFILE}
-    awk -v f=${FEATURE_FILE} '{sum+=$2} END {print sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_micro
+    awk -v f=${FEATURE_FILE} '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_micro
 done < feature_mapfile
 
 # shuffled
+
+echo shuffled
 
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.permuted" ]; then
