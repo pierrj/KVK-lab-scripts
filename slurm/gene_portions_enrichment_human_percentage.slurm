@@ -162,7 +162,7 @@ while read FEATURE_FILE; do
         percentage=$(awk -v var1=$num_intersect -v var2=$num_total 'BEGIN { print  ( var1 / var2 ) }')
         echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
     done < ${ECCDNA_MAPFILE}
-    awk -v f=${FEATURE_FILE} '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_large
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_large
 done < feature_mapfile
 
 # shuffled
@@ -194,7 +194,7 @@ for i in {0..2}; do
             percentage=$(awk -v var1=$num_intersect -v var2=$num_total 'BEGIN { print  ( var1 / var2 ) }')
             echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
         done < permuted_ecc_mapfile
-        awk -v f=${FEATURE_FILE} '{sum+=$2} END {print sum/NR}' ${FEATURE_FILE}.percent_per_sample >> ${FEATURE_FILE}.permuted
+        awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print sum/NR}' ${FEATURE_FILE}.percent_per_sample >> ${FEATURE_FILE}.permuted
     done < feature_mapfile
 done
 
@@ -248,7 +248,7 @@ while read FEATURE_FILE; do
         percentage=$(awk -v var1=$num_intersect -v var2=$num_total 'BEGIN { print  ( var1 / var2 ) }')
         echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
     done < ${ECCDNA_MAPFILE}
-    awk -v f=${FEATURE_FILE} '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_micro
+    awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_micro
 done < feature_mapfile
 
 # shuffled
@@ -280,7 +280,7 @@ for i in {0..2}; do
             percentage=$(awk -v var1=$num_intersect -v var2=$num_total 'BEGIN { print  ( var1 / var2 ) }')
             echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
         done < permuted_ecc_mapfile
-        awk -v f=${FEATURE_FILE} '{sum+=$2} END {print sum/NR}' ${FEATURE_FILE}.percent_per_sample >> ${FEATURE_FILE}.permuted
+        awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print sum/NR}' ${FEATURE_FILE}.percent_per_sample >> ${FEATURE_FILE}.permuted
     done < feature_mapfile
 done
 
