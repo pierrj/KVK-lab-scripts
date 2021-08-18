@@ -180,6 +180,7 @@ for i in {0..2}; do
         rm permuted_ecc_mapfile
     fi
     while read ECCDNA_FILE; do
+        ecc_basename=$(basename ${ECCDNA_FILE})
         bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
         echo shuffled.${ecc_basename} >> permuted_ecc_mapfile
     done < ${ECCDNA_MAPFILE}
@@ -280,6 +281,7 @@ for i in {0..2}; do
         rm permuted_ecc_mapfile
     fi
     while read ECCDNA_FILE; do
+        ecc_basename=$(basename ${ECCDNA_FILE})
         bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
         echo shuffled.${ecc_basename} >> permuted_ecc_mapfile
     done < ${ECCDNA_MAPFILE}
