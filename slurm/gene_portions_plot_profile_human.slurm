@@ -62,7 +62,9 @@ eval "paste $( echo $(while read sample; do
 
 awk -v OFS='\t' '{print $1, $2, $3, $4}' ${track}.averaged > ${track}.bg
 
-bedGraphToBigWig ${track}.bg ${GENOME_CHROMSIZES} ${track}.bw
+sort -k1,1 -k2,2n micro_dna_density.bg > micro_dna_density.sorted.bg
+
+bedGraphToBigWig micro_dna_density.sorted.bg ${GENOME_CHROMSIZES} ${track}.bw
 
 computeMatrix scale-regions -p ${SLURM_NTASKS} -S ${track}.bw \
                             -R ${GENE_GTF} \
