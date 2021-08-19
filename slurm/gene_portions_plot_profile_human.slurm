@@ -13,7 +13,7 @@
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human_plotprofile
 
 GENOME_CHROMSIZES=/global/scratch/pierrj/references/GRCh37.p13.chromsizes
-GENE_GTF=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human/GRCh37.p13.gtf
+GENE_GTF=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/human/GRCh37.p13.gffread.gtf
 CHROM_SIZES=/global/scratch/pierrj/references/GRCh37.p13.chromsizes
 LTR_TE_LOCATIONS=/global/scratch/pierrj/references/te_annotations/human/blank
 copia_file=/global/scratch/pierrj/references/te_annotations/human/blank
