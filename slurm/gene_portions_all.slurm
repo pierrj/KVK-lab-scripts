@@ -27,7 +27,7 @@ GENOME_FILE=/global/scratch/users/pierrj/references/GRCh37.p13.fasta
 COPIA_FILE=/global/scratch/pierrj/references/te_annotations/human/blank
 GYPSY_FILE=/global/scratch/pierrj/references/te_annotations/human/blank
 
-if [ -d "${ORGANISM_NAME}"]; then
+if [ -d "${ORGANISM_NAME}" ]; then
     rm -r ${ORGANISM_NAME}
 fi
 
@@ -35,5 +35,5 @@ mkdir ${ORGANISM_NAME}
 cd ${ORGANISM_NAME}
     /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
         -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
-        -f ${GENOME_FILE} -c ${COPIA_FILE} -g ${GYPSY_FILE}
+        -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE}
 cd ..
