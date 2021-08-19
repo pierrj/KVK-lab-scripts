@@ -18,12 +18,12 @@ ELEMENT_MAPFILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characte
 
 while read sample
 do
-bamfile=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam
-/global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
-split_read_file=candidate_ltr_srs.${sample}.bam
-/global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b ${TE_BEDFILE} \
-    -m ${ELEMENT_MAPFILE} \
-    -s ${split_read_file} -o ${sample}
+    bamfile=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam
+    /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
+    split_read_file=candidate_ltr_srs.${sample}.bam
+    /global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b ${TE_BEDFILE} \
+        -m ${ELEMENT_MAPFILE} \
+        -s ${split_read_file} -o ${sample}
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 ## normalize and average
@@ -35,60 +35,34 @@ while read sample; do
         rm -r ${sample}
     fi
     mkdir ${sample}
-    mv ${sample}.ltr_sr_cov_perfeature ${sample}/${sample}.ltr_sr_cov_perfeature
-    mv ${sample}.read_cov_perfeature ${sample}/${sample}.read_cov_perfeature
-    mv ${sample}.junction_sr_cov_perfeature ${sample}/${sample}.junction_sr_cov_perfeature
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-if [ -f "G3.normalization_table.ltr_sr_cov_perfeature" ]; then
-    rm G3.normalization_table.ltr_sr_cov_perfeature
+if [ -f "results_mapfile" ]; then
+    rm results_mapfile
 fi
 
-while read sample; do
-    total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.ltr_sr_cov_perfeature | awk '{print $1/1000000}')
-    echo -e ${sample}'\t'${total} >> G3.normalization_table.ltr_sr_cov_perfeature
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+echo ltr_sr_cov_perfeature >> results_mapfile
+echo ltr_ltr_sr_cov_perfeature >> results_mapfile
+echo ltr_internal_sr_cov_perfeature >> results_mapfile
+echo read_cov_perfeature >> results_mapfile
+echo junction_sr_cov_perfeature >> results_mapfile
 
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
-    -t G3_1A.ltr_sr_cov_perfeature -n G3.normalization_table.ltr_sr_cov_perfeature -y t
+awk '{print $1}' junction_sr_cov_perfeature > cov_perfeature_table
 
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-
-mv G3.normalized_binned ltr_sr_cov_perfeature_normalized
-
-
-if [ -f "G3.normalization_table.read_cov_perfeature" ]; then
-    rm G3.normalization_table.read_cov_perfeature
-fi
-
-while read sample; do
-    total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.read_cov_perfeature | awk '{print $1/1000000}')
-    echo -e ${sample}'\t'${total} >> G3.normalization_table.read_cov_perfeature
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
-
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
-    -t G3_1A.read_cov_perfeature -n G3.normalization_table.read_cov_perfeature -y t
-
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-
-mv G3.normalized_binned read_cov_perfeature_normalized
-
-
-if [ -f "G3.normalization_table.junction_sr_cov_perfeature" ]; then
-    rm G3.normalization_table.junction_sr_cov_perfeature
-fi
-
-while read sample; do
-    total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.junction_sr_cov_perfeature | awk '{print $1/1000000}')
-    echo -e ${sample}'\t'${total} >> G3.normalization_table.junction_sr_cov_perfeature
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
-
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
-    -t G3_1A.junction_sr_cov_perfeature -n G3.normalization_table.junction_sr_cov_perfeature -y t
-
-/global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
-
-mv G3.normalized_binned junction_sr_cov_perfeature_normalized
-
-
-paste ltr_sr_cov_perfeature_normalized read_cov_perfeature_normalized junction_sr_cov_perfeature_normalized > ltr_sr_and_read_cov_and_junction_sr_perfeature_normalized
+while read results; do
+    mv ${sample}.${results} ${sample}/${sample}.${results}
+    if [ -f "G3.normalization_table.${results}" ]; then
+        rm G3.normalization_table.${results}
+    fi
+    while read sample; do
+        ## normalization is a little tricky here
+        total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.${results} | awk '{print $1/1000000}')
+        echo -e ${sample}'\t'${total} >> G3.normalization_table.${results}
+    done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+    /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+        -t G3_1A.${results} -n G3.normalization_table.${results} -y t
+    /global/home/users/pierrj/git/bash/normalize_and_average.sh -m mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
+    mv G3.normalized_binned ${results}_normalized
+    paste cov_perfeature_table <(awk '{print $2}' ${results}_normalized) > tmptable
+    mv tmptable cov_perfeature_table
+done < results_mapfile

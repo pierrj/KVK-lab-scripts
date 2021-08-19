@@ -38,6 +38,7 @@ fi
 cat ${ELEMENT}.${OUTPUTNAME}.ltr_and_ltr_overlap_srs.bed >> ${ELEMENT}.${OUTPUTNAME}.all_ltr_sr_locations.bed
 cat ${ELEMENT}.${OUTPUTNAME}.ltr_and_internal_overlap_srs.bed >> ${ELEMENT}.${OUTPUTNAME}.all_ltr_sr_locations.bed
 
+# get the ltr side of the internal overlap srs
 while read sr; do
     grep $sr ${ELEMENT}.${OUTPUTNAME}.ltr_overlap_srs.bed >> ${ELEMENT}.${OUTPUTNAME}.all_ltr_sr_locations.bed
 done < ${ELEMENT}.${OUTPUTNAME}.ltr_and_internal_overlap_srs.mapfile
@@ -53,6 +54,14 @@ total=$((ltr_and_ltr_count+ltr_and_internal_count))
 
 bedtools coverage -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed -b ${ELEMENT}.${OUTPUTNAME}.all_ltr_sr_locations.bed \
  | awk -v OFS='\t' '{print $4, $5}' > ${ELEMENT}.${OUTPUTNAME}.ltr_sr_cov_perfeature
+
+## divided by two bc there are two entries for each split read
+bedtools coverage -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed -b ${ELEMENT}.${OUTPUTNAME}.ltr_and_ltr_overlap_srs.bed \
+ | awk -v OFS='\t' '{print $4, $5/2}' > ${ELEMENT}.${OUTPUTNAME}.ltr_ltr_sr_cov_perfeature
+
+## not divided bc there is only one entry per split read
+bedtools coverage -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed -b ${ELEMENT}.${OUTPUTNAME}.ltr_and_internal_overlap_srs.bed \
+ | awk -v OFS='\t' '{print $4, $5}' > ${ELEMENT}.${OUTPUTNAME}.ltr_internal_sr_cov_perfeature
 
 bedtools coverage -sorted -a tmp.${ELEMENT}.${OUTPUTNAME}.filtered.bed \
     -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${OUTPUTNAME}/no_secondary.filtered.sorted.${OUTPUTNAME}.bam | \
