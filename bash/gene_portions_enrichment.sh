@@ -14,6 +14,14 @@ esac
 done
 
 
+echo ${ORGANISM_NAME}
+echo ${GENE_GFF}
+echo ${SAMPLE_MAPFILE}
+echo ${ECC_DIR}
+echo ${GENOME_FILE}
+echo ${COPIA_FILE}
+echo ${GYPSYFILE}
+
 WORKING_DIR=$(pwd)
 
 basename_gff=$(basename ${GENE_GFF})
