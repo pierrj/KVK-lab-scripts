@@ -15,7 +15,7 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 module load genometools
 module load emboss
 
-conda activate agat
+source activate agat
 
 export PERL5LIB=~/.conda/envs/agat/lib
 
