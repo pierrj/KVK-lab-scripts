@@ -29,19 +29,13 @@ if [ -f "te_eccs_per_sample.txt" ]; then
 fi
 
 while read sample; do
-    if [ -f "tmp_line" ]; then
-        rm tmp_line
-    fi
-    echo ${genome_size} >> tmp_line
-    echo ${sample} >> tmp_line
-    samtools view -c /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam >> tmp_line
+    read_count=$(samtools view -c /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam)
     while read ELEMENT; do
         bedtools coverage -sorted -a ${ELEMENT}.bed \
             -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
             awk -v OFS='\t' '{print $4, $5}' > ${ELEMENT}.${sample}.read_cov_perfeature
-        awk '{SUM+=$2}END{print SUM}' ${ELEMENT}.${sample}.read_cov_perfeature >> tmp_line
-        awk '{SUM+=$3-$2}END{print SUM}' ${ELEMENT}.bed >> tmp_line
+        element_bp=$(awk '{SUM+=$3-$2}END{print SUM}' ${ELEMENT}.bed)
+        reads_per_element=$(awk '{SUM+=$2}END{print SUM}' ${ELEMENT}.${sample}.read_cov_perfeature)
+        echo -e ${sample}'\t'${ELEMENT}'\t'${genome_size}'\t'${read_count}'\t'${element_bp}'\t'${reads_per_element} >> te_eccs_per_sample.txt
     done < ${ELEMENT_MAPFILE}
-    cat tmp_line | tr "\n" " " >> te_eccs_per_sample.txt
-    echo >> te_eccs_per_sample.txt
 done < ${MAPFILE}
