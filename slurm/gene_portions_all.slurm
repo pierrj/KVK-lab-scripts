@@ -12,28 +12,37 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/script_test
 
-module load genometools
-module load emboss
+rm org*
 
-source activate agat
+rm mapfile*
 
-export PERL5LIB=~/.conda/envs/agat/lib
+# paste <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) org_names > mapfile_gene_portions
 
-ORGANISM_NAME=human
-GENE_GFF=/global/scratch/users/pierrj/references/GRCh37.p13.gff
-SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile_muscle
-ECC_DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/
-GENOME_FILE=/global/scratch/users/pierrj/references/GRCh37.p13.fasta
-COPIA_FILE=/global/scratch/pierrj/references/te_annotations/human/blank
-GYPSY_FILE=/global/scratch/pierrj/references/te_annotations/human/blank
+# module load genometools
+# module load emboss
 
-if [ -d "${ORGANISM_NAME}" ]; then
-    rm -r ${ORGANISM_NAME}
-fi
+# source activate agat
 
-mkdir ${ORGANISM_NAME}
-cd ${ORGANISM_NAME}
-    /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
-        -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
-        -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE}
-cd ..
+# export PERL5LIB=~/.conda/envs/agat/lib
+
+
+
+# while read -r dir GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FILE GYPSY_FILE ORGANISM_NAME
+# do
+#     if [ -d "${ORGANISM_NAME}" ]; then
+#         rm -r ${ORGANISM_NAME}
+#     fi
+#     mkdir ${ORGANISM_NAME}
+#     cd ${ORGANISM_NAME}
+#     echo ${ORGANISM_NAME}
+#     echo ${GENE_GFF}
+#     echo ${SAMPLE_MAPFILE}
+#     echo ${ECC_DIR}
+#     echo ${GENOME_FILE}
+#     echo ${COPIA_FILE}
+#     echo ${GYPSY_FILE}
+#         # /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
+#         #     -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
+#         #     -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE}
+#     cd ..
+# done < mapfile_gene_portions
