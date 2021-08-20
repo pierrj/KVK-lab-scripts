@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts o:g:s:d:f:c:y: option
+while getopts o:g:s:d:f:c:y:c: option
 do
 case "${option}"
 in
@@ -10,13 +10,37 @@ d) ECC_DIR=${OPTARG};;
 f) GENOME_FILE=${OPTARG};;
 c) COPIA_FILE=${OPTARG};;
 y) GYPSY_FILE=${OPTARG};;
+c) CONTIGNAMES_FILE=${OPTARG};;
 esac
 done
 
 WORKING_DIR=$(pwd)
 
+## FILTER GFF AND OTHER BEDFILES TO ECC INPUT
+
+samtools faidx ${GENOME_FILE} $(cat ${CONTIGNAMES_FILE} | tr "\n" " ") > ${GENOME_FILE}.filtered
+GENOME_FILE=$(realpath ${GENOME_FILE}.filtered)
+
+samtools faidx ${GENOME_FILE}
+cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
+GENOME_CHROMSIZES=$(realpath ${GENOME_FILE}.chromsizes)
+
+awk -v OFS='\t' '{print $1, 1, $2}' ${GENOME_CHROMSIZES} > ${GENOME_CHROMSIZES}.forintersect
+GENOME_CHROMSIZES_FOR_INTERSECT=$(realpath ${GENOME_CHROMSIZES}.forintersect)
+
+bedtools intersect -header -u -a ${GENE_GFF} -b ${GENOME_CHROMSIZES_FOR_INTERSECT} > ${GENE_GFF}.filtered
+GENE_GFF=$(realpath ${GENE_GFF}.filtered)
+
+bedtools intersect -header -u -a ${COPIA_FILE} -b ${GENOME_CHROMSIZES_FOR_INTERSECT} > ${COPIA_FILE}.filtered
+COPIA_FILE=$(realpath ${COPIA_FILE}.filtered)
+
+bedtools intersect -header -u -a ${GYPSY_FILE} -b ${GENOME_CHROMSIZES_FOR_INTERSECT} > ${GYPSY_FILE}.filtered
+GYPSY_FILE=$(realpath ${GYPSY_FILE}.filtered)
+
+## generate some extra needed files
+
 basename_gff=$(basename ${GENE_GFF})
-awk -v OFS='\t' '{if ($3 ~ /gene/) {print $1, $4, $5, $9}}' ${GENE_GFF} > ${basename_gff}.bed
+awk -v OFS='\t' '{if ($3 ~ /gene/) {print $1, $4, $5, $9}}' ${GENE_GFF} | sort -k1,1 -k2,2n > ${basename_gff}.bed
 GENE_BEDFILE=$(realpath ${basename_gff}.bed)
 
 cat ${COPIA_FILE} ${GYPSY_FILE} > ${ORGANISM}.ltr_te_locs
@@ -27,7 +51,7 @@ cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
 GENOME_CHROMSIZES=$(realpath ${GENOME_FILE}.chromsizes)
 
 ## make sure to activate conda env for this and export perl5lib
-agat_convert_sp_gff2gtf.pl --gff ${GENE_GFF} -o ${ORGANISM}.gtf
+agat_convert_sp_gff2gtf.pl --gff ${GENE_GFF} -o ${ORGANISM}.gtf > agat_output 2>&1
 GENE_GTF=$(realpath ${ORGANISM}.gtf)
 
 
@@ -39,6 +63,10 @@ GENE_GTF=$(realpath ${ORGANISM}.gtf)
 awk '$3 ~ /exon/' ${GENE_GFF} | awk -v OFS='\t' '{print $1, $4, $5, $9}' > exons
 
 # introns
+
+agat_sp_add_introns.pl --gff ${GENE_GFF} -o ${ORGANISM}.tmpintrons > agat_output_intron 2>&1
+
+awk '$3 ~ /intron/' ${ORGANISM}.tmpintrons | awk -v OFS='\t' '{print $1, $4, $5, $9}' > introns
 
 gt gff3 -addintrons ${GENE_GFF} | awk '$3 ~ /intron/' | awk -v OFS='\t' '{print $1, $4, $5, $9}' > introns
 

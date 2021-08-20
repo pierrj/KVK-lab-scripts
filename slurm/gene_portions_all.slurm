@@ -20,14 +20,13 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 
 # paste <(awk -v OFS='=' '{print $1, $2, $3, $4, $5}' ecc_count_metadata_unix.txt.uniq) <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) > mapfile_gene_portions
 
-module load genometools
 module load emboss
 
 source activate agat
 
 export PERL5LIB=~/.conda/envs/agat/lib
 
-while read -r ORGANISM_NAME GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FILE GYPSY_FILE
+while read -r ORGANISM_NAME GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FILE GYPSY_FILE CONTIGNAMES_FILE
 do
     if [ -d "${ORGANISM_NAME}" ]; then
         rm -r ${ORGANISM_NAME}
@@ -36,6 +35,6 @@ do
     cd ${ORGANISM_NAME}
         /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
             -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
-            -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE}
+            -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE} -c ${CONTIGNAMES_FILE}
     cd ..
 done < mapfile_gene_portions
