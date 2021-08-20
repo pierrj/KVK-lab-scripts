@@ -12,9 +12,7 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/script_test
 
-rm org*
-
-rm mapfile*
+rm *
 
 # paste <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) org_names > mapfile_gene_portions
 
