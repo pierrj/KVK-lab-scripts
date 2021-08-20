@@ -12,35 +12,30 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/script_test
 
-rm *
+# cp /global/scratch/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/ecc_count_metadata_unix.txt .
 
-# paste <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) org_names > mapfile_gene_portions
+# cp /global/scratch/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/mapfile_ecc_count .
 
-# module load genometools
-# module load emboss
+# uniq ecc_count_metadata_unix.txt > ecc_count_metadata_unix.txt.uniq
 
-# source activate agat
+# paste <(awk -v OFS='=' '{print $1, $2, $3, $4, $5}' ecc_count_metadata_unix.txt.uniq) <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) > mapfile_gene_portions
 
-# export PERL5LIB=~/.conda/envs/agat/lib
+module load genometools
+module load emboss
 
+source activate agat
 
+export PERL5LIB=~/.conda/envs/agat/lib
 
-# while read -r dir GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FILE GYPSY_FILE ORGANISM_NAME
-# do
-#     if [ -d "${ORGANISM_NAME}" ]; then
-#         rm -r ${ORGANISM_NAME}
-#     fi
-#     mkdir ${ORGANISM_NAME}
-#     cd ${ORGANISM_NAME}
-#     echo ${ORGANISM_NAME}
-#     echo ${GENE_GFF}
-#     echo ${SAMPLE_MAPFILE}
-#     echo ${ECC_DIR}
-#     echo ${GENOME_FILE}
-#     echo ${COPIA_FILE}
-#     echo ${GYPSY_FILE}
-#         # /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
-#         #     -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
-#         #     -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE}
-#     cd ..
-# done < mapfile_gene_portions
+while read -r ORGANISM_NAME GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FILE GYPSY_FILE
+do
+    if [ -d "${ORGANISM_NAME}" ]; then
+        rm -r ${ORGANISM_NAME}
+    fi
+    mkdir ${ORGANISM_NAME}
+    cd ${ORGANISM_NAME}
+        /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
+            -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
+            -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE}
+    cd ..
+done < mapfile_gene_portions
