@@ -35,6 +35,6 @@ do
     cd ${ORGANISM_NAME}
         /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
             -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
-            -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE} -c ${CONTIGNAMES_FILE}
+            -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE} -n ${CONTIGNAMES_FILE}
     cd ..
 done < mapfile_gene_portions

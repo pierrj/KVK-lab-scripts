@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts o:g:s:d:f:c:y:c: option
+while getopts o:g:s:d:f:c:y:n: option
 do
 case "${option}"
 in
@@ -10,7 +10,7 @@ d) ECC_DIR=${OPTARG};;
 f) GENOME_FILE=${OPTARG};;
 c) COPIA_FILE=${OPTARG};;
 y) GYPSY_FILE=${OPTARG};;
-c) CONTIGNAMES_FILE=${OPTARG};;
+n) CONTIGNAMES_FILE=${OPTARG};;
 esac
 done
 
