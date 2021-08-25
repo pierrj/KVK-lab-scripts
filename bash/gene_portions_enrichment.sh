@@ -68,8 +68,6 @@ agat_sp_add_introns.pl --gff ${GENE_GFF} -o ${ORGANISM}.tmpintrons > agat_output
 
 awk '$3 ~ /intron/' ${ORGANISM}.tmpintrons | awk -v OFS='\t' '{print $1, $4, $5, $9}' > introns
 
-gt gff3 -addintrons ${GENE_GFF} | awk '$3 ~ /intron/' | awk -v OFS='\t' '{print $1, $4, $5, $9}' > introns
-
 # 2000 bp upstream
 
 awk '$3 ~ /gene/' ${GENE_GFF} | awk -v OFS='\t' '{if ($7 == "+")
