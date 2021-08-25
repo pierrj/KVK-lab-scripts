@@ -16,15 +16,15 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics
 TE_BEDFILE=/global/scratch/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_nolengthfilter_individual_elements.bed
 ELEMENT_MAPFILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
 
-while read sample
-do
-    bamfile=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam
-    /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
-    split_read_file=candidate_ltr_srs.${sample}.bam
-    /global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b ${TE_BEDFILE} \
-        -m ${ELEMENT_MAPFILE} \
-        -s ${split_read_file} -o ${sample}
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+# while read sample
+# do
+#     bamfile=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam
+#     /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
+#     split_read_file=candidate_ltr_srs.${sample}.bam
+#     /global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b ${TE_BEDFILE} \
+#         -m ${ELEMENT_MAPFILE} \
+#         -s ${split_read_file} -o ${sample}
+# done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 ## normalize and average
 
@@ -47,10 +47,12 @@ echo ltr_internal_sr_cov_perfeature >> results_mapfile
 echo read_cov_perfeature >> results_mapfile
 echo junction_sr_cov_perfeature >> results_mapfile
 
-awk '{print $1}' junction_sr_cov_perfeature > cov_perfeature_table
+touch cov_perfeature_table
 
 while read results; do
-    mv ${sample}.${results} ${sample}/${sample}.${results}
+    while read sample; do
+        mv ${sample}.${results} ${sample}/${sample}.${results}
+    done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
     if [ -f "G3.normalization_table.${results}" ]; then
         rm G3.normalization_table.${results}
     fi
@@ -66,3 +68,6 @@ while read results; do
     paste cov_perfeature_table <(awk '{print $2}' ${results}_normalized) > tmptable
     mv tmptable cov_perfeature_table
 done < results_mapfile
+
+paste <(awk '{print $1}' junction_sr_cov_perfeature_normalized) cov_perfeature_table > tmptable
+mv tmptable cov_feature_table
