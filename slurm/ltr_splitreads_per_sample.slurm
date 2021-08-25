@@ -51,7 +51,7 @@ touch cov_perfeature_table
 
 while read results; do
     while read sample; do
-        mv ${sample}.${results} ${sample}/${sample}.${results}
+        cp ${sample}.${results} ${sample}/${sample}.${results}
     done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
     if [ -f "G3.normalization_table.${results}" ]; then
         rm G3.normalization_table.${results}
