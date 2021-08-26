@@ -21,10 +21,11 @@ awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.qualityfiltered.filtered.sorted.allmap
 cat tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam \
     tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.2.${SAMPLE}.sam > tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam
 
-python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam
+# python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam
+# samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam) > tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.bam
+# samtools sort tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.bam > candidate_ltr_srs.${SAMPLE}.bam
 
-samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam) > tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.bam
+samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.sam) > tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.bam
+samtools sort tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.bam > candidate_ltr_srs.${SAMPLE}.bam
 
-
-samtools sort tmp.match_length_filtered.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.all.${SAMPLE}.bam > candidate_ltr_srs.${SAMPLE}.bam
 samtools index candidate_ltr_srs.${SAMPLE}.bam
