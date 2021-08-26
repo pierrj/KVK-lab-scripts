@@ -58,7 +58,7 @@ while read results; do
     fi
     while read sample; do
         ## normalization is a little tricky here
-        total=$( awk '{sum += $2} END {print sum}' ${sample}/${sample}.${results} | awk '{print $1/1000000}')
+        total=$( samtools view -c /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1/1000000}')
         echo -e ${sample}'\t'${total} >> G3.normalization_table.${results}
     done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
     /global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
