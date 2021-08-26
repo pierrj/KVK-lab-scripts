@@ -38,3 +38,25 @@ do
             -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE} -n ${CONTIGNAMES_FILE}
     cd ..
 done < mapfile_gene_portions
+
+if [ -f "gene_portions_full_table" ]; then
+    rm gene_portions_full_table
+fi
+
+while read sample; do
+cd ${sample}
+    if [ -f "temp.sample_name_column" ]; then
+        rm temp.sample_name_column
+    fi
+    for i in {0..8}; do
+        echo ${sample} >> temp.sample_name_column
+    done
+    awk '{print $1}' observed_averages_micro > temp.gene_portion_name_column
+    awk '{print $2}' observed_averages_micro > temp.observed_averages_micro_column
+    awk '{print $2}' expected_averages_micro > temp.expected_averages_micro_column
+    awk '{print $2}' observed_averages_large > temp.observed_averages_large_column
+    awk '{print $2}' expected_averages_large > temp.expected_averages_large_column
+    paste temp.sample_name_column temp.gene_portion_name_column temp.observed_averages_micro_column temp.expected_averages_micro_column temp.observed_averages_large_column temp.expected_averages_large_column >> ../gene_portions_full_table
+    rm temp.*
+cd ..
+done < mapfile_studies
