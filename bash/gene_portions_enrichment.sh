@@ -66,7 +66,8 @@ awk '$3 ~ /exon/' ${GENE_GFF} | awk -v OFS='\t' '{print $1, $4, $5, $9}' > exons
 
 agat_sp_add_introns.pl --gff ${GENE_GFF} -o ${ORGANISM}.tmpintrons > agat_output_intron 2>&1
 
-awk '$3 ~ /intron/' ${ORGANISM}.tmpintrons | awk -v OFS='\t' '{print $1, $4, $5, $9}' > introns
+## for some reason human gff file has a weird intron
+awk '$3 ~ /intron/' ${ORGANISM}.tmpintrons | awk -v OFS='\t' '{ if ($5 > $4) {print $1, $4, $5, $9}}' > introns
 
 # 2000 bp upstream
 
