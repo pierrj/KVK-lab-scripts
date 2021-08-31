@@ -12,6 +12,7 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/ltr_splitreads/simulated
 
+THREADS=24
 LTR_FILE=copia_group1_cons_oneline.fasta
 
 if [ -f "ltr_circles_mapfile" ]; then
@@ -27,7 +28,7 @@ bwa index ${LTR_FILE} -p ltr_db
 while read circle; do
     /global/scratch/users/pierrj/art_bin_MountRainier/art_illumina -p -m 450 -s 50 -ss HSXt -i ${circle}.fasta -l 150 -c 1000000 -o ${circle}.simulated
     echo "done simulating one"
-    bwa mem -t ${THREADS} ltr_db ${circle}.simulated.fq ${circle}.simulated.fq -o ${circle}.sam
-    samtools sort -b ${circle}.sam > ${circle}.bam
-    bedtools genomecov -ibam ${circle}.bam -g ${LTR_FILE} -d > ${circle}.coverage
+    bwa mem -t ${THREADS} ltr_db ${circle}.simulated1.fq ${circle}.simulated2.fq -o ${circle}.sam
+    samtools sort -O BAM ${circle}.sam > ${circle}.bam
+    bedtools genomecov -ibam ${circle}.bam -d > ${circle}.coverage
 done < ltr_circles_mapfile
