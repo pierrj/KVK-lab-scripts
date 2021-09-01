@@ -25,8 +25,9 @@ echo two_ltr_nhej_circle_seq_randomized >> ltr_circles_mapfile
 
 bwa index ${LTR_FILE} -p ltr_db
 
+# probably 20k is the best but 2k temporarily
 while read circle; do
-    /global/scratch/users/pierrj/art_bin_MountRainier/art_illumina -p -m 450 -s 50 -ss HSXt -i ${circle}.fasta -l 150 -c 1000000 -o ${circle}.simulated
+    /global/scratch/users/pierrj/art_bin_MountRainier/art_illumina -p -m 450 -s 50 -ss HSXt -i ${circle}.fasta -l 150 -c 2000 -o ${circle}.simulated
     echo "done simulating one"
     bwa mem -t ${THREADS} ltr_db ${circle}.simulated1.fq ${circle}.simulated2.fq -o ${circle}.sam
     samtools sort -O BAM ${circle}.sam > ${circle}.bam
