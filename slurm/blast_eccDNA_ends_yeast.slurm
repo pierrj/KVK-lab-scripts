@@ -136,12 +136,12 @@ if [ -f "${OUTPUT_TABLE}" ]; then
 fi
 
 ## deal with being too close to end
-awk -v OFS='\t' '{print $1, $2-100, $2}' ${GENOME_CHROMSIZES} > guy11_genome_baoetal2017.chromends
+awk -v OFS='\t' '{print $1, $2-10, $2}' ${GENOME_CHROMSIZES} > guy11_genome_baoetal2017.chromends
 bedtools intersect -v -wa -a ${INPUT_FILE} -b guy11_genome_baoetal2017.chromends > input_file_not_close_to_end
 
 ## deal with being too close to start
-awk -v OFS='\t' '{ if ($2-100>0) {print $1, $2-100, $2+100}}' input_file_not_close_to_end > eccdna_starts
-awk -v OFS='\t' '{ if ($2-100>0) {print $1, $3-100, $3+100}}' input_file_not_close_to_end > eccdna_ends
+awk -v OFS='\t' '{ if ($2-10>0) {print $1, $2-10, $2+10}}' input_file_not_close_to_end > eccdna_starts
+awk -v OFS='\t' '{ if ($2-10>0) {print $1, $3-10, $3+10}}' input_file_not_close_to_end > eccdna_ends
 
 bedtools getfasta -fi ${GENOME} -fo eccdna_starts.fasta -bed eccdna_starts
 bedtools getfasta -fi ${GENOME} -fo eccdna_ends.fasta -bed eccdna_ends
@@ -156,10 +156,10 @@ for i in $(seq 0 99); do
     echo ${i}
     bedtools shuffle -i ${INPUT_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > ${INPUT_FILE}_shuffle_${i}
     OUTPUT_TABLE=${INPUT_FILE}_shuffle_${i}_outputtable
-    awk -v OFS='\t' '{print $1, $2-100, $2}' ${GENOME_CHROMSIZES} > guy11_genome_baoetal2017.chromends
+    awk -v OFS='\t' '{print $1, $2-10, $2}' ${GENOME_CHROMSIZES} > guy11_genome_baoetal2017.chromends
     bedtools intersect -v -wa -a ${INPUT_FILE}_shuffle_${i} -b guy11_genome_baoetal2017.chromends > input_file_not_close_to_end
-    awk -v OFS='\t' '{ if ($2-100>0) {print $1, $2-100, $2+100}}' input_file_not_close_to_end > eccdna_starts
-    awk -v OFS='\t' '{ if ($2-100>0) {print $1, $3-100, $3+100}}' input_file_not_close_to_end > eccdna_ends
+    awk -v OFS='\t' '{ if ($2-10>0) {print $1, $2-10, $2+10}}' input_file_not_close_to_end > eccdna_starts
+    awk -v OFS='\t' '{ if ($2-10>0) {print $1, $3-10, $3+10}}' input_file_not_close_to_end > eccdna_ends
     bedtools getfasta -fi ${GENOME} -fo eccdna_starts.fasta -bed eccdna_starts
     bedtools getfasta -fi ${GENOME} -fo eccdna_ends.fasta -bed eccdna_ends
     awk '$1 !~ /^>/' eccdna_starts.fasta > nonames_eccdna_starts.seq
