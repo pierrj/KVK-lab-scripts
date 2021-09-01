@@ -64,13 +64,18 @@ awk -v OFS='\t' '{print $1, $2-10, $2, $3}' ${READS_NAME}.normalized_and_average
 bedtools merge -i ${READS_NAME}.normalized_and_average.bg -c 4 -o mean -d -1 > ${READS_NAME}.normalized_and_average.corrected.bg
 bedGraphToBigWig ${READS_NAME}.normalized_and_average.corrected.bg ${GENOME_CHROMSIZES} ${READS_NAME}.normalized_and_average.bw
 
-ELEMENT_MAPFILE=/global/scratch/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
+ELEMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
 ## high confidence, full length tes here
 TE_BEDFILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed
 
 
 while read ELEMENT; do
     grep ${ELEMENT} ${TE_BEDFILE} > ${ELEMENT}.bed
+    if [[ $ELEMENT == GYMAG2 ]]
+    then
+        cp ${ELEMENT}.bed ${ELEMENT}.old.bed
+        awk '$2 != 499211 && $3 != 505077' ${ELEMENT}.old.bed > ${ELEMENT}.bed ## remove one outlier
+    fi
     computeMatrix scale-regions -p ${SLURM_NTASKS} -S ${READS_NAME}.normalized_and_average.bw \
                             -R ${ELEMENT}.bed \
                             --beforeRegionStartLength 1000 \
