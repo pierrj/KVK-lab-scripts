@@ -13,15 +13,15 @@
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/ltr_splitreads/simulated
 
 THREADS=24
-LTR_FILE=copia_group1_cons_oneline.fasta
+LTR_FILE=maggy_sequence.fasta
 
 if [ -f "ltr_circles_mapfile" ]; then
     rm ltr_circles_mapfile
 fi
 
-echo one_ltr_auto_circle_seq_randomized >> ltr_circles_mapfile
-echo one_ltr_hr_circle_seq_randomized >> ltr_circles_mapfile
-echo two_ltr_nhej_circle_seq_randomized >> ltr_circles_mapfile
+echo one_ltr_auto_circle_seq_randomized_maggy >> ltr_circles_mapfile
+echo one_ltr_hr_circle_seq_randomized_maggy >> ltr_circles_mapfile
+echo two_ltr_nhej_circle_seq_randomized_maggy >> ltr_circles_mapfile
 
 bwa index ${LTR_FILE} -p ltr_db
 
