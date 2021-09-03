@@ -180,7 +180,7 @@ while read FEATURE_FILE; do
     fi
 done < feature_mapfile
 
-for i in {0..2}; do
+for i in {0..9}; do
     if [ -f "permuted_ecc_mapfile" ]; then
         rm permuted_ecc_mapfile
     fi
@@ -259,7 +259,7 @@ while read FEATURE_FILE; do
     fi
 done < feature_mapfile
 
-for i in {0..2}; do
+for i in {0..9}; do
     if [ -f "permuted_ecc_mapfile" ]; then
         rm permuted_ecc_mapfile
     fi
