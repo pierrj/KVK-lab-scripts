@@ -14,7 +14,7 @@
 
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 SAMPLE=G3
-SRA_LIST=/global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/zhang_et_al_rnaseq_accessions.txt
+SRA_LIST=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas/zhang_et_al_rnaseq_accessions.txt
 THREADS=${SLURM_NTASKS}
 LIB_TYPE=1
 GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
