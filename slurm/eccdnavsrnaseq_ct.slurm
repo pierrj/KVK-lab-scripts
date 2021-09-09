@@ -18,7 +18,7 @@ SRA_LIST=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_character
 THREADS=${SLURM_NTASKS}
 LIB_TYPE=1
 GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
-SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/rnaseq_comparison_wrapper/anyoverlap_normalization/G3.sample_mapfile
+SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/expression_v_eccdnas_infected/G3.sample_mapfile
 copia_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_copia_locs.bed
 gypsy_file=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_gypsy_locs.bed
 
