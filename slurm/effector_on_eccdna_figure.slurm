@@ -47,9 +47,13 @@ cd ${sample_target}
 
 samtools index no_secondary.filtered.sorted.${sample_target}.bam
 
-samtools view -h no_secondary.filtered.sorted.${sample_target}.bam "${effector_chrom}:${region_start}-${region_end}" > \
+samtools view -bh no_secondary.filtered.sorted.${sample_target}.bam "${effector_chrom}:${region_start}-${region_end}" > \
     /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.totalreads.bam
 
+samtools sort /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.totalreads.bam > \
+    /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.totalreads.sorted.bam
+
+samtools index /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.totalreads.sorted.bam
 
 ## get eccs
 
@@ -164,6 +168,10 @@ samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.match_leng
 
 cp tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam junction_splitreads.${SAMPLE}.bam
 
+samtools sort junction_splitreads.${SAMPLE}.bam > junction_splitreads.${SAMPLE}.sorted.bam
+
+samtools index junction_splitreads.${SAMPLE}.sorted.bam
+
 
 ### get opposite facing read pairs, taken from ecc_caller_mapq0.sh
 
@@ -191,6 +199,9 @@ source activate deeptools
 
 ~/.conda/envs/deeptools/bin/bedtools bedpetobam -i outwardfacing.${SAMPLE}.bedpe -g ${GENOME_CHROMSIZES} > outwardfacing.${SAMPLE}.bam
 
+samtools sort outwardfacing.${SAMPLE}.bam > outwardfacing.${SAMPLE}.sorted.bam
+
+samtools index outwardfacing.${SAMPLE}.sorted.bam
 
 ## get pacbio bam reads
 
@@ -203,6 +214,10 @@ samtools view -h /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipel
         "${effector_chrom}:${region_start}-${region_end}" > \
         ${effector_name}.${sample_target}.pacbioreads.bam
 
+samtools sort ${effector_name}.${sample_target}.pacbioreads.bam > ${effector_name}.${sample_target}.pacbioreads.sorted.bam
+
+samtools index ${effector_name}.${sample_target}.pacbioreads.sorted.bam
+
 ## pacbio splitreads specifically maybe?
 
 samtools view -F 4 ${effector_name}.${sample_target}.pacbioreads.bam | awk '{print $2}' > ${effector_name}.${sample_target}_aligned_samflags
@@ -214,3 +229,7 @@ python /global/home/users/pierrj/git/python/ecc_caller_pacbio_splitreadout.py ${
     ${effector_name}.${sample_target}_pacbio_eccs.bed 20 50000 ${effector_name}.${sample_target}_pacbio_splitreads.bed
 
 ~/.conda/envs/deeptools/bin/bedtools bedtobam -i ${effector_name}.${sample_target}_pacbio_splitreads.bed -g ${GENOME_CHROMSIZES} > ${effector_name}.${sample_target}_pacbio_splitreads.bam
+
+samtools sort ${effector_name}.${sample_target}_pacbio_splitreads.bam > ${effector_name}.${sample_target}_pacbio_splitreads.sorted.bam
+
+samtools index ${effector_name}.${sample_target}_pacbio_splitreads.sorted.bam
