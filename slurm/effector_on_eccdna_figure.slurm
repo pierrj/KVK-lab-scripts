@@ -38,8 +38,8 @@ done < mapfile
 ## pick sample_target manually
 sample_target=G3_1B
 
-region_start=$(($effector_start-2000))
-region_end=$(($effector_end+2000))
+region_start=$(($effector_start-4000))
+region_end=$(($effector_end+4000))
 
 ## get region mapped reads
 
