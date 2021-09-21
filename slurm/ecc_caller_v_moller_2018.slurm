@@ -16,8 +16,9 @@ sample_mapfile=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile
 mapfile="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GCF_000001405.25_GRCh37.p13_genomic.contignames"
 muscle_mapfile=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile_muscle_moller_samples
 leukocytes_mapfile=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile_leukocytes_moller_samples
-muscle_eccs=2018_moller_muscle_eccs.txt
-leukocyte_eccs=2018_moller_leukocyte_eccs.txt
+moller_muscle_eccs=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/human/2018_moller_muscle_eccs.txt
+moller_leukocyte_eccs=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/human/2018_moller_leukocyte_eccs.txt
+output_table=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/human/ecc_caller_v_moller_2018_out_table.txt
 
 # while read sample; do
 #     if [ -d "${sample}" ]; then
@@ -41,14 +42,14 @@ leukocyte_eccs=2018_moller_leukocyte_eccs.txt
 #     cd ..
 # done < ${sample_mapfile}
 
-if [ -f "ecc_caller_v_moller_2018_out_table.txt" ]; then
-    rm ecc_caller_v_moller_2018_out_table.txt
+if [ -f "${output_table}" ]; then
+    rm ${output_table}
 fi
 
 while read sample moller_sample; do
     cd ${sample}
-    python /global/home/users/pierrj/git/python/ecc_caller_v_moller_2018.py 2018_moller_muscle_eccs.txt ${moller_sample} ${sample}.ecc_caller_out.details.txt ${sample}.ecc_caller_out.uniq.details.txt muscle ${sample} ${sample}.ecc_caller_v_moller_2018
-    cat ${sample}.ecc_caller_v_moller_2018 >> ecc_caller_v_moller_2018_out_table.txt
+    python /global/home/users/pierrj/git/python/ecc_caller_v_moller_2018.py ${moller_muscle_eccs} ${moller_sample} ${sample}.ecc_caller_out.details.txt ${sample}.ecc_caller_out.uniq.details.txt muscle ${sample} ${sample}.ecc_caller_v_moller_2018
+    cat ${sample}.ecc_caller_v_moller_2018 >> ${output_table}
     cd ..
 done < ${muscle_mapfile}
 
@@ -56,7 +57,7 @@ done < ${muscle_mapfile}
 
 while read sample moller_sample; do
     cd ${sample}
-    python /global/home/users/pierrj/git/python/ecc_caller_v_moller_2018.py 2018_moller_muscle_eccs.txt ${moller_sample} ${sample}.ecc_caller_out.details.txt ${sample}.ecc_caller_out.uniq.details.txt leukocytes ${sample} ${sample}.ecc_caller_v_moller_2018
-    cat ${sample}.ecc_caller_v_moller_2018 >> ecc_caller_v_moller_2018_out_table.txt
+    python /global/home/users/pierrj/git/python/ecc_caller_v_moller_2018.py ${moller_leukocyte_eccs} ${moller_sample} ${sample}.ecc_caller_out.details.txt ${sample}.ecc_caller_out.uniq.details.txt leukocytes ${sample} ${sample}.ecc_caller_v_moller_2018
+    cat ${sample}.ecc_caller_v_moller_2018 >> ${output_table}
     cd ..
 done < ${leukocytes_mapfile}
