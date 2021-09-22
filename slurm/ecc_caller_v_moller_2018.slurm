@@ -57,6 +57,7 @@ done < ${muscle_mapfile}
 
 while read sample moller_sample; do
     cd ${sample}
+    echo stuff?
     python /global/home/users/pierrj/git/python/ecc_caller_v_moller_2018.py ${moller_leukocyte_eccs} ${moller_sample} ${sample}.ecc_caller_out.details.txt ${sample}.ecc_caller_out.uniq.details.txt leukocytes ${sample} ${sample}.ecc_caller_v_moller_2018
     cat ${sample}.ecc_caller_v_moller_2018 >> ${output_table}
     cd ..
