@@ -16,7 +16,7 @@ moller_2018_eccs = []
 with open(moller_2018, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     for row in file_reader:
-        if row[0] == "01t" and row[1] != 'chrMT' and row[9] != "lowqual" :
+        if row[0] == sample_moller and row[1] != 'chrMT' and row[9] != "lowqual" :
             if row[1][3:] == 'X':
                 chrom = 23
             elif row[1][3:] == 'Y':
