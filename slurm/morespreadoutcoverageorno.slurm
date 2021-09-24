@@ -17,4 +17,4 @@ GENOME_FILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chr
 
 bedtools makewindows -w 100 -g ${GENOME_FILE} > guy11.genome_100bp_windows.bed
 
-bedtools coverage -a guy11.genome_100bp_windows.bed -b no_secondary.filtered.sorted.G3_1A.bam > guy11.genome_100bp_windows.coverage
+bedtools coverage -sorted -a guy11.genome_100bp_windows.bed -b no_secondary.filtered.sorted.G3_1A.bam > guy11.genome_100bp_windows.coverage
