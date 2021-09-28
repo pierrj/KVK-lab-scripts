@@ -105,7 +105,7 @@ OUTPUT_NAME=G3
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/
 
-/global/home/users/pierrj/git/bash/ecc_dna_vs_expression.sh -g ${GENOME_FASTA} \
+/global/home/users/pierrj/git/bash/output_neverfound_common_genes.sh -g ${GENOME_FASTA} \
     -s ${SAMPLE} -a ${SRA_LIST} -t ${THREADS} -l ${LIB_TYPE} -f ${GFF_FILE} \
     -e ${ECCDNA_MAPFILE} -m ${SAMPLE_MAPFILE} -n n
 

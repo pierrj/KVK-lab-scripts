@@ -22,9 +22,11 @@
 
 # awk '{sum += $4} END { print sum/NR }' guy11.genome_100bp_windows.coverage
 
+# 468.152
+
 # awk '{x+=$4;y+=$4^2}END{print sqrt(y/NR-(x/NR)^2)}' guy11.genome_100bp_windows.coverage
 
-
+# 3922.62
 
 
 
