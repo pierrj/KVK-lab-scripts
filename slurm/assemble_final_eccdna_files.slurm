@@ -20,7 +20,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile
 
@@ -28,26 +28,26 @@ cp ${output_file} ${output_file}.old
 
 sort -k2,2 -k3,3n ${output_file}.old > ${output_file}
 
-cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio
 
 output_file=this_study_moryzae_pacbio_eccdnas.txt
+
+## need to fixx this
 
 if [ -f "${output_file}" ]; then
     rm ${output_file}
 fi
 
 while read sample; do
-    cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
-    cd ..
-done < mapfile
+    awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ${output_file}
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all/mapfile
 
 cp ${output_file} ${output_file}.old
 
 sort -k2,2 -k3,3n ${output_file}.old > ${output_file}
 
 
-cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control/
+cd /global/scratch/users/pierrj/eccDNA/stress_experiments/rice_control
 
 output_file=this_study_osativa_eccdnas.txt
 
@@ -57,7 +57,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < $mapfile
 
@@ -76,7 +76,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_muscle
 
@@ -93,7 +93,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_leukocytes
 
@@ -112,7 +112,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_flower
 
@@ -128,7 +128,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_leaf
 
@@ -144,7 +144,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_root
 
@@ -160,7 +160,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_stem
 
@@ -179,7 +179,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_ENA_ara_wt
 
@@ -195,7 +195,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_ENA_ara_epi
 
@@ -211,7 +211,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_ENA_ory_callus
 
@@ -227,7 +227,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_ENA_ory_leaf
 
@@ -243,7 +243,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_ENA_ory_seed
 
@@ -271,7 +271,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_d
 
@@ -291,7 +291,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_z
 
@@ -311,7 +311,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_g
 
@@ -331,7 +331,7 @@ fi
 
 while read sample; do
     cd ${sample}
-        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
+        awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
 done < mapfile_s
 
