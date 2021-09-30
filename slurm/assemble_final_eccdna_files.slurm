@@ -39,7 +39,7 @@ if [ -f "${output_file}" ]; then
 fi
 
 while read sample; do
-    awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}.ecc_caller_out.details.nolowq.txt >> ${output_file}
+    awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3}' ${sample}_pacbio_eccs.bed >> ${output_file}
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_all/mapfile
 
 cp ${output_file} ${output_file}.old
@@ -59,7 +59,7 @@ while read sample; do
     cd ${sample}
         awk -v OFS='\t' -v s=${sample} '{print s, $1, $2, $3, $4}' ${sample}.ecc_caller_out.details.nolowq.txt >> ../${output_file}
     cd ..
-done < $mapfile
+done < mapfile
 
 cp ${output_file} ${output_file}.old
 
