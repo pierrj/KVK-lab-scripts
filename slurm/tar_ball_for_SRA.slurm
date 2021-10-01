@@ -12,4 +12,4 @@
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/tarball
 
-tar -czvf moryzae_illumina.tar.gz mylist.txt
+tar -czvf moryzae_illumina.tar.gz -T mylist.txt
