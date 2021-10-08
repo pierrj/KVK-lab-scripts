@@ -89,4 +89,6 @@ while read -r ORGANISM_NAME GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FI
     done < $SAMPLE_MAPFILE
 done < mapfile_ecc_count
 
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison_re
+
 paste ecc_count_comparison.txt ecc_count_metadata.txt > ecc_count_comparison_w_metadata.txt
