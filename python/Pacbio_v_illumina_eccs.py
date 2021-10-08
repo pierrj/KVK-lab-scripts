@@ -80,4 +80,4 @@ pacbio_eccs_splitreads_overlap = len(pacbio_with_overlap_splitreads)
 
 with open(output, 'w', newline = '') as output_csv:
     w = csv.writer(output_csv, delimiter = '\t')
-    w.writerow([sample, pacbio_eccs, pacbio_with_overlap, pacbio_with_overlap_splitreads])
+    w.writerow([sample, pacbio_eccs_count, pacbio_eccs_overlap, pacbio_eccs_splitreads_overlap])
