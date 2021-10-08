@@ -12,7 +12,7 @@
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 
-output_table= /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/srs_per_reads
+output_table=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/srs_per_reads
 
 if [ -f "${output_table}" ]; then
     rm ${output_table}
@@ -22,7 +22,7 @@ while read sample; do
     cd ${sample}
         read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam)
         sr_count=$(wc -l ${sample}.ecc_caller_out.splitreads.bed | awk '{print $1}')
-        echo -e ${sample}'\t'${read_count}'\t'${sr_count}
+        echo -e ${sample}'\t'${read_count}'\t'${sr_count} >> /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/srs_per_reads
     cd ..
 done < mapfile
 
