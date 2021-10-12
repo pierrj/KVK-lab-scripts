@@ -18,7 +18,7 @@ output_name = str(sys.argv[1])
 output_number = str(sys.argv[2])
 bam_file = str(sys.argv[3])
 
-# read in output from cluster_eccs.py, input must be named merged.confirmed with chunk number for parallelization
+# read in output from splitread calls, input must be named merged.confirmed with chunk number for parallelization
 with open('merged.confirmed'+output_number) as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
     flat_merged_list = [[int(row[0]), int(row[1]), int(row[2]), int(row[3])] for row in merged_reader]
