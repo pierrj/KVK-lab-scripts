@@ -12,6 +12,8 @@
 
 cd /global/scratch/users/pierrj/moryzae_pav/tree_making
 
+source activate /global/scratch/users/pierrj/conda_envs/orthofinder
+
 ls Single_Copy_Orthologue_Sequences_jan_04_2021 > sco_mapfile
 
 if [ -d "Single_Copy_Orthologue_Sequences_jan_04_2021_msas" ]; then
