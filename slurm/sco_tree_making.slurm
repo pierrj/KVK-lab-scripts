@@ -20,6 +20,8 @@ if [ -d "Single_Copy_Orthologue_Sequences_jan_04_2021_msas" ]; then
     rm -r Single_Copy_Orthologue_Sequences_jan_04_2021_msas
 fi
 
+mkdir Single_Copy_Orthologue_Sequences_jan_04_2021_msas
+
 while read orthogroup; do
     mafft --maxiterate 1000 --globalpair --thread 24 Single_Copy_Orthologue_Sequences_jan_04_2021/${orthogroup} > \
         Single_Copy_Orthologue_Sequences_jan_04_2021_msas/${orthogroup}.msa
