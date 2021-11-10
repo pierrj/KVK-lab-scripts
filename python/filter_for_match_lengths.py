@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2020 Pierre Michel Joubert
+#Copyright (c) 2021 Pierre Michel Joubert
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -36,14 +36,14 @@ with open(input_file, newline = '') as file:
         w = csv.writer(confirmed, delimiter = '\t')
         for row1 in file_reader:
             row2 = next(file_reader)
-            matches_row1 = re.findall(r'(\d+)([A-Z]{1})', row1[5])
+            matches_row1 = re.findall(r'(\d+)([A-Z]{1})', row1[5]) ## regexp to process cigar string for match lengths
             matches_sums_row1 = {'M': 0, 'other': 0}
             for i in range(len(matches_row1)):
                 if matches_row1[i][1] == 'M':
                     matches_sums_row1['M'] += int(matches_row1[i][0])
                 else:
                     matches_sums_row1['other'] += int(matches_row1[i][0])
-            matches_row2 = re.findall(r'(\d+)([A-Z]{1})', row2[5])
+            matches_row2 = re.findall(r'(\d+)([A-Z]{1})', row2[5]) ## regexp to process cigar string for match lengths
             matches_sums_row2 = {'M': 0, 'other': 0}
             for i in range(len(matches_sums_row2)):
                 if matches_row2[i][1] == 'M':
@@ -52,6 +52,6 @@ with open(input_file, newline = '') as file:
                     matches_sums_row2['other'] += int(matches_row2[i][0])
             read_length_matches = matches_sums_row1['M'] + matches_sums_row2['M']
             read_length_nonmatches = matches_sums_row1['other'] + matches_sums_row2['other']
-            if math.isclose(read_length_matches,read_length_nonmatches, abs_tol=10):
+            if math.isclose(read_length_matches,read_length_nonmatches, abs_tol=10): ## make sure the match lengths for either side of the split reads are close enough
                 w.writerow(row1)
                 w.writerow(row2)

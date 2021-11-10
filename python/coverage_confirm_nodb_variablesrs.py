@@ -1,8 +1,42 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import sys
 import csv
 import numpy as np
 import statistics
 import subprocess
+
+## USAGE ##
+# this python script uses read coverage information as well as split read count to assign confidence to eccDNA regions
+# this version has variable numbers of srs to be used especially for eccDNA calling from single end reads
+# lowq eccDNA regions either have read coverage less than 95% or only one split read
+# conf eccDNA regions have more than two split reads but are not more covered than neighboring regions
+# hconf eccDNA regions have more than three split reads OR two split reads and are more covered than neighboring regions
+# options:
+# "output_name" - sample name/output prefix
+# "output_number" - used to keep track of GNU parallel chunks
+# "bam_file" - input bamfile of mapped reads
+# "min_sr" - srs required for not lowq
+# "hconf_sr" - srs required for hconf
 
 output_name = str(sys.argv[1])
 
@@ -14,30 +48,32 @@ min_sr = int(sys.argv[4])
 
 hconf_sr = int(sys.argv[5])
 
+# read in output from splitread calls, input must be named merged.confirmed with chunk number for parallelization
 with open('merged.confirmed'+output_number) as merged:
     merged_reader = csv.reader(merged, delimiter = '\t')
     flat_merged_list = [[int(row[0]), int(row[1]), int(row[2]), int(row[3])] for row in merged_reader]
 
+# function that does the confidence assignments
 def confidence_check(ecc):
     # get coverage of confirmed ecc region
     region_len = ecc[2] - ecc[1]
-    beforestart = ecc[1] - region_len
+    beforestart = ecc[1] - region_len # get coordinates of regions before and after
     afterstart =  ecc[2] + 2 + region_len
-    if beforestart > 0:
+    if beforestart > 0: # deal with what happens if the region before includes the end of the scaffold
         region = [ecc[0], beforestart, afterstart]
     else:
         region = [ecc[0], ecc[1], afterstart]
-    samtools_get_region = ['samtools', 'depth', '-a', '-d 8000', '-r', str(region[0]+1)+':'+str(region[1])+'-'+str(region[2]), bam_file]
+    samtools_get_region = ['samtools', 'depth', '-a', '-d 8000', '-r', str(region[0]+1)+':'+str(region[1])+'-'+str(region[2]), bam_file] # get region coverage
     sp = subprocess.Popen(samtools_get_region, shell= False, stdout=subprocess.PIPE)
-    region_cov = [int(line.decode("utf-8").strip().split("\t")[2]) for line in sp.stdout]
-    if beforestart > 0:
+    region_cov = [int(line.decode("utf-8").strip().split("\t")[2]) for line in sp.stdout] # translate samtools output to list
+    if beforestart > 0: # deal with what happens if the region before includes the end of the scaffold
         ecc_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
         before_region_cov = region_cov[0:region_len+1]
         after_region_cov = region_cov[(2 * region_len)+2:]
     else:
         ecc_region_cov = region_cov[0:region_len+1]
         after_region_cov = region_cov[region_len+1:((2 * region_len+1)+1)]
-    mean_region = round(statistics.mean(ecc_region_cov), 2)
+    mean_region = round(statistics.mean(ecc_region_cov), 2) # get mean coverage for target region, as well as regions before and after
     if beforestart > 0:
         mean_before = round(statistics.mean(before_region_cov), 2)
     else:

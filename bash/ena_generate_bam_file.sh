@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 while getopts g:1:2:s:t:m:q:w: option
 do
@@ -14,11 +35,29 @@ w) READTWO_LINK=${OPTARG};;
 esac
 done
 
+## USAGE ##
+# generates a bam file from fastq files
+# filters the bam file to contigs of interest
+# can be replaced by any filtered bam file
+# options:
+# -g path to bwa genome database name
+# -1 path to read 1 fastq file
+# -2 path to read 2 fastq file
+# -s should be SRA accession
+# -t threads
+# -m mapfile with names of contigs of interest, as written in the fasta file used to make bwa genome database
+# -q url to read 1 fastq file
+# -w url to read 2 fastq file
+
+# download reads from ENA
 curl -O ${READONE_LINK}
 curl -O ${READTWO_LINK}
+
+# cutadapt uses specific adapters here, will be replaced with trimmomatic which predicts adapters automatically eventually
+# nextseq-trim option is necessary for nextseq data
 cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq ${READONE} ${READTWO}
 
-# map reads
+# map reads, making sure to insign indepedent quality scores to split reads, and to write secondary alignments
 bwa mem -q -a -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
 
 # generate bam file from sam, this should probably just be passed as an option to bwa mem
@@ -33,7 +72,7 @@ samtools view -b ${SAMPLE}.sorted.mergedandpe.bwamem.bam $(cat ${MAPFILE} | tr "
 samtools view -b -F 256 filtered.sorted.${SAMPLE}.bam > no_secondary.filtered.sorted.${SAMPLE}.bam
 samtools view -b -q 1 no_secondary.filtered.sorted.${SAMPLE}.bam > uniq.filtered.sorted.${SAMPLE}.bam
 
-# COMMENTS MISSING
+# sort by read name for subsampling reads later
 samtools sort -n -@ ${THREADS} filtered.sorted.${SAMPLE}.bam > multimapped.filtered.name_sorted.${SAMPLE}.bam
 
 

@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 #SBATCH --job-name=get_split_reads_no_confirm
 #SBATCH --partition=savio
@@ -11,7 +32,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
-
+# list of contignames of interest
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 THREADS=20
 
@@ -25,6 +46,7 @@ while read sample; do
         FILTERED_BAMFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/uniq.filtered.sorted.${sample}.bam
         FILTERED_BAMFILE_QSORTED=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/multimapped.filtered.name_sorted.${sample}.bam
 
+        # grab any and all split reads as long as they are properly oriented and have more than 9 bp overlap on either side
         samtools view -f 81 -F 4 ${FILTERED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
         splitread_file="reverseread1.${SAMPLE}.sam"
         awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 9 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 9) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
@@ -114,9 +136,6 @@ while read sample; do
             tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reversemerged.${SAMPLE}.sam \
             tmp.oriented.samechromosome.exactlytwice.qualityfiltered.forwardmerged.${SAMPLE}.sam > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
-        # verify that the match lengths on either side match up so that only proper split reads are looked on
-        # python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
-
         cp tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
         # converting to bed file
@@ -184,6 +203,7 @@ while read sample; do
         # here we are including any split read that matches the required quality filter regardless of how they are oriented to each other
         samtools view -b -F 256 ${FILTERED_BAMFILE_QSORTED} > primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
+        # grab any and all split reads as long as they are properly oriented and have more than 9 bp overlap on either side
         samtools view -f 65 -F 4 primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam > tmp.primary_only.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam
         file='1'
         awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 9 ) print $0; else if (b !~ /[DMIHS]/ && int(b) > 9) print $0}' tmp.primary_only.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam > tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam
@@ -335,6 +355,7 @@ while read sample; do
         awk -v OFS='\t' '{print $1+1, $2, $3}' parallel.confirmed > parallel.plusone.confirmed
         awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.plusone.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 
+        #cat mapq0 choices plus uniquely mapped short reads, all false positives are included
         cat lengthfiltered.merged.splitreads.${sample}.bed mapq0_single_unique_choices.bed | sort -k1,1 -k2,2n | uniq > ${sample}.mapq0_and_uniq_splitreads.allfalsepositives.bed
     cd ..
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile

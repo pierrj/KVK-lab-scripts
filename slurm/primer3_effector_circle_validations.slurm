@@ -96,3 +96,5 @@ NUM_PRIMER_PAIRS=2
 
 cat effector_circle_validation_nopita1_primers.txt avrpita1_circle_validation_primers.txt fungicide_circle_validation_primers.txt > junction_validation_primers.txt
 cat effector_circle_validation_nopita1_primers.txt.product_sizes avrpita1_circle_validation_primers.txt.product_sizes fungicide_circle_validation_primers.txt.product_sizes > junction_validation_primers.txt.product_sizes
+
+cat all_effectors_nopita1_circles AvrPita1_circles all_fungicide_circles > all_validated_circle_locations.bed

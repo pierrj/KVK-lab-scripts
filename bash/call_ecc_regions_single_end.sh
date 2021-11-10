@@ -1,4 +1,24 @@
-#!/bin/bash
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 while getopts m:s:t:b:q: option
 do
@@ -12,6 +32,23 @@ q) FILTERED_BAMFILE_QSORTED=${OPTARG};; ## THIS SHOULD BE QNAME SORTED AND INCLU
 esac
 done
 
+## USAGE ##
+# call eccDNA forming regions using split reads and opposite facing read pairs
+# options:
+# -m mapfile with names of contigs of interest, as written in the fasta file used to make bwa genome database
+# -s sample name/output prefix
+# -t threads
+# -b coordinate sorted bamfile of mapped reads, only primary alignments
+# -q qname sorted bamfile, including secondary alignments
+
+## The first section of this scripts only process uniquely mapped reads
+
+# divide up reads from bam file based on their orientation to ensure that both sides of split read are mapped in the same direction
+# filter to split reads
+# filter split reads so that either side of the junction is at least 20 bp
+# make sure split reads appear only twice, clearly representing an eccDNA junction
+# make sure split reads map to the same chromosome (split reads mapping to different chromosomes would need to be analyzed using a different pipeline because opposite facing read pairs wouldn't make sense)
+# make sure split read halves are properly oriented to that they represent eccDNA junctions and not potential introns ( ---> gap --- is an eccDNA junction vs --- gap ---> is an intron)
 samtools view -f 16 -F 4 ${FILTERED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
 splitread_file="reverseread1.${SAMPLE}.sam"
 awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0, 1; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0, 2}' tmp.${splitread_file} > tmp.qualityfiltered.${splitread_file}
@@ -38,9 +75,11 @@ awk -v OFS='\t' '{
     }
 }' tmp.samechromosome.exactlytwice.qualityfiltered.${splitread_file} | awk -v OFS='\t' '{$NF=""; print $0}' | sed 's/[ \t]\+$//' > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.${splitread_file}
 
+# putting them all back together
 cat tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMPLE}.sam \
     tmp.oriented.samechromosome.exactlytwice.qualityfiltered.forwardread1.${SAMPLE}.sam > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
+# verify that the match lengths on either side match up so that only proper split reads are looked on
 python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
 # converting to bed file
@@ -67,10 +106,15 @@ for (( i = 1 ; i < ${chrom_count}+1; i++)); do echo $i ; done > tmp.chrom_count
 paste tmp.chrom_count ${MAPFILE} > tmp.chrom_count_and_names
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names lengthfiltered.merged.splitreads.${SAMPLE}.bed > lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed
 
+# no confirming here bc this is for single end read not paired end
 awk -v OFS='\t' '{print $1, $2, $3}' lengthfiltered.merged.splitreads.${SAMPLE}.renamed.bed > unique_parallel.confirmed
 
+## get length distribution of eccDNAs from uniquely mapped reads
 awk '{print $3-$2}' unique_parallel.confirmed > dsn.unique_parallel.confirmed
 
+## primary only bc of the exactly twice filter
+# for multimapped read we want to broaden our scope of split reads
+# here we are including any split read that matches the required quality filter regardless of how they are oriented to each other
 samtools view -b -F 256 ${FILTERED_BAMFILE_QSORTED} > primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
 samtools view -F 4 primary_only.${SAMPLE}.sorted.mergedandpe.bwamem.bam > tmp.primary_only.filtered.sorted.allmapq.mapped.1.${SAMPLE}.sam
@@ -78,6 +122,7 @@ file='1'
 awk -v OFS='\t' '{a=gensub(/^([0-9]+)M.*[HS]$/, "\\1", "", $6); b=gensub(/.*[HS]([0-9]+)M$/, "\\1", "", $6); if (a !~ /[DMIHS]/ && int(a) > 19 ) print $0; else if (b !~ /[DMIHS]/ && int(b) > 19) print $0}' tmp.primary_only.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam > tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam
 awk 'NR==FNR{a[$1]++; next} a[$1]==2' tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam tmp.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam > tmp.exactlytwice.qualityfiltered.filtered.sorted.allmapq.mapped.${file}.${SAMPLE}.sam
 
+# sort split reads by how many ends are multi-mapped
 awk -v OFS='\t' '{
     prev=$0; f1=$1 ; f5=$5
     getline 
@@ -97,6 +142,7 @@ awk -v OFS='\t' '{
 
 samtools view -b -F 4 ${FILTERED_BAMFILE_QSORTED} > tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam
 
+# use picard filter sam reads to extract split reads identified above and all their possible secondary alignnents
 java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar FilterSamReads \
         INPUT=tmp.filtered.sorted.allmapq.mapped.1.${SAMPLE}.bam \
         OUTPUT=${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bam \
@@ -111,12 +157,14 @@ java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.
         FILTER=includeReadList \
         SORT_ORDER=unsorted
 
+# convert to bed files and merge
 bedtools bamtobed -cigar -i ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bed
 bedtools bamtobed -cigar -i ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.1.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.1.bed
 
 cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.1.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.bed
 cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.1.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed
 
+# split files into chunks for parallelization and fix chunks so that a read name isnt present in two chunks
 split --number=l/${THREADS} --numeric-suffixes=1 --additional-suffix=.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.bed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.
 
 for i in $(seq -w 1 1 $THREADS); do
@@ -133,18 +181,22 @@ done < tmp.seqs
 
 cp ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.doublemapq0.chunk.${THREADS}.bed multimapped_splitreads.${THREADS}.bed
 
+# run through python script which calls putative eccdna forming regions from multimapping reads based off the length distribution from uniquely mapped eccDNAs
 parallel -j ${THREADS} --link python /global/home/users/pierrj/git/python/ecc_calling_mapq0.py dsn.unique_parallel.confirmed  multimapped_splitreads.{}.bed 50000 {} ::: $(seq -w 1 ${THREADS})
 
 python /global/home/users/pierrj/git/python/ecc_calling_mapq0_singleunique.py dsn.unique_parallel.confirmed ${SAMPLE}.sorted.mergedandpe.bwamem.multimapped_splitreads.singleunique.bed 50000
 
+# merge all chunks together then confirm as before
 cat mapq0_choices.* singleunique_choices > mapq0_single_unique_choices.bed
 
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names mapq0_single_unique_choices.bed > mapq0_single_unique_choices.renamed.bed
 
+# again no confirming done here bc of single end reads
 cp mapq0_single_unique_choices.renamed.bed mapq0_parallel.confirmed
 
 cat unique_parallel.confirmed mapq0_parallel.confirmed > parallel.confirmed
 
+# rename scaffolds in parallel.confirmed
 paste ${MAPFILE} tmp.chrom_count > tmp.chrom_names_and_count
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_names_and_count parallel.confirmed > ${SAMPLE}.confirmedsplitreads.bed
 

@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import csv
 import numpy as np
 import sys
@@ -7,6 +28,15 @@ illumina_file = sys.argv[2]
 illumina_file_split_reads = sys.argv[3]
 output = sys.argv[4]
 sample = sys.argv[5]
+
+## USAGE ##
+# this script takes illumina called eccdnas, illumina split reads and compares them to pacbio called eccdnas
+# options:
+# "pacbio_file" - eccdnas called with pacbio reads
+# "illumina_file" - eccdnas called with illumina reads
+# "illumina_file_split_reads" - split reads with very little qc (all false positives)
+# "output" - output file
+# "sample" - sample name
 
 pacbio_eccs = []
 with open(pacbio_file, newline = '') as file:

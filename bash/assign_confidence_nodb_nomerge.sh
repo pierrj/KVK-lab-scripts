@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 while getopts m:s:t:b:r: option
 do
@@ -19,7 +40,7 @@ done
 # -m mapfile with names of contigs of interest, as written in the fasta file used to make bwa genome database
 # -s sample name/output prefix
 # -t threads
-# -b bamfile of mapped reads, filtered to contigs of interest
+# -b bamfile of mapped reads, filtered to contigs of interest, which contains multi-mapped reads but no secondary alignments
 # -r confirmed split read file, output of call_ecc_regions.sh
 
 # get chrom/scaffold count from mapfile
@@ -36,9 +57,6 @@ samtools index renamed.filtered.sorted.${SAMPLE}.bam
 # parallel.confirmed is input for cluster_eccs.py
 awk -v OFS='\t' 'NR==FNR{a[$2]=$1;next}{$1=a[$1];}1' tmp.chrom_count_and_names ${CONFIRMED_SPLITREADS} > parallel.plusone.confirmed
 awk -v OFS='\t' '{print $1-1, $2, $3}' parallel.plusone.confirmed > parallel.confirmed
-
-# uses hierarchical clustering to merge highly similar confirmed eccDNA forming regions together
-# see cluster_eccs.py for more info
 sort -k1,1n -k2,2n parallel.confirmed | uniq -c | awk -v OFS='\t' '{print $2, $3, substr($4,0,length($4)-1), $1}' > merged.confirmed
 
 # split confirmed eccDNA forming regions into chunks to be used with GNU parallel
@@ -77,5 +95,3 @@ rm tmp.*
 rm ecccaller_output.${SAMPLE}.renamed.details.tsv
 rm ecccaller_output.${SAMPLE}.renamed.bed
 rm ecccaller_output.splitreads.${SAMPLE}.renamed.bed
-
-## should probably sort outputs at the end

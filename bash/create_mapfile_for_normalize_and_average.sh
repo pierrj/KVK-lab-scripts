@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 while getopts m:t:n:y: option
 do
@@ -10,11 +31,15 @@ y) NORMALIZE_TYPE=${OPTARG};; ## can be either an example file name, e, or a tab
 esac
 done
 
+## USAGE ##
+# this script generates a mapfile to be used with normalize_and_average.sh script
+# see description of options above
+
 if [ -f "mapfile_for_normalize_and_average" ]; then
     rm mapfile_for_normalize_and_average
 fi
 
-## GET SAMPLE ##
+## get sample name from formats
 
 sample=$(head -1 ${MAPFILE} | cut -f1)
 
@@ -24,6 +49,7 @@ end_string_file=$(echo ${FILE} | awk -F"${sample}" 'BEGIN {OFS=FS} {sub($1 FS,""
 
 if [[ "${NORMALIZE_TYPE}" == "e" ]]
 then
+# get files names if normalizing to files
 start_string_normalize_file=$(echo ${NORMALIZE_FILE} | awk -F"${sample}" 'BEGIN {OFS=FS} {sub(FS $2,"")}1')
 end_string_normalize_file=$(echo ${NORMALIZE_FILE} | awk -F"${sample}" 'BEGIN {OFS=FS} {sub($1 FS,"")}1')
 elif [[ "${NORMALIZE_TYPE}" != "t" ]]
@@ -31,6 +57,7 @@ then
 echo "invalid normalize file type"
 fi
 
+# write out treatment, biological replicate and technical replicate for each sample in addition to normalization file
 while read line; 
 do
     sample=$(echo "$line" | cut -f1)
