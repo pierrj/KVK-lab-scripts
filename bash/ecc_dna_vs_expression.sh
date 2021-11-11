@@ -1,4 +1,25 @@
-#!/bin/bash
+
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.#!/bin/bash
 while getopts g:s:a:t:l:f:e:m:n: option
 do
 case "${option}"
@@ -14,6 +35,17 @@ m) SAMPLE_MAPFILE=${OPTARG};;
 n) ECC_NORMALIZATION=${OPTARG};; ## g for gene length multiplication or a for any overlap or n for no normalization
 esac
 done
+
+## USAGE ##
+# this script maps rnaseq data and compares it to junction split reads associated with eccdnas
+# -g genome fasta file
+# -s output short name
+# -t threads for STAR
+# -l library type, either single end or paired end
+# -f gff file of gene annotations
+# -e list of eccdna files
+# -m list of eccdna sequencing sample names
+# -n type of normalization for number of junction split reads for genes, usually no normalization makes sense
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
@@ -37,7 +69,6 @@ basename_gff_file=$(basename ${GFF_FILE})
 grep 'exon' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
 awk '{if ($3 == "gene") print $0}' ${GFF_FILE} > ${basename_gff_file}.justgenes
 awk '{if ($3 == "gene") print $0}' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' | awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.gene_lengths
-## NEED TO TEST WITH AND WITHOUT THIS XFORMATION TO COMPARE OUTPUT
 
 
 ## download and map all reads in passed list of SRA accessions
@@ -78,7 +109,7 @@ paste $(find . -maxdepth 1 -name "${SAMPLE}.RPKM.*.ReadsPerGene.out.genecolumn.t
 awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' ${SAMPLE}.genecount_table > ${SAMPLE}.genecount_table_average
 paste ${SAMPLE}.genecount_firstcolumn ${SAMPLE}.genecount_table_average > ${SAMPLE}.genecount_table_final
 
-## look at confirmed spit reads per gene in all technical replicates
+## look at junction split reads spit reads per gene in all technical replicates
 ## normalize to limit bias against small genes which are more likely to be found in eccDNAs
 if [ -f "${SAMPLE}.mapfile_for_normalize_and_average_filecolumn" ]; then
     rm ${SAMPLE}.mapfile_for_normalize_and_average_filecolumn
@@ -160,9 +191,3 @@ paste ${SAMPLE}.genesperk100kb ${SAMPLE}.normalized.splitreadsper100kb.countcolu
 # number of genes per 100kb bins versus eccDNA forming regions (averages per scaffold)
 awk '{print $2}' ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage > ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn
 paste ${SAMPLE}.genesper100kb.scaffoldaverage ${SAMPLE}.normalized.splitreadsper100kb.scaffoldaverage.countcolumn > ${SAMPLE}.SRsvsgenesperk100kbperscaffold
-
-Rscript --vanilla /global/home/users/pierrj/git/R/basic_scatterplot.R ${SAMPLE}.RPKMvsSRs 2 3 RPKM SRs ${SAMPLE}.RPKMvsSRs ${SAMPLE}.RPKMvsSRs 4 4
-
-Rscript --vanilla /global/home/users/pierrj/git/R/basic_scatterplot.R ${SAMPLE}.SRsvsgenesper100kb 4 5 GenesPer100kb SRs ${SAMPLE}.SRsvsgenesper100kb ${SAMPLE}.SRsvsgenesper100kb 4 4
-
-Rscript --vanilla /global/home/users/pierrj/git/R/basic_scatterplot.R ${SAMPLE}.SRsvsgenesperk100kbperscaffold 2 3 GenesPerScaffold SRs ${SAMPLE}.SRsvsgenesperk100kbperscaffold ${SAMPLE}.SRsvsgenesperk100kbperscaffold 4 4 

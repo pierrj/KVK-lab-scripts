@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 while getopts o:g:s:d:f:c:y:n: option
 do
@@ -16,8 +37,19 @@ done
 
 WORKING_DIR=$(pwd)
 
-## FILTER GFF AND OTHER BEDFILES TO ECC INPUT
+## USAGE ##
+# this script calculates which regions of the genome are enriched for micro DNAs and large eccDNAs
+# -o name of the organism
+# -g gff file of gene annotations
+# -s mapfile containing list of eccDNA sample names
+# -d directory where eccDNA data is locatied
+# -f genome fasta file
+# -c bed file of copia element locations
+# -y bed file of gypsy element locations
+# -n list of scaffolds of interest within genome file
 
+
+# first off filter all files to scaffolds of interest, the ones use for eccdna calling
 samtools faidx ${GENOME_FILE} $(cat ${CONTIGNAMES_FILE} | tr "\n" " ") > ${GENOME_FILE}.filtered
 GENOME_FILE=$(realpath ${GENOME_FILE}.filtered)
 
@@ -37,26 +69,28 @@ COPIA_FILE=$(realpath ${COPIA_FILE}.filtered)
 bedtools intersect -header -u -a ${GYPSY_FILE} -b ${GENOME_CHROMSIZES_FOR_INTERSECT} > ${GYPSY_FILE}.filtered
 GYPSY_FILE=$(realpath ${GYPSY_FILE}.filtered)
 
-## generate some extra needed files
 
+# make a gene bedfile
 basename_gff=$(basename ${GENE_GFF})
 awk -v OFS='\t' '{if ($3 ~ /gene/) {print $1, $4, $5, $9}}' ${GENE_GFF} | sort -k1,1 -k2,2n > ${basename_gff}.bed
 GENE_BEDFILE=$(realpath ${basename_gff}.bed)
 
+# all te locations
 cat ${COPIA_FILE} ${GYPSY_FILE} > ${ORGANISM}.ltr_te_locs
 LTR_TE_LOCS=$(realpath ${ORGANISM}.ltr_te_locs)
 
+# get lengths of scaffolds of interest
 samtools faidx ${GENOME_FILE}
 cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
 GENOME_CHROMSIZES=$(realpath ${GENOME_FILE}.chromsizes)
 
-## make sure to activate conda env for this and export perl5lib
+# fix and standardize gffs
 agat_convert_sp_gff2gtf.pl --gff ${GENE_GFF} -o ${ORGANISM}.gtf > agat_output 2>&1
 GENE_GTF=$(realpath ${ORGANISM}.gtf)
 
 
 
-## make portions
+## make regions of interest files
 
 # exons
 
@@ -66,7 +100,7 @@ awk '$3 ~ /exon/' ${GENE_GFF} | awk -v OFS='\t' '{print $1, $4, $5, $9}' > exons
 
 agat_sp_add_introns.pl --gff ${GENE_GFF} -o ${ORGANISM}.tmpintrons > agat_output_intron 2>&1
 
-## for some reason human gff file has a weird intron
+## for some reason human gff file has a weird intron so remove it here
 awk '$3 ~ /intron/' ${ORGANISM}.tmpintrons | awk -v OFS='\t' '{ if ($5 > $4) {print $1, $4, $5, $9}}' > introns
 
 # 2000 bp upstream
@@ -117,7 +151,7 @@ awk -v OFS='\t' '{ if ($3 ~ /five_prime_utr/) {print $1, $4, $5, NR}}' ${GENE_GT
 # three_prime_utr 
 awk -v OFS='\t' '{ if ($3 ~ /three_prime_utr/) {print $1, $4, $5, NR}}' ${GENE_GTF} > three_prime_utr
 
-
+# make mapfile to loop through
 if [ -f "feature_mapfile" ]; then
     rm feature_mapfile
 fi
@@ -141,6 +175,7 @@ ECCDNA_MAPFILE=$(realpath large_eccdna_mapfile)
 
 cd ${ECC_DIR}
 
+# get large eccdna files
 while read sample; do
 cd ${sample}
     bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${COPIA_FILE} | \
@@ -160,7 +195,7 @@ cd ${WORKING_DIR}
 if [ -f "observed_averages_large" ]; then
     rm observed_averages_large
 fi
-
+# for each find the percentage of large eccdnas with any overlap
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.percent_per_sample" ]; then
         rm ${FEATURE_FILE}.percent_per_sample
@@ -180,15 +215,18 @@ while read FEATURE_FILE; do
     fi
 done < feature_mapfile
 
+# generate simulated eccdnas
 for i in {0..9}; do
     if [ -f "permuted_ecc_mapfile" ]; then
         rm permuted_ecc_mapfile
     fi
     while read ECCDNA_FILE; do
         ecc_basename=$(basename ${ECCDNA_FILE})
+        # shuffle eccdnas, excluding ltr retrotranposon locations
         bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
         echo shuffled.${ecc_basename} >> permuted_ecc_mapfile
     done < ${ECCDNA_MAPFILE}
+    # same as before but with shuffled eccdnas
     while read FEATURE_FILE; do
         if [ -f "${FEATURE_FILE}.percent_per_sample" ]; then
             rm ${FEATURE_FILE}.percent_per_sample
@@ -207,6 +245,7 @@ if [ -f "expected_averages_large" ]; then
     rm expected_averages_large
 fi
 
+# final expected output
 while read FEATURE_FILE; do
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{ sum += $1} END {print f, sum/NR}' ${FEATURE_FILE}.permuted >> expected_averages_large
 done < feature_mapfile
@@ -215,11 +254,13 @@ if [ -f "micro_dna_mapfile" ]; then
     rm micro_dna_mapfile
 fi
 
+# same as above but for microdnas
 touch micro_dna_mapfile
 ECCDNA_MAPFILE=$(realpath micro_dna_mapfile)
 
 cd ${ECC_DIR}
 
+# get microdnas files
 while read sample; do
 cd ${sample}
     bedtools intersect -wao -a ${sample}.ecc_caller_out.details.nolowq.txt -b ${COPIA_FILE} | \
@@ -240,6 +281,7 @@ if [ -f "observed_averages_micro" ]; then
     rm observed_averages_micro
 fi
 
+# for each find the percentage of micro dnas with any overlap
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.percent_per_sample" ]; then
         rm ${FEATURE_FILE}.percent_per_sample
@@ -259,15 +301,18 @@ while read FEATURE_FILE; do
     fi
 done < feature_mapfile
 
+# generate simulated microdnas
 for i in {0..9}; do
     if [ -f "permuted_ecc_mapfile" ]; then
         rm permuted_ecc_mapfile
     fi
     while read ECCDNA_FILE; do
         ecc_basename=$(basename ${ECCDNA_FILE})
+        # shuffle eccdnas, excluding ltr retrotranposon locations
         bedtools shuffle -i ${ECCDNA_FILE} -g ${GENOME_CHROMSIZES} -excl ${LTR_TE_LOCATIONS} > shuffled.${ecc_basename}
         echo shuffled.${ecc_basename} >> permuted_ecc_mapfile
     done < ${ECCDNA_MAPFILE}
+    # same as before but with shuffled eccdnas
     while read FEATURE_FILE; do
         if [ -f "${FEATURE_FILE}.percent_per_sample" ]; then
             rm ${FEATURE_FILE}.percent_per_sample
@@ -282,6 +327,7 @@ for i in {0..9}; do
     done < feature_mapfile
 done
 
+#final expected count
 if [ -f "expected_averages_micro" ]; then
     rm expected_averages_micro
 fi

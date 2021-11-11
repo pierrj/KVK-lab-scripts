@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 #!/bin/bash
 #SBATCH --job-name=gene_portions_all
 #SBATCH --partition=savio2
@@ -12,13 +33,14 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/gene_portions/script_test
 
-# cp /global/scratch/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/ecc_count_metadata_unix.txt .
+## just copying the mapfile
+cp /global/scratch/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/ecc_count_metadata_unix.txt .
 
-# cp /global/scratch/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/mapfile_ecc_count .
+cp /global/scratch/pierrj/eccDNA/rerunning_stuff_final/comparative/count_comparison/mapfile_ecc_count .
 
-# uniq ecc_count_metadata_unix.txt > ecc_count_metadata_unix.txt.uniq
+uniq ecc_count_metadata_unix.txt > ecc_count_metadata_unix.txt.uniq
 
-# paste <(awk -v OFS='=' '{print $1, $2, $3, $4, $5}' ecc_count_metadata_unix.txt.uniq) <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) > mapfile_gene_portions
+paste <(awk -v OFS='=' '{print $1, $2, $3, $4, $5}' ecc_count_metadata_unix.txt.uniq) <(awk -v OFS='\t' '{print $3, $6, $1, $2, $4, $5}' mapfile_ecc_count) > mapfile_gene_portions
 
 module load emboss
 
@@ -33,6 +55,7 @@ do
     fi
     mkdir ${ORGANISM_NAME}
     cd ${ORGANISM_NAME}
+        # this gets us the gene portion enrichment data for each feature we are interested in
         /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
             -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
             -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE} -n ${CONTIGNAMES_FILE}
@@ -43,6 +66,7 @@ if [ -f "gene_portions_full_table" ]; then
     rm gene_portions_full_table
 fi
 
+# make table for data analysis
 while read sample; do
 cd ${sample}
     if [ -f "temp.sample_name_column" ]; then
