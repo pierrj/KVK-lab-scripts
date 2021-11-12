@@ -1,3 +1,15 @@
+#!/bin/bash
+#SBATCH --job-name=doesnt_matter
+#SBATCH --account=fc_kvkallow
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
+#SBATCH --time=24:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 #MIT License
 #
 #Copyright (c) 2021 Pierre Michel Joubert
@@ -19,18 +31,7 @@
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
-#!/bin/bash
-#SBATCH --job-name=doesnt_matter
-#SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio2
-#SBATCH --qos=savio_normal
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=24
-#SBATCH --time=24:00:00
-#SBATCH --mail-user=pierrj@berkeley.edu
-#SBATCH --mail-type=ALL
-#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
-#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+
 cd ${SLURM_SUBMIT_DIR}
 cd ${sample}
 
