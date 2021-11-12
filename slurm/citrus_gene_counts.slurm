@@ -29,8 +29,8 @@ if [ -f "${SRA_LIST}" ]; then
 fi
 
 ## add run ids
-echo ERR760726 >> ${SRA_LIST}
-echo ERR760727 >> ${SRA_LIST}
+echo ERR760726 >> ${SRA_LIST} ## aka SAMEA2612286
+echo ERR760727 >> ${SRA_LIST} ## aka SAMEA2612285
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
