@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #MIT License
 #
 #Copyright (c) 2021 Pierre Michel Joubert
@@ -19,7 +19,7 @@
 #AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#SOFTWARE.#!/bin/bash
+#SOFTWARE.
 while getopts g:s:a:t:l:f:e:m:n: option
 do
 case "${option}"
