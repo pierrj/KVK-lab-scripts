@@ -31,6 +31,11 @@ fi
 ## add run ids
 echo ERR760726 >> ${SRA_LIST} ## aka SAMEA2612286
 echo ERR760727 >> ${SRA_LIST} ## aka SAMEA2612285
+echo ERR760723 >> ${SRA_LIST} ## aka SAMEA2612294
+echo ERR760724 >> ${SRA_LIST} ## aka SAMEA2612293
+echo ERR760720 >> ${SRA_LIST} ## aka SAMEA2612298
+echo ERR760721 >> ${SRA_LIST} ## aka SAMEA2612297
+
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
