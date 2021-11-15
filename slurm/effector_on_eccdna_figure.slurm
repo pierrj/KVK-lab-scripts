@@ -10,11 +10,32 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina
 
+# looking at avrpita3
 effector_name=AvrPita3
 effector_chrom=MQOP01000016.1
 effector_start=368546
@@ -25,6 +46,7 @@ effector_gene_name=gene_11229 ## no t1 please
 
 GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 
+# get location of effector from gff
 awk -v g=$effector_gene_name '$9 ~ g' ${GFF_FILE} > /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.gff3
 
 ## get sample of interest
@@ -38,6 +60,7 @@ done < mapfile
 ## pick sample_target manually
 sample_target=G3_1B
 
+# pick a region bordering effectors
 region_start=$(($effector_start-4000))
 region_end=$(($effector_end+4000))
 
@@ -47,6 +70,7 @@ cd ${sample_target}
 
 samtools index no_secondary.filtered.sorted.${sample_target}.bam
 
+## get total reads in region, sort and index
 samtools view -bh no_secondary.filtered.sorted.${sample_target}.bam "${effector_chrom}:${region_start}-${region_end}" > \
     /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.totalreads.bam
 
@@ -55,7 +79,7 @@ samtools sort /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_e
 
 samtools index /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.totalreads.sorted.bam
 
-## get eccs
+## get eccs in region
 
 awk -v c=$effector_chrom -v s=$region_start -v e=$region_end '$1 == c && $2 > s && $3 < e' ${sample_target}.ecc_caller_out.details.nolowq.txt > \
     /global/scratch/users/pierrj/eccDNA/pipeline_tests/gviz_effector_ecc/${effector_name}.${sample_target}.eccs.bed
@@ -69,7 +93,7 @@ GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal20
 
 
 
-## get junction split reads, taken from ecc_caller_mapq0.sh
+## get junction split reads, taken directly from ecc_caller_mapq0.sh
 
 samtools view -f 81 -F 4 ${FILTERED_BAMFILE} > tmp.reverseread1.${SAMPLE}.sam
 splitread_file="reverseread1.${SAMPLE}.sam"
@@ -185,6 +209,7 @@ mv tmp.outwardfacing.${SAMPLE}.bed tmp.outwardfacing.${SAMPLE}.bed.old
 awk 'BEGIN {OFS="\t"}; {print $1,$2,$3,substr($4, 1, length($4)-2),$5,$6}' tmp.outwardfacing.${SAMPLE}.bed.old > tmp.outwardfacing.${SAMPLE}.bed.old.trimmed
 awk 'NR==FNR{a[$4]++; next} a[$4]==2' tmp.outwardfacing.${SAMPLE}.bed.old.trimmed tmp.outwardfacing.${SAMPLE}.bed.old.trimmed > outwardfacing.${SAMPLE}.bed
 
+## get outward facing pe reads
 ## convert to bedpe format and then to bam file
 awk -v OFS='\t' '{
     f1=$1; f2=$2; f3=$3; f4=$4; f5=$5; f6=$6
@@ -203,7 +228,7 @@ samtools sort outwardfacing.${SAMPLE}.bam > outwardfacing.${SAMPLE}.sorted.bam
 
 samtools index outwardfacing.${SAMPLE}.sorted.bam
 
-## get pacbio bam reads
+## get pacbio bam reads, index and sort
 
 samtools sort /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio/${sample_target}_aligned.bam > \
     /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pacbio/${sample_target}_aligned.sorted.bam
@@ -218,7 +243,7 @@ samtools sort ${effector_name}.${sample_target}.pacbioreads.bam > ${effector_nam
 
 samtools index ${effector_name}.${sample_target}.pacbioreads.sorted.bam
 
-## pacbio splitreads specifically maybe?
+## pacbio splitreads specifically, index and sort
 
 samtools view -F 4 ${effector_name}.${sample_target}.pacbioreads.bam | awk '{print $2}' > ${effector_name}.${sample_target}_aligned_samflags
 

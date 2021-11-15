@@ -36,7 +36,9 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/commo
 # gene annotation file
 GENE_GFF=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
 
-# 
+# this script looks for genes that are found in guy11 genomes that are deleted in other moryzae genomes
+# specifically, these must be single gene deletions, where the other moryzae genomes have kept the neighboring genes
+# it outputs the location of putative deletions in other genomes
 python /global/home/users/pierrj/git/python/pav_validation_get_all_gene_deletions.py guy11_vs_others ${GENE_GFF} gffs output_sizes all_gene_deletions_output
 
 source activate mummer
@@ -46,11 +48,16 @@ module load imagemagick
 cd all_gene_deletions_output
 
 REFERENCE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/guy11_genome_baoetal2017.fasta
+# directory containing fasta files for all other moryzae genomes
 GENOME_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/sv_with_mummer/now_with_wheat_genomes_too/all_host_genomes
 SUBDIR_OUTPUT=output_jpgs
+# for auto_mummer_plot.sh, this means no alignments are filtered out bc they are incomplete
 PERCENT_ZEROES_FILTER=1
+# directory where jpegs of mummer alignments are stored
 ALL_JPGS_DIR=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav_validation/jpgs_small_deletions
+# directory where nucmer alignment files are stored
 ALL_COORDS_DIR=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav_validation/coords_small_deletions
+# directory where the location of deletions in genomes are
 ALL_GENELOCS_DIR=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav_validation/genelocs_small_deletions
 
 if [ -d "${ALL_JPGS_DIR}" ]; then
@@ -72,10 +79,12 @@ mkdir ${ALL_GENELOCS_DIR}
 for gene_dir in */ ; do
     gene=$(basename ${gene_dir})
     cd ${gene}
+    # nucmer align locations of putative deletions to validate them
     /global/home/users/pierrj/git/bash/auto_mummer_plot.sh -r ${REFERENCE} -g ${GENOME_DIR} -s ${SUBDIR_OUTPUT} -p ${PERCENT_ZEROES_FILTER}
     cd ..
 done
 
+# move output jpgs from auto_mummer_plot.sh
 for d in */ ; do
     cd $d
         d_basename=$(basename $d)
@@ -87,6 +96,7 @@ for d in */ ; do
     cd ..
 done
 
+# process outputs from auto_mummer_plot.sh for final validation
 for gene_dir in */ ; do
     gene=$(basename ${gene_dir})
     cd ${gene}
@@ -103,7 +113,7 @@ for gene_dir in */ ; do
     cd ..
 done
 
-
+# finally, validate locations of deletions by parsing nucmer outputs and making sure that a deletion is actually there in the genome and not some sort of misannotation
 python /global/home/users/pierrj/git/python/pav_validation_write_confirmed_deletions.py ${ALL_COORDS_DIR} ${ALL_GENELOCS_DIR} all_small_deletions.bed
 
 awk -v OFS='\t' '{print $1, $2, $3}' all_small_deletions.bed | sort -k1,1 -k2,2n | uniq > uniq.all_small_deletions.bed

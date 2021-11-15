@@ -26,7 +26,7 @@ import sys
 ## USAGE ##
 # this script takes an output from orthofinder showing which orthologs in query genomes, the orthologs in a reference genome corresponds to
 # if a gene is missing, the fasta sequence of that gene is output for blast validation
-# "directory" - directory of orthogroup comparison results
+# "directory" - directory of orthogroup comparison results (i.e. guy11 vs all other genomes)
 # "fungap_out" - gene gff file for reference
 # "gene_cds" - cds fasta sequences for genes 
 
