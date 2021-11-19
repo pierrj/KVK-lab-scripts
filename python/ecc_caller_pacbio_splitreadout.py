@@ -1,7 +1,37 @@
+#MIT License
+#
+#Copyright (c) 2021 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import csv
 import numpy as np
 import sys
 import re
+
+## USAGE ##
+# this python script uses mapped pacbio ccs sequences converted to a bed file to call eccdna forming regions, and writes informative split read alignments
+# options:
+# "pacbio_alignments" - bed file of aligned pacbio reads
+# "output" - output file name
+# "tolerance" - tolerance in difference between alignment locations
+# "column_cutoff" - maximum eccdna size based off filtration of DNA during eccDNA prep
+# "output_alignments" - bedfile of pacbio split reads used for eccdna calling
 
 pacbio_alignments = sys.argv[1]
 output = sys.argv[2]
@@ -20,7 +50,7 @@ def process_cigar(cigar, sense):
             matches_sums['other'] += int(matches[i][0])
     start_pattern = "^([0-9]+)[HS].*[MDIHS]$"
     end_pattern = ".*[MDIHS]([0-9]+)[HS]$"
-    if sense == '+':
+    if sense == '+': ## walk through reads based off sense and count matches
         if re.match(start_pattern, cigar) and re.match(end_pattern, cigar):
             if int(re.match(start_pattern, cigar).group(1)) < int(re.match(end_pattern, cigar).group(1)):
                 loc = 'start'
@@ -52,6 +82,7 @@ def process_cigar(cigar, sense):
                 return False
     return loc, matches_sums['M'], matches_sums['other']
 
+# open pacbio alignments
 reads = {}
 with open(pacbio_alignments, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
@@ -133,6 +164,7 @@ with open(output, 'w', newline = '') as output_csv:
     for row in eccdna_locs:
         w.writerow([row[0], row[1], row[2]])
 
+## write pacbio split reads
 splitreads_bed_output = []
 for key in overlapping_unique_reads:
     alignments = overlapping_unique_reads[key]
@@ -143,7 +175,8 @@ for key in split_reads:
     for alignment in alignments:
         splitreads_bed_output.append([alignment[0], alignment[1], alignment[2], key, alignment[3], alignment[4]])
 
+## output pacbio split reads
 with open(output_alignments, 'w', newline = '') as output_csv:
-    w = csv.writer(output_csv, delimiter = '\t') ## lineterminator="\n" might fix issues with windows
+    w = csv.writer(output_csv, delimiter = '\t')
     for row in splitreads_bed_output:
         w.writerow([row[0], row[1], row[2], row[3], row[4], row[5]])
