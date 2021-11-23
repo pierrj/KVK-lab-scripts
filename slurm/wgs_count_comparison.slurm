@@ -39,16 +39,19 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_dat
 # mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 # genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
 # sample="ERR2660591"
+# mkdir ${sample}
 # sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
 # mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 # genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-# sample="ERR5060418"
+# sample="SRR16282278"
+# mkdir ${sample}
 # sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
 # mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
 # genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
 # sample="SRR11528297"
+# mkdir ${sample}
 # sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
 sample=ERR2660591
@@ -62,7 +65,7 @@ wc -l ${sample}/${sample}.ecc_caller_out.splitreads.bed | awk '{print $1}'
 # count read numbers
 samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam
 
-sample=ERR5060418
+sample=SRR16282278
 echo ${sample}
 # count no lowq eccdnas
 awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l

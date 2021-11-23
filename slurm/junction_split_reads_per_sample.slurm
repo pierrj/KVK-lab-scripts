@@ -51,4 +51,5 @@ while read sample; do
     cd ..
 done < mapfile
 
-awk '{print $3/$2}' ${output_table} | awk '{SUM+=$1} END {print SUM/NR}'
+
+awk '{print $3/$2*1000000}' ${output_table} | awk '{SUM+=$1} END {print SUM/NR}'
