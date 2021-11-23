@@ -77,7 +77,7 @@ fi
 # make normalization table
 # based off number of reads in library
 while read sample; do
-    total=$( eval "samtools view -c ${READS_FILE}" | awk '{print $1/1000000}')
+    total=$( eval "samtools view -c -F 4 -F 2048 ${READS_FILE}" | awk '{print $1/1000000}')
     echo -e ${sample}'\t'${total} >> ${READS_NAME}.normalization_table
 done < ${MAPFILE}
 
