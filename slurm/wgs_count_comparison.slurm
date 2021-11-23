@@ -36,35 +36,41 @@
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/
 
 ## call eccdnas with WGS data from previously publications and SRA
-mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
-genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-sample="ERR2660591"
-sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+# mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+# genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+# sample="ERR2660591"
+# sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
-mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
-genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-sample="ERR5060418"
-sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+# mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+# genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+# sample="ERR5060418"
+# sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
-mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
-genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-sample="SRR11528297"
-sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+# mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+# genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+# sample="SRR11528297"
+# sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
+sample=ERR2660591
+echo ${sample}
 # count no lowq eccdnas
-awk '$5 != "lowq"' ERR2660591/ERR2660591.ecc_caller_out.details.txt | wc -l
+awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l
 
 # count read numbers
-wc -l ERR2660591/ERR2660591_sra_1.fastq | awk '{print $1*2}'
+samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1*2}'
 
+sample=ERR5060418
+echo ${sample}
 # count no lowq eccdnas
-awk '$5 != "lowq"' ERR5060418/ERR5060418.ecc_caller_out.details.txt | wc -l
+awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l
 
 # count read numbers
-wc -l ERR5060418/ERR5060418_sra_1.fastq | awk '{print $1*2}'
+samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1*2}'
 
+sample=SRR11528297
+echo ${sample}
 # count no lowq eccdnas
-awk '$5 != "lowq"' SRR11528297/SRR11528297.ecc_caller_out.details.txt | wc -l
+awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l
 
 # count read numbers
-wc -l SRR11528297/SRR11528297_sra_1.fastq | awk '{print $1*2}'
+samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1*2}'
