@@ -57,7 +57,7 @@ echo ${sample}
 awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l
 
 # count read numbers
-samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1*2}'
+samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam
 
 sample=ERR5060418
 echo ${sample}
@@ -65,7 +65,7 @@ echo ${sample}
 awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l
 
 # count read numbers
-samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1*2}'
+samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam
 
 sample=SRR11528297
 echo ${sample}
@@ -73,4 +73,4 @@ echo ${sample}
 awk '$5 != "lowq"' ${sample}/${sample}.ecc_caller_out.details.txt | wc -l
 
 # count read numbers
-samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam | awk '{print $1*2}'
+samtools view -c -F 4 -F 2048 ${sample}/no_secondary.filtered.sorted.${sample}.bam
