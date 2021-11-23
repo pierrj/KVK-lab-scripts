@@ -102,7 +102,7 @@ while read -r ORGANISM_NAME GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FI
         ecc_count_large=$(wc -l tmp.large_eccdnas | awk '{print $1}')
         ecc_count_all=$(wc -l ${sample}.ecc_caller_out.details.nolowq.txt | awk '{print $1}')
         ## this is in number of mapped reads
-        read_count=$(samtools view -c no_secondary.filtered.sorted.${sample}.bam | awk '{print $1}') ## mapped reads
+        read_count=$(samtools view -c -F 4 -F 2048 no_secondary.filtered.sorted.${sample}.bam | awk '{print $1}') ## mapped reads
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum;}' ${GENOME_FILE} ) ## basepairs
         coding_bp=$(awk '{SUM+=$3-$2}END{print SUM}' tmp.exons.bed)
         copia_bp=$(awk '{SUM+=$3-$2}END{print SUM}' tmp.copia.bed)
