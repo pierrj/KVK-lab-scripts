@@ -105,6 +105,23 @@ while read results; do
     mv tmptable cov_perfeature_table
 done < results_mapfile
 
+
 # make final table
 paste <(awk '{print $1}' junction_sr_cov_perfeature_normalized) cov_perfeature_table > tmptable
 mv tmptable cov_feature_table
+
+# these are all the same
+# table for read normalization
+cp G3.normalization_table.${ltr_sr_cov_perfeature} G3.normalization_table
+
+## make cov_feature_table per sample, dont normalize though
+while read sample; do
+    if [ -f "${sample}.cov_perfeature_table" ]; then
+        rm ${sample}.cov_perfeature_table
+    fi
+    touch ${sample}.cov_perfeature_table
+    while read results; do
+        paste ${sample}.cov_perfeature_table ${sample}/${sample}.${results} > ${sample}.tmptable
+        mv ${sample}.tmptable ${sample}.cov_perfeature_table
+    done < results_mapfile
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
