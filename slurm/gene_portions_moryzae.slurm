@@ -26,3 +26,6 @@ CONTIGNAMES_FILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal201
 /global/home/users/pierrj/git/bash/gene_portions_enrichment.sh -o ${ORGANISM_NAME} \
     -g ${GENE_GFF} -s ${SAMPLE_MAPFILE} -d ${ECC_DIR} \
     -f ${GENOME_FILE} -c ${COPIA_FILE} -y ${GYPSY_FILE} -n ${CONTIGNAMES_FILE}
+
+mv observed_averages_large_all_samples moryzae.observed_averages_large_all_samples
+mv observed_averages_micro_all_samples moryzae.observed_averages_micro_all_samples
