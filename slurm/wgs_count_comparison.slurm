@@ -35,24 +35,24 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/
 
-## call eccdnas with WGS data from previously publications and SRA
-# mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
-# genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-# sample="ERR2660591"
-# mkdir ${sample}
-# sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+# call eccdnas with WGS data from previously publications and SRA
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+sample="ERR2660591"
+mkdir ${sample}
+sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
-# mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
-# genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-# sample="SRR16282278"
-# mkdir ${sample}
-# sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+sample="SRR16282278"
+mkdir ${sample}
+sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
-# mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
-# genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
-# sample="SRR11528297"
-# mkdir ${sample}
-# sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
+mapfile="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames"
+genome_bwa="/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito_bwa"
+sample="SRR11528297"
+mkdir ${sample}
+sbatch --job-name=$sample.ecc_caller_sra --export=sample=$sample,mapfile=$mapfile,genome_bwa=$genome_bwa /global/home/users/pierrj/git/slurm/ecc_caller_sra.slurm
 
 sample=ERR2660591
 echo ${sample}

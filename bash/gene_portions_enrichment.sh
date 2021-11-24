@@ -213,6 +213,7 @@ while read FEATURE_FILE; do
     done < ${ECCDNA_MAPFILE}
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_large
     awk -v f=${FEATURE_FILE} 'BEGIN{print f};{print $2}' ${FEATURE_FILE}.percent_per_sample | tr "\n" "\t" >> observed_averages_large_all_samples
+    echo >> observed_averages_large_all_samples
 done < feature_mapfile
 
 while read FEATURE_FILE; do
@@ -304,6 +305,7 @@ while read FEATURE_FILE; do
     done < ${ECCDNA_MAPFILE}
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_micro
     awk -v f=${FEATURE_FILE} 'BEGIN{print f};{print $2}' ${FEATURE_FILE}.percent_per_sample | tr "\n" "\t" >> observed_averages_micro_all_samples
+    echo >> observed_averages_micro_all_samples
 done < feature_mapfile
 
 while read FEATURE_FILE; do

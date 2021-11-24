@@ -40,17 +40,17 @@ TE_BEDFILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryza
 # mapfile with element names
 ELEMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
 
-# while read sample
-# do
-#     bamfile=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam
-#     # get split reads that could be attributed to ltr ecc circles
-#     /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
-#     split_read_file=candidate_ltr_srs.${sample}.bam
-#     # filter split reads to those attributed to ltr ecc circles
-#     /global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b ${TE_BEDFILE} \
-#         -m ${ELEMENT_MAPFILE} \
-#         -s ${split_read_file} -o ${sample}
-# done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+while read sample
+do
+    bamfile=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam
+    # get split reads that could be attributed to ltr ecc circles
+    /global/home/users/pierrj/git/bash/get_splitreads_for_LTR.sh -s ${sample} -b ${bamfile}
+    split_read_file=candidate_ltr_srs.${sample}.bam
+    # filter split reads to those attributed to ltr ecc circles
+    /global/home/users/pierrj/git/bash/get_ltr_sr_circle_count_all_elements.sh -b ${TE_BEDFILE} \
+        -m ${ELEMENT_MAPFILE} \
+        -s ${split_read_file} -o ${sample}
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 ## normalize and average across bioreps and samples
 
