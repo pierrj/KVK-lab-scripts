@@ -195,6 +195,11 @@ cd ${WORKING_DIR}
 if [ -f "observed_averages_large" ]; then
     rm observed_averages_large
 fi
+
+if [ -f "observed_averages_large_all_samples" ]; then
+    rm observed_averages_large_all_samples
+fi
+
 # for each find the percentage of large eccdnas with any overlap
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.percent_per_sample" ]; then
@@ -207,6 +212,7 @@ while read FEATURE_FILE; do
         echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
     done < ${ECCDNA_MAPFILE}
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_large
+    awk -v f=${FEATURE_FILE} 'BEGIN{print f};{print $2}' ${FEATURE_FILE}.percent_per_sample | tr "\n" "\t" >> observed_averages_large_all_samples
 done < feature_mapfile
 
 while read FEATURE_FILE; do
@@ -281,6 +287,10 @@ if [ -f "observed_averages_micro" ]; then
     rm observed_averages_micro
 fi
 
+if [ -f "observed_averages_micro_all_samples" ]; then
+    rm observed_averages_micro_all_samples
+fi
+
 # for each find the percentage of micro dnas with any overlap
 while read FEATURE_FILE; do
     if [ -f "${FEATURE_FILE}.percent_per_sample" ]; then
@@ -293,6 +303,7 @@ while read FEATURE_FILE; do
         echo -e $(basename ${ECCDNA_FILE})'\t'${percentage} >> ${FEATURE_FILE}.percent_per_sample
     done < ${ECCDNA_MAPFILE}
     awk -v f=${FEATURE_FILE} -v OFS='\t' '{sum+=$2} END {print f, sum/NR}' ${FEATURE_FILE}.percent_per_sample >> observed_averages_micro
+    awk -v f=${FEATURE_FILE} 'BEGIN{print f};{print $2}' ${FEATURE_FILE}.percent_per_sample | tr "\n" "\t" >> observed_averages_micro_all_samples
 done < feature_mapfile
 
 while read FEATURE_FILE; do
