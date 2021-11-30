@@ -14,15 +14,15 @@ cd /global/scratch/users/pierrj/moryzae_pav/tree_making
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-ls Single_Copy_Orthologue_Sequences_jan_04_2021 > sco_mapfile
+ls Single_Copy_Orthologue_Sequences_nov_01_2021 > sco_mapfile
 
-if [ -d "Single_Copy_Orthologue_Sequences_jan_04_2021_msas" ]; then
-    rm -r Single_Copy_Orthologue_Sequences_jan_04_2021_msas
+if [ -d "Single_Copy_Orthologue_Sequences_nov_01_2021_msas" ]; then
+    rm -r Single_Copy_Orthologue_Sequences_nov_01_2021_msas
 fi
 
-mkdir Single_Copy_Orthologue_Sequences_jan_04_2021_msas
+mkdir Single_Copy_Orthologue_Sequences_nov_01_2021_msas
 
 while read orthogroup; do
     mafft --maxiterate 1000 --globalpair --thread 24 Single_Copy_Orthologue_Sequences_jan_04_2021/${orthogroup} > \
-        Single_Copy_Orthologue_Sequences_jan_04_2021_msas/${orthogroup}.msa
+        Single_Copy_Orthologue_Sequences_nov_01_2021_msas/${orthogroup}.msa
 done < sco_mapfile
