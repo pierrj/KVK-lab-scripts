@@ -4,7 +4,6 @@ import os
 import csv
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import SingleLetterAlphabet
 
 msa_dir = sys.argv[1]
 genomes = sys.argv[2]
@@ -18,7 +17,7 @@ genomes_dict = {}
 with open(genomes, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     for row in file_reader:
-        genomes_dict[row[0].split("_")[0]] = SeqRecord(Seq("", SingleLetterAlphabet()), id=row[0])
+        genomes_dict[row[0].split("_")[0]] = SeqRecord(Seq(""), id=row[0])
 
 
 for msa in msa_list:
