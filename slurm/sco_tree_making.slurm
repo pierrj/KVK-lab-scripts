@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=sco_tree_making
-#SBATCH --partition=savio2
+#SBATCH --partition=savio_bigmem
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
