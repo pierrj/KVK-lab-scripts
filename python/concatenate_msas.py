@@ -21,6 +21,7 @@ with open(genomes, newline = '') as file:
 
 
 for msa in msa_list:
+    print(msa)
     msa_path = msa_dir+ '/' +msa
     for record in SeqIO.parse(msa_path, 'fasta'):
         genome = record.id.split("_")[2]
