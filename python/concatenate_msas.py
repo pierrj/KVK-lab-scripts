@@ -9,7 +9,7 @@ msa_dir = sys.argv[1]
 genomes = sys.argv[2]
 output = sys.argv[3]
 
-msa_list = os.listdir(msa_dir)
+msa_list = os.listdir(msa_dir).sort()
 
 ## make dict of sequence lists
 genomes_dict = {}
