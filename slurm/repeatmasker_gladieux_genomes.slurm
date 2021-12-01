@@ -16,7 +16,7 @@ RM_LIB=/global/scratch/users/pierrj/references/te_annotations/moryzae/repbase_pl
 GENOMES_PATH=gladieux_et_al_2021_assemblies
 MAPFILE=gladieux_et_al_2021_assemblies_mapfile
 
-module load repeatmasker/4.1.1s
+module load repeatmasker/4.1.1
 
 while read genome; do
     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
