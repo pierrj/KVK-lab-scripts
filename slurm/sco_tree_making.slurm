@@ -23,6 +23,6 @@ fi
 mkdir Single_Copy_Orthologue_Sequences_nov_01_2021_msas
 
 while read orthogroup; do
-    mafft --maxiterate 1000 --globalpair --thread 24 Single_Copy_Orthologue_Sequences_jan_04_2021/${orthogroup} > \
+    mafft --maxiterate 1000 --globalpair --thread 24 Single_Copy_Orthologue_Sequences_nov_01_2021/${orthogroup} > \
         Single_Copy_Orthologue_Sequences_nov_01_2021_msas/${orthogroup}.msa
 done < sco_mapfile
