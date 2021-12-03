@@ -42,5 +42,24 @@ source activate /global/scratch/users/pierrj/conda_envs/gaas
 export PERL5LIB=/global/scratch/users/pierrj/conda_envs/gaas/lib
 
 while read genome; do
-    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 !~ /-/' > ${genome}.stats
+    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 ~ /[[:digit:]]/' > ${genome}.stats
 done < ${MAPFILE}
+
+if [ -f "genome_assembly_stats" ]; then
+    rm genome_assembly_stats
+fi
+
+while read genome; do
+    tr '\n' '\t' ${genome}.stats >> genome_assembly_stats
+    echo >> genome_assembly_stats
+done < ${MAPFILE}
+
+if [ -f "te_counts_per_genome" ]; then
+    rm te_counts_per_genome
+fi
+
+while read genome; do
+    wc -l /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/structural_variation/moryzae/${genome}_genomic.fna.out.gff | awk '{print $1}' >> te_counts_per_genome
+done < ${MAPFILE}
+
+paste -d'\0' genome_assembly_stats te_counts_per_genome > assembly_stats_and_te_per_genome
