@@ -69,7 +69,7 @@
 
 cd /global/scratch/users/pierrj/moryzae_pav/te_annotations_anne
 
-RM_LIB=anne_repbase_te_lib
+RM_LIB=anne_repbase_te_lib_fixed
 GENOMES_PATH=gladieux_et_al_2021_assemblies
 MAPFILE=gladieux_et_al_2021_assemblies_mapfile
 
