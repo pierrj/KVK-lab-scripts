@@ -12,13 +12,14 @@
 
 cd /global/scratch/users/pierrj/moryzae_pav/orthogroup_cons
 
-
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 module load trimal
 module load emboss
 
 ls -1 orthogroup_protein_out > orthogroup_mapfile
+
+MAPFILE=orthogroup_mapfile
 
 input_dir=orthogroup_protein_out
 out_msas=orthogroup_protein_out_msas
@@ -41,4 +42,4 @@ while read orthogroup; do
         ${out_msas}/${orthogroup}.msa
     trimal -gt 0.8 -in ${out_msas}/${orthogroup}.msa -out ${out_msas}/${orthogroup}.trimmed.msa
     cons -sequence ${out_msas}/${orthogroup}.msa -out ${out_cons}/${orthogroup}.cons
-done < sco_mapfile
+done < ${MAPFILE}
