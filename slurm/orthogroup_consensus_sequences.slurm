@@ -18,7 +18,7 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 module load trimal
 module load emboss
 
-ls -1 orthogroup_cds_out > orthogroup_mapfile
+ls -1 orthogroup_protein_out > orthogroup_mapfile
 
 input_dir=orthogroup_protein_out
 out_msas=orthogroup_protein_out_msas
