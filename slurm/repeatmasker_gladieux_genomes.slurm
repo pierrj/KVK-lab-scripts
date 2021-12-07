@@ -67,4 +67,18 @@
 
 # paste -d'\0' genome_assembly_stats te_counts_per_genome > assembly_stats_and_te_per_genome
 
-echo test
+cd /global/scratch/users/pierrj/moryzae_pav/te_annotations_anne
+
+RM_LIB=anne_repbase_te_lib
+GENOMES_PATH=gladieux_et_al_2021_assemblies
+MAPFILE=gladieux_et_al_2021_assemblies_mapfile
+
+module load repeatmasker/4.1.1
+
+while read genome; do
+    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}.fasta
+done < ${MAPFILE}
+
+while read genome; do
+    awk '{print $11}' ${genome}.fasta.out | paste ${genome}.fasta.out.gff - > ${genome}.fasta.out.w_class.gff
+done < ${MAPFILE}
