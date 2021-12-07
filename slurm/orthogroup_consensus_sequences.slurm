@@ -10,7 +10,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/moryzae_pav/orthogroup_cons
+cd /global/scratch/users/pierrj/moryzae_pav/orthogroup_cons/orthogroup_protein_out_cons
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
