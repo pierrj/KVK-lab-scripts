@@ -14,4 +14,4 @@ cd /global/scratch/users/pierrj/moryzae_pav/tree_making
 
 module load raxml
 
-raxmlHPC-HYBRID-SSE3 -s SCO_nov_01_2021_combined_msas.trimmed.fasta -n SCO_nov_01_2021_combined_msas.trimmed.raxmltree -m PROTGAMMAGTR -T 32 -f a -x 12345 -p 12345 -# 100
+raxmlHPC-MPI-SSE3 -s SCO_nov_01_2021_combined_msas.trimmed.fasta -n SCO_nov_01_2021_combined_msas.trimmed.raxmltree -m PROTGAMMAGTR -T 32 -f a -x 12345 -p 12345 -# 100
