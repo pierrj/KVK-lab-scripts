@@ -14,7 +14,7 @@ cd /global/scratch/users/pierrj/moryzae_pav/exonerate_validation
 
 module load exonerate
 
-LOST_GENOME=/global/scratch/users/pierrj/moryzae_pav/gladieux_et_al_2020_data/gladieux_et_al_2021_assemblies/CH0043.fasta
+LOST_GENOME=CH0043.fasta.masked
 LOST_OG=/global/scratch/users/pierrj/moryzae_pav/orthogroup_cons/orthogroup_protein_out/OG0000323_protein.fasta
 
-exonerate --fsmmemory 2048 --model protein2genome ${LOST_OG} ${LOST_GENOME} --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no > missing.gff
+exonerate --fsmmemory 2048 --softmasktarget --model protein2genome --showtargetgff yes --bestn 1 --showalignment no --verbose 0 --showvulgar no ${LOST_OG} ${LOST_GENOME} > missing.gff
