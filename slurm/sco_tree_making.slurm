@@ -14,25 +14,27 @@ cd /global/scratch/users/pierrj/moryzae_pav/tree_making
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-# ls Single_Copy_Orthologue_Sequences_nov_01_2021 > sco_mapfile
+SCO_DIR=Single_Copy_Orthologue_Sequences_dec_08_21
 
-# if [ -d "Single_Copy_Orthologue_Sequences_nov_01_2021_msas" ]; then
-#     rm -r Single_Copy_Orthologue_Sequences_nov_01_2021_msas
-# fi
+ls ${SCO_DIR} > sco_mapfile
 
-# mkdir Single_Copy_Orthologue_Sequences_nov_01_2021_msas
+if [ -d "${SCO_DIR}_msas" ]; then
+    rm -r ${SCO_DIR}_msas
+fi
 
-# while read orthogroup; do
-#     mafft --maxiterate 1000 --globalpair --thread 24 Single_Copy_Orthologue_Sequences_nov_01_2021/${orthogroup} > \
-#         Single_Copy_Orthologue_Sequences_nov_01_2021_msas/${orthogroup}.msa
-# done < sco_mapfile
+mkdir ${SCO_DIR}_msas
 
-# module remove python
+while read orthogroup; do
+    mafft --maxiterate 1000 --globalpair --thread ${SLURM_NTASKS} ${SCO_DIR}/${orthogroup} > \
+        ${SCO_DIR}_msas/${orthogroup}.msa
+done < sco_mapfile
 
-# python /global/home/users/pierrj/git/python/concatenate_msas.py Single_Copy_Orthologue_Sequences_nov_01_2021_msas proteomes_combined_for_orthofinder_accessions SCO_nov_01_2021_combined_msas.fasta
+module remove python
 
-# module load trimal
+python /global/home/users/pierrj/git/python/concatenate_msas.py ${SCO_DIR}_msas proteomes_combined_for_orthofinder_accessions ${SCO_DIR}_msas_combined.fasta
 
-# trimal -gt 0.8 -in SCO_nov_01_2021_combined_msas.fasta -out SCO_nov_01_2021_combined_msas.trimmed.fasta
+module load trimal
 
-fasttree -gamma -out SCO_nov_01_2021_combined_msas.trimmed.fasttree SCO_nov_01_2021_combined_msas.trimmed.fasta
+trimal -gt 0.8 -in ${SCO_DIR}_msas_combined.fasta -out ${SCO_DIR}_msas_combined.trimmed.fasta
+
+fasttree -gamma -out ${SCO_DIR}_msas_combined.trimmed.fasttree ${SCO_DIR}_msas_combined.trimmed.fasta
