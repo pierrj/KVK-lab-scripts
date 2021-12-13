@@ -14,6 +14,8 @@ cd /global/scratch/users/pierrj/moryzae_pav/tree_making
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
+cp Single_Copy_Orthologue_Sequences Single_Copy_Orthologue_Sequences_dec_08_21
+
 SCO_DIR=Single_Copy_Orthologue_Sequences_dec_08_21
 
 ls ${SCO_DIR} > sco_mapfile
