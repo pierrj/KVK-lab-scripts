@@ -3,8 +3,8 @@
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=10
-#SBATCH --ntasks-per-node=20
-#SBATCH --cpus-per-task=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=20
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
