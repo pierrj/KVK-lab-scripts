@@ -16,7 +16,7 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 # cp -r Single_Copy_Orthologue_Sequences Single_Copy_Orthologue_Sequences_dec_08_21
 
-# SCO_DIR=Single_Copy_Orthologue_Sequences_dec_08_21
+SCO_DIR=Single_Copy_Orthologue_Sequences_dec_08_21
 
 # ls ${SCO_DIR} > sco_mapfile
 
