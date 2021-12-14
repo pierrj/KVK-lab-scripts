@@ -2,7 +2,7 @@
 #SBATCH --job-name=raxml_multinode
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
-#SBATCH --nodes=20
+#SBATCH --nodes=10
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=20
 #SBATCH --time=72:00:00
