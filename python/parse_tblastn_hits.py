@@ -38,3 +38,38 @@ if len(valid_hits) >= hit_count:
     print(og + '\tyes')
 else:
     print(og+'\tno')
+
+same_scaffold_filtered_hits = []
+for protein in hits_arrays:
+    hit = hits_arrays[protein]
+    if np.max(hit[:,0]) == np.min(hit[:,0]):
+        same_scaffold_filtered_hits.append(protein)
+
+evalue_filtered_hits = []
+for protein in hits_arrays:
+    hit = hits_arrays[protein]
+    if np.all(hit[:,1] < e_value):
+        evalue_filtered_hits.append(protein)
+
+pident_filtered_hits = []
+for protein in hits_arrays:
+    hit = hits_arrays[protein]
+    if np.all(hit[:,7] > pident):
+        pident_filtered_hits.append(protein)
+
+query_cov_filtered_hits = []
+for protein in hits_arrays:
+    hit = hits_arrays[protein]
+    if np.all(hit[:,8] > query_cov):
+        query_cov_filtered_hits.append(protein)
+
+print('total')
+print(len(list(hits_arrays.keys())))
+print('same scaffold filter')
+print(len(same_scaffold_filtered_hits))
+print('evalue filter')
+print(len(evalue_filtered_hits))
+print('pident filter')
+print(len(pident_filtered_hits))
+print('query cov filter')
+print(len(query_cov_filtered_hits))
