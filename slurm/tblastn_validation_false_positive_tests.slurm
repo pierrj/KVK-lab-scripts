@@ -15,8 +15,8 @@ cd /global/scratch/users/pierrj/moryzae_pav/exonerate_validation/false_positive_
 
 LOST_GENOME=/global/scratch/users/pierrj/moryzae_pav/exonerate_validation/CH0043.fasta
 E_VALUE=1e-10
-PIDENT=75 ## maybe drop to 60?
-QUERY_COV=80 ## maybe drop to 60?
+PIDENT=85 ## this should probably be quite high
+QUERY_COV=70 ## this should maybe be dropped a bit
 HIT_COUNT=2
 
 # ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
