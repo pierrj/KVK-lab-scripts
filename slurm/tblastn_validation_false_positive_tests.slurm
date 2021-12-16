@@ -19,9 +19,9 @@ PIDENT=75
 QUERY_COV=80
 HIT_COUNT=2
 
-ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
+# ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
 
-shuf og_list_all_presences_CH0043 | head -100 > test_100
+# shuf og_list_all_presences_CH0043 | head -100 > test_100
 
 # if [ -f "jobqueue" ]; then
 #     rm jobqueue

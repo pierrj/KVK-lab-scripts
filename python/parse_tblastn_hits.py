@@ -61,8 +61,8 @@ valid_hits = []
 for protein in parsed_hits_arrays:
     hit = parsed_hits_arrays[protein]
     if (np.max(hit[:,0]) == np.min(hit[:,0]) and # all same scaffold
-       np.all(hit[:,1] < e_value) and # e-value cutoff
-       np.all(hit[:,7] > pident) # pident cutoff
+       np.mean(hit[:,1]) < e_value and # e-value cutoff averaged across all
+       np.mean(hit[:,7]) > pident # pident cutoff averaged across all
        ):
         protein_size = hit[0,2]
         protein_size_range = range(1,protein_size)
@@ -87,14 +87,14 @@ for protein in parsed_hits_arrays:
 evalue_filtered_hits = []
 for protein in parsed_hits_arrays:
     hit = parsed_hits_arrays[protein]
-    if np.all(hit[:,1] < e_value):
+    if np.mean(hit[:,1]) < e_value:
         if protein[:-2] not in evalue_filtered_hits:
             evalue_filtered_hits.append(protein[:-2])
 
 pident_filtered_hits = []
 for protein in parsed_hits_arrays:
     hit = parsed_hits_arrays[protein]
-    if np.all(hit[:,7] > pident):
+    if np.mean(hit[:,7]) > pident:
         if protein[:-2] not in pident_filtered_hits:
             pident_filtered_hits.append(protein[:-2])
 
