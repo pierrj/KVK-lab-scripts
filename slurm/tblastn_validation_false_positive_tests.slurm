@@ -15,25 +15,20 @@ cd /global/scratch/users/pierrj/moryzae_pav/exonerate_validation/false_positive_
 
 LOST_GENOME=/global/scratch/users/pierrj/moryzae_pav/exonerate_validation/CH0043.fasta
 E_VALUE=1e-10
-PIDENT=75
-QUERY_COV=80
+PIDENT=75 ## maybe drop to 60?
+QUERY_COV=80 ## maybe drop to 60?
 HIT_COUNT=2
 
 # ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
 
 # shuf og_list_all_presences_CH0043 | head -100 > test_100
 
-# if [ -f "jobqueue" ]; then
-#     rm jobqueue
-# fi
-
-# while read og; do
-#     echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
-# done < test_a_few
-
-# parallel -j 24 < jobqueue
-
+if [ -f "jobqueue" ]; then
+    rm jobqueue
+fi
 
 while read og; do
-    /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT}
+    echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
 done < test_100
+
+parallel -j 24 < jobqueue
