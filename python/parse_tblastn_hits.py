@@ -19,7 +19,8 @@ with open(input_file, newline = '') as file:
         if row[0] not in prelim_hits:
             prelim_hits[row[0]] = []
         prelim_hits[row[0]].append([row[1],float(row[2]),int(row[3]),int(row[4]),
-                             int(row[5]),int(row[6]),int(row[7]),float(row[8])])
+                             int(row[5]),int(row[6]),int(row[7]),
+                             (int(row[8])/(int(row[8])+int(row[9])))*100]) # calculate pident manually here
 prelim_hits_arrays = {}
 
 for key in prelim_hits.keys():
@@ -61,15 +62,16 @@ valid_hits = []
 for protein in parsed_hits_arrays:
     hit = parsed_hits_arrays[protein]
     hit = hit[hit[:,1] < e_value] # remove hsps below evalue
-    hit = hit[hit[:,7] > pident] # remove hsps below pident value
-    if np.max(hit[:,0]) == np.min(hit[:,0]): # make sure all are from same scaffold
-        protein_size = hit[0,2]
-        protein_size_range = range(1,protein_size)
-        for i in hit:
-            protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
-        if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov for remaining hsps is enough
-            if protein[:-2] not in valid_hits: # same protein cant be counted twice for two alignments
-                valid_hits.append(protein)
+    hit = hit[hit[:,7] > pident] # remove hsps below pident
+    if hit.size != 0: # check that it isn't empty
+        if np.max(hit[:,0]) == np.min(hit[:,0]): # make sure all are from same scaffold
+            protein_size = hit[0,2]
+            protein_size_range = range(1,protein_size)
+            for i in hit:
+                protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
+            if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov for remaining hsps is enough
+                if protein[:-2] not in valid_hits: # same protein cant be counted twice for two alignments
+                    valid_hits.append(protein[:-2])
 
 if len(valid_hits) >= hit_count:
     print(og + '\tyes')
