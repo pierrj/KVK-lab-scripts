@@ -21,10 +21,7 @@ HIT_COUNT=2
 
 ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
 
-shuf og_list_all_presences_CH0043 | head -1000 > test_1000
-
-cat no_CH0043_there test_1000 | sort | uniq -d > test_a_few
-
+shuf og_list_all_presences_CH0043 | head -100 > test_100
 
 # if [ -f "jobqueue" ]; then
 #     rm jobqueue
@@ -39,4 +36,4 @@ cat no_CH0043_there test_1000 | sort | uniq -d > test_a_few
 
 while read og; do
     /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT}
-done < test_a_few
+done < test_100
