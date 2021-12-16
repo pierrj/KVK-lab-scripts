@@ -64,10 +64,11 @@ for protein in parsed_hits_arrays:
        np.all(hit[:,1] < e_value) and # e-value cutoff
        np.all(hit[:,7] > pident) # pident cutoff
        ):
-        protein_size_range = range(1,hit[0,2])
+        protein_size = hit[0,2]
+        protein_size_range = range(1,protein_size)
         for i in hit:
             protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
-        if (1-len(protein_size_range))*100 > query_cov: # check if query cov is enough
+        if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov is enough
             if protein[:-2] not in valid_hits: # same protein cant be counted twice for two alignments
                 valid_hits.append(protein)
 
@@ -99,8 +100,8 @@ for protein in parsed_hits_arrays:
 
 query_cov_filtered_hits = []
 for protein in parsed_hits_arrays:
-    protein_size = hit[0,2]
     hit = parsed_hits_arrays[protein]
+    protein_size = hit[0,2]
     protein_size_range = range(1,protein_size)
     for i in hit:
         protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
