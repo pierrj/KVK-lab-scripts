@@ -19,9 +19,9 @@ PIDENT=85 ## this should probably be quite high
 QUERY_COV=70 ## this should maybe be dropped a bit
 HIT_COUNT=2
 
-# ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
+ls orthogroup_protein_out_no_CH0043 | awk '{print substr($1, 0, 9)}' > no_CH0043_there
 
-# shuf og_list_all_presences_CH0043 | head -100 > test_100
+shuf og_list_all_presences_CH0043 | head -1000 > test_1000
 
 if [ -f "jobqueue" ]; then
     rm jobqueue
@@ -29,6 +29,6 @@ fi
 
 while read og; do
     echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
-done < test_100
+done < test_1000
 
 parallel -j 24 < jobqueue
