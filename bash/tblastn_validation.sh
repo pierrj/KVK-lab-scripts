@@ -16,7 +16,7 @@ og_base=$(basename ${LOST_OG})
 
 tblastn -query ${LOST_OG} -subject ${LOST_GENOME} \
     -max_intron_length 3000 \
-    -outfmt "6 qacc sacc evalue qlen qstart qend sstart send  pident"  \
+    -outfmt "6 qacc sacc evalue qlen qstart qend sstart send nident mismatch"  \
     -max_target_seqs 1 > tblastn_${genome_base}_${og_base}
 
 python /global/home/users/pierrj/git/python/parse_tblastn_hits.py tblastn_${genome_base}_${og_base} ${E_VALUE} ${PIDENT} ${QUERY_COV} ${HIT_COUNT} ${LOST_OG}
