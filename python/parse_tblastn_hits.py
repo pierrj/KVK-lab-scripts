@@ -60,15 +60,14 @@ valid_hits = []
 
 for protein in parsed_hits_arrays:
     hit = parsed_hits_arrays[protein]
-    if (np.max(hit[:,0]) == np.min(hit[:,0]) and # all same scaffold
-       np.mean(hit[:,1]) < e_value and # e-value cutoff averaged across all
-       np.mean(hit[:,7]) > pident # pident cutoff averaged across all
-       ):
+    hit = hit[hit[:,1] < e_value] # remove hsps below evalue
+    hit = hit[hit[:,7] > pident] # remove hsps below pident value
+    if np.max(hit[:,0]) == np.min(hit[:,0]): # make sure all are from same scaffold
         protein_size = hit[0,2]
         protein_size_range = range(1,protein_size)
         for i in hit:
             protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
-        if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov is enough
+        if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov for remaining hsps is enough
             if protein[:-2] not in valid_hits: # same protein cant be counted twice for two alignments
                 valid_hits.append(protein)
 
