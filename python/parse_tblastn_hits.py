@@ -99,11 +99,12 @@ for protein in parsed_hits_arrays:
 
 query_cov_filtered_hits = []
 for protein in parsed_hits_arrays:
+    protein_size = hit[0,2]
     hit = parsed_hits_arrays[protein]
-    protein_size_range = range(1,hit[0,2])
+    protein_size_range = range(1,protein_size)
     for i in hit:
         protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
-    if (1-len(protein_size_range))*100 > query_cov:
+    if (1-(len(protein_size_range)/protein_size))*100 > query_cov:
         if protein[:-2] not in query_cov_filtered_hits:
             query_cov_filtered_hits.append(protein[:-2])
 
