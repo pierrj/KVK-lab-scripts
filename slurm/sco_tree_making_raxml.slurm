@@ -3,8 +3,8 @@
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=10
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=20
+#SBATCH --ntasks-per-node=2
+#SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -18,4 +18,4 @@ module load gcc openmpi
 
 rm RAxML*
 
-mpirun raxmlHPC-HYBRID-SSE3 -s SCO_nov_01_2021_combined_msas.trimmed.fasta -n SCO_nov_01_2021_combined_msas.trimmed.raxmltree -m PROTGAMMAGTR -T 20 -f a -x 12345 -p 12345 -# 100
+mpirun raxmlHPC-HYBRID-SSE3 -s SCO_nov_01_2021_combined_msas.trimmed.fasta -n SCO_nov_01_2021_combined_msas.trimmed.raxmltree -m PROTGAMMAGTR -T 10 -f a -x 12345 -p 12345 -# 100
