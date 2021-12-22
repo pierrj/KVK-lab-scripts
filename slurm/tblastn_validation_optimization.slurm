@@ -20,11 +20,12 @@ if [ -f "optimization_out" ]; then
     rm optimization_out
 fi
 
-for QUERY_COV in {50..100..5}
+shuf og_list_all_presences_CH0043 | head -10000 > test_10000
+
+for QUERY_COV in {60..70..5}
 do
-  for PIDENT in {50..100..5}
+  for PIDENT in {60..80..5}
   do
-    shuf og_list_all_presences_CH0043 | head -1000 > test_1000
 
     if [ -f "jobqueue" ]; then
         rm jobqueue
