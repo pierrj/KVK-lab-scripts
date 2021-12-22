@@ -15,10 +15,12 @@ cd /global/scratch/users/pierrj/rnaseq/moryzae/2021_oses-ruiz
 module load STAR
 
 THREADS=24
-GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
-GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
+GENOME_FASTA=guy11_genome_baoetal2017.fasta
+GFF_FILE=guy11_fungap_out_12_28_20.gff3
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
+
+mkdir ${genome_fasta_basename}_starindex
 
 ## index genome for STAR
 STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
