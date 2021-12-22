@@ -12,6 +12,8 @@
 
 cd /global/scratch/users/pierrj/rnaseq/moryzae/2021_oses-ruiz
 
+module load STAR
+
 THREADS=24
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 GFF_FILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3
