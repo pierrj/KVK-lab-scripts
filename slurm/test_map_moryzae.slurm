@@ -31,7 +31,7 @@ STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta
     --sjdbGTFtagExonParentTranscript ID \
     --sjdbGTFtagExonParentGene Parent
 
-SRA=ERR5875670
+SRA=ERR5875671
 
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
