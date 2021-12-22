@@ -20,18 +20,18 @@ GFF_FILE=guy11_fungap_out_12_28_20.gff3
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
-mkdir ${genome_fasta_basename}_starindex
+# mkdir ${genome_fasta_basename}_starindex
 
-## index genome for STAR
-STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
-    --genomeFastaFiles ${GENOME_FASTA} \
-    --sjdbGTFfile ${GFF_FILE} \
-    --sjdbOverhang 100 \
-    --genomeSAindexNbases 11 \
-    --sjdbGTFtagExonParentTranscript ID \
-    --sjdbGTFtagExonParentGene Parent
+# ## index genome for STAR
+# STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
+#     --genomeFastaFiles ${GENOME_FASTA} \
+#     --sjdbGTFfile ${GFF_FILE} \
+#     --sjdbOverhang 100 \
+#     --genomeSAindexNbases 11 \
+#     --sjdbGTFtagExonParentTranscript ID \
+#     --sjdbGTFtagExonParentGene Parent
 
-SRA=ERR5875671
+SRA=ERR5875672
 
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
