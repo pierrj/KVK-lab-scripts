@@ -33,7 +33,7 @@ do
 
     while read og; do
         echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
-    done < test_1000
+    done < test_10000
 
     echo ${QUERY_COV}_${PIDENT}
 
