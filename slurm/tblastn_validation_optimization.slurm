@@ -20,11 +20,9 @@ if [ -f "optimization_out" ]; then
     rm optimization_out
 fi
 
-shuf og_list_all_presences_CH0043 | head -10000 > test_10000
-
-for QUERY_COV in {60..70..5}
+for QUERY_COV in {50..60..5}
 do
-  for PIDENT in {60..80..5}
+  for PIDENT in {50..60..5}
   do
 
     if [ -f "jobqueue" ]; then
@@ -33,7 +31,7 @@ do
 
     while read og; do
         echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
-    done < test_10000
+    done < og_list_all_presences_CH0043
 
     echo ${QUERY_COV}_${PIDENT}
 
