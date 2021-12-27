@@ -19,4 +19,4 @@ tblastn -query ${LOST_OG} -subject ${LOST_GENOME} \
     -outfmt "6 qacc sacc evalue qlen qstart qend sstart send nident mismatch"  \
     -max_target_seqs 1 > tblastn_${genome_base}_${og_base}
 
-python /global/home/users/pierrj/git/python/parse_tblastn_hits.py tblastn_${genome_base}_${og_base} ${E_VALUE} ${PIDENT} ${QUERY_COV} ${HIT_COUNT} ${LOST_OG}
+python /global/home/users/pierrj/git/python/parse_tblastn_hits.py tblastn_${genome_base}_${og_base} ${E_VALUE} ${PIDENT} ${QUERY_COV} ${HIT_COUNT} ${genome_base} ${og_base}

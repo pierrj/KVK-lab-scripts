@@ -1,13 +1,13 @@
 #!/bin/bash
 
-LOST_GENOME_DIR=
-LOST_OG_DIR=
-E_VALUE=
-PIDENT=
-QUERY_COV=
-HIT_COUNT=
+LOST_GENOME_DIR=/global/scratch/users/pierrj/moryzae_pav/gladieux_et_al_2020_data/gladieux_et_al_2021_assemblies
+LOST_OG_DIR=/global/scratch/users/pierrj/moryzae_pav/orthogroup_cons/orthogroup_protein_out
+E_VALUE=1e-10
+PIDENT=55
+QUERY_COV=55
+HIT_COUNT=2
 N_NODES=20
-OUTPUT_FILE=tblastn_validation_out
+OUTPUT_FILE=tblastn_pav_validation_gladieux_12_26_21
 
 
 if [ -f "jobqueue" ]; then
@@ -16,8 +16,8 @@ fi
 
 
 while read -r LOST_GENOME LOST_OG; do
-    echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l ${LOST_OG_DIR}/${LOST_OG}_protein.fasta -g ${LOST_GENOME_DIR}/${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
-done < absences_to_validate.tsv
+    echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l ${LOST_OG_DIR}/${LOST_OG}_protein.fasta -g ${LOST_GENOME_DIR}/${LOST_GENOME}.fasta -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
+done < absences_to_validate
 
 mv jobqueue jobqueue_old
 

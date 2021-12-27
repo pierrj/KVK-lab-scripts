@@ -9,7 +9,8 @@ e_value = float(sys.argv[2])
 pident = int(sys.argv[3])
 query_cov = int(sys.argv[4])
 hit_count = int(sys.argv[5])
-og = sys.argv[6]
+genome = sys.argv[6]
+og = sys.argv[7]
 
 prelim_hits = {}
 
@@ -74,6 +75,6 @@ for protein in parsed_hits_arrays:
                     valid_hits.append(protein[:-2])
 
 if len(valid_hits) >= hit_count:
-    print(og + '\tyes')
+    print(genome + '\t' + og + '\tyes')
 else:
-    print(og+'\tno')
+    print(genome + '\t' + og + '\tyes')
