@@ -77,4 +77,4 @@ for protein in parsed_hits_arrays:
 if len(valid_hits) >= hit_count:
     print(genome + '\t' + og + '\tyes')
 else:
-    print(genome + '\t' + og + '\tyes')
+    print(genome + '\t' + og + '\tno')
