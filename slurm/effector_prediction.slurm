@@ -12,7 +12,21 @@
 
 cd /global/scratch/users/pierrj/effector_prediction
 
-/global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f short guy11_fungap_out_12_28_20_prot.faa > guy11_signalp_short
 
+INPUT_FILE=guy11_fungap_out_12_28_20_prot.faa
+OUTPUT_NAME=guy11
 
-cat guy11_fungap_out_12_28_20_prot.faa | /global/scratch/users/pierrj/tmhmm-2.0c/bin/tmhmm > guy11_tmhmm_out
+module load seqtk
+
+cat ${INPUT_FILE} | /global/scratch/users/pierrj/tmhmm-2.0c/bin/tmhmm > ${OUTPUT_NAME}.tmhmmout
+
+awk '{if ($7 == 0){print $2}} ' ${OUTPUT_NAME}.tmhmmout > ${OUTPUT_NAME}.notm.names
+
+seqtk subseq ${INPUT_FILE} ${OUTPUT_NAME}.notm.names > ${OUTPUT_NAME}.notm.faa
+
+/global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f short ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.short
+
+/global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f long ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.long
+
+/global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f summary ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.summary
+
