@@ -47,19 +47,10 @@ cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/lumpy
 
 module purge
 
-source activate /global/scratch/users/pierrj/conda_envs/lumpy
+source activate /global/scratch/users/pierrj/conda_envs/smoove
 
-module load bcftools
-module load samtools
-
-/global/scratch/users/pierrj/lumpy-sv/bin/lumpyexpress \
-    -B ../data/${SAMPLE}.bam \
-    -o ${SAMPLE}.lumpyout \
-    -k  \
-    -T tmp
-
-bcftools filter \
-    -O v \
-    -o ${SAMPLE}.lumpyout.filtered \
-    -i "FILTER == 'PASS'" \
-    ${SAMPLE}.lumpyout
+smoove call --name ${SAMPLE} \
+    --fasta ../data/${REFERENCE} \
+    --processes ${SLURM_NTASKS} \
+    --outdir ${SAMPLE}_smoove_out \
+    ../data/${SAMPLE}.bam
