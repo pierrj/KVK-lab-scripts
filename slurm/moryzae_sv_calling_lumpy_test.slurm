@@ -56,7 +56,7 @@ source activate /global/scratch/users/pierrj/conda_envs/lumpy
     -T tmp
 
 bcftools filter \
-    -O b \
+    -O v \
     -o ${SAMPLE}.lumpyout.filtered \
     -i "FILTER == 'PASS'" \
     ${SAMPLE}.lumpyout
