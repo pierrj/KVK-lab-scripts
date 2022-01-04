@@ -12,6 +12,8 @@
 
 cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/data
 
+module load bwa
+
 REFERENCE=moryzae_70-15_ref_with_mito.fasta
 SAMPLE=ERR4757126
 GENOME_DB=moryzae_70-15_ref_with_mito.fasta
