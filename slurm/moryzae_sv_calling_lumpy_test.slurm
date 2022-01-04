@@ -1,10 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=moryzae_sv_calling_lumpy_test
-#SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=24
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
