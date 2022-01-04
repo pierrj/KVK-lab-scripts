@@ -45,15 +45,15 @@ fi
 
 cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/lumpy
 
+module purge
+
+source activate /global/scratch/users/pierrj/conda_envs/lumpy
+
 /global/scratch/users/pierrj/lumpy-sv/bin/lumpyexpress \
     -B ../data/${SAMPLE}.bam \
     -o ${SAMPLE}.lumpyout \
     -k  \
     -T tmp
-
-module purge
-
-source activate /global/scratch/users/pierrj/conda_envs/delly
 
 bcftools filter \
     -O b \
