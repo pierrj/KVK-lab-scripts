@@ -49,6 +49,8 @@ module purge
 
 source activate /global/scratch/users/pierrj/conda_envs/delly
 
+module load bcftools
+
 delly call \
     -g ../data/${REFERENCE} \
     -o ${SAMPLE}.delly.out \
