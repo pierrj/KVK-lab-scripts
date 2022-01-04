@@ -53,7 +53,7 @@ source activate /global/scratch/users/pierrj/conda_envs/manta
 /global/scratch/users/pierrj/manta-1.6.0.centos6_x86_64/bin/configManta.py \
     --runDir manta_out \
     --reference ../data/${REFERENCE} \
-    ../${SAMPLE}.bam
+    --bam ../${SAMPLE}.bam
 
 /manta_out/runWorkflow.py \
     --quiet \
