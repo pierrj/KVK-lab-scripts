@@ -30,7 +30,8 @@ if [ ! -f "${REFERENCE}.amb" ]; then
 fi
 
 if [ ! -f "${SAMPLE}.bam" ]; then
-    bwa mem -R -t ${SLURM_NTASKS} ${GENOME_DB} ${READONE} ${READTWO} -o ${SAMPLE}.preprocessed
+    bwa mem -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" \
+    -t ${SLURM_NTASKS} ${GENOME_DB} ${READONE} ${READTWO} -o ${SAMPLE}.preprocessed
     java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar SortSam \
         I=${SAMPLE}.preprocessed \
         O=${SAMPLE}.sorted \
