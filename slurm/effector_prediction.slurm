@@ -31,3 +31,5 @@ awk '{ if ($10 == "Y") {print $1} }' ${OUTPUT_NAME}.signalpout.short > ${OUTPUT_
 seqtk subseq ${OUTPUT_NAME}.notm.faa ${OUTPUT_NAME}.sp.names > ${OUTPUT_NAME}.notm.sp.faa
 
 python /global/scratch/users/pierrj/EffectorP-3.0/EffectorP.py -i ${OUTPUT_NAME}.notm.sp.faa > ${OUTPUT_NAME}.effectorpout
+
+awk '{ if ($(NF) == "effector") {print $1}}' ${OUTPUT_NAME}.effectorpout > ${OUTPUT_NAME}.predicted_effectors
