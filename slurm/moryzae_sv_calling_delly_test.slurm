@@ -55,13 +55,7 @@ delly call \
     ../data/${SAMPLE}.bam
 
 bcftools filter \
-    -O b \
+    -O v \
     -o ${SAMPLE}.delly.out.filtered \
     -i "FILTER == 'PASS'" \
     ${SAMPLE}.delly.out
-
-bcftools concat \
-    -a `# allow overlaps` \
-    -O v `# uncompressed VCF format` \
-    -o ${SAMPLE}.delly.out.filtered.concatenated \
-    ${SAMPLE}.delly.out.filtered

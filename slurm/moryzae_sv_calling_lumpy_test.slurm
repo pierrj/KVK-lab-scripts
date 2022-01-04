@@ -49,6 +49,8 @@ module purge
 
 source activate /global/scratch/users/pierrj/conda_envs/lumpy
 
+module load bcftools
+
 /global/scratch/users/pierrj/lumpy-sv/bin/lumpyexpress \
     -B ../data/${SAMPLE}.bam \
     -o ${SAMPLE}.lumpyout \
