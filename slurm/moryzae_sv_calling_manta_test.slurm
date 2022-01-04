@@ -44,7 +44,7 @@ if [ ! -f "${SAMPLE}.bam.bai" ]; then
     samtools index ${SAMPLE}.bam
 fi
 
-cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/delly
+cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/manta
 
 module purge
 
@@ -55,7 +55,7 @@ source activate /global/scratch/users/pierrj/conda_envs/manta
     --reference ../data/${REFERENCE} \
     --bam ../data/${SAMPLE}.bam
 
-/manta_out/runWorkflow.py \
+manta_out/runWorkflow.py \
     --quiet \
     -m local \
     -j ${SLURM_NTASKS}
