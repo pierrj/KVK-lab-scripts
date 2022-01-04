@@ -26,7 +26,8 @@ seqtk subseq ${INPUT_FILE} ${OUTPUT_NAME}.notm.names > ${OUTPUT_NAME}.notm.faa
 
 /global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f short ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.short
 
-/global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f long ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.long
+awk '{ if ($10 == "Y") {print $1} }' ${OUTPUT_NAME}.signalpout.short > ${OUTPUT_NAME}.sp.names
 
-/global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f summary ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.summary
+seqtk subseq ${OUTPUT_NAME}.notm.faa ${OUTPUT_NAME}.sp.names > ${OUTPUT_NAME}.notm.sp.faa
 
+python /global/scratch/users/pierrj/EffectorP-3.0/EffectorP.py -i ${OUTPUT_NAME}.notm.sp.faa > ${OUTPUT_NAME}.effectorpout
