@@ -48,4 +48,4 @@ fi
 
 cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/wham
 
-/global/scratch/users/pierrj/wham/bin/whamg -f ../data/${SAMPLE}.bam -a ../data/${REFERENCE}.fasta -x ${SLURM_NTASKS} > ${SAMPLE}.wham.vcf
+/global/scratch/users/pierrj/wham/bin/whamg -f ../data/${SAMPLE}.bam -a ../data/${REFERENCE} -x ${SLURM_NTASKS} > ${SAMPLE}.wham.vcf
