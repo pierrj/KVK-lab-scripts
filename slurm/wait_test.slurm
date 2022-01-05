@@ -18,7 +18,8 @@ date '+%d/%m/%Y %H:%M:%S' >> master
 
 for((i=0; i<5; i++)); do
     sbatch -W --job-name=$i.wait_test --export=print=$i /global/home/users/pierrj/git/slurm/wait_command.slurm
-done;
+done
+
 wait
 
 date '+%d/%m/%Y %H:%M:%S' >> master
