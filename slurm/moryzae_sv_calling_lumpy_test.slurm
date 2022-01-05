@@ -45,12 +45,7 @@ fi
 
 cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/lumpy
 
-module purge
-
 source activate /global/scratch/users/pierrj/conda_envs/lumpy
-
-module load bcftools
-module load samtools
 
 smoove call --name ${SAMPLE} \
     --fasta ../data/${REFERENCE} \
