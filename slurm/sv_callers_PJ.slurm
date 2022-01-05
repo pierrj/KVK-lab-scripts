@@ -34,12 +34,13 @@ while read SAMPLE; do
     if [ ! -f "${SAMPLE}/data/${SAMPLE}.bam" ]; then
         cd ${SAMPLE}/data/
             sbatch --parsable --job-name=${SAMPLE}.sra_map --export=SAMPLE=$SAMPLE,REFERENCE=$REFERENCE /global/home/users/pierrj/git/slurm/download_sra_and_map.slurm >> ../../slurm_ids
-        cd ..
+        cd ../..
     fi
 done < $SAMPLE_LIST
 
 # wait for all jobs to finish
 sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
+
 wait
 
 # run all callers with per sample parallelization
@@ -59,7 +60,7 @@ for caller in wham lumpy manta delly; do
             echo /global/home/users/pierrj/git/bash/run_${caller}.sh -f ${SAMPLE}/data/${SAMPLE}.bam -r ${REFERENCE} -t 1 -o ${SAMPLE}/${caller}/${SAMPLE}.${caller}.vcf -d ${SAMPLE}/${caller}/ >> ${caller}_jobqueue
         fi
         
-    done < SAMPLE_LIST
+    done < $SAMPLE_LIST
 
     if [[ ! "${caller}" == "wham" ]]; then
         source activate /global/scratch/users/pierrj/conda-envs/${caller}
