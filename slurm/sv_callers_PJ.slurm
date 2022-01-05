@@ -31,7 +31,7 @@ while read SAMPLE; do
     if [ ! -d "${SAMPLE}/data/" ]; then
         mkdir ${SAMPLE}/data/
     fi
-    if [ ! -f "${SAMPLE}/data/${SAMPLE}.bam" ]; then
+    if [ ! -s "${SAMPLE}/data/${SAMPLE}.bam" ]; then
         cd ${SAMPLE}/data/
             sbatch --parsable --job-name=${SAMPLE}.sra_map --export=SAMPLE=$SAMPLE,REFERENCE=$REFERENCE /global/home/users/pierrj/git/slurm/download_sra_and_map.slurm >> ../../slurm_ids
         cd ../..
@@ -47,10 +47,12 @@ fi
 
 # run all callers with per sample parallelization
 
+module purge
+
 module load bcftools
 
 for caller in wham lumpy manta delly; do
-    if [ -f ${caller}_jobqueue ]; then
+    if [ -s ${caller}_jobqueue ]; then
         rm ${caller}_jobqueue
     fi
 
@@ -58,7 +60,7 @@ for caller in wham lumpy manta delly; do
         if [ ! -d "${SAMPLE}/${caller}/" ]; then
             mkdir ${SAMPLE}/${caller}/
         fi
-        if [ ! -f "${SAMPLE}/${caller}/${SAMPLE}.${caller}.vcf" ]; then
+        if [ ! -s "${SAMPLE}/${caller}/${SAMPLE}.${caller}.vcf" ]; then
             echo /global/home/users/pierrj/git/bash/run_${caller}.sh -f ${SAMPLE}/data/${SAMPLE}.bam -r ${REFERENCE} -t 1 -o ${SAMPLE}/${caller}/${SAMPLE}.${caller}.vcf -d ${SAMPLE}/${caller}/ >> ${caller}_jobqueue
         fi
         
@@ -89,6 +91,16 @@ while read SAMPLE; do
     if [ ! -d "${SAMPLE}/all/" ]; then
         mkdir ${SAMPLE}/all/
     fi
-    
+
+    if [ -f  ${SAMPLE}/all/${SAMPLE}.survivor.vcflist ]; then
+        rm  ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
+    fi
+
+    echo ${SAMPLE}/delly/${SAMPLE}.delly.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
+    echo ${SAMPLE}/lumpy/${SAMPLE}.lumpy.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
+    echo ${SAMPLE}/manta/${SAMPLE}.manta.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
+    echo ${SAMPLE}/wham/${SAMPLE}.wham.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
+
     /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}/all/${SAMPLE}.survivor.vcflist 1000 3 1 0 0 50 ${SAMPLE}/all/${SAMPLE}.all.vcf
+    
 done < $SAMPLE_LIST
