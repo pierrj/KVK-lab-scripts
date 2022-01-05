@@ -52,6 +52,8 @@ module purge
 
 module load bcftools
 
+export PERL5LIB=~/.conda/envs/agat/lib
+
 for caller in wham lumpy manta delly; do
     if [ -f ${caller}_jobqueue ]; then
         rm ${caller}_jobqueue
@@ -69,6 +71,7 @@ for caller in wham lumpy manta delly; do
 
     if [[ ! "${caller}" == "wham" ]]; then
         source activate /global/scratch/users/pierrj/conda_envs/${caller}
+        export PERL5LIB=/global/scratch/users/pierrj/conda_envs/${caller}/lib
     fi
 
     if [ -f ${caller}_jobqueue ]; then

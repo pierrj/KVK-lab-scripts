@@ -21,4 +21,4 @@ ${OUTDIR}/manta_out/runWorkflow.py \
     -m local \
     -j ${THREADS}
 
-zcat manta_out/results/variants/candidateSV.vcf.gz > ${OUTPUT}
+zcat ${OUTDIR}/manta_out/results/variants/candidateSV.vcf.gz > ${OUTPUT}
