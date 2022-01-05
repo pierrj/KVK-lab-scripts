@@ -65,7 +65,7 @@ for caller in wham lumpy manta delly; do
     done < $SAMPLE_LIST
 
     if [[ ! "${caller}" == "wham" ]]; then
-        source activate /global/scratch/users/pierrj/conda-envs/${caller}
+        source activate /global/scratch/users/pierrj/conda_envs/${caller}
     fi
 
     parallel -j ${SLURM_NTASKS} < ${caller}_jobqueue
