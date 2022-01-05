@@ -53,7 +53,7 @@ module purge
 module load bcftools
 
 for caller in wham lumpy manta delly; do
-    if [ -s ${caller}_jobqueue ]; then
+    if [ -f ${caller}_jobqueue ]; then
         rm ${caller}_jobqueue
     fi
 
