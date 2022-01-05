@@ -16,7 +16,7 @@ done
     --reference ${REFERENCE} \
     --bam ${FILE}
 
-${OUTDIR}/manta_out \
+${OUTDIR}/manta_out/runWorkflow.py \
     --quiet \
     -m local \
     -j ${THREADS}
