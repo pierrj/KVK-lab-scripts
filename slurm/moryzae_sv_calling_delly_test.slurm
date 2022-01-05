@@ -58,6 +58,6 @@ delly call \
 
 bcftools filter \
     -O v \
-    -o ${SAMPLE}.delly.out.filtered \
+    -o ${SAMPLE}.delly.vcf \
     -i "FILTER == 'PASS'" \
     ${SAMPLE}.delly.out
