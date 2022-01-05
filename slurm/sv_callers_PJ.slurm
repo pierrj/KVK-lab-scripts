@@ -33,7 +33,7 @@ while read SAMPLE; do
     fi
     if [ ! -f "${SAMPLE}/data/${SAMPLE}.bam" ]; then
         cd ${SAMPLE}/data/
-            sbatch --parsable --job-name=${SAMPLE}.sra_map --export=SAMPLE=$SAMPLE,REFERENCE=$REFERENCE /global/home/users/pierrj/git/slurm/download_sra_and_map.slurm >> slurm_ids
+            sbatch --parsable --job-name=${SAMPLE}.sra_map --export=SAMPLE=$SAMPLE,REFERENCE=$REFERENCE /global/home/users/pierrj/git/slurm/download_sra_and_map.slurm >> ../../slurm_ids
         cd ..
     fi
 done < $SAMPLE_LIST
