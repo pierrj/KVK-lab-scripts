@@ -32,6 +32,7 @@ while read SAMPLE; do
         mkdir ${SAMPLE}/data/
     fi
     if [ ! -s "${SAMPLE}/data/${SAMPLE}.bam" ]; then
+        echo "starting bwa mem for ${SAMPLE}"
         cd ${SAMPLE}/data/
             sbatch --parsable --job-name=${SAMPLE}.sra_map --export=SAMPLE=$SAMPLE,REFERENCE=$REFERENCE /global/home/users/pierrj/git/slurm/download_sra_and_map.slurm >> ../../slurm_ids
         cd ../..
@@ -71,6 +72,7 @@ for caller in wham lumpy manta delly; do
     fi
 
     if [ -f ${caller}_jobqueue ]; then
+        echo "starting ${caller} jobs"
         parallel -j ${SLURM_NTASKS} < ${caller}_jobqueue
     fi
 
@@ -102,5 +104,5 @@ while read SAMPLE; do
     echo ${SAMPLE}/wham/${SAMPLE}.wham.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
 
     /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}/all/${SAMPLE}.survivor.vcflist 1000 3 1 0 0 50 ${SAMPLE}/all/${SAMPLE}.all.vcf
-    
+
 done < $SAMPLE_LIST
