@@ -36,7 +36,7 @@ while read SAMPLE; do
             sbatch --parsable --job-name=${SAMPLE}.sra_map --export=SAMPLE=$SAMPLE,REFERENCE=$REFERENCE /global/home/users/pierrj/git/slurm/download_sra_and_map.slurm >> slurm_ids
         cd ..
     fi
-done < SAMPLE_LIST
+done < $SAMPLE_LIST
 
 # wait for all jobs to finish
 sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
