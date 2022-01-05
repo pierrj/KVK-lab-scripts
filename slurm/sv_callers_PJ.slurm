@@ -11,9 +11,9 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
-cd /global/scratch/users/pierrj/sv_calling_moryzae/run_1_5_2022
+cd /global/scratch/users/pierrj/sv_calling_moryzae/run_1_5_2022_full
 
-SAMPLE_LIST=test_sample_list
+SAMPLE_LIST=gladieux_accessions
 REFERENCE=/global/scratch/users/pierrj/references/moryzae_70-15_ref_with_mito.fasta # must be full path
 
 if [ ! -f "${REFERENCE}.amb" ]; then
