@@ -38,10 +38,12 @@ while read SAMPLE; do
     fi
 done < $SAMPLE_LIST
 
-# wait for all jobs to finish
-sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
+if [ -f slurm_ids ]; then
+    # wait for all jobs to finish
+    sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
 
-wait
+    wait
+fi
 
 # run all callers with per sample parallelization
 

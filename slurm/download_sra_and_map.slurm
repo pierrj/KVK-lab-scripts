@@ -19,6 +19,9 @@ if [ ! -f "${SAMPLE}.sra" ]; then
     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${SLURM_NTASKS} -O . -t tmp ${SAMPLE}.sra
 fi
 
+READONE=${SAMPLE}.sra_1.fastq
+READTWO=${SAMPLE}.sra_2.fastq
+
 if [ ! -f "${SAMPLE}.bam" ]; then
     bwa mem -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" \
     -t ${SLURM_NTASKS} ${GENOME_DB} ${READONE} ${READTWO} -o ${SAMPLE}.preprocessed
