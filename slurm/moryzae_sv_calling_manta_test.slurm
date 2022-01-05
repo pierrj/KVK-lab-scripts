@@ -59,4 +59,4 @@ manta_out/runWorkflow.py \
     -m local \
     -j ${SLURM_NTASKS}
 
-## no filtering
+zcat manta_out/results/variants/candidateSV.vcf.gz > ${SAMPLE}.manta.vcf

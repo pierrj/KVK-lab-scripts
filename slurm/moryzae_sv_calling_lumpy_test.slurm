@@ -54,3 +54,5 @@ smoove call --name ${SAMPLE} \
     --processes ${SLURM_NTASKS} \
     --outdir ${SAMPLE}_smoove_out \
     ../data/${SAMPLE}.bam
+
+zcat ${SAMPLE}_smoove_out/${SAMPLE}-smoove.vcf.gz > ${SAMPLE}.lumpy.vcf
