@@ -73,3 +73,22 @@ for caller in wham lumpy manta delly; do
     fi
 
 done
+
+## merge all
+
+## in order
+# distance between breakpoints
+# number of supporting callers
+# take type into account
+# take strand into account
+# disabled?
+# minimum size
+# output
+
+while read SAMPLE; do
+    if [ ! -d "${SAMPLE}/all/" ]; then
+        mkdir ${SAMPLE}/all/
+    fi
+    
+    /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}/all/${SAMPLE}.survivor.vcflist 1000 3 1 0 0 50 ${SAMPLE}/all/${SAMPLE}.all.vcf
+done < $SAMPLE_LIST

@@ -47,7 +47,7 @@ cd /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/lumpy
 
 module purge
 
-source activate /global/scratch/users/pierrj/conda_envs/smoove
+source activate /global/scratch/users/pierrj/conda_envs/lumpy
 
 smoove call --name ${SAMPLE} \
     --fasta ../data/${REFERENCE} \
