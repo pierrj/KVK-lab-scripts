@@ -7,7 +7,7 @@ PIDENT=55
 QUERY_COV=55
 HIT_COUNT=2
 N_NODES=20
-OUTPUT_FILE=tblastn_pav_validation_gladieux_12_26_21
+OUTPUT_FILE=tblastn_pav_validation_gladieux_1_3_2022
 
 
 if [ -f "jobqueue" ]; then

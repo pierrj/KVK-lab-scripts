@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --job-name=wait_test
-#SBATCH --account=fc_kvkallow
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -25,6 +24,7 @@ for((i=0; i<5; i++)); do
 done
 
 sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/wait_command.slurm
+
 wait
 
 date '+%d/%m/%Y %H:%M:%S' >> master

@@ -39,6 +39,6 @@ realpath /global/scratch/users/pierrj/sv_calling_moryzae/my_tests/wham/${SAMPLE}
 # minimum size
 # output
 
-/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}.survivor.vcflist 1000 3 1 0 0 0 ${SAMPLE}.all.vcf
+/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}.survivor.vcflist 1000 3 1 0 0 50 ${SAMPLE}.all.vcf
 
 some more filtering needed here such as SV length and mapping quality of regions
