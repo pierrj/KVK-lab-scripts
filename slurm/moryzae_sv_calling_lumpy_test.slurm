@@ -49,6 +49,9 @@ module purge
 
 source activate /global/scratch/users/pierrj/conda_envs/lumpy
 
+module load bcftools
+module load samtools
+
 smoove call --name ${SAMPLE} \
     --fasta ../data/${REFERENCE} \
     --processes ${SLURM_NTASKS} \
