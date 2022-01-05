@@ -17,7 +17,7 @@ cd /global/scratch/users/pierrj/sandbox/wait_test
 date '+%d/%m/%Y %H:%M:%S' >> master
 
 for((i=0; i<5; i++)); do
-    sbatch -W --job-name=$i.wait_test --export=print=$i /global/home/users/pierrj/git/slurm/wait_command.slurm
+    sbatch --job-name=$i.wait_test --export=print=$i /global/home/users/pierrj/git/slurm/wait_command.slurm
 done
 
 wait
