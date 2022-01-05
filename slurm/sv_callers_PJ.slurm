@@ -68,6 +68,8 @@ for caller in wham lumpy manta delly; do
         source activate /global/scratch/users/pierrj/conda_envs/${caller}
     fi
 
-    parallel -j ${SLURM_NTASKS} < ${caller}_jobqueue
+    if [ -f ${caller}_jobqueue ]; then
+        parallel -j ${SLURM_NTASKS} < ${caller}_jobqueue
+    fi
 
 done
