@@ -14,29 +14,29 @@ cd /global/scratch/users/pierrj/sv_calling_workshop
 
 module load sra-tools
 
-prefetch ERR3415817 -O .
-fasterq-dump -e 20 -O . -t tmp ERR3415817.sra
+prefetch ERR3624573 -O .
+fasterq-dump -e 20 -O . -t tmp ERR3624573/ERR3624573.sra
 
-ACCESSION=ERR3415817
+ACCESSION=ERR3624573
 REFERENCE_GENOME=GCA_000001735.2_TAIR10.1_genomic.fna
 
 module load bwa
 
 bwa index ${REFERENCE_GENOME}
 
-bwa mem -R "@RG\tID:${ACCESSION}\tSM:${ACCESSION}" \ # read group labels
-	-t 24 \ # number of threads, should be same as ntasks in header
-	${REFERENCE_GENOME} \ # reference
-	${ACCESSION}.sra_1.fastq \ # read file one
-	${ACCESSION}.sra_2.fastq \ # read file two
-	-o ${ACCESSION}.bam # output mapped reads file
+bwa mem -R "@RG\tID:${ACCESSION}\tSM:${ACCESSION}" \
+    -t 24 \
+    ${REFERENCE_GENOME} \
+    ${ACCESSION}_1.fastq \
+    ${ACCESSION}_2.fastq \
+    -o ${ACCESSION}.bam
 
 source activate /global/scratch/users/pierrj/conda_envs/lumpy
 
-smoove call --name ERR3415817 \
+smoove call --name ERR3624573 \
 	--fasta GCA_000001735.2_TAIR10.1_genomic.fna \
 	--processes 24 \
-	--outdir ERR3415817_smoove_out \
-	ERR3415817.bam
+	--outdir ERR3624573_smoove_out \
+	ERR3624573.bam
 
-zcat ERR3415817_smoove_out/ERR3415817-smoove.vcf.gz > ERR3415817.lumpy.vcf
+zcat ERR3624573_smoove_out/ERR3624573-smoove.vcf.gz > ERR3624573.lumpy.vcf
