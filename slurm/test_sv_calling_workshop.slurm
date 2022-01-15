@@ -22,7 +22,9 @@ REFERENCE_GENOME=GCA_000001735.2_TAIR10.1_genomic.fna
 
 module load bwa
 
-bwa mem -R "@RG\tID:${ACCESSION}\tSM:${ACCESSION}"\ # read group labels
+bwa index ${REFERNCE_GENOME}
+
+bwa mem -R "@RG\tID:${ACCESSION}\tSM:${ACCESSION}" \ # read group labels
 	-t 24 \ # number of threads, should be same as ntasks in header
 	${REFERENCE_GENOME} \ # reference
 	${ACCESSION}.sra_1.fastq \ # read file one
