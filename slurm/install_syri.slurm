@@ -12,7 +12,7 @@
 
 export CONDA_PKGS_DIRS=/global/scratch/users/pierrj/conda_envs/
 
-source activate conda activate /global/scratch/users/pierrj/conda_envs/syri_2
+source activate /global/scratch/users/pierrj/conda_envs/syri_2
 
 conda install -y cython numpy scipy pandas=0.23.4 biopython psutil matplotlib=3.0.0
 conda install -y -c conda-forge python-igraph
