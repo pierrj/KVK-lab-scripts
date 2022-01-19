@@ -14,12 +14,12 @@ cd /global/scratch/users/pierrj/plot_profiler
 
 REGIONS_BED=ERR4832458.dels.bed
 DENSITY_BED=GCA_000002495.2_MG8_genomic.fna.out.gff
-GENOME=moryzae_70-15_ref_with_mito.fasta
+GENOME_FILE=moryzae_70-15_ref_with_mito.fasta
 WINDOWS=10
 THREADS=${SLURM_NTASKS}
 OUTPUT_NAME=test
 
-genome_basename=$(basename ${GENOME})
+genome_basename=$(basename ${GENOME_FILE})
 
 samtools faidx ${GENOME_FILE}
 cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
