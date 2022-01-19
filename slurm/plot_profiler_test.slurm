@@ -30,6 +30,5 @@ bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WIND
 density_bed_basename=$(basename ${DENSITY_BED} )
 
 bedtools coverage -a ${genome_basename}.${WINDOWS}windows \
-    -b ${DENSITY_BED} -g ${CHROM_SIZES} | \
-    TEST WHAT THE OUTPUT ACTUALLY LOOKS LIKE
-    awk -v OFS='\t' '{print $1, $3, $4}' > ${density_bed_basename}.genomecoverage.bed
+    -b ${DENSITY_BED} -g ${CHROM_SIZES} > test_file.coverage
+# awk -v OFS='\t' '{print $1, $3, $4}' > ${density_bed_basename}.genomecoverage.bed
