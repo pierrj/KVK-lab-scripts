@@ -19,21 +19,6 @@ WINDOWS=10
 THREADS=${SLURM_NTASKS}
 OUTPUT_NAME=test
 
-genome_basename=$(basename ${GENOME_FILE})
+source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
-samtools faidx ${GENOME_FILE}
-cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
-CHROM_SIZES=${GENOME_FILE}.chromsizes
-
-bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
-
-module load repeatmasker/4.1.1
-
-RM_LIB=/global/scratch/users/pierrj/moryzae_pav/te_annotations_anne/anne_repbase_te_lib_fixed
-RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOME_FILE}
-
-density_bed_basename=$(basename ${DENSITY_BED} )
-
-bedtools coverage -a ${genome_basename}.${WINDOWS}windows \
-    -b ${DENSITY_BED} -g ${CHROM_SIZES} > test_file.coverage
-# awk -v OFS='\t' '{print $1, $3, $4}' > ${density_bed_basename}.genomecoverage.bed
+/global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
