@@ -13,7 +13,7 @@
 cd /global/scratch/users/pierrj/plot_profiler
 
 REGIONS_BED=ERR4832458.dels.bed
-DENSITY_BED=GCA_000002495.2_MG8_genomic.fna.out.gff
+DENSITY_BED=moryzae_70-15_ref_with_mito.fasta.out.gff
 GENOME_FILE=moryzae_70-15_ref_with_mito.fasta
 WINDOWS=10
 THREADS=${SLURM_NTASKS}
@@ -26,6 +26,11 @@ cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
 CHROM_SIZES=${GENOME_FILE}.chromsizes
 
 bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
+
+module load repeatmasker/4.1.1
+
+RM_LIB=/global/scratch/users/pierrj/moryzae_pav/te_annotations_anne/anne_repbase_te_lib_fixed
+RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOME_FILE}
 
 density_bed_basename=$(basename ${DENSITY_BED} )
 
