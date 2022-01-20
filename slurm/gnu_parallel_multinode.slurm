@@ -12,4 +12,6 @@
 
 cd ${SLURM_SUBMIT_DIR}
 
+module load seqtk
+
 parallel -j ${SLURM_NTASKS} < jobqueue_${node}
