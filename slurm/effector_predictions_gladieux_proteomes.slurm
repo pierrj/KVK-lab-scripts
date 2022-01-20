@@ -19,4 +19,4 @@ module load seqtk
 
 while read genome; do
     /global/home/users/pierrj/git/bash/effector_predictor.sh -i ${PROTEOMES_PATH}/${genome}/${genome}_protein.fasta -o ${genome}
-do < $MAPFILE
+done < $MAPFILE
