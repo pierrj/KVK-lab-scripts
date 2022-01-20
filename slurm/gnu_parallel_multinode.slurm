@@ -12,4 +12,4 @@
 
 cd ${SLURM_SUBMIT_DIR}
 
-parallel -j ${SLURM_NTASKS} < jobqueue_${node} >> ${OUTPUT_FILE}
+parallel -j ${SLURM_NTASKS} < jobqueue_${node}
