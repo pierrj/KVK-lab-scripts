@@ -31,6 +31,7 @@ source activate /global/scratch/users/pierrj/conda_envs/syri_2
 
 # chmod +x syri/bin/syri syri/bin/chroder
 
+module purge
 module load mummer
 
 nucmer --maxmatch -p c24_v_col-0_full -l 40 -g 90 -c 100 -b 200 -t ${SLURM_NTASKS} col0_chrom_only.fasta c24_chrom_only.fasta
