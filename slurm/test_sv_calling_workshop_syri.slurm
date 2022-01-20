@@ -39,6 +39,6 @@ delta-filter -m -i 90 -l 100 c24_v_col-0_full.delta > c24_v_col-0_full.filtered.
 
 show-coords -THrd c24_v_col-0_full.filtered.delta > c24_v_col-0_full.filtered.coords
 
-syri -c c24_v_col-0_full.filtered.coords -d c24_v_col-0_full.filtered.delta -r GCA_000001735.2_TAIR10.1_genomic.fna -q C24.chr.all.v2.0.fasta --nc 5 --all -k
+syri/syri/bin/syri -c c24_v_col-0_full.filtered.coords -d c24_v_col-0_full.filtered.delta -r GCA_000001735.2_TAIR10.1_genomic.fna -q C24.chr.all.v2.0.fasta --nc 5 --all -k
 
 plotsr syri.out GCA_000001735.2_TAIR10.1_genomic.fna C24.chr.all.v2.0.fasta
