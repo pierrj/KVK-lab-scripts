@@ -14,20 +14,22 @@ cd /global/scratch/users/pierrj/sv_calling_workshop/syri_part
 
 export CONDA_PKGS_DIRS=/global/scratch/users/pierrj/conda_envs/
 
-source activate /global/scratch/users/pierrj/conda_envs/syri3
+source activate /global/scratch/users/pierrj/conda_envs/syri_2
 
-conda install -y python=3.8 cython=0.29.23 numpy=1.20.2 scipy=1.6.2 pandas=1.2.4 psutil=5.8.0 matplotlib=3.3.4
-conda install -y python-igraph=0.9.1
-conda install -y pysam=0.16.0.1
-conda install -y plotsr
+# conda install -y python=3.8 cython=0.29.23 numpy=1.20.2 scipy=1.6.2 pandas=1.2.4 psutil=5.8.0 matplotlib=3.3.4
+# conda install -y python-igraph=0.9.1
+# conda install -y pysam=0.16.0.1
+# conda install -y plotsr
 
-module purge
+# module purge
 
-git clone https://github.com/schneebergerlab/syri.git
+# git clone https://github.com/schneebergerlab/syri.git
 
-python setup.py install
+# cd syri
 
-chmod +x syri/bin/syri syri/bin/chroder
+# python setup.py install
+
+# chmod +x syri/bin/syri syri/bin/chroder
 
 module load mummer
 
