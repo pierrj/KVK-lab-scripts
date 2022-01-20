@@ -14,6 +14,8 @@ cd /global/scratch/users/pierrj/plot_profiler
 
 
 #awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-5}}' ERR4832458.all.vcf
+# RM_LIB=anne_repbase_te_lib_fixed
+# RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}.fasta
 
 REGIONS_BED=ERR4832458.dels.bed
 DENSITY_BED=moryzae_70-15_ref_with_mito.fasta.out.gff
