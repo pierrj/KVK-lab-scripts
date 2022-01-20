@@ -20,16 +20,28 @@ fasterq-dump -e 20 -O . -t tmp ERR3624573/ERR3624573.sra
 ACCESSION=ERR3624573
 REFERENCE_GENOME=GCA_000001735.2_TAIR10.1_genomic.fna
 
-module load bwa
+# module load bwa
 
-bwa index ${REFERENCE_GENOME}
+# bwa index ${REFERENCE_GENOME}
 
-bwa mem -R "@RG\tID:${ACCESSION}\tSM:${ACCESSION}" \
-    -t 24 \
-    ${REFERENCE_GENOME} \
-    ${ACCESSION}_1.fastq \
-    ${ACCESSION}_2.fastq \
-    -o ${ACCESSION}.bam
+# bwa mem -R "@RG\tID:${ACCESSION}\tSM:${ACCESSION}" \
+#     -t 24 \
+#     ${REFERENCE_GENOME} \
+#     ${ACCESSION}_1.fastq \
+#     ${ACCESSION}_2.fastq \
+#     -o ${ACCESSION}.bam
+
+# mv ${ACCESSION}.bam ${ACCESSION}.preprocessed
+
+# java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar SortSam \
+#     I=${ACCESSION}.preprocessed \
+#     O=${ACCESSION}.sorted \
+#     SORT_ORDER=coordinate
+java -jar /clusterfs/vector/home/groups/software/sl-7.x86_64/modules/picard/2.9.0/lib/picard.jar MarkDuplicates \
+    I=${ACCESSION}.sorted \
+    O=${ACCESSION}.bam \
+    M=${ACCESSION}.marked_dup_metrics
+samtools index ${ACCESSION}.bam
 
 source activate /global/scratch/users/pierrj/conda_envs/lumpy
 
