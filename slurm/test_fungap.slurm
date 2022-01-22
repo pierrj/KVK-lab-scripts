@@ -14,6 +14,8 @@ cd /global/scratch/users/pierrj/fungap_runs/gladieux_all/test_run
 
 module purge
 
+export PERL5LIB=''
+
 genome=ZJ2011-7-1
 
 singularity exec /global/scratch/users/pierrj/fungap_singularity/fungap.sif python /workspace/FunGAP/fungap.py \
