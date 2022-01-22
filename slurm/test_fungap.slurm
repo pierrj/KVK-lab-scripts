@@ -12,27 +12,14 @@
 
 cd /global/scratch/users/pierrj/fungap_runs/gladieux_all/test_run
 
-singularity shell /global/scratch/users/pierrj/fungap_singularity/fungap.sif
-
 genome=ZJ2011-7-1
 
-python /workspace/FunGAP/fungap.py \
-    --output_dir fungap_out \
-    --trans_read_1 ERR5875670_1.fastq \
-    --trans_read_2 ERR5875670_2.fastq \
-    --genome_assembly ${genome}_genomic.fna  \
-    --augustus_species magnaporthe_grisea  \
-    --sister_proteome prot_db.faa  \
-    --busco_dataset sordariomycetes_odb10 \
-    --num_cores ${SLURM_NTASKS}
-
-
-python /workspace/FunGAP/fungap.py \
-    --output_dir fungap_out \
-    --trans_read_1 ERR5875670_1.fastq \
-    --trans_read_2 ERR5875670_2.fastq \
-    --genome_assembly ${genome}_genomic.fna  \
-    --augustus_species magnaporthe_grisea  \
-    --sister_proteome prot_db.faa  \
-    --busco_dataset sordariomycetes_odb10 \
-    --num_cores 20
+singularity exec python /workspace/FunGAP/fungap.py \
+                --output_dir fungap_out \
+                --trans_read_1 ERR5875670_1.fastq \
+                --trans_read_2 ERR5875670_2.fastq \
+                --genome_assembly ${genome}_genomic.fna  \
+                --augustus_species magnaporthe_grisea  \
+                --sister_proteome prot_db.faa  \
+                --busco_dataset sordariomycetes_odb10 \
+                --num_cores 20
