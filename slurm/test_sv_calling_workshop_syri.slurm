@@ -40,8 +40,11 @@ delta-filter -m -i 90 -l 100 c24_v_col-0_full.delta > c24_v_col-0_full.filtered.
 
 show-coords -THrd c24_v_col-0_full.filtered.delta > c24_v_col-0_full.filtered.coords
 
-syri/syri/bin/syri -c c24_v_col-0_full.filtered.coords -d c24_v_col-0_full.filtered.delta -r col0_chrom_only.fasta -q c24_chrom_only.fasta --nc 5 --all -k
+syri/syri/bin/syri -c c24_v_col-0_full.filtered.coords -d c24_v_col-0_full.filtered.delta -r col0_chrom_only.fasta -q c24_chrom_only.fasta --nc 5 --all -p c24_v_col-0
 
 source activate /global/scratch/users/pierrj/conda_envs/plotsr
 
-plotsr syri.out col0_chrom_only.fasta c24_chrom_only.fasta
+echo -e $(realpath col0_chrom_only.fasta)"\t"col0 > genomes_list
+echo -e $(realpath c24_chrom_only.fasta)"\t"c24 >> genomes_list
+
+plotsr syri.out --genomes col0_chrom_only.fasta c24_chrom_only.fasta
