@@ -21,7 +21,7 @@ export AUGUSTUS_CONFIG_PATH=/global/scratch/users/pierrj/fungap_runs/fungap_conf
 
 genome=ZJ2011-7-1
 
-singularity exec --fakeroot --writable /global/scratch/users/pierrj/fungap_runs/fungap.sif python /workspace/FunGAP/fungap.py \
+singularity exec /global/scratch/users/pierrj/fungap_runs/fungap.sif python /workspace/FunGAP/fungap.py \
                                                         --output_dir fungap_out \
                                                         --trans_read_1 ERR5875670_1.fastq \
                                                         --trans_read_2 ERR5875670_2.fastq \
