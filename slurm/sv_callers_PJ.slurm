@@ -52,8 +52,6 @@ module purge
 
 module load bcftools
 
-export PERL5LIB=~/.conda/envs/agat/lib
-
 for caller in wham lumpy manta delly; do
     if [ -f ${caller}_jobqueue ]; then
         rm ${caller}_jobqueue
