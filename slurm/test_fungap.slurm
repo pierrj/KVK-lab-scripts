@@ -15,13 +15,13 @@ cd /global/scratch/users/pierrj/fungap_runs/gladieux_all/test_run
 module purge
 
 export PERL5LIB=''
-export AUGUSTUS_CONFIG_PATH=/global/scratch/users/pierrj/fungap_runs/fujngap_config_copy/
+export AUGUSTUS_CONFIG_PATH=/global/scratch/users/pierrj/fungap_runs/fungap_config_copy/
 
 ## ADD GM_KEY TO HOME DIRECTORY ##
 
 genome=ZJ2011-7-1
 
-singularity exec --fakeroot --writable /global/scratch/users/pierrj/fungap_singularity/fungap.sif python /workspace/FunGAP/fungap.py \
+singularity exec --fakeroot --writable /global/scratch/users/pierrj/fungap_runs/fungap.sif python /workspace/FunGAP/fungap.py \
                                                         --output_dir fungap_out \
                                                         --trans_read_1 ERR5875670_1.fastq \
                                                         --trans_read_2 ERR5875670_2.fastq \
@@ -29,4 +29,4 @@ singularity exec --fakeroot --writable /global/scratch/users/pierrj/fungap_singu
                                                         --augustus_species magnaporthe_grisea  \
                                                         --sister_proteome prot_db.faa  \
                                                         --busco_dataset sordariomycetes_odb10 \
-                                                        --num_cores 20
+                                                        --num_cores ${SLURM_NTASKS}
