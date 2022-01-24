@@ -11,10 +11,10 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
-cd /global/scratch/users/pierrj/sv_calling_moryzae/run_1_5_2022_full
+cd /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11
 
 SAMPLE_LIST=gladieux_accessions
-REFERENCE=/global/scratch/users/pierrj/references/moryzae_70-15_ref_with_mito.fasta # must be full path
+REFERENCE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito.fasta # must be full path
 
 if [ ! -f "${REFERENCE}.amb" ]; then
     bwa index ${REFERENCE}

@@ -15,6 +15,7 @@ cd /global/scratch/users/pierrj/fungap_runs/gladieux_all/test_run
 module purge
 
 export PERL5LIB=''
+export AUGUSTUS_CONFIG_PATH=/global/scratch/users/pierrj/fungap_runs/fujngap_config_copy/
 
 ## ADD GM_KEY TO HOME DIRECTORY ##
 
