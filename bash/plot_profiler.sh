@@ -47,8 +47,7 @@ elif [[ "${file_num}" == "2" ]]
 then
     echo 'two files, treating input as bam, where first is treatment, second is input'
     echo "bamCompare -p ${SLURM_NTASKS} -b1 ${DENSITY_FILE[0]} -b2 ${DENSITY_FILE[1]} -o ${density_file_basename}.bw -of bigwig --scaleFactorsMethod readCount"
-    bamCompare -p ${SLURM_NTASKS} -b1 ${DENSITY_FILE[0]} -b2 ${DENSITY_FILE[1]} \
-        -o ${density_file_basename}.bw -of bigwig --scaleFactorsMethod readCount
+    bamCompare -p ${SLURM_NTASKS} -b1 ${DENSITY_FILE[0]} -b2 ${DENSITY_FILE[1]} -o ${density_file_basename}.bw -of bigwig --scaleFactorsMethod readCount
 
 else
     echo 'too many files inputted'
