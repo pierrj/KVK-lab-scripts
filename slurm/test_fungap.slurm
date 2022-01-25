@@ -16,6 +16,7 @@ module purge
 
 export PERL5LIB=''
 export AUGUSTUS_CONFIG_PATH=/global/scratch/users/pierrj/fungap_runs/fungap_config_copy/
+export AUGUSTUS_SCRIPTS_PATH=/opt/conda/bin
 
 ## ADD GM_KEY TO HOME DIRECTORY ##
 
