@@ -19,6 +19,8 @@ cd /global/scratch/users/pierrj/plot_profiler
 
 REGIONS_BED=ERR4832458.dels.bed
 DENSITY_BED=moryzae_70-15_ref_with_mito.fasta.out.gff
+TREATMENT_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.H3K27ac_1.sam.bam
+CONTROL_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.Input_1.sam.bam
 GENOME_FILE=moryzae_70-15_ref_with_mito.fasta
 WINDOWS=10
 THREADS=${SLURM_NTASKS}
@@ -26,4 +28,6 @@ OUTPUT_NAME=test
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
-/global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
+# /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
+
+/global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $TREATMENT_BAM -d $CONTROL_BAM -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
