@@ -12,8 +12,8 @@ o) OUTPUT_NAME=${OPTARG};;
 esac
 done
 
-
-genome_basename=${GENOME_FILE%%.*}
+genome_basename=$(basename ${GENOME_FILE})
+genome_basename=${genome_basename%%.*}
 
 if [ ! -f "${GENOME_FILE}.chromsizes" ]; then
     samtools faidx ${GENOME_FILE}
@@ -22,10 +22,6 @@ fi
 
 CHROM_SIZES=${GENOME_FILE}.chromsizes
 
-if [ ! -f "${genome_basename}.${WINDOWS}windows" ]; then
-    bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
-fi
-
 density_file_basename=$(basename ${DENSITY_FILE})
 density_file_basename=${density_file_basename[0]%%.*}
 
@@ -33,16 +29,21 @@ file_num=${#DENSITY_FILE[@]}
 
 if [[ "${file_num}" == "1" ]]
 then
-echo 'single file, treating input as bed'
     if [ ! -f "${genome_basename}.${WINDOWS}windows" ]; then
         bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
     fi
+    if [[ "${DENSITY_FILE[0]}" == "gc" ]]; then
+        echo 'gc content'
+        bedtools nuc -fi ${GENOME} -bed ${genome_basename}.${WINDOWS}windows > ${genome_basename}.${WINDOWS}windows.gc
+        awk -v OFS='\t' '{ if (NR > 1) {print $1, $2, $3, $5}}' ${genome_basename}.${WINDOWS}windows.gc > ${genome_basename}.${WINDOWS}windows.gc.bg
+        bedGraphToBigWig ${genome_basename}.${WINDOWS}windows.gc.bg ${density_file_basename}.bw
+    else
+        echo 'single file but not gc, treating input as bed'
+        bedtools coverage -a ${genome_basename}.${WINDOWS}windows \
+            -b ${DENSITY_FILE[0]} -g ${CHROM_SIZES} | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${density_file_basename}.bg
 
-    bedtools coverage -a ${genome_basename}.${WINDOWS}windows \
-        -b ${DENSITY_FILE[0]} -g ${CHROM_SIZES} | awk -v OFS='\t' '{print $1, $2, $3, $4}' > ${density_file_basename}.bg
-
-    bedGraphToBigWig ${density_file_basename}.bg ${CHROM_SIZES} ${density_file_basename}.bw
-
+        bedGraphToBigWig ${density_file_basename}.bg ${CHROM_SIZES} ${density_file_basename}.bw
+    fi
 elif [[ "${file_num}" == "2" ]]
 then
     echo 'two files, treating input as bam, where first is treatment, second is input'
