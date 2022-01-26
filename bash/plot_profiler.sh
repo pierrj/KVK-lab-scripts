@@ -34,7 +34,7 @@ then
     fi
     if [[ "${DENSITY_FILE[0]}" == "gc" ]]; then
         echo 'gc content'
-        bedtools nuc -fi ${GENOME} -bed ${genome_basename}.${WINDOWS}windows > ${genome_basename}.${WINDOWS}windows.gc
+        bedtools nuc -fi ${GENOME_FILE} -bed ${genome_basename}.${WINDOWS}windows > ${genome_basename}.${WINDOWS}windows.gc
         awk -v OFS='\t' '{ if (NR > 1) {print $1, $2, $3, $5}}' ${genome_basename}.${WINDOWS}windows.gc > ${genome_basename}.${WINDOWS}windows.gc.bg
         bedGraphToBigWig ${genome_basename}.${WINDOWS}windows.gc.bg ${density_file_basename}.bw
     else
