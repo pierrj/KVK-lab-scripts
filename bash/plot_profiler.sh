@@ -26,8 +26,8 @@ if [ ! -f "${genome_basename}.${WINDOWS}windows" ]; then
     bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
 fi
 
-
-density_file_basename=${DENSITY_FILE[0]%%.*}
+density_file_basename=$(basename ${DENSITY_FILE})
+density_file_basename=${density_file_basename[0]%%.*}
 
 file_num=${#DENSITY_FILE[@]}
 
