@@ -12,6 +12,7 @@
 
 cd /global/scratch/users/pierrj/plot_profiler
 
+repeatmasker/4.1.1
 
 # awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/ERR4832458/all/ERR4832458.all.vcf > ERR4832458.dels.bed
 RM_LIB=/global/scratch/users/pierrj/moryzae_pav/te_annotations_anne/anne_repbase_te_lib
@@ -24,7 +25,7 @@ WINDOWS=10
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
-DENSITY_BED=moryzae_70-15_ref_with_mito.fasta.out.gff
+DENSITY_BED=guy11_genome_baoetal2017_with_70-15_mito.fasta.out.gff
 OUTPUT_NAME=tes
 /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
 
