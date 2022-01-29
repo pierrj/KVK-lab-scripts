@@ -47,7 +47,6 @@ then
 elif [[ "${file_num}" == "2" ]]
 then
     echo 'two files, treating input as bam, where first is treatment, second is input'
-    echo "bamCompare -p ${THREADS} -b1 ${DENSITY_FILE[0]} -b2 ${DENSITY_FILE[1]} -o ${density_file_basename}.bw -of bigwig --scaleFactorsMethod readCount"
     bamCompare -p ${THREADS} -b1 ${DENSITY_FILE[0]} -b2 ${DENSITY_FILE[1]} -o ${density_file_basename}.bw -of bigwig --scaleFactorsMethod readCount
 else
     echo 'too many files inputted'
@@ -61,7 +60,7 @@ computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             --beforeRegionStartLength 10000 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 10000 \
-                            -o ${OUTPUT_NAME}.mat.gz
+                            --skipZeros	-o ${OUTPUT_NAME}.mat.gz
 
 plotProfile -m ${OUTPUT_NAME}.mat.gz \
             -out ${OUTPUT_NAME}.pdf \
