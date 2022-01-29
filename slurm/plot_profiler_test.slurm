@@ -26,16 +26,16 @@ WINDOWS=10
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
 DENSITY_BED=guy11_genome_baoetal2017_with_70-15_mito.fasta.out.gff
-OUTPUT_NAME=tes_skip_zeroes
+OUTPUT_NAME=tes
 /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
 
 
 for OUTPUT_NAME in H3K27ac H3K36me3 H3K27me3; do
     TREATMENT_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${OUTPUT_NAME}_1.sam.bam
     CONTROL_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.Input_1.sam.bam
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $TREATMENT_BAM -d $CONTROL_BAM -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_skip_zeroes
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $TREATMENT_BAM -d $CONTROL_BAM -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
 done
 
 DENSITY_BED=gc
-OUTPUT_NAME=gc_skip_zeroes
+OUTPUT_NAME=gc
 /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o $OUTPUT_NAME
