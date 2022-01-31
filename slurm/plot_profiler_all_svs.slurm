@@ -44,7 +44,7 @@ if [ -f all_dels.bed ]; then
     rm all_dels.bed
 fi
 
-awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' all_svs.vcf > all_dels.bed
+awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' all_svs.vcf | grep -v 'Supercontig_7.9' > all_dels.bed
 
 cp /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito.fasta .
 
