@@ -37,7 +37,7 @@ grep -v 'Supercontig_7.9' all_svs.vcf.old > all_svs.vcf
 
 for sv in DEL DUP INV TAR; do
 
-    awk -F "\t|;" -v OFS='\t' -v sv=${sv} '{ if ( $11 == "SVTYPE="sv) {print $1, $2, substr($14, 5, length($14)-4)}}' > all_${sv}.bed
+    awk -F "\t|;" -v OFS='\t' -v sv=${sv} '{ if ( $11 == "SVTYPE="sv) {print $1, $2, substr($14, 5, length($14)-4)}}' all_svs.vcf > all_${sv}.bed
 
     OUTPUT_NAME=plot_profile_all_${sv}_w_survivor
 
