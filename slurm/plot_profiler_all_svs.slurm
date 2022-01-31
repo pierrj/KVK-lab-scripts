@@ -14,37 +14,37 @@
 cd /global/scratch/users/pierrj/PAV_SV/SV/plot_profile
 
 
-## STRAIGHT JUST CAT VERSION
-if [ -f all_dels.bed ]; then
-    rm all_dels.bed
-fi
-
-while read SAMPLE; do
-    awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' \
-        /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_dels.bed
-done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
-
-
-mv all_dels.bed all_dels.bed.old
-
-sort -k1,1 -k2,2n all_dels.bed.old | grep -v 'Supercontig_7.9' | uniq > all_dels.bed
-
-# # SURVIVOR VERSION
-# if [ -f all_svs_list ]; then
-#     rm all_svs_list
-# fi
-# while read SAMPLE; do
-#     echo /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
-# done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
-
-# # the first 1 is important, means any file counts
-# /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 1000 1 1 0 0 50 all_svs.vcf
-
+## JUST CAT VERSION
 # if [ -f all_dels.bed ]; then
 #     rm all_dels.bed
 # fi
 
-# awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' all_svs.vcf > all_dels.bed
+# while read SAMPLE; do
+#     awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' \
+#         /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_dels.bed
+# done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
+
+
+# mv all_dels.bed all_dels.bed.old
+
+# sort -k1,1 -k2,2n all_dels.bed.old | grep -v 'Supercontig_7.9' | uniq > all_dels.bed
+
+# # SURVIVOR VERSION
+if [ -f all_svs_list ]; then
+    rm all_svs_list
+fi
+while read SAMPLE; do
+    echo /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
+done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
+
+# the first 1 is important, means any file counts
+/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 1000 1 1 0 0 50 all_svs.vcf
+
+if [ -f all_dels.bed ]; then
+    rm all_dels.bed
+fi
+
+awk -F "\t|;" -v OFS='\t' '{ if ( $5 == "<DEL>") {print $1, $2, substr($14, 5, length($14)-4)}}' all_svs.vcf > all_dels.bed
 
 cp /global/scratch/users/pierrj/references/guy11_genome_baoetal2017_with_70-15_mito.fasta .
 
