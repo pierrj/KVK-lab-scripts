@@ -29,21 +29,25 @@ accessions = []
 
 for seq in seq_list:
     print(seq)
-    if '_fungap_out_prot.faa' in seq:
-        accession = seq.split('_')[0] + seq.split('_')[1]
-    elif seq == 'GCA_000002495.2_MG8_protein.faa':
-        accession = '70-15'
-    elif seq == 'GCA_004355905.1_PgNI_protein.faa':
-        accession = 'NI907'
-    elif '_protein.fasta' in seq:
+    accession = 0
+    if 'GCA' in seq:
+        if seq == 'GCA_000002495.2_MG8_fungap_out_prot.faa':
+            accession = '70-15'
+        elif seq == 'GCA_004355905.1_PgNI_fungap_out_prot.faa':
+            accession = 'NI907'
+        elif seq == 'GCA_002368485.1_ASM236848v1_fungap_out_prot.faa':
+            accession = 'GY11'
+        else:
+            accession = seq.split('_')[0] + seq.split('_')[1]
+    else:
         isolate = seq.split('_')[0]
         lineage = lineage_info[isolate]
         accession = seq.split('_')[0] + '_' + lineage
-    else:
+    if not accession:
         print('couldnt process accession')
     print(accession)
     accessions.append(accession)
-    out_file = out_dir + '/' + accession + '_proteome_filtered.fasta'
+    out_file = out_dir + '/' + accession + '_fungap_out_prot_filtered.faa'
     seq_path = seq_dir + '/' + seq
     record_list = list(SeqIO.parse(seq_path, 'fasta'))
     with open(out_file, 'w') as corrected:
