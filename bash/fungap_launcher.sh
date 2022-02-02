@@ -13,10 +13,13 @@ while read genome; do
 done < genomes_mapfile
 
 while read genome; do
-    sbatch -p savio3 --job-name=${genome}_run_fungap --export=genome=$genome /global/home/users/pierrj/git/slurm/run_fungap.slurm
+    sbatch --job-name=${genome}_run_fungap --export=genome=$genome /global/home/users/pierrj/git/slurm/run_fungap.slurm
 done < genomes_mapfile
 
 while read genome; do
     echo ${genome}
     tail -2 ${genome}/fungap_out/logs/maker_ERR5875670_run1.log
 done < genomes_mapfile
+
+
+sbatch -p savio3 --ntasks-per-node=32 --job-name=${genome}_run_fungap --export=genome=$genome /global/home/users/pierrj/git/slurm/run_fungap.slurm

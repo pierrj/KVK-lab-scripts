@@ -31,6 +31,20 @@ for sv in DEL DUP INV TRA; do
             /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_${sv}.bed
     done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
 
+    # small number of invs have end site before start
+    if [[ "${sv}" == "INV" ]]
+    then
+        mv all_INV.bed all_INV.bed.old
+        awk -v OFS='\t' '{ if ($2 > $3) {print $1, $3, $2} else {print $0}}' all_INV.bed.old > all_INV.bed
+    fi
+
+    # third field for TRAs are all wrong so do breakpoints instead.
+    if [[ "${sv}" == "TRA" ]]
+    then
+        mv all_TRA.bed all_TRA.bed.old
+        awk -v OFS='\t' '{print $1, $2, $2+1}' all_TRA.bed.old > all_TRA.bed
+    fi
+
 
     mv all_${sv}.bed all_${sv}.bed.old
 
@@ -47,21 +61,27 @@ for sv in DEL DUP INV TRA; do
 
     DENSITY_BED=guy11_genome_baoetal2017_with_70-15_mito.fasta.out.gff
     SUB_OUTPUT_NAME=tes
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME}
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     DENSITY_BED=guy11_genome_baoetal2017_with_70-15_mito.fasta.simplerepeats.bed
     SUB_OUTPUT_NAME=simple_repeats
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME}
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     for treatment in H3K27ac H3K36me3 H3K27me3; do
         TREATMENT_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${treatment}_1.sam.bam
         CONTROL_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.Input_1.sam.bam
-        /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $TREATMENT_BAM -d $CONTROL_BAM -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${treatment}
+        /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $TREATMENT_BAM -d $CONTROL_BAM -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${treatment} -s ${sv}
     done
 
     DENSITY_BED=gc
     SUB_OUTPUT_NAME=gc
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME}
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+
+    DENSITY_BED=guy11_fungap_out_12_28_20.justgenes.bed
+    SUB_OUTPUT_NAME=genes
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+
+    ## could probably add SCOs here or effectors or different types of genes as well
 done
 
 

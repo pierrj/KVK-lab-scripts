@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts b:d:g:w:t:o: option
+while getopts b:d:g:w:t:o:s: option
 do
 case "${option}"
 in
@@ -9,6 +9,7 @@ g) GENOME_FILE=${OPTARG};;
 w) WINDOWS=${OPTARG};;
 t) THREADS=${OPTARG};;
 o) OUTPUT_NAME=${OPTARG};;
+s) SV=${OPTARG};;
 esac
 done
 
@@ -53,14 +54,22 @@ else
     exit 1
 fi
 
-
-## SKIP ZEROS OR NO?
+if [[ "${SV}" == "TRA" ]]
+then
+computeMatrix reference-point -p ${THREADS} -S ${density_file_basename}.bw \
+                            -R ${REGIONS_BED} \
+                            --beforeRegionStartLength 10000 \
+                            --referencePoint TSS \
+                            --afterRegionStartLength 10000 \
+                            -o ${OUTPUT_NAME}.mat.gz
+else
 computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             -R ${REGIONS_BED} \
                             --beforeRegionStartLength 10000 \
                             --regionBodyLength 1000 \
                             --afterRegionStartLength 10000 \
-                            --skipZeros	-o ${OUTPUT_NAME}.mat.gz
+                            -o ${OUTPUT_NAME}.mat.gz
+fi
 
 plotProfile -m ${OUTPUT_NAME}.mat.gz \
             -out ${OUTPUT_NAME}.pdf \
