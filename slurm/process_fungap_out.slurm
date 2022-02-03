@@ -16,6 +16,9 @@ if [ ! -d "full_runfungap_proteomes_1_31_2022" ]; then
     mkdir full_runfungap_proteomes_1_31_2022
 fi
 
+source activate /global/scratch/users/pierrj/conda_envs/orthofinder
+module purge
+
 while read genome; do
     cp /global/scratch/users/pierrj/fungap_runs/gladieux_all/${genome}/fungap_out/fungap_out/fungap_out_prot.faa \
         full_runfungap_proteomes_1_31_2022/${genome}_fungap_out_prot.faa

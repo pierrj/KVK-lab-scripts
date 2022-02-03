@@ -26,6 +26,12 @@ for sv in DEL DUP INV TRA; do
         rm all_${sv}.bed
     fi
 
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+
     while read SAMPLE; do
         awk -F "\t|;" -v OFS='\t' -v sv=${sv} '{ if ( $11 == "SVTYPE="sv) {print $1, $2, substr($14, 5, length($14)-4)}}' \
             /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_${sv}.bed
