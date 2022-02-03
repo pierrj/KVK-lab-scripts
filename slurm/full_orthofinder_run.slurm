@@ -12,4 +12,4 @@
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/full_run_orthofinder_1_31_2022
 
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_1_31_2022
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_1_31_2022/Results_Feb03/WorkingDirectory
