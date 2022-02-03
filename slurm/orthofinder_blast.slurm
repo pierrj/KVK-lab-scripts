@@ -14,4 +14,8 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/full_run_orthofinder_1_31_2022
 
+module purge
+
+export PERL5LIB=''
+
 parallel -j ${SLURM_NTASKS} < jobqueue_${node}
