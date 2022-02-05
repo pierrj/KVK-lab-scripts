@@ -12,13 +12,13 @@
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/adding_70_15_to_orthogrouping
 
-cp -r ../full_run_orthofinder_1_31_2022/orthofinder_1_31_2022/ .
+# cp -r ../full_run_orthofinder_1_31_2022/orthofinder_1_31_2022/ .
 
-mkdir 70_15_proteome
-cd 70_15_proteome
-wget http://ftp.ensemblgenomes.org/pub/fungi/release-52/fasta/magnaporthe_oryzae/pep/Magnaporthe_oryzae.MG8.pep.all.fa.gz
-gunzip Magnaporthe_oryzae.MG8.pep.all.fa.gz
-cd ..
+# mkdir 70_15_proteome
+# cd 70_15_proteome
+# wget http://ftp.ensemblgenomes.org/pub/fungi/release-52/fasta/magnaporthe_oryzae/pep/Magnaporthe_oryzae.MG8.pep.all.fa.gz
+# gunzip Magnaporthe_oryzae.MG8.pep.all.fa.gz
+# cd ..
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
@@ -26,4 +26,4 @@ module purge
 
 export PERL5LIB=''
 
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a 24 -b orthofinder_1_31_2022 -f 70_15_proteome
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a 24 -b orthofinder_1_31_2022/Results_Feb03/WorkingDirectory/ -f 70_15_proteome
