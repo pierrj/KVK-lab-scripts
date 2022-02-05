@@ -20,4 +20,10 @@ wget http://ftp.ensemblgenomes.org/pub/fungi/release-52/fasta/magnaporthe_oryzae
 gunzip Magnaporthe_oryzae.MG8.pep.all.fa.gz
 cd ..
 
+source activate /global/scratch/users/pierrj/conda_envs/orthofinder
+
+module purge
+
+export PERL5LIB=''
+
 orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a 24 -b orthofinder_1_31_2022 -f 70_15_proteome
