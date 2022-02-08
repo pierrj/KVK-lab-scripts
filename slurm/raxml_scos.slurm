@@ -19,4 +19,11 @@ basename=$(basename ${SCO_DIR})
 MSA=${basename}_msas_combined.trimmed.fasta
 output=gladieux_full_raxml
 
-raxmlHPC-PTHREADS-SSE3 -s ${MSA} -n ${output} -m PROTGAMMAGTR -T ${SLURM_NTASKS} -f a -x 12345 -p 12345 -# 100
+# raxmlHPC-PTHREADS-SSE3 -s ${MSA} -n ${output} -m PROTGAMMAGTR -T ${SLURM_NTASKS} -f a -x 12345 -p 12345 -# 100
+
+
+## for interrupted run
+
+raxmlHPC-PTHREADS-SSE3 -s ${MSA} -n ${output}_interrupted_ML -m PROTGAMMAGTR -T ${SLURM_NTASKS} -f d -p 12345
+
+# raxmlHPC -f b ­-t bestTree -z bootstrapTrees ­-m GTRCAT ­-n best+boot
