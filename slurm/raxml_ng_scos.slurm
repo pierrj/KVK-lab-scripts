@@ -2,7 +2,7 @@
 #SBATCH --job-name=raxml_ng_scos
 #SBATCH --partition=savio2_knl
 #SBATCH --qos=savio_normal
-#SBATCH --nodes=1
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=64
 #SBATCH --time=72:00:00
@@ -23,6 +23,6 @@ module load cmake
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/raxml_ng_test
 
-/global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --parse --msa Single_Copy_Orthologue_Sequences_msas_combined.trimmed.fasta --model PROTGTR+G --prefix T4
+# /global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --parse --msa Single_Copy_Orthologue_Sequences_msas_combined.trimmed.fasta --model PROTGTR+G --prefix T4
 
-# /global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --msa Single_Copy_Orthologue_Sequences_msas_combined.trimmed.fasta --prefix H1 --threads 64 --model PROTGTR+G
+/global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --msa T4.raxml.rba --prefix H2 --threads 64 --model PROTGTR+G
