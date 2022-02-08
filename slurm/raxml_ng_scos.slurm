@@ -25,4 +25,4 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/raxml_ng_test
 
 # /global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --parse --msa Single_Copy_Orthologue_Sequences_msas_combined.trimmed.fasta --model PROTGTR+G --prefix T4
 
-/global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --msa T4.raxml.rba --prefix H2 --threads 64 --model PROTGTR+G
+mpirun /global/scratch/users/pierrj/raxml_ng/bin/raxml-ng-mpi --msa T4.raxml.rba --prefix H3 --threads 64 # --model PROTGTR+G
