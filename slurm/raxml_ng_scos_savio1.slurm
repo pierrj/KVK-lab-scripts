@@ -27,4 +27,4 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/raxml_ng_test
 
 /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --parse --msa Single_Copy_Orthologue_Sequences_msas_combined.trimmed.fasta --model PROTGTR+G --prefix savio1_T1
 
-mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --msa savio1_T1.raxml.rba --prefix savio1_H1 --threads 20 # --model PROTGTR+G
+mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --msa savio1_T1.raxml.rba --prefix savio1_H1 --threads 10 # --model PROTGTR+G
