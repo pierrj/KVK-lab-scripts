@@ -2,9 +2,9 @@
 #SBATCH --job-name=raxml_ng_scos_savio1
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
-#SBATCH --nodes=10
+#SBATCH --nodes=20
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=20
+#SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
