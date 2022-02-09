@@ -13,6 +13,8 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/full_run_tree_1_31_2022
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
+module purge
+
 SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/full_run_orthofinder_1_31_2022/orthofinder_1_31_2022/Results_Feb03/WorkingDirectory/OrthoFinder/Results_Feb03/Single_Copy_Orthologue_Sequences
 basename=$(basename ${SCO_DIR})
 MSA=${basename}_msas_combined.trimmed.fasta
