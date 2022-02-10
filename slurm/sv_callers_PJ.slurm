@@ -104,6 +104,6 @@ while read SAMPLE; do
     echo ${SAMPLE}/manta/${SAMPLE}.manta.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
     echo ${SAMPLE}/wham/${SAMPLE}.wham.vcf >> ${SAMPLE}/all/${SAMPLE}.survivor.vcflist
 
-    /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}/all/${SAMPLE}.survivor.vcflist 1000 3 1 1 0 50 ${SAMPLE}/all/${SAMPLE}.all.stranded.vcf
+    /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}/all/${SAMPLE}.survivor.vcflist 1000 3 1 1 0 50 ${SAMPLE}/all/${SAMPLE}.all.vcf
 
 done < $SAMPLE_LIST
