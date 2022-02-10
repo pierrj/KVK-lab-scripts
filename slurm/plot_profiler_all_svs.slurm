@@ -27,11 +27,22 @@ while read SAMPLE; do
     echo /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
 done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
 
+## in order
+# distance between breakpoints
+# number of supporting callers
+# take type into account
+# take strand into account
+# disabled?
+# minimum size
+# output
+
 /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 1000 1 1 1 0 0 all_svs.vcf
 
 /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR vcftobed all_svs.vcf 1 10000000000000000 all_svs.bed
 
-## remove mitochondria
+mv all_svs.bed all_svs.bed.old
+
+grep -v 'Supercontig_7.9' all_svs.bed.old > all_svs.bed
 
 for sv in DEL DUP INV TRA; do
 
@@ -39,25 +50,7 @@ for sv in DEL DUP INV TRA; do
         rm all_${sv}.bed
     fi
 
-    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
-    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
-    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
-    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
-    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
-
-    # while read SAMPLE; do
-    #     awk -F "\t|;" -v OFS='\t' -v sv=${sv} '{ if ( $11 == "SVTYPE="sv) {print $1, $2, substr($14, 5, length($14)-4)}}' \
-    #         /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_${sv}.bed
-    # done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
-
-    
-
-    # small number of invs have end site before start
-    if [[ "${sv}" == "INV" ]]
-    then
-        mv all_INV.bed all_INV.bed.old
-        awk -v OFS='\t' '{ if ($2 > $3) {print $1, $3, $2} else {print $0}}' all_INV.bed.old > all_INV.bed
-    fi
+    awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' all_svs.bed > all_${sv}.bed
 
     # third field for TRAs are all wrong so do breakpoints instead.
     if [[ "${sv}" == "TRA" ]]
@@ -65,11 +58,6 @@ for sv in DEL DUP INV TRA; do
         mv all_TRA.bed all_TRA.bed.old
         awk -v OFS='\t' '{print $1, $2, $2+1}' all_TRA.bed.old > all_TRA.bed
     fi
-
-
-    mv all_${sv}.bed all_${sv}.bed.old
-
-    sort -k1,1 -k2,2n all_${sv}.bed.old | grep -v 'Supercontig_7.9' | uniq > all_${sv}.bed
 
     OUTPUT_NAME=plot_profile_all_${sv}_no_survivor
 
@@ -126,3 +114,19 @@ done
 ### FOR REPEATS ### 
 
 # awk -v OFS='\t' '{if ($11 == "Simple_repeat") {print $5, $6, $7, $10}' guy11_genome_baoetal2017_with_70-15_mito.fasta.out
+
+
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+    ## TO BE REPLACED BY SURVIVOR MEGE AND SURVIVOR VCF2BED ##
+
+    # while read SAMPLE; do
+    #     awk -F "\t|;" -v OFS='\t' -v sv=${sv} '{ if ( $11 == "SVTYPE="sv) {print $1, $2, substr($14, 5, length($14)-4)}}' \
+    #         /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_${sv}.bed
+    # done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
+
+    
+
+    # small number of invs have end site before start
