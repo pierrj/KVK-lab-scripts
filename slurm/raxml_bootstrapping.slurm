@@ -11,6 +11,11 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
+module purge
+module load gcc/7.4.0
+module load openmpi
+module load cmake
+
 cd /global/scratch/users/pierrj/PAV_SV/PAV/raxml_ng_test
 
 mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --bootstrap --msa savio1_T1.raxml.rba --prefix BS2 --seed 12345 --threads 10 --bs-trees 20
