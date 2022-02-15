@@ -18,4 +18,4 @@ module load cmake
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/raxml_ng_test
 
-mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --msa savio1_T1.raxml.rba --prefix ${jobname} --seed ${seed} --threads 10 --extra thread-pin 
+mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --msa savio1_T1.raxml.rba --prefix ${jobname} --seed ${seed} --threads 10 --extra thread-pin
