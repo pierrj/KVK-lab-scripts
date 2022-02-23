@@ -45,4 +45,6 @@ module load gcc/7.4.0
 module load openmpi
 module load cmake
 
-mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --bootstrap --bs-trees 1 --msa savio1_T1.raxml.rba --prefix only_1000 --seed 12345 --threads 10  --extra thread-pin
+# /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --parse --msa only_1000_msas_combined.trimmed.fasta --model PROTGTR+G --prefix only_1000
+
+mpirun /global/scratch/users/pierrj/raxml_ng_savio1/bin/raxml-ng-mpi --bootstrap --bs-trees 1 --msa only_1000.raxml.rba --prefix only_1000 --seed 12345 --threads 10  --extra thread-pin
