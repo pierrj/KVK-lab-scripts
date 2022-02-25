@@ -158,7 +158,7 @@ while read sample; do
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 # make table of samples and numbers to use for normalization
-/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m sample_mapfile \
+/global/home/users/pierrj/git/bash/create_mapfile_for_normalize_and_average.sh -m /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/sample_mapfile \
     -t G3_1A.${group}.genomecoverage.bed -n ${group}.normalization_table -y t
 
 # normalize and average coverage across all samples, technical replicates are averaged across biological replicates, biological replicates are then averaged
