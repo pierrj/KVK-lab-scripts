@@ -288,12 +288,11 @@ module load bwa
 THREADS=${SLURM_NTASKS}
 READONE=mapq0_reads_R1.fastq
 READTWO=mapq0_reads_R2.fastq
-GENOME_DB=/global/scratch/users/pierrj
 SAMPLE=${effector_name}.${sample_target}.remapped
 
 cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq ${READONE} ${READTWO}
 
-bwa index ${effector_name}.region.fasta
+# bwa index ${effector_name}.region.fasta
 
 GENOME_DB=${effector_name}.region.fasta
 
@@ -304,7 +303,7 @@ samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergeda
 samtools sort -@ ${THREADS} ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
-samtools view -b -F 256 filtered.sorted.${SAMPLE}.bam > no_secondary.filtered.sorted.${SAMPLE}.bam
+samtools view -b -F 256 ${SAMPLE}.sorted.mergedandpe.bwamem.bam > no_secondary.filtered.sorted.${SAMPLE}.remapped.bam
 
 
 FILTERED_BAMFILE=no_secondary.filtered.sorted.${effector_name}.${sample_target}.remapped.bam
