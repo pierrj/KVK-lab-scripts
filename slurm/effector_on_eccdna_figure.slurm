@@ -270,14 +270,22 @@ samtools index ${effector_name}.${sample_target}_pacbio_splitreads.sorted.bam
 
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
 
-echo -e ${effector_chrom}"\t"${region_start}"\t"${region_end} | /global/scratch/users/pierrj/conda_envs/bedtools/bin/bedtools getfasta -fi ${GENOME_FASTA} -bed - -fo ${effector_name}.region.fasta
+module load seqtk
+
+echo ${effector_chrom} | seqtk subseq ${GENOME_FASTA} - > effector_chrom.fasta
+
+end_of_chrom=$(grep ${effector_chrom} $GENOME_CHROMSIZES | cut -f 2)
+
+echo -e ${effector_chrom}"\t"1"\t"${region_start} > to_mask
+echo -e ${effector_chrom}"\t"${region_end}"\t"${end_of_chrom} >> to_mask
+
+/global/scratch/users/pierrj/conda_envs/bedtools/bin/bedtools maskfasta -fi effector_chrom.fasta -bed to_mask -fo effector_chrom_masked.fasta
 
 samtools view -q 1 ${FILTERED_BAMFILE} | cut -f1 | sort | uniq > readnames_no_mapq0
 samtools view ${FILTERED_BAMFILE} | cut -f1 | sort | uniq > readnames_w_mapq0
 
 cat readnames_no_mapq0 readnames_w_mapq0 | sort | uniq -u > readnames_only_mapq0
 
-module load seqtk
 
 seqtk subseq /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample_target}/${sample_target}_R1.fastq readnames_only_mapq0 > mapq0_reads_R1.fastq
 seqtk subseq /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample_target}/${sample_target}_R2.fastq readnames_only_mapq0 > mapq0_reads_R2.fastq
@@ -292,9 +300,9 @@ SAMPLE=${effector_name}.${sample_target}.remapped
 
 cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --nextseq-trim=20 -o tmp.trimmed.seqprep.${SAMPLE}_R1.fastq -p tmp.trimmed.seqprep.${SAMPLE}_R2.fastq ${READONE} ${READTWO}
 
-# bwa index ${effector_name}.region.fasta
+bwa index effector_chrom_masked.fasta
 
-GENOME_DB=${effector_name}.region.fasta
+GENOME_DB=effector_chrom_masked.fasta
 
 bwa mem -q -a -t ${THREADS} ${GENOME_DB} tmp.trimmed.seqprep.${SAMPLE}_R1.fastq tmp.trimmed.seqprep.${SAMPLE}_R2.fastq -o tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam
 
