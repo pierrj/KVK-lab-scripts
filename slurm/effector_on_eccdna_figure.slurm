@@ -58,7 +58,7 @@ cd ..
 done < mapfile
 
 ## pick sample_target manually
-sample_target=G3_1B
+sample_target=G3_1A
 
 # pick a region bordering effectors
 region_start=$(($effector_start-4000))
