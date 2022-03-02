@@ -220,9 +220,9 @@ awk -v OFS='\t' '{
 }' outwardfacing.${SAMPLE}.bed > outwardfacing.${SAMPLE}.bedpe
 
 ## deal with bedtools older version bug
-source activate deeptools
+source activate /global/scratch/users/pierrj/conda_envs/bedtools
 
-~/.conda/envs/deeptools/bin/bedtools bedpetobam -i outwardfacing.${SAMPLE}.bedpe -g ${GENOME_CHROMSIZES} > outwardfacing.${SAMPLE}.bam
+/global/scratch/users/pierrj/conda_envs/bedtools/bin/bedtools bedpetobam -i outwardfacing.${SAMPLE}.bedpe -g ${GENOME_CHROMSIZES} > outwardfacing.${SAMPLE}.bam
 
 samtools sort outwardfacing.${SAMPLE}.bam > outwardfacing.${SAMPLE}.sorted.bam
 
@@ -253,7 +253,7 @@ bedtools bamtobed -cigar -i /global/scratch/users/pierrj/eccDNA/pipeline_tests/g
 python /global/home/users/pierrj/git/python/ecc_caller_pacbio_splitreadout.py ${effector_name}.${sample_target}_aligned.bed \
     ${effector_name}.${sample_target}_pacbio_eccs.bed 20 50000 ${effector_name}.${sample_target}_pacbio_splitreads.bed
 
-~/.conda/envs/deeptools/bin/bedtools bedtobam -i ${effector_name}.${sample_target}_pacbio_splitreads.bed -g ${GENOME_CHROMSIZES} > ${effector_name}.${sample_target}_pacbio_splitreads.bam
+/global/scratch/users/pierrj/conda_envs/bedtools/bin/bedtools bedtobam -i ${effector_name}.${sample_target}_pacbio_splitreads.bed -g ${GENOME_CHROMSIZES} > ${effector_name}.${sample_target}_pacbio_splitreads.bam
 
 samtools sort ${effector_name}.${sample_target}_pacbio_splitreads.bam > ${effector_name}.${sample_target}_pacbio_splitreads.sorted.bam
 
