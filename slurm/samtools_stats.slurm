@@ -15,12 +15,16 @@ cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_1
 
 samtools stats SMRTcell_1_subreads.bam
 
-samtools stats SMRTcell_2_subreads.bam
-
-samtools stats SMRTcell_3_subreads.bam
-
 samtools stats SMRTcell_1_ccs.bam
 
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_2
+
+samtools stats SMRTcell_2_subreads.bam
+
 samtools stats SMRTcell_2_ccs.bam
+
+cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/pacbio/SMRTcell_3
+
+samtools stats SMRTcell_3_subreads.bam
 
 samtools stats SMRTcell_3_ccs.bam
