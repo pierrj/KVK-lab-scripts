@@ -311,8 +311,7 @@ samtools view -S -b tmp.seqprep.trimmed.${SAMPLE}_bwamem.sam > ${SAMPLE}.mergeda
 samtools sort -@ ${THREADS} ${SAMPLE}.mergedandpe.bwamem.bam > ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 samtools index ${SAMPLE}.sorted.mergedandpe.bwamem.bam
 
-samtools view -b -F 256 ${SAMPLE}.sorted.mergedandpe.bwamem.bam > no_secondary.filtered.sorted.${SAMPLE}.remapped.bam
-
+samtools view -b -F 256 ${SAMPLE}.sorted.mergedandpe.bwamem.bam > no_secondary.filtered.sorted.${SAMPLE}.bam
 
 FILTERED_BAMFILE=no_secondary.filtered.sorted.${effector_name}.${sample_target}.remapped.bam
 
