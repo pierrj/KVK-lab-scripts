@@ -187,14 +187,7 @@ cat tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMP
 # verify that the match lengths on either side match up so that only proper split reads are looked on
 python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
-# converting to bed file
-samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam) > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam
-
-cp tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam junction_splitreads.${SAMPLE}.bam
-
-samtools sort junction_splitreads.${SAMPLE}.bam > junction_splitreads.${SAMPLE}.sorted.bam
-
-samtools index junction_splitreads.${SAMPLE}.sorted.bam
+### COMBINE OUTPUT WITH OUTPUT FROM MULTI MAPPING SPLIT READS BELOW ###
 
 
 ### get opposite facing read pairs, taken from ecc_caller_mapq0.sh
@@ -260,9 +253,9 @@ samtools sort ${effector_name}.${sample_target}_pacbio_splitreads.bam > ${effect
 samtools index ${effector_name}.${sample_target}_pacbio_splitreads.sorted.bam
 
 
-### to deal with getting multi mapping split reads in junction split reads
+### to deal with getting multi mapping split reads not being in junction split reads ##
 
-## get region fasta
+## get genome file with everything but region of interest masked
 ## get read names
 ## extract read names from fastq file
 ## remap with BWA MEM 
@@ -409,8 +402,19 @@ cat tmp.oriented.samechromosome.exactlytwice.qualityfiltered.reverseread1.${SAMP
 # verify that the match lengths on either side match up so that only proper split reads are looked on
 python /global/home/users/pierrj/git/python/filter_for_match_lengths.py tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam
 
+
+
+## combine non-multimapped with multi-mapped split reads
+
+SAMPLE=${effector_name}.${sample_target}
+
+cat tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam \
+    tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.remapped.sam > \
+    tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.both.sam
+
+
 # converting to bed file
-samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.sam) > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam
+samtools view -b -h <(cat <(samtools view -H ${FILTERED_BAMFILE}) tmp.match_length_filtered.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.both.sam) > tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam
 
 cp tmp.oriented.samechromosome.exactlytwice.qualityfiltered.all.${SAMPLE}.bam junction_splitreads.${SAMPLE}.bam
 
