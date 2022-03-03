@@ -36,7 +36,7 @@
 
 cd /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/
 
-while read ${sample}; do
+while read sample; do
     echo ${sample}
     cat ${sample}/${sample}_R1.fastq | paste - - - - | cut -f 2 | tr -d '\n' | wc -c
     cat ${sample}/${sample}_R2.fastq | paste - - - - | cut -f 2 | tr -d '\n' | wc -c
