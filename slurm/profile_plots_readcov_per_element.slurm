@@ -130,7 +130,7 @@ MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wg
 # coverage file
 READS_NAME=readcoverage
 # reads file
-READS_FILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/no_secondary.filtered.sorted.'${sample}'.bam
+READS_FILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/'${sample}'/no_secondary.filtered.sorted.'${sample}'.bam
 WINDOWS=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/ltr_splitreads/profileplot/guy11_genome_baoetal2017.10bpwindows
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
