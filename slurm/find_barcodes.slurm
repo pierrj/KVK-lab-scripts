@@ -2,9 +2,8 @@
 #SBATCH --job-name=find_barcodes
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
-#SBATCH --nodes=20
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=10
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=20
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
