@@ -146,38 +146,48 @@ eval "bedtools coverage -sorted -a ${WINDOWS} \
     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${READS_NAME}
 done < ${MAPFILE}
 
-### NEED TO AVERAGE ACROSS ALL SAMPLES HERE BUT FOR NOW JUST USE ONE
+# #average across all samples
+# # eval is absolutely required here to interpret the echo'ed process substitutions as if it was typed into the command line
+# # but basically, without making any temporary files, grab the third column of all files and average them, then paste the first column of one of the files
 
-mv  SRR11528297.${READS_NAME} ${READS_NAME}.normalized_and_average
+# while read sample; do
+#     cut -f 3 ${sample}.${READS_NAME} > ${sample}.${READS_NAME}.column
+# done < ${MAPFILE}
 
-# convert to bedgraph
-awk -v OFS='\t' '{print $1, $2-10, $2, $3}' ${READS_NAME}.normalized_and_average > ${READS_NAME}.normalized_and_average.bg
+# eval "paste $( echo $(while read sample; do
+#         echo ${sample}.${READS_NAME}.column
+#     done < ${MAPFILE} | tr "\n" " ") )" | \
+#     awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum/NR}' | \
+#     paste <( awk '{print $1}' $(head -1 ${FEATURE_FILE}.mapfile_for_normalize_and_average_filecolumn) ) - > ${READS_NAME}.normalized_and_average
 
-## get rid of overlapping entries and convert to bigwig
-bedtools merge -i ${READS_NAME}.normalized_and_average.bg -c 4 -o mean -d -1 > ${READS_NAME}.normalized_and_average.corrected.bg
-bedGraphToBigWig ${READS_NAME}.normalized_and_average.corrected.bg ${GENOME_CHROMSIZES} ${READS_NAME}.normalized_and_average.bw
+# # convert to bedgraph
+# awk -v OFS='\t' '{print $1, $2-10, $2, $3}' ${READS_NAME}.normalized_and_average > ${READS_NAME}.normalized_and_average.bg
 
-ELEMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
-## high confidence, full length tes here from wickersoft, with length filter
-TE_BEDFILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed
+# ## get rid of overlapping entries and convert to bigwig
+# bedtools merge -i ${READS_NAME}.normalized_and_average.bg -c 4 -o mean -d -1 > ${READS_NAME}.normalized_and_average.corrected.bg
+# bedGraphToBigWig ${READS_NAME}.normalized_and_average.corrected.bg ${GENOME_CHROMSIZES} ${READS_NAME}.normalized_and_average.bw
 
-# generate profile pltos per element
-while read ELEMENT; do
-    grep ${ELEMENT} ${TE_BEDFILE} > ${ELEMENT}.bed
-    if [[ $ELEMENT == GYMAG2 ]]
-    then
-        cp ${ELEMENT}.bed ${ELEMENT}.old.bed
-        awk '$2 != 499211 && $3 != 505077' ${ELEMENT}.old.bed > ${ELEMENT}.bed ## remove one outlier entry for GYMAG2
-    fi
-    computeMatrix scale-regions -p ${SLURM_NTASKS} -S ${READS_NAME}.normalized_and_average.bw \
-                            -R ${ELEMENT}.bed \
-                            --beforeRegionStartLength 1000 \
-                            --regionBodyLength 1000 \
-                            --afterRegionStartLength 1000 \
-                            --skipZeros -o ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz ## calculate input for profile plots
-    plotProfile -m ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz \
-            -out ${ELEMENT}.${READS_NAME}.pdf \
-            --numPlotsPerRow 1 \
-            --plotTitle "${ELEMENT}" \
-            --outFileNameData ${ELEMENT}.${READS_NAME}.normalized_and_average..tab ## output this to be plotted in ggplot
-done < ${ELEMENT_MAPFILE}
+# ELEMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteristics/coverage_plots/transposon_mapfile
+# ## high confidence, full length tes here from wickersoft, with length filter
+# TE_BEDFILE=/global/scratch/users/pierrj/references/te_annotations/moryzae/moryzae_high_conf_ltr_tes_for_plotprofile.bed
+
+# # generate profile pltos per element
+# while read ELEMENT; do
+#     grep ${ELEMENT} ${TE_BEDFILE} > ${ELEMENT}.bed
+#     if [[ $ELEMENT == GYMAG2 ]]
+#     then
+#         cp ${ELEMENT}.bed ${ELEMENT}.old.bed
+#         awk '$2 != 499211 && $3 != 505077' ${ELEMENT}.old.bed > ${ELEMENT}.bed ## remove one outlier entry for GYMAG2
+#     fi
+#     computeMatrix scale-regions -p ${SLURM_NTASKS} -S ${READS_NAME}.normalized_and_average.bw \
+#                             -R ${ELEMENT}.bed \
+#                             --beforeRegionStartLength 1000 \
+#                             --regionBodyLength 1000 \
+#                             --afterRegionStartLength 1000 \
+#                             --skipZeros -o ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz ## calculate input for profile plots
+#     plotProfile -m ${ELEMENT}.${READS_NAME}.normalized_and_average.mat.gz \
+#             -out ${ELEMENT}.${READS_NAME}.pdf \
+#             --numPlotsPerRow 1 \
+#             --plotTitle "${ELEMENT}" \
+#             --outFileNameData ${ELEMENT}.${READS_NAME}.normalized_and_average..tab ## output this to be plotted in ggplot
+# done < ${ELEMENT_MAPFILE}
