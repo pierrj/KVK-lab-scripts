@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=profile_plots_readcov_per_element
 #SBATCH --account=fc_kvkallow
-#SBATCH --partition=savio2
+#SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks-per-node=20
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -139,8 +139,8 @@ source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
 # eval to pass variables here
 # get bedtools coverage file
-# while read sample
-# do
+while read sample
+do
 eval "bedtools coverage -sorted -a ${WINDOWS} \
     -b ${READS_FILE} -g ${GENOME_CHROMSIZES}" | \
     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${READS_NAME}
