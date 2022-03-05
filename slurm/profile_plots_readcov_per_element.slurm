@@ -137,41 +137,41 @@ WINDOWS=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/ecc_characteri
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
-# # eval to pass variables here
-# # get bedtools coverage file
-# # while read sample
-# # do
-# eval "bedtools coverage -sorted -a ${WINDOWS} \
-#     -b ${READS_FILE} -g ${GENOME_CHROMSIZES}" | \
-#     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${READS_NAME}
-# done < ${MAPFILE}
+# eval to pass variables here
+# get bedtools coverage file
+# while read sample
+# do
+eval "bedtools coverage -sorted -a ${WINDOWS} \
+    -b ${READS_FILE} -g ${GENOME_CHROMSIZES}" | \
+    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${READS_NAME}
+done < ${MAPFILE}
 
-# #average and normalize across all samples
-# # eval is absolutely required here to interpret the echo'ed process substitutions as if it was typed into the command line
-# # but basically, without making any temporary files, grab the third column of all files and average them, then paste the first column of one of the files
+#average and normalize across all samples
+# eval is absolutely required here to interpret the echo'ed process substitutions as if it was typed into the command line
+# but basically, without making any temporary files, grab the third column of all files and average them, then paste the first column of one of the files
 
-# # make normalization table
-# # based off number of reads in library
+# make normalization table
+# based off number of reads in library
 
-# if [ -f "${READS_NAME}.normalization_table" ]; then
-#     rm ${READS_NAME}.normalization_table
-# fi
+if [ -f "${READS_NAME}.normalization_table" ]; then
+    rm ${READS_NAME}.normalization_table
+fi
 
-# while read sample; do
-#     normalization=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
-#                 awk '{print $1/1000000}')
-#     echo -e ${sample}'\t'${normalization} >> ${READS_NAME}.normalization_table
-# done < ${MAPFILE}
+while read sample; do
+    normalization=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
+                awk '{print $1/1000000}')
+    echo -e ${sample}'\t'${normalization} >> ${READS_NAME}.normalization_table
+done < ${MAPFILE}
 
-# while read sample normalization; do
-#     cut -f 3 ${sample}.${READS_NAME} | awk -v n=$normalization '{print $1/n}' > ${sample}.${READS_NAME}.normalized.column
-# done < ${READS_NAME}.normalization_table
+while read sample normalization; do
+    cut -f 3 ${sample}.${READS_NAME} | awk -v n=$normalization '{print $1/n}' > ${sample}.${READS_NAME}.normalized.column
+done < ${READS_NAME}.normalization_table
 
-# eval "paste $( echo $(while read sample; do
-#         echo ${sample}.${READS_NAME}.normalized.column
-#     done < ${MAPFILE} | tr "\n" " ") )" | \
-#     awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' | \
-#     paste <( awk -v OFS='\t' '{print $1, $2}' $(head -1 ${MAPFILE}).${READS_NAME} ) - > ${READS_NAME}.normalized_and_average
+eval "paste $( echo $(while read sample; do
+        echo ${sample}.${READS_NAME}.normalized.column
+    done < ${MAPFILE} | tr "\n" " ") )" | \
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' | \
+    paste <( awk -v OFS='\t' '{print $1, $2}' $(head -1 ${MAPFILE}).${READS_NAME} ) - > ${READS_NAME}.normalized_and_average
 
 # convert to bedgraph
 awk -v OFS='\t' '{print $1, $2-10, $2, $3}' ${READS_NAME}.normalized_and_average > ${READS_NAME}.normalized_and_average.bg
@@ -202,5 +202,5 @@ while read ELEMENT; do
             -out ${ELEMENT}.${READS_NAME}.pdf \
             --numPlotsPerRow 1 \
             --plotTitle "${ELEMENT}" \
-            --outFileNameData ${ELEMENT}.${READS_NAME}.normalized_and_average..tab ## output this to be plotted in ggplot
+            --outFileNameData ${ELEMENT}.${READS_NAME}.normalized_and_average.wgs.tab ## output this to be plotted in ggplot
 done < ${ELEMENT_MAPFILE}
