@@ -10,4 +10,4 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-find /global/scratch/users/pierrj -name 'G3_1A_R1.fastq' 
+find /global/scratch/users/pierrj -name 'barcodes.fasta' 
