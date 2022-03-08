@@ -12,7 +12,7 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/compare_bioreps
 
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/gene_analysis/common/pav/G3.all_eccdnas_mapfile
+ECCDNA_MAPFILE=eccdna_mapfile
 OUTPUT_NAME=G3
 GENE_BEDFILE=/global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.renamed.bed
 SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_comparison/G3.sample_mapfile
