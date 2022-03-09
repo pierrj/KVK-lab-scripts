@@ -31,7 +31,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/qc/pca_coverage_tech_reps
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pca_coverage_tech_reps
 
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 
@@ -41,8 +41,34 @@ bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bp
 
 while read sample
 do
-# junction split reads corresponding to each window
+    bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows \
+        -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
+        awk -v OFS='\t' '{print $4}' > ${sample}.genomecoverage
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+
+sample=G3_1A
+
 bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows \
     -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
-    awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.genomecoverage.bed
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+    awk -v OFS='\t' '{print $1$3}' > first_column
+
+paste first_column G3_1A.genomecoverage G3_1B.genomecoverage G3_1C.genomecoverage G3_2A.genomecoverage G3_2B.genomecoverage G3_2C.genomecoverage G3_3A.genomecoverage G3_3B.genomecoverage > all.genomecoverage
+
+
+## transpose
+awk '
+{ 
+    for (i=1; i<=NF; i++)  {
+        a[NR,i] = $i
+    }
+}
+NF>p { p = NF }
+END {    
+    for(j=1; j<=p; j++) {
+        str=a[1,j]
+        for(i=2; i<=NR; i++){
+            str=str" "a[i,j];
+        }
+        print str
+    }
+}' all.genomecoverage > all.genomecoverage.transposed
