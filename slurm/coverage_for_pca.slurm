@@ -42,33 +42,32 @@ bedtools makewindows -g ${CHROM_SIZES} -w 1000 > guy11_genome_baoetal2017.1000bp
 while read sample
 do
     bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows \
-        -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
-        awk -v OFS='\t' '{print $4}' > ${sample}.genomecoverage
+        -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} > ${sample}.genomecoverage
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-sample=G3_1A
+# sample=G3_1A
 
-bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows \
-    -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
-    awk -v OFS='\t' '{print $1$3}' > first_column
+# bedtools coverage -a guy11_genome_baoetal2017.1000bpwindows \
+#     -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
+#     awk -v OFS='\t' '{print $1$3}' > first_column
 
-paste first_column G3_1A.genomecoverage G3_1B.genomecoverage G3_1C.genomecoverage G3_2A.genomecoverage G3_2B.genomecoverage G3_2C.genomecoverage G3_3A.genomecoverage G3_3B.genomecoverage > all.genomecoverage
+# paste first_column G3_1A.genomecoverage G3_1B.genomecoverage G3_1C.genomecoverage G3_2A.genomecoverage G3_2B.genomecoverage G3_2C.genomecoverage G3_3A.genomecoverage G3_3B.genomecoverage > all.genomecoverage
 
 
-## transpose
-awk '
-{ 
-    for (i=1; i<=NF; i++)  {
-        a[NR,i] = $i
-    }
-}
-NF>p { p = NF }
-END {    
-    for(j=1; j<=p; j++) {
-        str=a[1,j]
-        for(i=2; i<=NR; i++){
-            str=str" "a[i,j];
-        }
-        print str
-    }
-}' all.genomecoverage > all.genomecoverage.transposed
+# ## transpose
+# awk '
+# { 
+#     for (i=1; i<=NF; i++)  {
+#         a[NR,i] = $i
+#     }
+# }
+# NF>p { p = NF }
+# END {    
+#     for(j=1; j<=p; j++) {
+#         str=a[1,j]
+#         for(i=2; i<=NR; i++){
+#             str=str" "a[i,j];
+#         }
+#         print str
+#     }
+# }' all.genomecoverage > all.genomecoverage.transposed
