@@ -50,7 +50,7 @@ bedtools makewindows -g ${CHROM_SIZES} -w 1000 > ${WINDOWS}
 
 
 while read sample; do
-    normalization=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
+    normalization=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
                 awk '{print $1/1000000}')
     echo -e ${sample}'\t'${normalization} >> normalization_table
 done < ${MAPFILE}
