@@ -32,9 +32,9 @@ for i in $(seq 0.1 0.1 1.0); do
 
     cd ${i}
 
-    samtools view --subsample ${i} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${SAMPLE}/uniq.filtered.sorted.${SAMPLE}.bam > uniq.filtered.sorted.${sample}.bam
-    samtools view --subsample ${i} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${SAMPLE}/multimapped.filtered.name_sorted.${SAMPLE}.bam > multimapped.filtered.name_sorted.${sample}.bam
-    samtools view --subsample ${i} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${SAMPLE}/no_secondary.filtered.sorted.${SAMPLE}.bam > no_secondary.filtered.sorted.${sample}.bam
+    samtools view -s ${i} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${SAMPLE}/uniq.filtered.sorted.${SAMPLE}.bam > uniq.filtered.sorted.${sample}.bam
+    samtools view -s ${i} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${SAMPLE}/multimapped.filtered.name_sorted.${SAMPLE}.bam > multimapped.filtered.name_sorted.${sample}.bam
+    samtools view -s ${i} -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${SAMPLE}/no_secondary.filtered.sorted.${SAMPLE}.bam > no_secondary.filtered.sorted.${sample}.bam
 
     ## call putative eccDNA forming regions, using both uniquely mapped and multi-mapped reads
     /global/home/users/pierrj/git/bash/ecc_caller_mapq0.sh -m ${mapfile} \
