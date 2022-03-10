@@ -23,15 +23,19 @@ SAMPLE_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/pva_comparison
 
 OUTPUT_NAME=G3_1
 
-top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/10)}')
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/3)}')
 sort -k2,2nr ${OUTPUT_NAME}.normalized_binned | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
 
 OUTPUT_NAME=G3_2
 
-top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/10)}')
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/3)}')
 sort -k2,2nr ${OUTPUT_NAME}.normalized_binned | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
 
 OUTPUT_NAME=G3_3
 
-top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/10)}')
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/3)}')
 sort -k2,2nr ${OUTPUT_NAME}.normalized_binned | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
+
+cat G3_1.common.genes G3_2.common.genes G3_3.common.genes | sort | uniq -c | awk '{ if ($1 == 3) {print $2}}' > top_third_common_genes
+
+cat top_third_common_genes G3.common.genes | sort | uniq -c | awk '$1 == 2' | wc -l

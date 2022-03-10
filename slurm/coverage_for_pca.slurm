@@ -34,10 +34,10 @@
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pca_coverage_tech_reps_splitreads
 
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
-WINDOWS=guy11_genome_baoetal2017.1000bpwindows
+WINDOWS=guy11_genome_baoetal2017.10000bpwindows
 MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-bedtools makewindows -g ${CHROM_SIZES} -w 1000 > ${WINDOWS}
+bedtools makewindows -g ${CHROM_SIZES} -w 10000 > ${WINDOWS}
 
 while read sample
 do
