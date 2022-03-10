@@ -35,22 +35,35 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pca_cov
 
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 WINDOWS=guy11_genome_baoetal2017.1000bpwindows
+MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 bedtools makewindows -g ${CHROM_SIZES} -w 1000 > ${WINDOWS}
 
 
 
-while read sample
-do
-    bedtools coverage -sorted -a ${WINDOWS} \
-        -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
-        awk -v OFS='\t' '{print $4}' > ${sample}.genomecoverage
-done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+# while read sample
+# do
+#     bedtools coverage -sorted -a ${WINDOWS} \
+#         -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
+#         awk -v OFS='\t' '{print $4}' > ${sample}.genomecoverage
+# done < ${MAPFILE}
 
-awk -v OFS='\t' '{print $1,$3}' ${WINDOWS} > first_column
 
-paste first_column G3_1A.genomecoverage G3_1B.genomecoverage G3_1C.genomecoverage G3_2A.genomecoverage G3_2B.genomecoverage G3_2C.genomecoverage G3_3A.genomecoverage G3_3B.genomecoverage > all.genomecoverage
+while read sample; do
+    normalization=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/wgs_data/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
+                awk '{print $1/1000000}')
+    echo -e ${sample}'\t'${normalization} >> normalization_table
+done < ${MAPFILE}
 
+while read sample normalization; do
+    awk -v n=$normalization '{print $1/n}' ${sample}.genomecoverage > ${sample}.genomecoverage.normalized
+done < normalization_table
+
+awk -v OFS='_' '{print $1,$3}' ${WINDOWS} > first_column
+
+paste first_column G3_1A.genomecoverage.normalized G3_1B.genomecoverage.normalized G3_1C.genomecoverage.normalized \
+     G3_2A.genomecoverage.normalized G3_2B.genomecoverage.normalized G3_2C.genomecoverage.normalized \
+      G3_3A.genomecoverage.normalized G3_3B.genomecoverage.normalized > all.genomecoverage.normalized
 
 ## transpose
 awk '
@@ -68,4 +81,4 @@ END {
         }
         print str
     }
-}' all.genomecoverage > all.genomecoverage.transposed
+}' all.genomecoverage.normalized > all.genomecoverage.normalized.transposed
