@@ -31,7 +31,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pca_coverage_tech_reps
+cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/pca_coverage_tech_reps_splitreads
 
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 WINDOWS=guy11_genome_baoetal2017.1000bpwindows
@@ -39,19 +39,16 @@ MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/map
 
 bedtools makewindows -g ${CHROM_SIZES} -w 1000 > ${WINDOWS}
 
-
-
-# while read sample
-# do
-#     bedtools coverage -sorted -a ${WINDOWS} \
-#         -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam -g ${CHROM_SIZES} | \
-#         awk -v OFS='\t' '{print $4}' > ${sample}.genomecoverage
-# done < ${MAPFILE}
+while read sample
+do
+    bedtools coverage -sorted -a ${WINDOWS} \
+        -b /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.splitreads.bed -g ${CHROM_SIZES} | \
+        awk -v OFS='\t' '{print $4}' > ${sample}.genomecoverage
+done < ${MAPFILE}
 
 
 while read sample; do
-    normalization=$(samtools view -c -F 4 -F 2048 /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/no_secondary.filtered.sorted.${sample}.bam | \
-                awk '{print $1/1000000}')
+    normalization=$(wc -l /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.splitreads.bed | awk '{print $1/1000000}')
     echo -e ${sample}'\t'${normalization} >> normalization_table
 done < ${MAPFILE}
 
