@@ -69,7 +69,7 @@ while read sample; do
     fi
 
     for i in $(seq 0.1 0.1 1.0); do
-        sort ${sample}/${i}/${i}.ecc_caller_out.splitreads.bed | uniq | wc -l >> ${sample}_rarefaction_column
+        sort ${sample}/${i}/${i}.ecc_caller_out.splitreads.bed | uniq | wc -l >> ${sample}_ecc_counts
     done
 
     paste ${sample}_column ${sample}_rarefaction_percent ${sample}_read_counts ${sample}_ecc_counts > ${sample}_rarefaction_curve
