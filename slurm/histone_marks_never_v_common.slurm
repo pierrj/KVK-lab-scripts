@@ -31,53 +31,53 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
+# cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
 
-## download and map all chpseq data from Zhang et al 2021
-while read SRA; do
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-done < accessions_histone_marks.txt 
+# ## download and map all chpseq data from Zhang et al 2021
+# while read SRA; do
+#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+# done < accessions_histone_marks.txt 
 
-while read SRA; do
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-done < chpseq_loading_control_accessions.txt
+# while read SRA; do
+#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+# done < chpseq_loading_control_accessions.txt
 
-# reformat metadata downloaded from Zhang et al
-# sort accessions by treatment
-awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' metadata_histone_marks.txt > metadata_biorep_treatment.txt
-awk -v OFS='\t' '{print $2, $3}' metadata_biorep_treatment.txt | tail -n+2 | sort | uniq > biorep_treament
-while read biorep treatment; do
-awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' metadata_biorep_treatment.txt > accessions
-cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
-done < biorep_treament
+# # reformat metadata downloaded from Zhang et al
+# # sort accessions by treatment
+# awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' metadata_histone_marks.txt > metadata_biorep_treatment.txt
+# awk -v OFS='\t' '{print $2, $3}' metadata_biorep_treatment.txt | tail -n+2 | sort | uniq > biorep_treament
+# while read biorep treatment; do
+# awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' metadata_biorep_treatment.txt > accessions
+# cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
+# done < biorep_treament
 
-awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' chpseq_loading_control_metadata.txt > control_biorep_treatment.txt
-awk -v OFS='\t' '{print $2, $3}' control_biorep_treatment.txt | tail -n+2 | sort | uniq > control_biorep_treament
-while read biorep treatment; do
-awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' control_biorep_treatment.txt > accessions
-cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
-done < control_biorep_treament
+# awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' chpseq_loading_control_metadata.txt > control_biorep_treatment.txt
+# awk -v OFS='\t' '{print $2, $3}' control_biorep_treatment.txt | tail -n+2 | sort | uniq > control_biorep_treament
+# while read biorep treatment; do
+# awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' control_biorep_treatment.txt > accessions
+# cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
+# done < control_biorep_treament
 
-## map and sort all reads
-while read sample; do
-    bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
-done < mapfile
+# ## map and sort all reads
+# while read sample; do
+#     bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
+# done < mapfile
 
-while read sample; do
-    bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
-done < mapfile_input
+# while read sample; do
+#     bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
+# done < mapfile_input
 
-while read biorep treatment; do
-    samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
-    samtools index sorted.${treatment}_${biorep}.sam.bam
-done < biorep_treament
+# while read biorep treatment; do
+#     samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
+#     samtools index sorted.${treatment}_${biorep}.sam.bam
+# done < biorep_treament
 
-while read biorep treatment; do
-    samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
-    samtools index sorted.${treatment}_${biorep}.sam.bam
-done < control_biorep_treament
+# while read biorep treatment; do
+#     samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
+#     samtools index sorted.${treatment}_${biorep}.sam.bam
+# done < control_biorep_treament
 
 OUTPUT_NAME=G3
 MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
@@ -183,7 +183,7 @@ bedtools intersect -v -wa -f 0.5 -a /global/scratch/users/pierrj/references/guy1
 
 cp /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.justgenes.bed all_genes
 
-source activate deeptools
+source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
 data_dir=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
 
