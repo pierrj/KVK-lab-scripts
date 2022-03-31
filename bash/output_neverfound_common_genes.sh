@@ -61,9 +61,25 @@ paste ${OUTPUT_NAME}.mapfile_for_normalize_and_average_filecolumn ${OUTPUT_NAME}
 /global/home/users/pierrj/git/bash/normalize_and_average.sh -m ${OUTPUT_NAME}.mapfile_for_normalize_and_average -f 1 -b 1 -c 2 -n n
 mv ${OUTPUT_NAME}.normalized_binned ${OUTPUT_NAME}.normalized.splitreadspergene
 
-# get top ten % of genes for encompassing split reads and call those common genes or eccdna associated genes
-top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized.splitreadspergene | wc -l | awk '{print int($1/10)}')
-sort -k2,2nr ${OUTPUT_NAME}.normalized.splitreadspergene | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
+# get top ten % of genes for encompassing split reads, get overlap between bioreps and call those common genes or eccdna associated genes
+OUTPUT_NAME=G3_1
+
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/3)}')
+sort -k2,2nr ${OUTPUT_NAME}.normalized_binned | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
+
+OUTPUT_NAME=G3_2
+
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/3)}')
+sort -k2,2nr ${OUTPUT_NAME}.normalized_binned | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
+
+OUTPUT_NAME=G3_3
+
+top_ten_percent=$(awk '$2!=0' ${OUTPUT_NAME}.normalized_binned | wc -l | awk '{print int($1/3)}')
+sort -k2,2nr ${OUTPUT_NAME}.normalized_binned | head -${top_ten_percent} | awk '{print $1}' > ${OUTPUT_NAME}.common.genes
+
+OUTPUT_NAME=G3
+
+cat G3_1.common.genes G3_2.common.genes G3_3.common.genes | sort | uniq -c | awk '{ if ($1 == 3) {print $2}}' > ${OUTPUT_NAME}.common.genes
 
 # genes never found on eccdnas
 awk '{ if ($2==0) {print $1}}' ${OUTPUT_NAME}.normalized.splitreadspergene > ${OUTPUT_NAME}.neverfound.genes
