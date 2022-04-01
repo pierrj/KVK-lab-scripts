@@ -165,8 +165,8 @@ cat ltr_eccdnas large_eccdnas micro_dnas > all_eccdnas
 bedtools shuffle -i all_eccdnas -g ${GENOME_CHROMSIZES} > genome_baseline
 
 ## get peak locations and reformat, downloaded from Zhang et al 2021
-cp /global/scratch/pierrj/eccDNA/pipeline_tests/histone_marks/methyl_peaks_zhang_etal.txt .
-cp /global/scratch/pierrj/eccDNA/pipeline_tests/histone_marks/acetylation_peaks_zhang_etal.txt .
+cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/methyl_peaks_zhang_etal.txt .
+cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/acetylation_peaks_zhang_etal.txt .
 head -n-1 methyl_peaks_zhang_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > methyl_peaks_zhang_etal.bed
 head -n-1 acetylation_peaks_zhang_etal.txt | tail -n+3 | awk -v OFS='\t' '{print $1, $2, $3}' > acetylation_peaks_zhang_etal.bed
 
