@@ -146,9 +146,7 @@ eval "bedtools coverage -sorted -a ${WINDOWS} \
     awk -v OFS='\t' '{print $1, $3, $4}' > ${sample}.${READS_NAME}
 done < ${MAPFILE}
 
-#average and normalize across all samples
-# eval is absolutely required here to interpret the echo'ed process substitutions as if it was typed into the command line
-# but basically, without making any temporary files, grab the third column of all files and average them, then paste the first column of one of the files
+
 
 # make normalization table
 # based off number of reads in library
@@ -166,6 +164,10 @@ done < ${MAPFILE}
 while read sample normalization; do
     cut -f 3 ${sample}.${READS_NAME} | awk -v n=$normalization '{print $1/n}' > ${sample}.${READS_NAME}.normalized.column
 done < ${READS_NAME}.normalization_table
+
+#average and normalize across all samples
+# eval is absolutely required here to interpret the echo'ed process substitutions as if it was typed into the command line
+# but basically, without making any temporary files, grab the third column of all files and average them, then paste the first column of one of the files
 
 eval "paste $( echo $(while read sample; do
         echo ${sample}.${READS_NAME}.normalized.column
