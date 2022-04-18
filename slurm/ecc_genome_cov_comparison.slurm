@@ -54,7 +54,7 @@ while read -r ORGANISM_NAME GENE_GFF SAMPLE_MAPFILE ECC_DIR GENOME_FILE COPIA_FI
         genome_size=$(awk 'BEGIN{sum=0;}{if($0 !~ /^>/){sum+=length($0);}}END{print sum;}' ${GENOME_FILE} )
         ## coverage base pairs
         covered_bps=$(bedtools genomecov -d -i ${sample}.ecc_caller_out.details.nolowq.txt -g ${GENOME_FILE}.chromsizes | awk '$3 == 0' | wc -l)
-        echo -e $sample'\t'$genome_size'\t'$covered_bps >> ecc_coverage_comparison.txt
+        echo -e $sample'\t'$genome_size'\t'$covered_bps >> /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/comparative/genome_coverage/ecc_coverage_comparison.txt
     cd ..
     done < $SAMPLE_MAPFILE
 done < mapfile_ecc_count
