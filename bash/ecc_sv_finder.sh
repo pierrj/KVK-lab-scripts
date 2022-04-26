@@ -62,8 +62,8 @@ if [ ! -f "${QUERY}.fai" ]; then
 fi
 cut -f1,2 ${QUERY}.fai > ${TMP_DIR}/${quer}.genomesize
 # nucmer align genomes, output coords file for parsing
-/global/scratch/pierrj/mummer_4/bin/nucmer -t ${THREADS} --maxmatch -p ${TMP_DIR}/${OUTPUT_NAME} ${REFERENCE} ${QUERY}
-/global/scratch/pierrj/mummer_4/bin/show-coords ${TMP_DIR}/${OUTPUT_NAME}.delta > ${TMP_DIR}/${OUTPUT_NAME}.coords
+nucmer -t ${THREADS} --maxmatch -p ${TMP_DIR}/${OUTPUT_NAME} ${REFERENCE} ${QUERY}
+show-coords ${TMP_DIR}/${OUTPUT_NAME}.delta > ${TMP_DIR}/${OUTPUT_NAME}.coords
 tail -n+6 ${TMP_DIR}/${OUTPUT_NAME}.coords | awk -v OFS='\t' '{print $1, $2, $4, $5, $12, $13}' > ${TMP_DIR}/${OUTPUT_NAME}.processed_output.coords
 
 # parse coords, output svs that look like they may have been caused by eccdnas

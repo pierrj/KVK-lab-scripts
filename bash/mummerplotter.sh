@@ -59,8 +59,8 @@ while read plot; do
     cut -f1,2 ${SUBDIR_TMP}/${ref}_${plot}.fasta.fai > ${SUBDIR_TMP}/${ref}_${plot}.genomesize
     bedtools getfasta -fi ${QUERY} -bed ${quer}_${plot}.bed -fo ${SUBDIR_TMP}/${quer}_${plot}.fasta
     # align fastas
-    /global/scratch/pierrj/mummer_4/bin/nucmer -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${ref}_${plot}.fasta ${SUBDIR_TMP}/${quer}_${plot}.fasta
-    /global/scratch/pierrj/mummer_4/bin/show-coords ${SUBDIR_TMP}/${plot}.delta | tail -n +6 | awk -v OFS='\t' '{print $12, $1, $2}' | sort -k1,1 -k2,2n >  ${SUBDIR_TMP}/${plot}.bed
+    nucmer -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${ref}_${plot}.fasta ${SUBDIR_TMP}/${quer}_${plot}.fasta
+    show-coords ${SUBDIR_TMP}/${plot}.delta | tail -n +6 | awk -v OFS='\t' '{print $12, $1, $2}' | sort -k1,1 -k2,2n >  ${SUBDIR_TMP}/${plot}.bed
     # count percentage of alignment not covered
     bedtools genomecov -d -i ${SUBDIR_TMP}/${plot}.bed -g ${SUBDIR_TMP}/${ref}_${plot}.genomesize > ${SUBDIR_TMP}/${plot}.genomecov
     total_size=$(wc -l ${SUBDIR_TMP}/${plot}.genomecov | awk '{print $1}')
@@ -69,8 +69,8 @@ while read plot; do
     if (( $(echo "$percent_zeroes < ${PERCENT_ZEROES_FILTER}" |bc -l) )) # filter based off percentage
     then
         # draw mummer plot, make pdf and convert to jpg
-        /global/scratch/pierrj/mummer_4/bin/mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
-        /global/home/users/pierrj/ps2pdf/usr/bin/ps2pdf ${SUBDIR_TMP}/${plot}.ps ${SUBDIR_TMP}/${plot}.pdf
+        mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
+        ps2pdf ${SUBDIR_TMP}/${plot}.ps ${SUBDIR_TMP}/${plot}.pdf
         convert -density 150 ${SUBDIR_TMP}/${plot}.pdf -quality 90 ${output_realpath}/${ref}_v_${quer}_${plot}.jpg
         cp ${SUBDIR_TMP}/${plot}.pdf ${output_realpath}/${ref}_v_${quer}_${plot}.pdf
     fi

@@ -36,6 +36,8 @@ PERCENT_ZEROES_FILTER=1
 module load gnuplot
 module load imagemagick
 module load repeatmasker/4.1.1
+module load mummer
+module load ghostscript
 
 # repeat mask all genomes, only for TEs not repeats
 while read genome; do
