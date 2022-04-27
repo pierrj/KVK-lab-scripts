@@ -1,8 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=run_fungap
 #SBATCH --partition=savio
-#SBATCH --qos=savio_lowprio
-#SBATCH --account=co_rosalind
+#SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=20
 #SBATCH --time=72:00:00
