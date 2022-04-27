@@ -29,7 +29,7 @@ for msa in msa_list:
 
 for genome in genomes_dict.keys():
     print(genome)
-    print(len(genomes_dict[genome].seq.count('-')))
+    print(genomes_dict[genome].seq.count('-'))
 
 with open(output, 'w') as handle:
     SeqIO.write(genomes_dict.values(), handle, 'fasta')
