@@ -27,5 +27,9 @@ for msa in msa_list:
         genome = record.id.split("_")[2]
         genomes_dict[genome].seq += record.seq
 
+for genome in genomes_dict.keys():
+    print(genome)
+    print(len(genomes_dict[genome].seq))
+
 with open(output, 'w') as handle:
     SeqIO.write(genomes_dict.values(), handle, 'fasta')
