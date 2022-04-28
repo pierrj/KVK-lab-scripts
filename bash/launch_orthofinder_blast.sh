@@ -2,11 +2,11 @@
 
 N_NODES=100
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/full_run_orthofinder_1_31_2022
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
 
 conda activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-orthofinder -op -S diamond_ultra_sens -f full_runfungap_proteomes_1_31_2022_corrected -o orthofinder_1_31_2022 | tail -n +184 > jobqueue
+orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder_4_27_2022 | tail -n +184 > jobqueue
 
 mv jobqueue jobqueue_old
 

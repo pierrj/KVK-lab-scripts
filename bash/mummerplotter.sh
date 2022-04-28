@@ -70,6 +70,7 @@ while read plot; do
     then
         # draw mummer plot, make pdf and convert to jpg
         mummerplot --color -postscript -p ${SUBDIR_TMP}/${plot} ${SUBDIR_TMP}/${plot}.delta
+        gnuplot ${SUBDIR_TMP}/${plot}.gp
         ps2pdf ${SUBDIR_TMP}/${plot}.ps ${SUBDIR_TMP}/${plot}.pdf
         convert -density 150 ${SUBDIR_TMP}/${plot}.pdf -quality 90 ${output_realpath}/${ref}_v_${quer}_${plot}.jpg
         cp ${SUBDIR_TMP}/${plot}.pdf ${output_realpath}/${ref}_v_${quer}_${plot}.pdf

@@ -33,6 +33,7 @@ PERCENT_ZEROES_FILTER=1
 
 # cd /global/scratch/users/pierrj/scooping_emile/
 
+module purge
 module load gnuplot
 module load imagemagick
 module load repeatmasker/4.1.1
@@ -54,8 +55,10 @@ while read reference;
 do
     while read genome;
     do
+        if [ "$reference" != "$genome" ]; then
         echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${reference}_genomic.fna.masked -q ${genome}_genomic.fna.masked -t 1 -n ${reference}_v_${genome} -p ${PERCENT_ZEROES_FILTER} -o ${reference}_v_${genome}_jpg -m ${reference}_v_${genome}_tmp" >> jobqueue
         echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${genome}_genomic.fna.masked -q ${reference}_genomic.fna.masked -t 1 -n ${genome}_v_${reference} -p ${PERCENT_ZEROES_FILTER} -o ${genome}_v_${reference}_jpg -m ${genome}_v_${reference}_tmp" >> jobqueue
+        fi
     done < ${MAPFILE}
 done < ${MAPFILE}
 
