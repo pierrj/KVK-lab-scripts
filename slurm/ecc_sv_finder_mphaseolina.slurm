@@ -39,11 +39,12 @@ module load imagemagick
 module load repeatmasker/4.1.1
 module load mummer
 module load ghostscript
+module load parallel
 
 # repeat mask all genomes, only for TEs not repeats
-while read genome; do
-    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
-done < ${MAPFILE}
+# while read genome; do
+#     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
+# done < ${MAPFILE}
 
 if [ -f "jobqueue" ]; then
     rm jobqueue
