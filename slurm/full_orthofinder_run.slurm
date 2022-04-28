@@ -12,4 +12,9 @@
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
 
+source activate /global/scratch/users/pierrj/conda_envs/orthofinder
+
+module purge
+
+
 orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_4_27_2022/Results_Apr27/WorkingDirectory
