@@ -76,5 +76,17 @@ for protein in parsed_hits_arrays:
 
 if len(valid_hits) >= hit_count:
     print(genome + '\t' + og + '\tyes')
+    bed_entries = []
+    for hit in valid_hits:
+        scaffold = valid_hits[hit][:,0][0]
+        start = np.min(valid_hits[hit][:,5:7])
+        end = np.max(valid_hits[hit][:,5:7])
+        bed = np.array([scaffold, start, end])
+        if bed not in bed_entries:
+            bed_entries.append(bed)
+    for count, bed in enumerate(bed_entries):
+        with open(genome+'_'+og+'_'+count+'.bed', 'w', newline = '') as output_bed:
+                  w = csv.writer(output_bed,delimiter = '\t')
+                  w.writewrow(bed)
 else:
     print(genome + '\t' + og + '\tno')
