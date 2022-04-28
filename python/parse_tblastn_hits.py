@@ -3,6 +3,7 @@ import csv
 import more_itertools as mit
 from itertools import filterfalse
 import sys
+import os
 
 input_file = sys.argv[1]
 e_value = float(sys.argv[2])
@@ -79,6 +80,7 @@ for protein in parsed_hits_arrays:
 if len(protein_hits) >= hit_count:
     print(genome + '\t' + og + '\tyes')
     bed_entries = []
+    os.mkdir(genome+'_'+og)
     for hit in valid_hits:
         scaffold = hit[:,0][0]
         start = np.min(hit[:,5:7])
@@ -87,7 +89,7 @@ if len(protein_hits) >= hit_count:
         if bed not in bed_entries:
             bed_entries.append(bed)
     for count, bed in enumerate(bed_entries):
-        with open(genome+'_'+og+'_'+str(count)+'.bed', 'w', newline = '') as output_bed:
+        with open(genome+'_'+og+'/'+str(count)+'.bed', 'w', newline = '') as output_bed:
                   w = csv.writer(output_bed,delimiter = '\t')
                   w.writerow(bed)
 else:
