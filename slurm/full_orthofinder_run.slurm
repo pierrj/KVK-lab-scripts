@@ -10,6 +10,6 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/full_run_orthofinder_1_31_2022
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
 
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_1_31_2022/Results_Feb03/WorkingDirectory
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_4_27_2022/Results_Apr27/WorkingDirectory
