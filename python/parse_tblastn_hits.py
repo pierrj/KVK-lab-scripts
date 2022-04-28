@@ -58,6 +58,7 @@ parsed_hits_arrays = {}
 for key in parsed_hits.keys():
     parsed_hits_arrays[key] = np.array(parsed_hits[key], dtype=object)
 
+protein_hits = []
 valid_hits = []
 
 for protein in parsed_hits_arrays:
@@ -71,10 +72,11 @@ for protein in parsed_hits_arrays:
             for i in hit:
                 protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
             if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov for remaining hsps is enough
+                valid_hits.append(hit)
                 if protein[:-2] not in valid_hits: # same protein cant be counted twice for two alignments
                     valid_hits.append(protein[:-2])
 
-if len(valid_hits) >= hit_count:
+if len(protein_hits) >= hit_count:
     print(genome + '\t' + og + '\tyes')
     bed_entries = []
     for hit in valid_hits:
