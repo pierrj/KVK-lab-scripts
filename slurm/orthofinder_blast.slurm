@@ -12,7 +12,7 @@
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/full_run_orthofinder_1_31_2022
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
 
 module purge
 
