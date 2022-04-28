@@ -73,8 +73,8 @@ for protein in parsed_hits_arrays:
                 protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
             if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov for remaining hsps is enough
                 valid_hits.append(hit)
-                if protein[:-2] not in valid_hits: # same protein cant be counted twice for two alignments
-                    valid_hits.append(protein[:-2])
+                if protein[:-2] not in protein_hits: # same protein cant be counted twice for two alignments
+                    protein_hits.append(protein[:-2])
 
 if len(protein_hits) >= hit_count:
     print(genome + '\t' + og + '\tyes')
