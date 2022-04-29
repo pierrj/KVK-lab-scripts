@@ -17,7 +17,7 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/orthofinder_4_27_2022/Results_Apr28/WorkingDirectory/OrthoFinder/Results_Apr28/Single_Copy_Orthologue_Sequences
 ACCESSIONS=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/output_accession_names
 
-# basename=$(basename ${SCO_DIR})
+basename=$(basename ${SCO_DIR})
 
 # ls ${SCO_DIR} > sco_mapfile
 
@@ -35,7 +35,7 @@ ACCESSIONS=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/output_
 
 # module purge
 
-python /global/home/users/pierrj/git/python/concatenate_msas.py ${basename}_msas ${ACCESSIONS} ${basename}_msas_combined.fasta
+# python /global/home/users/pierrj/git/python/concatenate_msas.py ${basename}_msas ${ACCESSIONS} ${basename}_msas_combined.fasta
 
 module load trimal
 
