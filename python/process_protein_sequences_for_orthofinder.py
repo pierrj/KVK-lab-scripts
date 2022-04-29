@@ -38,7 +38,7 @@ for seq in seq_list:
         elif seq == 'GCA_002368485.1_ASM236848v1_fungap_out_prot.faa':
             accession = 'GY11'
         elif seq == 'GCA_002368525.1_unmasked_fungap_out_prot.faa':
-            accession = 'GCA_002368525.1_unmasked'
+            accession = 'GCA002368525.1_unmasked'
         else:
             accession = seq.split('_')[0] + seq.split('_')[1]
     elif seq == 'DS0505_fungap_out_prot.faa':
