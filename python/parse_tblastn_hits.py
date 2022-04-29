@@ -96,7 +96,6 @@ def numpy_get_overlap_percent(lst, twod_array, percent): ## function to quickly 
     overlap_array = np.vstack((lst_end_array, twod_array_ordered[:,1])).T.min(axis=1) - np.vstack((lst_start_array, twod_array_ordered[:,0])).T.max(axis=1)
     overlap_or_zero = np.vstack((zero_array, overlap_array)).T.max(axis=1)
     overlap_percent = overlap_or_zero/lst_length
-    print(overlap_percent)
     boolean_array = overlap_percent > percent # compare to percentage cutoff
     return boolean_array
 
@@ -117,7 +116,6 @@ if len(protein_hits) >= hit_count:
             bed_entries.append(bed)
     beds_with_intersect = []
     for bed in bed_entries:
-        print(bed)
         subset = gene_gff_arrays[gene_gff_arrays[:,0] == bed[0]]
         subset = subset[
             np.logical_or(
