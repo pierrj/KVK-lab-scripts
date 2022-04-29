@@ -39,14 +39,14 @@ for seq in seq_list:
             accession = 'GY11'
         elif seq == 'GCA_002368525.1_unmasked_fungap_out_prot.faa':
             accession = 'GCA_002368525.1_unmasked'
-        elif seq == 'DS0505_fungap_out_prot.faa':
-            accession = 'DS0505'
-        elif seq == 'FJ2003_masked_ncbi_fungap_out_prot.faa':
-            accession = 'FJ2003_masked_ncbi'
-        elif seq == 'FJ2003_unmasked_ncbi_fungap_out_prot.faa' :
-            accession = 'FJ2003_unmasked_ncbi'
         else:
             accession = seq.split('_')[0] + seq.split('_')[1]
+    elif seq == 'DS0505_fungap_out_prot.faa':
+        accession = 'DS0505'
+    elif seq == 'FJ2003_masked_ncbi_fungap_out_prot.faa':
+        accession = 'FJ2003_masked_ncbi'
+    elif seq == 'FJ2003_unmasked_ncbi_fungap_out_prot.faa' :
+        accession = 'FJ2003_unmasked_ncbi'
     else:
         isolate = seq.split('_')[0]
         lineage = lineage_info[isolate]
