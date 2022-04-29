@@ -10,42 +10,43 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/moryzae_pav/exonerate_validation/false_positive_rate
 
-LOST_GENOME=/global/scratch/users/pierrj/moryzae_pav/exonerate_validation/CH0043.fasta
+cd /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/optimization_run
+
+LOST_GENOME=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/CH0043.fasta
 E_VALUE=1e-10
 HIT_COUNT=2
+QUERY_COV=55
+PIDENT=55
+GENE_GFF=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/CH0043_merge.gff3
 
 if [ -f "optimization_out" ]; then
     rm optimization_out
 fi
 
-for QUERY_COV in {50..60..5}
+for GENE_OVERLAP in {80..95..5}
 do
-  for PIDENT in {50..60..5}
-  do
+  if [ -f "jobqueue" ]; then
+      rm jobqueue
+  fi
 
-    if [ -f "jobqueue" ]; then
-        rm jobqueue
-    fi
+  while read og; do
+      echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/orthogroup_protein_out_no_CH0043/${og}_protein.fasta \
+      -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} -f  ${GENE_GFF} -b ${GENE_OVERLAP} >> jobqueue
+  done < /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/og_list_all_presences_CH0043
 
-    while read og; do
-        echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l orthogroup_protein_out_no_CH0043/${og}_protein.fasta -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} >> jobqueue
-    done < og_list_all_presences_CH0043
+  echo ${GENE_OVERLAP}
 
-    echo ${QUERY_COV}_${PIDENT}
-
-    if [ -f "${QUERY_COV}_${PIDENT}_out" ]; then
-        rm ${QUERY_COV}_${PIDENT}_out
-    fi
+  if [ -f "${GENE_OVERLAP}_out" ]; then
+      rm ${GENE_OVERLAP}_out
+  fi
 
 
-    parallel -j 24 < jobqueue >> ${QUERY_COV}_${PIDENT}_out
+  parallel -j 24 < jobqueue >> ${GENE_OVERLAP}_out
 
-    yes_count=$(awk '$2 == "yes"' ${QUERY_COV}_${PIDENT}_out | wc -l)
-    no_count=$(awk '$2 == "no"' ${QUERY_COV}_${PIDENT}_out | wc -l)
+  yes_otherog_count=$(awk '$2 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
+  yes_unannotated_count=$(awk '$2 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
+  no_count=$(awk '$2 == "no"' ${GENE_OVERLAP}_out | wc -l)
 
-    echo -e ${QUERY_COV}'\t'${PIDENT}'\t'$yes_count'\t'$no_count >> optimization_out
-
-  done
+  echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
 done
