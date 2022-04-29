@@ -31,8 +31,20 @@ for seq in seq_list:
     print(seq)
     accession = 0
     if 'GCA' in seq:
-        if seq == 'GCA_004355905.1_PgNI_protein.faa':
+        if seq == 'GCA_000002495.2_MG8_fungap_out_prot.faa':
+            accession = '70-15'
+        elif seq == 'GCA_004355905.1_PgNI_fungap_out_prot.faa':
             accession = 'NI907'
+        elif seq == 'GCA_002368485.1_ASM236848v1_fungap_out_prot.faa':
+            accession = 'GY11'
+        elif seq == 'GCA_002368525.1_unmasked_fungap_out_prot.faa':
+            accession = 'GCA_002368525.1_unmasked'
+        elif seq == 'DS0505_fungap_out_prot.faa':
+            accession = 'DS0505'
+        elif seq == 'FJ2003_masked_ncbi_fungap_out_prot.faa':
+            accession = 'FJ2003_masked_ncbi'
+        elif seq == 'FJ2003_unmasked_ncbi_fungap_out_prot.faa' :
+            accession = 'FJ2003_unmasked_ncbi'
         else:
             accession = seq.split('_')[0] + seq.split('_')[1]
     else:
@@ -43,7 +55,7 @@ for seq in seq_list:
         print('couldnt process accession')
     print(accession)
     accessions.append(accession)
-    out_file = out_dir + '/' + accession + '_protein.faa'
+    out_file = out_dir + '/' + accession + '_fungap_out_prot_filtered.faa'
     seq_path = seq_dir + '/' + seq
     record_list = list(SeqIO.parse(seq_path, 'fasta'))
     with open(out_file, 'w') as corrected:
