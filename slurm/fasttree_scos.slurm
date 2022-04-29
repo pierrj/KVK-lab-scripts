@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=fasttree_scos
-#SBATCH --partition=savio_bigmem
+#SBATCH --partition=savio3_bigmem
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=20

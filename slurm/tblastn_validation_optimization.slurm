@@ -44,9 +44,9 @@ do
 
   parallel -j 24 < jobqueue >> ${GENE_OVERLAP}_out
 
-  yes_otherog_count=$(awk '$2 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
-  yes_unannotated_count=$(awk '$2 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
-  no_count=$(awk '$2 == "no"' ${GENE_OVERLAP}_out | wc -l)
+  yes_otherog_count=$(awk '$3 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
+  yes_unannotated_count=$(awk '$3 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
+  no_count=$(awk '$3 == "no"' ${GENE_OVERLAP}_out | wc -l)
 
   echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
 done
