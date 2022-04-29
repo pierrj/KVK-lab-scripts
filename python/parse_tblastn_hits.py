@@ -12,6 +12,8 @@ query_cov = int(sys.argv[4])
 hit_count = int(sys.argv[5])
 genome = sys.argv[6]
 og = sys.argv[7]
+gene_gff = sys.argv[8]
+gene_overlap = float(sys.argv[9])
 
 prelim_hits = {}
 
@@ -77,10 +79,35 @@ for protein in parsed_hits_arrays:
                 if protein[:-2] not in protein_hits: # same protein cant be counted twice for two alignments
                     protein_hits.append(protein[:-2])
 
+
+def numpy_get_overlap_percent(lst, twod_array, percent): ## function to quickly calculate percent overlap between two alignments from the input coords file
+    twod_array_min = twod_array.min(axis=1)
+    twod_array_max = twod_array.max(axis=1)
+    twod_array_length = twod_array_max-twod_array_min
+    twod_array_ordered = np.vstack((twod_array_min, twod_array_max)).T # transpose
+    lst_start = min(lst)
+    lst_end = max(lst)
+    number_of_matches = np.shape(twod_array)[0] # count matches
+    lst_start_array = np.repeat(lst_start, number_of_matches)
+    lst_end_array = np.repeat(lst_end, number_of_matches)
+    lst_length = lst_end-lst_start
+    zero_array = np.repeat(0, number_of_matches) # count zeroes
+    ## watch out for integers here
+    overlap_array = np.vstack((lst_end_array, twod_array_ordered[:,1])).T.min(axis=1) - np.vstack((lst_start_array, twod_array_ordered[:,0])).T.max(axis=1)
+    overlap_or_zero = np.vstack((zero_array, overlap_array)).T.max(axis=1)
+    overlap_percent = overlap_or_zero/lst_length
+    print(overlap_percent)
+    boolean_array = overlap_percent > percent # compare to percentage cutoff
+    return boolean_array
+
 if len(protein_hits) >= hit_count:
-    print(genome + '\t' + og + '\tyes')
+    gene_gff_list = []
+    with open(gene_gff, newline = '') as file:
+        file_reader = csv.reader(file, delimiter = '\t')
+        for row in file_reader:
+            gene_gff_list.append([row[0], int(row[3]), int(row[4])])
+    gene_gff_arrays = np.array(gene_gff_list)
     bed_entries = []
-    os.mkdir(genome+'_'+og)
     for hit in valid_hits:
         scaffold = hit[:,0][0]
         start = np.min(hit[:,5:7])
@@ -88,9 +115,28 @@ if len(protein_hits) >= hit_count:
         bed = [scaffold, start, end]
         if bed not in bed_entries:
             bed_entries.append(bed)
-    for count, bed in enumerate(bed_entries):
-        with open(genome+'_'+og+'/'+str(count)+'.bed', 'w', newline = '') as output_bed:
-                  w = csv.writer(output_bed,delimiter = '\t')
-                  w.writerow(bed)
+    beds_with_intersect = []
+    for bed in bed_entries:
+        print(bed)
+        subset = gene_gff_arrays[gene_gff_arrays[:,0] == bed[0]]
+        subset = subset[
+            np.logical_or(
+                np.logical_and(
+                    subset[:,1].astype(int) <= bed[1],
+                    subset[:,2].astype(int) >= bed[1]
+                ),
+                np.logical_and(
+                    subset[:,1].astype(int) <= bed[2],
+                    subset[:,2].astype(int) >= bed[2]
+                )
+            )
+        ]
+        subset = numpy_get_overlap_percent([bed[1], bed[2]],subset[:,1:3].astype(int), gene_overlap)
+        if subset.size != 0:
+            beds_with_intersect.append(bed)
+    if len(beds_with_intersect) > 0:
+            print(genome + '\t' + og + '\tyes_otherog')
+    else:
+        print(genome + '\t' + og + '\tyes_unannotated')
 else:
     print(genome + '\t' + og + '\tno')
