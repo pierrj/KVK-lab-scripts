@@ -24,29 +24,31 @@ if [ -f "optimization_out" ]; then
     rm optimization_out
 fi
 
-for GENE_OVERLAP in {80..95..5}
-do
-  if [ -f "jobqueue" ]; then
-      rm jobqueue
-  fi
+# for GENE_OVERLAP in {80..95..5}
+# do
 
-  while read og; do
-      echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/orthogroup_protein_out_no_CH0043/${og}_protein.fasta \
-      -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} -f  ${GENE_GFF} -b ${GENE_OVERLAP} >> jobqueue
-  done < /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/og_list_all_presences_CH0043
+GENE_OVERLAP=100
+if [ -f "jobqueue" ]; then
+    rm jobqueue
+fi
 
-  echo ${GENE_OVERLAP}
+while read og; do
+    echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/orthogroup_protein_out_no_CH0043/${og}_protein.fasta \
+    -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} -f  ${GENE_GFF} -b ${GENE_OVERLAP} >> jobqueue
+done < /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/og_list_all_presences_CH0043
 
-  if [ -f "${GENE_OVERLAP}_out" ]; then
-      rm ${GENE_OVERLAP}_out
-  fi
+echo ${GENE_OVERLAP}
+
+if [ -f "${GENE_OVERLAP}_out" ]; then
+    rm ${GENE_OVERLAP}_out
+fi
 
 
-  parallel -j 24 < jobqueue >> ${GENE_OVERLAP}_out
+parallel -j 24 < jobqueue >> ${GENE_OVERLAP}_out
 
-  yes_otherog_count=$(awk '$3 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
-  yes_unannotated_count=$(awk '$3 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
-  no_count=$(awk '$3 == "no"' ${GENE_OVERLAP}_out | wc -l)
+yes_otherog_count=$(awk '$3 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
+yes_unannotated_count=$(awk '$3 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
+no_count=$(awk '$3 == "no"' ${GENE_OVERLAP}_out | wc -l)
 
-  echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
-done
+echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
+# done
