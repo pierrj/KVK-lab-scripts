@@ -10,11 +10,11 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
+cd /global/scratch/users/pierrj/PAV_SV/PAV/tree_problems
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 module purge
 
 
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_4_27_2022/Results_Apr28/WorkingDirectory
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_tree_problems/Results_Apr29/WorkingDirectory
