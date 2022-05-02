@@ -33,49 +33,63 @@ PERCENT_ZEROES_FILTER=1
 
 # cd /global/scratch/users/pierrj/scooping_emile/
 
-module purge
-module load gnuplot
-module load imagemagick
-module load repeatmasker/4.1.1
-module load mummer
-module load ghostscript
-module load parallel
+# module purge
+# module load gnuplot
+# module load imagemagick
+# module load repeatmasker/4.1.1
+# module load mummer
+# module load ghostscript
+# module load parallel
 
-# repeat mask all genomes, only for TEs not repeats
-# while read genome; do
-#     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
+# # repeat mask all genomes, only for TEs not repeats
+# # while read genome; do
+# #     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
+# # done < ${MAPFILE}
+
+# if [ -f "jobqueue" ]; then
+#     rm jobqueue
+# fi
+
+# ## run script that looks for svs that may have been caused by eccs, comparing guy11 vs all other genomes
+# ## do all by all
+# while read reference;
+# do
+#     while read genome;
+#     do
+#         if [ "$reference" != "$genome" ]; then
+#         echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${reference}_genomic.fna.masked -q ${genome}_genomic.fna.masked -t 1 -n ${reference}_v_${genome} -p ${PERCENT_ZEROES_FILTER} -o ${reference}_v_${genome}_jpg -m ${reference}_v_${genome}_tmp" >> jobqueue
+#         echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${genome}_genomic.fna.masked -q ${reference}_genomic.fna.masked -t 1 -n ${genome}_v_${reference} -p ${PERCENT_ZEROES_FILTER} -o ${genome}_v_${reference}_jpg -m ${genome}_v_${reference}_tmp" >> jobqueue
+#         fi
+#     done < ${MAPFILE}
 # done < ${MAPFILE}
 
-if [ -f "jobqueue" ]; then
-    rm jobqueue
+# parallel -j ${SLURM_NTASKS} < jobqueue
+
+# if [ -d "output_pdfs" ]; then
+#     rm -r output_pdfs
+# fi
+
+# mkdir output_pdfs
+
+
+# ls | grep jpg > output_mapfile
+
+# ## move files around
+# while read output; do
+# cd ${output}
+#     cp *.pdf ../output_pdfs
+# cd ..
+# done < output_mapfile
+
+
+if [ -d "output_jpgs" ]; then
+    rm -r output_jpgs
 fi
 
-## run script that looks for svs that may have been caused by eccs, comparing guy11 vs all other genomes
-## do all by all
-while read reference;
-do
-    while read genome;
-    do
-        if [ "$reference" != "$genome" ]; then
-        echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${reference}_genomic.fna.masked -q ${genome}_genomic.fna.masked -t 1 -n ${reference}_v_${genome} -p ${PERCENT_ZEROES_FILTER} -o ${reference}_v_${genome}_jpg -m ${reference}_v_${genome}_tmp" >> jobqueue
-        echo "/global/home/users/pierrj/git/bash/ecc_sv_finder.sh -r ${genome}_genomic.fna.masked -q ${reference}_genomic.fna.masked -t 1 -n ${genome}_v_${reference} -p ${PERCENT_ZEROES_FILTER} -o ${genome}_v_${reference}_jpg -m ${genome}_v_${reference}_tmp" >> jobqueue
-        fi
-    done < ${MAPFILE}
-done < ${MAPFILE}
+mkdir output_jpgs
 
-parallel -j ${SLURM_NTASKS} < jobqueue
-
-if [ -d "output_pdfs" ]; then
-    rm -r output_pdfs
-fi
-
-mkdir output_pdfs
-
-ls | grep jpg > output_mapfile
-
-## move files around
 while read output; do
 cd ${output}
-    cp *.pdf ../output_pdfs
+    cp *.pdf ../output_jpgs
 cd ..
 done < output_mapfile
