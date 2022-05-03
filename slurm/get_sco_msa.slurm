@@ -14,7 +14,7 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/tree_problems
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/tree_problems/orthofinder_tree_problems/Results_Apr29/WorkingDirectory/OrthoFinder/Results_Apr28/Single_Copy_Orthologue_Sequences
+SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/tree_problems/orthofinder_tree_problems/Results_Apr29/WorkingDirectory/OrthoFinder/Results_Apr29/Single_Copy_Orthologue_Sequences
 ACCESSIONS=/global/scratch/users/pierrj/PAV_SV/PAV/tree_problems/output_accession_names
 
 basename=$(basename ${SCO_DIR})
