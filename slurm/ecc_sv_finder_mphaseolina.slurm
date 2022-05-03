@@ -90,6 +90,6 @@ mkdir output_jpgs
 
 while read output; do
 cd ${output}
-    cp *.pdf ../output_jpgs
+    cp *.jpg ../output_jpgs
 cd ..
 done < output_mapfile
