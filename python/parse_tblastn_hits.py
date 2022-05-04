@@ -1,9 +1,7 @@
 import numpy as np
 import csv
-import more_itertools as mit
 from itertools import filterfalse
 import sys
-import os
 
 input_file = sys.argv[1]
 e_value = float(sys.argv[2])
@@ -12,8 +10,6 @@ query_cov = int(sys.argv[4])
 hit_count = int(sys.argv[5])
 genome = sys.argv[6]
 og = sys.argv[7]
-gene_gff = sys.argv[8]
-gene_overlap = float(sys.argv[9])
 
 prelim_hits = {}
 
@@ -75,66 +71,120 @@ for protein in parsed_hits_arrays:
             for i in hit:
                 protein_size_range = list(filterfalse(lambda x: i[3] <= x <= i[4], protein_size_range)) # get query cov
             if (1-(len(protein_size_range)/protein_size))*100 > query_cov: # check if query cov for remaining hsps is enough
-                valid_hits.append(hit)
+                valid_hits.append(parsed_hits_arrays[protein])
                 if protein[:-2] not in protein_hits: # same protein cant be counted twice for two alignments
                     protein_hits.append(protein[:-2])
 
+def output_gff(input_valid_hits):
+    gff_no_ids = {}
+    gff_no_ids_count = {}
 
-def numpy_get_overlap_percent(lst, twod_array, percent): ## function to quickly calculate percent overlap between two alignments from the input coords file
-    twod_array_min = twod_array.min(axis=1)
-    twod_array_max = twod_array.max(axis=1)
-    twod_array_length = twod_array_max-twod_array_min
-    twod_array_ordered = np.vstack((twod_array_min, twod_array_max)).T # transpose
-    lst_start = min(lst)
-    lst_end = max(lst)
-    number_of_matches = np.shape(twod_array)[0] # count matches
-    lst_start_array = np.repeat(lst_start, number_of_matches)
-    lst_end_array = np.repeat(lst_end, number_of_matches)
-    lst_length = lst_end-lst_start
-    zero_array = np.repeat(0, number_of_matches) # count zeroes
-    ## watch out for integers here
-    overlap_array = np.vstack((lst_end_array, twod_array_ordered[:,1])).T.min(axis=1) - np.vstack((lst_start_array, twod_array_ordered[:,0])).T.max(axis=1)
-    overlap_or_zero = np.vstack((zero_array, overlap_array)).T.max(axis=1)
-    overlap_percent = overlap_or_zero/lst_length
-    boolean_array = overlap_percent > percent # compare to percentage cutoff
-    return boolean_array
-
-if len(protein_hits) >= hit_count:
-    gene_gff_list = []
-    with open(gene_gff, newline = '') as file:
-        file_reader = csv.reader(file, delimiter = '\t')
-        for row in file_reader:
-            gene_gff_list.append([row[0], int(row[3]), int(row[4])])
-    gene_gff_arrays = np.array(gene_gff_list)
-    bed_entries = []
-    for hit in valid_hits:
-        scaffold = hit[:,0][0]
-        start = np.min(hit[:,5:7])
-        end = np.max(hit[:,5:7])
-        bed = [scaffold, start, end]
-        if bed not in bed_entries:
-            bed_entries.append(bed)
-    beds_with_intersect = []
-    for bed in bed_entries:
-        subset = gene_gff_arrays[gene_gff_arrays[:,0] == bed[0]]
-        subset = subset[
-            np.logical_or(
-                np.logical_and(
-                    subset[:,1].astype(int) <= bed[1],
-                    subset[:,2].astype(int) >= bed[1]
-                ),
-                np.logical_and(
-                    subset[:,1].astype(int) <= bed[2],
-                    subset[:,2].astype(int) >= bed[2]
-                )
-            )
+    for hit in input_valid_hits:
+        scaffold = hit[0][0]
+        if hit[0][5] > hit[0][6]:
+            orientation = '-'
+        else:
+            orientation = '+'
+        gene_start = np.min(hit[:,5:7])
+        gene_end = np.max(hit[:,5:7])
+        gene_entry = [
+            scaffold,
+            'PAV_validation',
+            'gene',
+            gene_start,
+            gene_end,
+            '.',
+            orientation,
+            '.'
         ]
-        subset = numpy_get_overlap_percent([bed[1], bed[2]],subset[:,1:3].astype(int), gene_overlap)
-        if subset.size != 0:
-            beds_with_intersect.append(bed)
-    if len(beds_with_intersect) > 0:
-            print(genome + '\t' + og + '\tyes_otherog')
-    else:
-        print(genome + '\t' + og + '\tyes_unannotated')
+        mRNA_entry = [
+            scaffold,
+            'PAV_validation',
+            'mRNA',
+            gene_start,
+            gene_end,
+            '.',
+            orientation,
+            '.'
+        ]
+        if tuple(gene_entry) not in gff_no_ids:
+            gff_no_ids[tuple(gene_entry)] = []
+            gff_no_ids_count[tuple(gene_entry)] = 1
+            gff_no_ids[tuple(gene_entry)].append(gene_entry)
+            gff_no_ids[tuple(gene_entry)].append(mRNA_entry)
+            for hsp in hit:
+                if hsp[5] > hsp[6]:
+                    orientation_hsp = '-'
+                else:
+                    orientation_hsp = '+'
+                if orientation_hsp != orientation:
+                    print(hit)
+                    print(hsp)
+                    print(orientation)
+                    print(orientation_hsp)
+                    raise ValueError('hsp orientations arent all the same')
+                start = min([hsp[5],hsp[6]])
+                end = max([hsp[5],hsp[6]])
+                frame = (gene_start - start) % 3
+                exon_entry = [
+                    scaffold,
+                    'PAV_validation',
+                    'exon',
+                    start,
+                    end,
+                    '.',
+                    orientation_hsp,
+                    '.'
+                ]
+                cds_entry = [
+                    scaffold,
+                    'PAV_validation',
+                    'CDS',
+                    start,
+                    end,
+                    '.',
+                    orientation_hsp,
+                    frame
+                ]
+                gff_no_ids[tuple(gene_entry)].append(exon_entry)
+                gff_no_ids[tuple(gene_entry)].append(cds_entry)
+        else:
+            gff_no_ids_count[tuple(gene_entry)] += 1
+
+    gff = []
+
+    for entry_count, gene_entry in enumerate(gff_no_ids):
+        hit_count = gff_no_ids_count[gene_entry]
+        gene_ID = 'ID='+str(entry_count)+'_'+str(count)+';Name='+str(entry_count)+'_'+str(count)
+        mRNA_ID = 'ID='+str(entry_count)+'_'+str(count)+'T0;Parent='+str(entry_count)+'_'+str(count)
+        parent_ID = 'Parent='+str(entry_count)+'_'+str(count)
+        for exon_cds in gff_no_ids[gene_entry]:
+            if exon_cds[2] == 'gene':
+                gff.append([
+                    exon_cds[0], exon_cds[1], exon_cds[2],
+                    exon_cds[3], exon_cds[4], exon_cds[5],
+                    exon_cds[6], exon_cds[7], gene_ID
+                ])
+            elif exon_cds[2] == 'mRNA':
+                gff.append([
+                    exon_cds[0], exon_cds[1], exon_cds[2],
+                    exon_cds[3], exon_cds[4], exon_cds[5],
+                    exon_cds[6], exon_cds[7], mRNA_ID
+                ])
+            else:
+                gff.append([
+                    exon_cds[0], exon_cds[1], exon_cds[2],
+                    exon_cds[3], exon_cds[4], exon_cds[5],
+                    exon_cds[6], exon_cds[7], parent_ID
+                ])
+
+    with open(genome+'_'+og+'.gff3', 'w', newline = '') as output_csv:
+        w = csv.writer(output_csv, delimiter = '\t')
+        w.writerow(['##gff-version 3'])
+        for row in gff:
+            w.writerow(row)
+
+if len(protein_hits) < hit_count:
+    print(genome + '\t' + og + '\tno_tblastn_hit')
 else:
-    print(genome + '\t' + og + '\tno')
+    output_gff(valid_hits)

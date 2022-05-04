@@ -18,7 +18,7 @@ E_VALUE=1e-10
 HIT_COUNT=2
 QUERY_COV=55
 PIDENT=55
-GENE_GFF=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/CH0043_merge.gff3
+BLAST_DB=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/test_blast_id/all_proteins_with_og_names.fasta
 
 if [ -f "optimization_out" ]; then
     rm optimization_out
@@ -34,7 +34,7 @@ fi
 
 while read og; do
     echo /global/home/users/pierrj/git/bash/tblastn_validation.sh -l /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/orthogroup_protein_out_no_CH0043/${og}_protein.fasta \
-    -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} -f  ${GENE_GFF} -b ${GENE_OVERLAP} >> jobqueue
+    -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} -d ${BLAST_DB} >> jobqueue
 done < /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/og_list_all_presences_CH0043
 
 echo ${GENE_OVERLAP}

@@ -6,7 +6,7 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
 
 conda activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder_4_27_2022 | grep "diamond blastp" > jobqueue
+orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder_tree_problems | grep "diamond blastp" > jobqueue
 
 mv jobqueue jobqueue_old
 
