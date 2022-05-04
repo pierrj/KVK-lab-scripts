@@ -19,7 +19,7 @@ weighed_counts = {}
 
 for protein in hits_dict:
     number_of_overlapping_proteins = int(protein.split('_')[1])
-    c = Counter(hits_dict['0_122'])
+    c = Counter(hits_dict[protein])
     for og in c:
         if og not in weighed_counts:
             weighed_counts[og] = c[og]*number_of_overlapping_proteins
