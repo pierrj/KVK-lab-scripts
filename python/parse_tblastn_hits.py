@@ -155,9 +155,9 @@ def output_gff(input_valid_hits):
 
     for entry_count, gene_entry in enumerate(gff_no_ids):
         hit_count = gff_no_ids_count[gene_entry]
-        gene_ID = 'ID='+str(entry_count)+'_'+str(count)+';Name='+str(entry_count)+'_'+str(count)
-        mRNA_ID = 'ID='+str(entry_count)+'_'+str(count)+'T0;Parent='+str(entry_count)+'_'+str(count)
-        parent_ID = 'Parent='+str(entry_count)+'_'+str(count)
+        gene_ID = 'ID='+str(entry_count)+'_'+str(hit_count)+';Name='+str(entry_count)+'_'+str(hit_count)
+        mRNA_ID = 'ID='+str(entry_count)+'_'+str(hit_count)+'T0;Parent='+str(entry_count)+'_'+str(hit_count)
+        parent_ID = 'Parent='+str(entry_count)+'_'+str(hit_count)
         for exon_cds in gff_no_ids[gene_entry]:
             if exon_cds[2] == 'gene':
                 gff.append([
