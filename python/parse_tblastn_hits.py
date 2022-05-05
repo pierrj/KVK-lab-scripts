@@ -90,7 +90,7 @@ def output_gff(input_valid_hits):
         if c['-'] > c['+']:
             orientation = '-'
         elif c['-'] < c['+']:
-            orintation = '+'
+            orientation = '+'
         else:
             raise ValueError('no clear orientation for hit')
         scaffold = hit[0][0]
