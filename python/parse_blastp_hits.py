@@ -18,8 +18,11 @@ with open(input_file, newline = '') as file:
 weighed_counts = {}
 
 for protein in hits_dict:
-    number_of_overlapping_proteins = int(protein.split('_')[1])
+    number_of_overlapping_proteins = int(protein.split('_')[1]) ## tblastn hits
     c = Counter(hits_dict[protein])
+    if len(hits_dict[protein]) < 100:
+        for og in c:
+            c[og] = round(c[og]*100/len(hits_dict[protein])) ## if less than 100 hits, weigh them to 100
     for og in c:
         if og not in weighed_counts:
             weighed_counts[og] = c[og]*number_of_overlapping_proteins
@@ -36,11 +39,8 @@ weighed_counts_percents = {}
 for weighed_count in weighed_counts:
     weighed_counts_percents[weighed_count] = weighed_counts[weighed_count]/weighed_counts_sum
 
-if max(weighed_counts_percents.values()) < 1.0:
-    print('some disagreement in ogs, max was')
-    print(print(max(weighed_counts_percents.values())))
 observed_og = max(weighed_counts_percents, key=weighed_counts_percents.get)
 if expected_og == observed_og:
-    print(genome + '\t' + expected_og + '\tyes')
+    print(genome + '\t' + expected_og + '\tyes'+'\t'+str(max(weighed_counts_percents.values()))+'\t'+observed_og)
 else:
-    print(genome + '\t' + expected_og + '\tno_wrong_blastp_hit')
+    print(genome + '\t' + expected_og + '\tno_wrong_blastp_hit'+'\t'+str(max(weighed_counts_percents.values()))+'\t'+observed_og)

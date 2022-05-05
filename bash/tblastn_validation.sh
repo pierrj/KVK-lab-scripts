@@ -20,16 +20,13 @@ tblastn -query ${LOST_OG} -subject ${LOST_GENOME} \
     -outfmt "6 qacc sacc evalue qlen qstart qend sstart send nident mismatch"  \
     -max_target_seqs 1 > tblastn_${genome_base}_${og_base}
 
-if [ ! -f "${GENE_GFF}.justgenes" ]; then
-    awk '$3 == "gene"' ${GENE_GFF} > ${GENE_GFF}.justgenes
-fi
-
 python /global/home/users/pierrj/git/python/parse_tblastn_hits.py tblastn_${genome_base}_${og_base} ${E_VALUE} ${PIDENT} ${QUERY_COV} ${HIT_COUNT} ${genome_base} ${og_base}
 
 if [ -f "${genome_base}_${og_base}.gff3" ]; then
-    agat_sp_extract_sequences.pl --gff ${genome_base}_${og_base}.gff3 -f ${LOST_GENOME} -p -o ${genome_base}_${og_base}.fasta
+    agat_sp_extract_sequences.pl --gff ${genome_base}_${og_base}.gff3 -f ${LOST_GENOME} -p -o ${genome_base}_${og_base}.fasta &> /dev/null
     blastp -db ${BLAST_DB} -query ${genome_base}_${og_base}.fasta \
         -outfmt "6 qacc sacc evalue qlen qstart qend sstart send nident mismatch"  \
-        -max_target_seqs 100 > blastp_${genome_base}_${og_base}
-    python /global/home/users/pierrj/git/python/parse_blastp_hits.py blastp_${genome_base}_${og_base}
+        -max_target_seqs 100 \
+        -max_hsps 1 > blastp_${genome_base}_${og_base}
+    python /global/home/users/pierrj/git/python/parse_blastp_hits.py blastp_${genome_base}_${og_base} ${og_base} ${genome_base}
 fi
