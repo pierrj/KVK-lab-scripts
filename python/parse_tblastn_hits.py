@@ -87,7 +87,6 @@ def output_gff(input_valid_hits):
                 orientation_dict['-'] += abs(i[1]-i[0])
             else:
                 orientation_dict['+'] += abs(i[1]-i[0])
-        print(orientation_dict)
         if orientation_dict['-'] > orientation_dict['+']:
             orientation = '-'
         elif orientation_dict['-'] < orientation_dict['+']:
