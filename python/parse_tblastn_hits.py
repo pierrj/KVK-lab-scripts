@@ -2,7 +2,6 @@ import numpy as np
 import csv
 from itertools import filterfalse
 import sys
-from collections import Counter
 
 input_file = sys.argv[1]
 e_value = float(sys.argv[2])
@@ -80,16 +79,18 @@ def output_gff(input_valid_hits):
     gff_no_ids = {}
     gff_no_ids_count = {}
     for hit in input_valid_hits:
-        orientation_list = []
+        orientation_dict = {}
+        orientation_dict['-'] = 0
+        orientation_dict['+'] = 0
         for i in hit[:,5:7]:
             if i[0] > i[1]:
-                orientation_list.append('-')
+                orientation_dict['-'] += abs(i[1]-i[0])
             else:
-                orientation_list.append('+')
-        c = Counter(orientation_list)
-        if c['-'] > c['+']:
+                orientation_dict['+'] += abs(i[1]-i[0])
+        print(orientation_dict)
+        if orientation_dict['-'] > orientation_dict['+']:
             orientation = '-'
-        elif c['-'] < c['+']:
+        elif orientation_dict['-'] < orientation_dict['+']:
             orientation = '+'
         else:
             raise ValueError('no clear orientation for hit')
