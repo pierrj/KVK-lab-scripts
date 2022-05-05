@@ -11,7 +11,7 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/optimization_run
+cd /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/test_blast_id
 
 LOST_GENOME=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/CH0043.fasta
 E_VALUE=1e-10
@@ -39,17 +39,15 @@ while read og; do
     -g ${LOST_GENOME} -e ${E_VALUE} -p ${PIDENT} -q ${QUERY_COV} -c ${HIT_COUNT} -d ${BLAST_DB} >> jobqueue
 done < /global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate/og_list_all_presences_CH0043
 
-echo ${GENE_OVERLAP}
 
-if [ -f "${GENE_OVERLAP}_out" ]; then
-    rm ${GENE_OVERLAP}_out
-fi
+mv jobqueue jobqueue_old
 
+head -100 jobqueue_old > jobqueue
 
-parallel -j 24 < jobqueue >> ${GENE_OVERLAP}_out
+parallel -j 24 < jobqueue >> optimization_out
 
-yes_otherog_count=$(awk '$3 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
-yes_unannotated_count=$(awk '$3 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
-no_count=$(awk '$3 == "no"' ${GENE_OVERLAP}_out | wc -l)
+# yes_otherog_count=$(awk '$3 == "yes_otherog"' ${GENE_OVERLAP}_out | wc -l)
+# yes_unannotated_count=$(awk '$3 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -l)
+# no_count=$(awk '$3 == "no"' ${GENE_OVERLAP}_out | wc -l)
 
-echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
+# echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
