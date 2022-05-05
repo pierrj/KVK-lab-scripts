@@ -2,6 +2,7 @@ import numpy as np
 import csv
 from itertools import filterfalse
 import sys
+from collections import Counter
 
 input_file = sys.argv[1]
 e_value = float(sys.argv[2])
@@ -89,7 +90,7 @@ def output_gff(input_valid_hits):
         if c['-'] > c['+']:
             orientation = '-'
         elif c['-'] < c['+']:
-            orintation = '+'
+            orientation = '+'
         else:
             raise ValueError('no clear orientation for hit')
         scaffold = hit[0][0]
