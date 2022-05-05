@@ -18,16 +18,18 @@ E_VALUE=1e-10
 HIT_COUNT=2
 QUERY_COV=55
 PIDENT=55
-BLAST_DB=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/test_blast_id/all_proteins_with_og_names.fasta
+BLAST_DB=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/test_blast_id/all_proteins_with_og_names_no_CH0043.fasta
+
+
+# makeblastdb -in ${BLAST_DB} -dbtype prot
+
+source activate /global/scratch/users/pierrj/conda_envs/agat
+PERL5LIB=''
 
 if [ -f "optimization_out" ]; then
     rm optimization_out
 fi
 
-# for GENE_OVERLAP in {80..95..5}
-# do
-
-GENE_OVERLAP=100
 if [ -f "jobqueue" ]; then
     rm jobqueue
 fi
@@ -51,4 +53,3 @@ yes_unannotated_count=$(awk '$3 == "yes_unannotated"' ${GENE_OVERLAP}_out | wc -
 no_count=$(awk '$3 == "no"' ${GENE_OVERLAP}_out | wc -l)
 
 echo -e ${GENE_OVERLAP}'\t'$yes_otherog_count'\t'$yes_unannotated_count'\t'$no_count >> optimization_out
-# done

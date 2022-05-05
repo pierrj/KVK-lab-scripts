@@ -9,13 +9,13 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes
+cd /global/scratch/users/pierrj/PAV_SV/PAV/tree_problems
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 module purge
 
-SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/orthofinder_4_27_2022/Results_Apr28/WorkingDirectory/OrthoFinder/Results_Apr28/Single_Copy_Orthologue_Sequences
+SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/tree_problems/orthofinder_tree_problems/Results_Apr29/WorkingDirectory/OrthoFinder/Results_Apr29/Single_Copy_Orthologue_Sequences
 basename=$(basename ${SCO_DIR})
 MSA=${basename}_msas_combined.trimmed.fasta
 
