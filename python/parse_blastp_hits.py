@@ -6,6 +6,8 @@ input_file = sys.argv[1]
 expected_og = sys.argv[2]
 genome = sys.argv[3]
 
+expected_og = expected_og.split('_')[0]
+
 hits_dict = {}
 
 with open(input_file, newline = '') as file:

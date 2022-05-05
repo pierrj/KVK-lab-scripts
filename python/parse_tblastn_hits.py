@@ -78,13 +78,21 @@ for protein in parsed_hits_arrays:
 def output_gff(input_valid_hits):
     gff_no_ids = {}
     gff_no_ids_count = {}
-
     for hit in input_valid_hits:
-        scaffold = hit[0][0]
-        if hit[0][5] > hit[0][6]:
+        orientation_list = []
+        for i in hit[:,5:7]:
+            if i[0] > i[1]:
+                orientation_list.append('-')
+            else:
+                orientation_list.append('+')
+        c = Counter(orientation_list)
+        if c['-'] > c['+']:
             orientation = '-'
+        elif c['-'] < c['+']:
+            orintation = '+'
         else:
-            orientation = '+'
+            raise ValueError('no clear orientation for hit')
+        scaffold = hit[0][0]
         gene_start = np.min(hit[:,5:7])
         gene_end = np.max(hit[:,5:7])
         gene_entry = [
@@ -113,16 +121,6 @@ def output_gff(input_valid_hits):
             gff_no_ids[tuple(gene_entry)].append(gene_entry)
             gff_no_ids[tuple(gene_entry)].append(mRNA_entry)
             for hsp in hit:
-                if hsp[5] > hsp[6]:
-                    orientation_hsp = '-'
-                else:
-                    orientation_hsp = '+'
-                if orientation_hsp != orientation:
-                    print(hit)
-                    print(hsp)
-                    print(orientation)
-                    print(orientation_hsp)
-                    raise ValueError('hsp orientations arent all the same')
                 start = min([hsp[5],hsp[6]])
                 end = max([hsp[5],hsp[6]])
                 frame = (gene_start - start) % 3
@@ -133,7 +131,7 @@ def output_gff(input_valid_hits):
                     start,
                     end,
                     '.',
-                    orientation_hsp,
+                    orientation,
                     '.'
                 ]
                 cds_entry = [
@@ -143,7 +141,7 @@ def output_gff(input_valid_hits):
                     start,
                     end,
                     '.',
-                    orientation_hsp,
+                    orientation,
                     frame
                 ]
                 gff_no_ids[tuple(gene_entry)].append(exon_entry)
