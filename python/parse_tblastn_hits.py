@@ -90,7 +90,7 @@ def output_gff(input_valid_hits):
         if c['-'] > c['+']:
             orientation = '-'
         elif c['-'] < c['+']:
-            orientation = '+'
+            orintation = '+'
         else:
             raise ValueError('no clear orientation for hit')
         scaffold = hit[0][0]
@@ -124,7 +124,10 @@ def output_gff(input_valid_hits):
             for hsp in hit:
                 start = min([hsp[5],hsp[6]])
                 end = max([hsp[5],hsp[6]])
-                frame = (gene_start - start) % 3
+                if orientation == '+':
+                    frame = (gene_start - start) % 3
+                else:
+                    frame = (gene_end - end) % 3
                 exon_entry = [
                     scaffold,
                     'PAV_validation',
