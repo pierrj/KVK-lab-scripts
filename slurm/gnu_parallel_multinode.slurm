@@ -12,4 +12,7 @@
 
 cd ${SLURM_SUBMIT_DIR}
 
+source activate /global/scratch/users/pierrj/conda_envs/agat
+PERL5LIB=''
+
 parallel -j ${SLURM_NTASKS} < jobqueue_${node} >> ${OUTPUT_FILE}
