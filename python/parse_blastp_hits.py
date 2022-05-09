@@ -6,7 +6,7 @@ input_file = sys.argv[1]
 expected_og = sys.argv[2]
 genome = sys.argv[3]
 
-expected_og = expected_og.split('_')[0]
+expected_og = expected_og.split('.')[0]
 
 hits_dict = {}
 

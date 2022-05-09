@@ -187,7 +187,7 @@ def output_gff(input_valid_hits):
         for row in gff:
             w.writerow(row)
 
-expected_og = og.split('_')[0]
+expected_og = og.split('.')[0]
 
 if len(protein_hits) < hit_count:
     print(genome + '\t' + expected_og + '\tno_tblastn_hit')
