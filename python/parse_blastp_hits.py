@@ -17,6 +17,10 @@ with open(input_file, newline = '') as file:
             hits_dict[row[0]] = []
         hits_dict[row[0]].append(row[1][-9:])
 
+if not hits_dict: # sometimes the blastp hit is emtpy
+    print(genome + '\t' + expected_og + '\tno_blastp_hit')
+    exit()
+
 weighed_counts = {}
 
 for protein in hits_dict:
@@ -40,11 +44,6 @@ weighed_counts_percents = {}
 
 for weighed_count in weighed_counts:
     weighed_counts_percents[weighed_count] = weighed_counts[weighed_count]/weighed_counts_sum
-
-try:
-    observed_og = max(weighed_counts_percents, key=weighed_counts_percents.get)
-except ValueError: # sometimes the blastp hit is emtpy
-    print(genome + '\t' + expected_og + '\tno_blastp_hit')
 
 if expected_og == observed_og:
     print(genome + '\t' + expected_og + '\tyes'+'\t'+str(max(weighed_counts_percents.values()))+'\t'+observed_og)
