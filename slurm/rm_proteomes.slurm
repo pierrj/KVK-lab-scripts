@@ -21,5 +21,5 @@ module load repeatmasker/4.1.1
 echo test
 
 while read genome; do
-    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}.fasta
+    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}
 done < ${MAPFILE}
