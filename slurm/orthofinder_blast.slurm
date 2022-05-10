@@ -12,7 +12,7 @@
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/tree_problems
+cd ${SLURM_SUBMIT_DIR}
 
 module purge
 
