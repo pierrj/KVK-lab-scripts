@@ -18,6 +18,8 @@ MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/assemblies
 
 module load repeatmasker/4.1.1
 
+echo test
+
 while read genome; do
     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}.fasta
 done < ${MAPFILE}
