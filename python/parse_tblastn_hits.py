@@ -93,7 +93,7 @@ def output_gff(input_valid_hits):
         elif orientation_dict['-'] < orientation_dict['+']:
             orientation = '+'
         else:
-            raise ValueError('no clear orientation for hit')
+            orientation = '+' ## this shouldn't happen very often, only for tandem repeats, in which case just assign +
         scaffold = hit[0][0]
         gene_start = np.min(hit[:,5:7])
         gene_end = np.max(hit[:,5:7])
