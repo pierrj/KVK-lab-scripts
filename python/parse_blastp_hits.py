@@ -45,6 +45,8 @@ weighed_counts_percents = {}
 for weighed_count in weighed_counts:
     weighed_counts_percents[weighed_count] = weighed_counts[weighed_count]/weighed_counts_sum
 
+observed_og = max(weighed_counts_percents, key=weighed_counts_percents.get)
+
 if expected_og == observed_og:
     print(genome + '\t' + expected_og + '\tyes'+'\t'+str(max(weighed_counts_percents.values()))+'\t'+observed_og)
 else:
