@@ -18,7 +18,7 @@ E_VALUE=1e-10
 HIT_COUNT=2
 QUERY_COV=55
 PIDENT=55
-BLAST_DB=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/test_blast_id/all_proteins_with_og_names_no_CH0043.fasta
+BLAST_DB=/global/scratch/users/pierrj/PAV_SV/PAV/exonerate_validation/false_positive_rate_fungap_or_orthofinder/all_proteins_with_og_names_no_CH0043.fasta
 
 
 # makeblastdb -in ${BLAST_DB} -dbtype prot
