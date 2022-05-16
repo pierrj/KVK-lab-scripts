@@ -16,7 +16,8 @@ source activate /global/scratch/users/pierrj/conda_envs/pfam_scan
 
 OUTPUTNAME=CH0043
 THREADS=${SLURM_NTASKS}
+PFAM_DIR=/global/scratch/users/pierrj/pfam/
 
-pfam_scan.pl -cpu ${THREADS} -outfile ${OUTPUT_NAME}.pfamscan.out -dir ${PFAM_DIR} -fasta ${OUTPUT_NAME}.CDS.fasta
+pfam_scan.pl -cpu ${THREADS} -outfile ${OUTPUT_NAME}.pfamscan.out -dir ${PFAM_DIR} -fasta CH0043_1_International_protein.faa
 
 /global/scratch/users/pierrj/scripts/plant_rgenes/processing_scripts/K-parse_Pfam_domains_v3.1.pl -p ${OUTPUT_NAME}.pfamscan.out -e 0.001 -o ${OUTPUT_NAME}.pfamscan.kparse.out
