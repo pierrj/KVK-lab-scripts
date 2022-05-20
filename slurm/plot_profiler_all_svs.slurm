@@ -93,11 +93,11 @@ cd /global/scratch/users/pierrj/PAV_SV/SV/plot_profile
 #     ## could probably add SCOs here or effectors or different types of genes as well
 # done
 
-sv=DEL.no_region_scale
+sv=TRA
 
-OUTPUT_NAME=plot_profile_all_${sv}_no_survivor
+OUTPUT_NAME=plot_profile_all_DEL.left_region
 
-REGIONS_BED=all_${sv}.bed
+REGIONS_BED=all_DEL.no_region_scale.bed
 GENOME_FILE=guy11_genome_baoetal2017_with_70-15_mito.fasta
 THREADS=${SLURM_NTASKS}
 WINDOWS=10

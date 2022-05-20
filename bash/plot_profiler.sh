@@ -58,9 +58,9 @@ if [[ "${SV}" == "TRA" ]]
 then
 computeMatrix reference-point -p ${THREADS} -S ${density_file_basename}.bw \
                             -R ${REGIONS_BED} \
-                            --beforeRegionStartLength 10000 \
+                            --beforeRegionStartLength 200 \
                             --referencePoint TSS \
-                            --afterRegionStartLength 10000 \
+                            --afterRegionStartLength 0 \
                             -o ${OUTPUT_NAME}.mat.gz
 else
 computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
