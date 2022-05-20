@@ -14,7 +14,7 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/pfam_scan
 
 source activate /global/scratch/users/pierrj/conda_envs/pfam_scan
 
-OUTPUTNAME=CH0043
+OUTPUT_NAME=CH0043
 THREADS=${SLURM_NTASKS}
 PFAM_DIR=/global/scratch/users/pierrj/pfam/
 
