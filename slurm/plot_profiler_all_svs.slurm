@@ -93,7 +93,7 @@ cd /global/scratch/users/pierrj/PAV_SV/SV/plot_profile
 #     ## could probably add SCOs here or effectors or different types of genes as well
 # done
 
-sv=DEL.gene_intersect
+sv=all_DEL.no_region_scale.bed
 
 OUTPUT_NAME=plot_profile_all_${sv}_no_survivor
 
