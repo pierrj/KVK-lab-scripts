@@ -93,9 +93,9 @@ cd /global/scratch/users/pierrj/PAV_SV/SV/plot_profile
 #     ## could probably add SCOs here or effectors or different types of genes as well
 # done
 
-sv=TRA
+sv=DEL
 
-OUTPUT_NAME=plot_profile_all_DEL.left_region
+OUTPUT_NAME=plot_profile_all_DEL.smaller_region
 
 REGIONS_BED=all_DEL.no_region_scale.bed
 GENOME_FILE=guy11_genome_baoetal2017_with_70-15_mito.fasta
