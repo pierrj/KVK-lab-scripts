@@ -66,7 +66,7 @@ else
 computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             -R ${REGIONS_BED} \
                             --beforeRegionStartLength 10000 \
-                            --regionBodyLength 1 \
+                            --regionBodyLength 10 \
                             --afterRegionStartLength 10000 \
                             -o ${OUTPUT_NAME}.mat.gz
 fi
