@@ -73,12 +73,29 @@ RM_LIB=/global/scratch/users/pierrj/PAV_SV/PAV/te_annotations_anne/anne_repbase_
 GENOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/assemblies
 MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/assemblies_mapfile
 
-module load repeatmasker/4.1.1
-
-while read genome; do
-    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}
-done < ${MAPFILE}
+# module load repeatmasker/4.1.1
 
 # while read genome; do
-#     awk '{print $11}' ${genome}.fasta.out | paste ${genome}.fasta.out.gff - > ${genome}.fasta.out.w_class.gff
+#     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}
 # done < ${MAPFILE}
+
+# while read genome; do
+#     awk '{print $11}' ${genome}.out | paste ${genome}.out.gff - > ${genome}.w_class.gff
+# done < ${MAPFILE}
+
+source activate /global/scratch/users/pierrj/conda_envs/gaas
+
+export PERL5LIB=/global/scratch/users/pierrj/conda_envs/gaas/lib
+
+while read genome; do
+    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 ~ /[[:digit:]]/' > ${genome}.stats
+done < ${MAPFILE}
+
+if [ -f "genome_assembly_stats" ]; then
+    rm genome_assembly_stats
+fi
+
+while read genome; do
+    cat ${genome}.stats | tr '\n' '\t'  >> genome_assembly_stats
+    echo >> genome_assembly_stats
+done < ${MAPFILE}
