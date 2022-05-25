@@ -88,7 +88,7 @@ source activate /global/scratch/users/pierrj/conda_envs/gaas
 export PERL5LIB=/global/scratch/users/pierrj/conda_envs/gaas/lib
 
 while read genome; do
-    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 ~ /[[:digit:]]/' > ${genome}.stats
+    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome} | awk '{print $(NF-1)}' | awk '$1 ~ /[[:digit:]]/' > ${genome}.stats
 done < ${MAPFILE}
 
 if [ -f "genome_assembly_stats" ]; then
