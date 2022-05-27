@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=sv_callers_PJ_lineage_2
+#SBATCH --job-name=sv_callers_PJ_lineage_3
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -10,7 +10,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/lineage_2
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/lineage_3
 
 
 # representatives:
@@ -22,8 +22,8 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_
 # lienage 4: TN0057
 
 
-SAMPLE_LIST=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/gladieux_accessions_lineage_2
-REFERENCE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/lineage_2/BN0202.fasta # must be full path
+SAMPLE_LIST=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/gladieux_accessions_lineage_3
+REFERENCE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/lineage_3/BN0252.fasta # must be full path
 
 if [ ! -f "${REFERENCE}.amb" ]; then
     bwa index ${REFERENCE}
