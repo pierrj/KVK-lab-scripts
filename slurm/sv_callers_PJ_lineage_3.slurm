@@ -22,7 +22,7 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_
 # lienage 4: TN0057
 
 
-SAMPLE_LIST=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/gladieux_accessions_lineage_3
+SAMPLE_LIST=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/lineage_3/gladieux_accessions_lineage_3
 REFERENCE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/sv_callers_per_lineage/lineage_3/BN0252.fasta # must be full path
 
 if [ ! -f "${REFERENCE}.amb" ]; then
