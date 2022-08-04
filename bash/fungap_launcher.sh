@@ -36,3 +36,12 @@ while read genome; do
     sbatch -p savio3 --ntasks-per-node=32 --job-name=${genome}_run_fungap --export=genome=$genome /global/home/users/pierrj/git/slurm/run_fungap.slurm
     fi
 done < genomes_mapfile
+
+
+genome=GCA_002924695.1_ASM292469v1
+
+genome=GCA_905067075.2_PR003_contigs_polished
+
+genome=GCA_905109835.1_Assembly_of_M.oryzae_isolate_KE017_genome
+
+sbatch -p savio3 --ntasks-per-node=32 --job-name=${genome}_run_fungap --export=genome=$genome /global/home/users/pierrj/git/slurm/run_fungap.slurm
