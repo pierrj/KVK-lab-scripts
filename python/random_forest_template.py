@@ -29,45 +29,43 @@ print(model.score(x_train,y_train))
 print(model.score(x_test,y_test))
 
 predictions = model.predict(x_test)
-# specificity, how specific is the test? TN/TN+FP
-TN = len(predictions[predictions == 0 & np.array(y_test == 0)])
-FP = len(predictions[predictions == 1 & np.array(y_test == 0)])
 
+TP = len(predictions[(predictions == 1) & (y_test == 1)])
+FN = len(predictions[(predictions == 0) & (y_test == 1)])
+TN = len(predictions[(predictions == 0) & (y_test == 0)])
+FP = len(predictions[(predictions == 1) & (y_test == 0)])
+
+# specificity, how specific is the test? TN/TN+FP
 print('specificity')
 print(TN/(TN+FP))
 
-## if we just called everything positive
-TN = 0
-FP = len(y_test[y_test==0])
-print(TN/(TN+FP))
-
 # sensitivity, how sensitive is the test? TP/TP+FN
-TP = len(predictions[predictions == 1 & np.array(y_test == 1)])
-FN = len(predictions[predictions == 0 & np.array(y_test == 1)])
-
 print('sensitivity')
 print(TP/(TP+FN))
 
-## if we just called everything positive
-TP = len(y_test[y_test==1])
-FN = len(y_test[y_test==0])
-
-print(TP/(TP+FN))
-
-
-## PPV, how powerful is the test? TP/TP+FP
-TP = len(predictions[predictions == 1 & np.array(y_test == 1)])
-FP = len(predictions[predictions == 1 & np.array(y_test == 0)])
-
+## PPV, how powerful is a positive? TP/TP+FP
 print('PPV')
 print(TP/(TP+FP))
 
-## if we just called everything positive
-TP = len(y_test[y_test==1])
-FP = len(y_test[y_test==0])
+## NPV, how powerful is a negative? TN/TN+FN
+print('NPV')
+print(TN/(TN+FN))
 
+# if we called everything positive
+print('if we just called everything positive')
+TP = len(y_test[y_test == 1])
+FN = 0
+TN = 0
+FP = len(y_test[y_test == 0])
+
+print('specificity')
+print(TN/(TN+FP))
+print('sensitivity')
+print(TP/(TP+FN))
+print('PPV')
 print(TP/(TP+FP))
-
+# print('NPV')
+# print(TN/(TN+FN))
 
 ## default importance
 I = pd.DataFrame()
@@ -81,6 +79,6 @@ I.to_csv('default_importances.txt',sep='\t')
 I = importances(model, x_test, y_test)
 I.to_csv('permutation_importances.txt',sep='\t')
 
-# drop col importances
-I = dropcol_importances(model, x_train, y_train, x_test, y_test)
-I.to_csv('dropcol_importances.txt', sep='\t')
+# # drop col importances
+# I = dropcol_importances(model, x_train, y_train, x_test, y_test)
+# I.to_csv('dropcol_importances.txt', sep='\t')
