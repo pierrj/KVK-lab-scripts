@@ -45,3 +45,20 @@ genome=GCA_905067075.2_PR003_contigs_polished
 genome=GCA_905109835.1_Assembly_of_M.oryzae_isolate_KE017_genome
 
 sbatch -p savio3 --ntasks-per-node=32 --job-name=${genome}_run_fungap --export=genome=$genome /global/home/users/pierrj/git/slurm/run_fungap.slurm
+
+
+if [-f genomes_annotated_mapfile ]; then
+    rm genomes_annotated_mapfile
+fi
+
+while read genome; do
+    if [ -f ${genome}/fungap_out/fungap_out/fungap_out.gff3 ]; then
+        echo ${genome} >> genomes_annotated_mapfile
+    fi
+done < genomes_mapfile
+
+
+while read genome; do
+    cp ${genome}/fungap_out/fungap_out/fungap_out_prot.faa /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast/all_proteomes/${genome}_protein.fasta
+done < genomes_annotated_mapfile
+
