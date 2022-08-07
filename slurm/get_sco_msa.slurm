@@ -10,12 +10,12 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/tree_problems
+cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/tree_problems/orthofinder_tree_problems/Results_Apr29/WorkingDirectory/OrthoFinder/Results_Apr29/Single_Copy_Orthologue_Sequences
-ACCESSIONS=/global/scratch/users/pierrj/PAV_SV/PAV/tree_problems/output_accession_names
+SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast/orthofinder/Results_Aug05/WorkingDirectory/OrthoFinder/Results_Aug05/Single_Copy_Orthologue_Sequences
+ACCESSIONS=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast/output_accession_names
 
 basename=$(basename ${SCO_DIR})
 
@@ -35,7 +35,7 @@ done < sco_mapfile
 
 module purge
 
-python /global/home/users/pierrj/git/python/concatenate_msas.py ${basename}_msas ${ACCESSIONS} ${basename}_msas_combined.fasta
+/global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/concatenate_msas.py ${basename}_msas ${ACCESSIONS} ${basename}_msas_combined.fasta
 
 module load trimal
 
