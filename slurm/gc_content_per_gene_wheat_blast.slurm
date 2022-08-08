@@ -46,7 +46,7 @@ while read genome; do
     awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' /global/scratch/users/pierrj/fungap_runs/wheat_blast/${genome}/fungap_out/fungap_out/fungap_out.gff3 > $GENES_BED
 
     samtools faidx $GENOME_FASTA
-    cut -f1-2 $GENOME_FASTA > $GENOME_CHROM_SIZES
+    cut -f1-2 $GENOME_FASTA.fai > $GENOME_CHROM_SIZES
 
     bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} | awk -v OFS='\t' '{ if (NR > 1) {print $4, $5}}' > gc_content_per_gene/${genome}.gene.gc
 
