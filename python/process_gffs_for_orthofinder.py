@@ -18,7 +18,7 @@ os.mkdir(out_dir)
 for genome in genomes:
     accession = genome.split('_')[0] + genome.split('_')[1]
     print(genome)
-    in_file = join(genome, 'fungap_out','fungap_out', 'fungap_out', 'fungap_out.gff3')
+    in_file = join(genome, 'fungap_out','fungap_out', 'fungap_out.gff3')
     in_handle = open(in_file)
     out_file = join(out_dir,genome+"fungap_out.fixed.gff3")
     with open(out_file, "w") as out_handle:
