@@ -3,7 +3,7 @@ import csv
 import os
 import shutil
 import sys
-from os import join
+from os.path import join
 
 genome_list = sys.argv[1]
 
