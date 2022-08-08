@@ -36,5 +36,7 @@ done < $MAPFILE
 /global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_gffs_for_orthofinder.py $MAPFILE
 
 while read genome; do
-    grep -v "#" all_gffs_fixed/${genome}_fungap_out.fixed.gff3 | grep -v gff-version=3=true | wc -l
+    mv all_gffs_fixed/${genome}_fungap_out.fixed.gff3 all_gffs_fixed/${genome}_fungap_out.fixed.gff3.old
+    grep -v gff-version=3=true all_gffs_fixed/${genome}_fungap_out.fixed.gff3.old > all_gffs_fixed/${genome}_fungap_out.fixed.gff3
+    rm all_gffs_fixed/${genome}_fungap_out.fixed.gff3.old
 done < $MAPFILE
