@@ -33,7 +33,7 @@ while read genome; do
     sed -i '1s/^/##gff-version 3\n/' ${genome}/fungap_out/fungap_out/fungap_out.nocomments.gff3
 done < $MAPFILE
 
-/global/scratch/users/pierrj/conda_envs/orthofinder/python /global/home/users/pierrj/git/python/process_gffs_for_orthofinder.py $MAPFILE
+/global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_gffs_for_orthofinder.py $MAPFILE
 
 while read genome; do
     grep -v "#" all_gffs_fixed/${genome}_fungap_out.fixed.gff3 | grep -v gff-version=3=true | wc -l
