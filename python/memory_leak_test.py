@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 df = pd.read_csv('heart.csv')
 
+df = pd.concat([df]*1000)
 
 y = df['target']
 X = df.drop('target', axis=1)
