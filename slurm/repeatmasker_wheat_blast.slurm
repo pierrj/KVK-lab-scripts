@@ -19,7 +19,7 @@ MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_annotated_m
 module load repeatmasker/4.1.1
 
 while read genome; do
-    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}
+    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOMES_PATH}/${genome}_genomic.fna
 done < ${MAPFILE}
 
 while read genome; do
