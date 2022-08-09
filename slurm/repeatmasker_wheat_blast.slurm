@@ -23,5 +23,5 @@ while read genome; do
 done < ${MAPFILE}
 
 while read genome; do
-    awk '{print $11}' ${genome}.out | paste ${genome}.out.gff - > ${genome}.w_class.gff
+    awk '{print $11}' ${genome}_genomic.fna.out | paste ${genome}_genomic.fna.out.gff - > ${genome}.w_class.gff
 done < ${MAPFILE}
