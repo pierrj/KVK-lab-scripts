@@ -1,13 +1,8 @@
-import matplotlib.pyplot as plt
 from statistics import mean
-from matplotlib import pyplot
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import RepeatedStratifiedKFold
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.metrics import plot_confusion_matrix
+from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from imblearn.over_sampling import SMOTE
 
@@ -27,21 +22,16 @@ oversample = SMOTE()
 over_X, over_y = oversample.fit_resample(X, y)
 over_X_train, over_X_test, over_y_train, over_y_test = train_test_split(over_X, over_y, test_size=0.1, stratify=over_y)
 
-# Number of trees in random forest
-n_estimators = [int(x) for x in np.linspace(start = 100, stop = 2000, num = 10)]
-# Number of features to consider at every split
-max_features = ['auto', 'sqrt']
-# Maximum number of levels in tree
-max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
-max_depth.append(None)
-# Minimum number of samples required to split a node
-min_samples_split = [2, 5, 10]
-# Minimum number of samples required at each leaf node
-min_samples_leaf = [1, 2, 4]
-# Method of selecting samples for training each tree
-bootstrap = [True, False]
+n_estimators = [int(x) for x in np.linspace(start = 800, stop = 1200, num = 9)]
+print(n_estimators)
+max_features = ["sqrt", "log2", None]
+max_depth = [int(x) for x in np.linspace(30, 70, num = 5)]
+print(max_depth)
+min_samples_split = [2]
+min_samples_leaf = [1]
+bootstrap = [True,False]
 # Create the random grid
-random_grid = {'n_estimators': n_estimators,
+param_grid = {'n_estimators': n_estimators,
                'max_features': max_features,
                'max_depth': max_depth,
                'min_samples_split': min_samples_split,
@@ -53,7 +43,7 @@ random_grid = {'n_estimators': n_estimators,
 rf = RandomForestClassifier()
 # Random search of parameters, using 3 fold cross validation, 
 # search across 100 different combinations, and use all available cores
-rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = 16, pre_dispatch='n_jobs')
+rf_random = GridSearchCV(estimator = rf, param_distributions = param_grid, cv = 3, verbose=2, random_state=42, n_jobs = 16, pre_dispatch='n_jobs')
 # Fit the random search model
 rf_random.fit(over_X_train, over_y_train)
 
