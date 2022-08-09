@@ -27,7 +27,8 @@ for genome in genomes:
                 if feature.type != "remark":
                     try:
                         original_feature_id = feature.id[:]
-                        original_feature_id = original_feature_id.split('_')[0] + '_' + original_feature_id.split('_')[1].lstrip("0") ## remove zeroes...
+                        gene_number = str(int(original_feature_id.split('_')[1].lstrip("0"))-1)
+                        original_feature_id = original_feature_id.split('_')[0] + '_' + gene_number ## remove zeroes...
                         feature.id = original_feature_id + '_' + accession
                         feature.qualifiers['ID'] = [original_feature_id + '_' + accession]
                         feature.qualifiers['Name'] = [original_feature_id + '_' + accession]
