@@ -43,7 +43,7 @@ param_grid = {'n_estimators': n_estimators,
 rf = RandomForestClassifier()
 # Random search of parameters, using 3 fold cross validation, 
 # search across 100 different combinations, and use all available cores
-rf_random = GridSearchCV(estimator = rf, param_distributions = param_grid, cv = 3, verbose=2, random_state=42, n_jobs = 16, pre_dispatch='n_jobs')
+rf_random = GridSearchCV(estimator = rf, param_grid = param_grid, cv = 3, verbose=2, random_state=42, n_jobs = 16, pre_dispatch='n_jobs')
 # Fit the random search model
 rf_random.fit(over_X_train, over_y_train)
 
