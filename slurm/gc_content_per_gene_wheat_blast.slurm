@@ -43,7 +43,7 @@ while read genome; do
     GENOME_CHROM_SIZES=${GENOMES_PATH}/${genome}.chromsizes
     GENES_BED=all_beds/${genome}.genes.bed
 
-    awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' /global/scratch/users/pierrj/fungap_runs/wheat_blast/${genome}/fungap_out/fungap_out/fungap_out.gff3 > $GENES_BED
+    awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' /global/scratch/users/pierrj/fungap_runs/wheat_blast/all_gffs_fixed/${genome}_fungap_out.fixed.gff3 > $GENES_BED
 
     samtools faidx $GENOME_FASTA
     cut -f1-2 $GENOME_FASTA.fai > $GENOME_CHROM_SIZES
