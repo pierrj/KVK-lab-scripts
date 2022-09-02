@@ -10,19 +10,30 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-# cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast/
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
 
-# if [ ! -d "all_proteomes_corrected" ]; then
-#     mkdir all_proteomes_corrected
-# fi
+if [ ! -d "all_proteomes" ]; then
+    mkdir all_proteomes
+fi
 
-# source activate /global/scratch/users/pierrj/conda_envs/orthofinder
-# module purge
+MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
+FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/gladieux_all/
 
-# python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes \
-#     all_proteomes_corrected \
-#     gladieux_et_al_assembly_stats.txt \
-#     output_accession_names
+while read genome; do
+    cp ${FUNGAP_DIR}/${genome}/fungap_out/fungap_out/fungap_out_prot.faa all_proteomes/${genome}_fungap_out_prot.faa
+done < $MAPFILE
+
+if [ ! -d "all_proteomes_corrected" ]; then
+    mkdir all_proteomes_corrected
+fi
+
+source activate /global/scratch/users/pierrj/conda_envs/orthofinder
+module purge
+
+/global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes \
+    all_proteomes_corrected \
+    gladieux_et_al_assembly_stats.txt \
+    output_accession_names
 
 cd /global/scratch/users/pierrj/fungap_runs/wheat_blast/
 

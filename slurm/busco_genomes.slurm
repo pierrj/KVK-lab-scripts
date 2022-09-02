@@ -10,10 +10,10 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/references/moryzae_genomes_10_26_21/
+cd /global/scratch/users/pierrj/fungap_runs/wheat_blast
 
 source activate /global/scratch/users/pierrj/conda_envs/BUSCO
 
-module remove python
+export PATH=/global/scratch/users/pierrj/conda_envs/BUSCO/bin:$PATH
 
-busco -i fastas -l sordariomycetes_odb10 -o fastas_buscofied -m genome -c 24 -f
+busco -i genomes_for_busco -l sordariomycetes_odb10 -o genomes_for_busco_buscofied -m genome -c 24 -f
