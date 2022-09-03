@@ -14,8 +14,12 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-SCO_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast/orthofinder/Results_Aug05/WorkingDirectory/OrthoFinder/Results_Aug05/Single_Copy_Orthologue_Sequences
-ACCESSIONS=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast/output_accession_names
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/
+
+cd $PROJECT_DIR
+
+SCO_DIR=$PROJECT_DIR/orthofinder/Results_Sep02/WorkingDirectory/OrthoFinder/Results_Sep02/Single_Copy_Orthologue_Sequences
+ACCESSIONS=$PROJECT_DIR/output_accession_names
 
 basename=$(basename ${SCO_DIR})
 
