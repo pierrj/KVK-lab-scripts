@@ -19,7 +19,15 @@ df_genes = pd.read_csv('gene_info_w_proportions.csv')
 df_genes = df_genes[df_genes['lineage']!=4]
 
 df_genes = df_genes.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                        'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                        'genome', 'lineage', 'lineage_conserved', 'proportion',
+                        'LTR/Gypsy', 'Unknown', 'DNA',
+                        'DNA/TcMar-Fot1', 'LINE/Tad1', 'DNA/Tc-Mar',
+                        'LTR/Copia','DNA/MULE-MuDR','DNA/hAT-Ac',
+                        'DNA/CMC-EnSpm','LINE/CRE', 'DNA/Kolobok-H', 
+                        'LTR/Unknown','LTR/Pao','DNA/TcMar-Pogo',
+                        'LINE/R2-NeSL','LINE/Penelope'], axis=1)
+
+print(df_genes.columns)
 
 y = df_genes['lineage_pav']
 X = df_genes.drop('lineage_pav', axis=1)
