@@ -83,7 +83,7 @@ over_X_train, over_X_test, over_y_train, over_y_test = train_test_split(over_X, 
 SMOTE_SRF = RandomForestClassifier(n_estimators=900, # default is 100
                                 min_samples_split=2, # default is 2
                                 min_samples_leaf=1, # default is 1
-                                max_features='None', # default is sqrt
+                                max_features=None, # default is sqrt
                                 max_depth=60, # default is none
                                 bootstrap=True, # default is True...
                                 random_state=1)
