@@ -80,12 +80,12 @@ over_X, over_y = oversample.fit_resample(X, y)
 over_X_train, over_X_test, over_y_train, over_y_test = train_test_split(over_X, over_y, test_size=0.1, stratify=over_y)
 
 #Build SMOTE SRF model
-SMOTE_SRF = RandomForestClassifier(n_estimators=1000, # default is 100
+SMOTE_SRF = RandomForestClassifier(n_estimators=900, # default is 100
                                 min_samples_split=2, # default is 2
                                 min_samples_leaf=1, # default is 1
-                                max_features='sqrt', # default is sqrt
-                                max_depth=50, # default is none
-                                bootstrap=False, # default is True...
+                                max_features='None', # default is sqrt
+                                max_depth=60, # default is none
+                                bootstrap=True, # default is True...
                                 random_state=1)
 #Create Stratified K-fold cross validation
 cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
