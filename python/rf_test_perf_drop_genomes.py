@@ -48,7 +48,7 @@ SMOTE_SRF = RandomForestClassifier(n_estimators=900, # default is 100
 cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
 scoring = ('f1', 'recall', 'precision')
 #Evaluate SMOTE SRF model
-scores = cross_validate(SMOTE_SRF, over_X, over_y, scoring=scoring, cv=cv, n_jobs=16,pre_dispatch='n_jobs')
+scores = cross_validate(SMOTE_SRF, over_X, over_y, scoring=scoring, cv=cv)
 
 #Get average evaluation metrics
 print('Mean f1: %.3f' % mean(scores['test_f1']))
