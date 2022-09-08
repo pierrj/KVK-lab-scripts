@@ -10,10 +10,13 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all
+DATE=Sep08
+
+cd $PROJECT_DIR
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 module purge
 
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_w_70_15/Results_Sep02/WorkingDirectory
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder/Results_${DATE}/WorkingDirectory
