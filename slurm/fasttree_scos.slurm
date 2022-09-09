@@ -11,7 +11,8 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
-PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all
+DATE=Sep08
 
 cd $PROJECT_DIR
 
@@ -19,7 +20,7 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
 module purge
 
-SCO_DIR=$PROJECT_DIR/orthofinder/Results_Sep02/WorkingDirectory/OrthoFinder/Results_Sep02/Single_Copy_Orthologue_Sequences
+SCO_DIR=$PROJECT_DIR/orthofinder/Results_${DATE}/WorkingDirectory/OrthoFinder/Results_${DATE}/Single_Copy_Orthologue_Sequences
 basename=$(basename ${SCO_DIR})
 MSA=${basename}_msas_combined.trimmed.fasta
 
