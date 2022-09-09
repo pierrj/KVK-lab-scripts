@@ -12,11 +12,12 @@
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all
+DATE=Sep08
 
 cd $PROJECT_DIR
 
-SCO_DIR=$PROJECT_DIR/orthofinder/Results_Sep02/WorkingDirectory/OrthoFinder/Results_Sep02/Single_Copy_Orthologue_Sequences
+SCO_DIR=$PROJECT_DIR/orthofinder/Results_${DATE}/WorkingDirectory/OrthoFinder/Results_${DATE}/Single_Copy_Orthologue_Sequences
 ACCESSIONS=$PROJECT_DIR/output_accession_names
 
 basename=$(basename ${SCO_DIR})
