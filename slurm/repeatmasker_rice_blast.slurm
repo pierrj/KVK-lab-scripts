@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=repeatmasker_wheat_blast
+#SBATCH --job-name=repeatmasker_rice_blast
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -10,7 +10,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
 
 if [ ! -d "$PROJECT_DIR/repeatmasked" ] 
 then
@@ -20,8 +20,8 @@ fi
 cd $PROJECT_DIR/repeatmasked
 
 RM_LIB=/global/scratch/users/pierrj/PAV_SV/PAV/te_annotations_anne/anne_repbase_te_lib_fixed
-GENOMES_PATH=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate
-MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/wheat_blast_busco_greater_than_90
+GENOMES_PATH=/global/scratch/users/pierrj/fungap_runs/gladieux_all/genomes_to_annotate
+MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
 
 module load repeatmasker/4.1.1
 
