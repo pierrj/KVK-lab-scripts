@@ -2,14 +2,15 @@
 
 N_NODES=50
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all
+
+cd $PROJECT_DIR
 
 conda activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-# orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder | grep "diamond blastp" > jobqueue
+orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder | grep "diamond blastp" > jobqueue
 
-orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected_w_70_15 -o orthofinder_w_70_15 | grep "diamond blastp" > jobqueue
-
+# orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected_w_70_15 -o orthofinder_w_70_15 | grep "diamond blastp" > jobqueue
 
 mv jobqueue jobqueue_old
 
