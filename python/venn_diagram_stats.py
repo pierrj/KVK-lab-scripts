@@ -22,6 +22,9 @@
 
 import csv
 import numpy as np
+import sys
+
+subdir = sys.argv[1]
 
 all_samples = ['G3_1A', 'G3_1B', 'G3_1C', 'G3_2A', 'G3_2B', 'G3_2C', 'G3_3A', 'G3_3B']
 biorep_1 = ['G3_1A', 'G3_1B', 'G3_1C']
@@ -33,9 +36,9 @@ all_bioreps = [biorep_1, biorep_2, biorep_3]
 ecc_dict = {}
 
 for sample in all_samples:
-    print(sample)
+    # print(sample)
     eccs_bed = []
-    with open(sample+'.ecc_caller_out.splitreads.bed', newline = '') as file:
+    with open(subdir+'/'+sample+'.ecc_caller_out.splitreads.bed', newline = '') as file:
         file_reader = csv.reader(file, delimiter = '\t')
         for row in file_reader:
             eccs_bed.append([row[0], row[1], row[2]])
@@ -55,13 +58,13 @@ for sample in all_samples:
 list_of_lists_output = []
 
 for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
-    print('for tolerance')
-    print(tolerance)
+    # print('for tolerance')
+    # print(tolerance)
     final_dict={}
-    print('getting data for bio reps...')
+    # print('getting data for bio reps...')
     for biorep in all_bioreps:
         biorep_string = biorep[0][0:4]
-        print(biorep_string)
+        # print(biorep_string)
         final_dict[biorep_string] = []
         for i in range(56):
             samples_list = []
@@ -91,8 +94,8 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
                     unique_samples_concatenated = np.append(unique_samples_concatenated, membership_column, axis=1)
             final_dict[biorep_string].append(unique_samples_concatenated)
     ## counts for overlap between tech reps
-    print('overlaps per biorep are...')
-    print('(order is A, B, C, AB, BC, AC, ABC)')
+    # print('overlaps per biorep are...')
+    # print('(order is A, B, C, AB, BC, AC, ABC)')
     for biorep in final_dict.keys():
         A_count = 0
         B_count = 0
@@ -143,14 +146,14 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
                     AB_count += len(eccs[(eccs[:,2] == 1) & 
                                         (eccs[:,3] == 1) 
                     ])
-        print(biorep)
-        print([A_count, B_count, C_count,
-              AB_count, BC_count, AC_count,
-              ABC_count])
+        # print(biorep)
+        # print([A_count, B_count, C_count,
+        #       AB_count, BC_count, AC_count,
+        #       ABC_count])
         list_of_lists_output.append([A_count, B_count, C_count,
               AB_count, BC_count, AC_count,
               ABC_count])
-    print('now comparing all combined bioreps')
+    # print('now comparing all combined bioreps')
     bioreps_dict = {} ## now combine all techreps together and compare bioreps
     for biorep in all_bioreps:
         biorep_string = biorep[0][0:4]
@@ -165,7 +168,7 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
             else:
                 unique_samples_concatenated = samples_concatenated
             bioreps_dict[biorep_string].append(unique_samples_concatenated)
-    print('getting data for all bioreps')
+    # print('getting data for all bioreps')
     overlap_bioreps = []
     for i in range(56):
         bioreps_list = []
@@ -194,8 +197,8 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
                 membership_column = np.reshape(np.array(membership), (-1, 1))
                 unique_bioreps_concatenated = np.append(unique_bioreps_concatenated, membership_column, axis=1)
         overlap_bioreps.append(unique_bioreps_concatenated)
-    print('overlaps for all bioreps are...')
-    print('(order is A, B, C, AB, BC, AC, ABC)')
+    # print('overlaps for all bioreps are...')
+    # print('(order is A, B, C, AB, BC, AC, ABC)')
     count_1 = 0
     count_2 = 0
     count_3 = 0
@@ -244,14 +247,14 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
             AB_count += len(eccs[(eccs[:,2] == 1) & 
                                 (eccs[:,3] == 1) 
             ])
-    print('tech reps combined')
-    print([count_1, count_2, count_3,
-          count_12, count_23, count_13,
-          count_123])
+    # print('tech reps combined')
+    # print([count_1, count_2, count_3,
+    #       count_12, count_23, count_13,
+    #       count_123])
     list_of_lists_output.append([count_1, count_2, count_3,
           count_12, count_23, count_13,
           count_123])
 
-with open('venn_diagram_stats_out.tsv', 'w', newline = '') as out_file:
+with open(subdir+'/'+'venn_diagram_stats_out.tsv', 'w', newline = '') as out_file:
     w = csv.writer(out_file, delimiter = '\t')
     w.writerows(list_of_lists_output)
