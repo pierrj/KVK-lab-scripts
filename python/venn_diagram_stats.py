@@ -57,7 +57,7 @@ for sample in all_samples:
 
 list_of_lists_output = []
 
-for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
+for tolerance in [0, 10, 50, 100, 250, 500, 1000]: ## check different tolerances
     # print('for tolerance')
     # print(tolerance)
     final_dict={}
@@ -69,7 +69,8 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
         for i in range(56):
             samples_list = []
             for sample in biorep:
-                samples_list.append(ecc_dict[sample][i])
+                if ecc_dict[sample][i].size != 0:
+                    samples_list.append(ecc_dict[sample][i])
             samples_concatenated = np.concatenate((samples_list), axis=0) ## concatenate all eccs in all tech reps
             if samples_concatenated.size != 0:
                 unique_samples_concatenated = np.unique(samples_concatenated, axis=0)
@@ -150,7 +151,7 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
         # print([A_count, B_count, C_count,
         #       AB_count, BC_count, AC_count,
         #       ABC_count])
-        list_of_lists_output.append([A_count, B_count, C_count,
+        list_of_lists_output.append([tolerance, biorep, A_count, B_count, C_count,
               AB_count, BC_count, AC_count,
               ABC_count])
     # print('now comparing all combined bioreps')
@@ -251,7 +252,7 @@ for tolerance in [0, 10, 100, 1000, 10000]: ## check different tolerances
     # print([count_1, count_2, count_3,
     #       count_12, count_23, count_13,
     #       count_123])
-    list_of_lists_output.append([count_1, count_2, count_3,
+    list_of_lists_output.append([tolerance, 'all', count_1, count_2, count_3,
           count_12, count_23, count_13,
           count_123])
 

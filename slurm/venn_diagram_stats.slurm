@@ -33,28 +33,27 @@
 
 cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/overlaps
 
-# python /global/home/users/pierrj/git/python/venn_diagram_stats.py .
+if [ -f "jobqueue" ]; then
+    rm jobqueue
+fi
 
-# while read sample; do
-#     sort ${sample}.ecc_caller_out.splitreads.bed | uniq > ${sample}.ecc_caller_out.splitreads.bed.uniq
-# done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+echo "python /global/home/users/pierrj/git/python/venn_diagram_stats.py ." >> jobque
 
+while read sample; do
+    sort ${sample}.ecc_caller_out.splitreads.bed | uniq > ${sample}.ecc_caller_out.splitreads.bed.uniq
+done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-# if [ -f "jobqueue" ]; then
-#     rm jobqueue
-# fi
-
-# for i in $(seq 1 100); do
-#     echo $i
-#     if [ -d "shuffled_${i}" ]; then
-#         rm -r shuffled_${i}
-#     fi
-#     mkdir shuffled_${i}
-#     while read sample; do
-#         bedtools shuffle -i ${sample}.ecc_caller_out.splitreads.bed.uniq \
-#             -g /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes > shuffled_${i}/${sample}.ecc_caller_out.splitreads.bed
-#     done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
-#     echo "python /global/home/users/pierrj/git/python/venn_diagram_stats.py shuffled_${i}" >> jobqueue
-# done
+for i in $(seq 1 40); do
+    echo $i
+    if [ -d "shuffled_${i}" ]; then
+        rm -r shuffled_${i}
+    fi
+    mkdir shuffled_${i}
+    while read sample; do
+        bedtools shuffle -i ${sample}.ecc_caller_out.splitreads.bed.uniq \
+            -g /global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes > shuffled_${i}/${sample}.ecc_caller_out.splitreads.bed
+    done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
+    echo "python /global/home/users/pierrj/git/python/venn_diagram_stats.py shuffled_${i}" >> jobqueue
+done
 
 parallel -j ${SLURM_NTASKS} < jobqueue
