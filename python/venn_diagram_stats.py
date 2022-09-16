@@ -71,7 +71,8 @@ for tolerance in [0, 10, 50, 100, 250, 500, 1000]: ## check different tolerances
             for sample in biorep:
                 if ecc_dict[sample][i].size != 0:
                     samples_list.append(ecc_dict[sample][i])
-            samples_concatenated = np.concatenate((samples_list), axis=0) ## concatenate all eccs in all tech reps
+            if len(samples_list) != 0:
+                samples_concatenated = np.concatenate((samples_list), axis=0) ## concatenate all eccs in all tech reps
             if samples_concatenated.size != 0:
                 unique_samples_concatenated = np.unique(samples_concatenated, axis=0)
             else:
@@ -80,19 +81,20 @@ for tolerance in [0, 10, 50, 100, 250, 500, 1000]: ## check different tolerances
                 for sample in biorep:
                     sample_eccs = ecc_dict[sample][i]
                     membership = []
-                    for ecc in unique_samples_concatenated: # loop through all eccs
-                        # check to see if any ecc overlaps in that tech rep
-                        if np.size(
-                        sample_eccs[np.logical_and(
-                            np.isclose(sample_eccs[:,0], ecc[0], atol=tolerance, rtol=0),
-                            np.isclose(sample_eccs[:,1], ecc[1], atol=tolerance, rtol=0)
-                        )] ## add isclose or just == here, depending on the level of tolerance
-                        ) != 0:
-                            membership.append(1)
-                        else:
-                            membership.append(0)
-                    membership_column = np.reshape(np.array(membership), (-1, 1))
-                    unique_samples_concatenated = np.append(unique_samples_concatenated, membership_column, axis=1)
+                    if sample_eccs.size != 0:
+                        for ecc in unique_samples_concatenated: # loop through all eccs
+                            # check to see if any ecc overlaps in that tech rep
+                            if np.size(
+                            sample_eccs[np.logical_and(
+                                np.isclose(sample_eccs[:,0], ecc[0], atol=tolerance, rtol=0),
+                                np.isclose(sample_eccs[:,1], ecc[1], atol=tolerance, rtol=0)
+                            )] ## add isclose or just == here, depending on the level of tolerance
+                            ) != 0:
+                                membership.append(1)
+                            else:
+                                membership.append(0)
+                        membership_column = np.reshape(np.array(membership), (-1, 1))
+                        unique_samples_concatenated = np.append(unique_samples_concatenated, membership_column, axis=1)
             final_dict[biorep_string].append(unique_samples_concatenated)
     ## counts for overlap between tech reps
     # print('overlaps per biorep are...')
