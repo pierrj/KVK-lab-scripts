@@ -43,7 +43,7 @@ while read sample; do
     sort ${sample}.ecc_caller_out.splitreads.bed | uniq > ${sample}.ecc_caller_out.splitreads.bed.uniq
 done < /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
-for i in $(seq 1 40); do
+for i in $(seq 2 ${SLURM_NTASKS}); do
     echo $i
     if [ -d "shuffled_${i}" ]; then
         rm -r shuffled_${i}
