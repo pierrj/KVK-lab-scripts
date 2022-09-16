@@ -57,4 +57,4 @@ cd /global/scratch/users/pierrj/eccDNA/rerunning_stuff_final/pipeline_qc/overlap
 #     echo "python /global/home/users/pierrj/git/python/venn_diagram_stats.py shuffled_${i}" >> jobqueue
 # done
 
-parallel -j ${SLURM_NTASKS}
+parallel -j ${SLURM_NTASKS} < jobqueue
