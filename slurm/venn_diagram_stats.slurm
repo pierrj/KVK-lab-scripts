@@ -37,7 +37,7 @@ if [ -f "jobqueue" ]; then
     rm jobqueue
 fi
 
-echo "python /global/home/users/pierrj/git/python/venn_diagram_stats.py ." >> jobque
+echo "python /global/home/users/pierrj/git/python/venn_diagram_stats.py ." >> jobqueue
 
 while read sample; do
     sort ${sample}.ecc_caller_out.splitreads.bed | uniq > ${sample}.ecc_caller_out.splitreads.bed.uniq
