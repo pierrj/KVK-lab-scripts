@@ -54,9 +54,31 @@ reads_2=SRR6315399.sra_2.fastq
 # rm -r test_human/peak_files
 # rm test_human/*
 
-params=peaks_10000
+# params=peaks_10000
 
-python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -d 10000 -o test_human >& run.test_human.${params}.out
+# python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -d 10000 -o test_human >& run.test_human.${params}.out
+
+# cp test_human/ecc.sr.csv test_params/${params}.csv
+
+# rm test_human/ecc.sr.bam
+# rm test_human/ecc.sr.bam.bed
+# rm -r test_human/peak_files
+# rm test_human/*
+
+# params=length_0
+
+# python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 -o test_human >& run.test_human.${params}.out
+
+# cp test_human/ecc.sr.csv test_params/${params}.csv
+
+# rm test_human/ecc.sr.bam
+# rm test_human/ecc.sr.bam.bed
+# rm -r test_human/peak_files
+# rm test_human/*
+
+params=length_0_reads_0
+
+python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 --min-read 0 -o test_human >& run.test_human.${params}.out
 
 cp test_human/ecc.sr.csv test_params/${params}.csv
 
@@ -65,9 +87,9 @@ rm test_human/ecc.sr.bam.bed
 rm -r test_human/peak_files
 rm test_human/*
 
-params=length_0
+params=length_0_reads_0_pvalue_1
 
-python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 -o test_human >& run.test_human.${params}.out
+python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 --min-read 0 -p 1.0 -o test_human >& run.test_human.${params}.out
 
 cp test_human/ecc.sr.csv test_params/${params}.csv
 
