@@ -36,15 +36,15 @@
 #     sbatch --job-name=$sample.ecc_finder --export=sample=$sample /global/home/users/pierrj/git/slurm/ecc_finder.slurm
 # done < /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile
 
-WORKING_DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${SAMPLE}/ecc_finder_${SAMPLE}
+DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${SAMPLE}/ecc_finder_${SAMPLE}
 
-if [ -d "$WORKING_DIR" ]; then
-    rm -r $WORKING_DIR
+if [ -d "$DIR" ]; then
+    rm -r $DIR
 fi
 
-mkdir $WORKING_DIR
+mkdir $DIR
 
-cd $WORKING_DIR
+cd $DIR
 
 mkdir align_files
 
