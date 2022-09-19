@@ -36,7 +36,7 @@
 #     sbatch --job-name=$sample.ecc_finder --export=sample=$sample /global/home/users/pierrj/git/slurm/ecc_finder.slurm
 # done < /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile
 
-DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${SAMPLE}/ecc_finder_${SAMPLE}
+DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/ecc_finder_${sample}
 
 if [ -d "$DIR" ]; then
     rm -r $DIR
@@ -56,8 +56,8 @@ source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
 
 module purge
 
-fastp --thread ${SLURM_NTASKS} -i /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${SAMPLE}/${SAMPLE}.sra_1.fastq \
-            -I /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${SAMPLE}/${SAMPLE}.sra_2.fastq \
+fastp --thread ${SLURM_NTASKS} -i /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
+            -I /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq \
             -o ecc.sr.R1.fastq.gz \
             -O ecc.sr.R2.fastq.gz \
             -h ecc.sr.html
