@@ -166,8 +166,10 @@ for tolerance in [0, 10, 50, 100, 250, 500, 1000]: ## check different tolerances
         for i in range(56):
             samples_list = []
             for sample in biorep:
-                samples_list.append(ecc_dict[sample][i])
-            samples_concatenated = np.concatenate((samples_list), axis=0) ## concatenate
+                if ecc_dict[sample][i].size != 0:
+                    samples_list.append(ecc_dict[sample][i])
+            if len(samples_list) != 0:
+                samples_concatenated = np.concatenate((samples_list), axis=0) ## concatenate
             if samples_concatenated.size != 0:
                 unique_samples_concatenated = np.unique(samples_concatenated, axis=0)
             else:
