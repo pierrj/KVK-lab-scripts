@@ -40,4 +40,4 @@ table_master['shuffled_mean'] = table_master[rep_columns].mean(axis=1)
 table_master['shuffled_std'] = table_master[rep_columns].std(axis=1)
 table_master.drop(columns=rep_columns)
 
-pd.write_csv(table_master, 'venn_diagram_stats_out.shuffled_all.tsv', sep='\t')
+pd.to_csv(table_master, 'venn_diagram_stats_out.shuffled_all.tsv', sep='\t')
