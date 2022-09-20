@@ -22,7 +22,7 @@
 
 import pandas as pd
 
-table_master = pd.read_csv('shuffled_'+str(i)+'/venn_diagram_stats_out.tsv',sep='\t',header=None)
+table_master = pd.read_csv('shuffled_1/venn_diagram_stats_out.tsv',sep='\t',header=None)
 table_master.columns = ['overlap', 'biorep', 'rep1','rep2', 'rep3','rep1+2','rep2+3','rep1+3','rep1+2+3']
 table_master.drop(columns=['rep1','rep2', 'rep3','rep1+2','rep2+3','rep1+3','rep1+2+3'])
 
