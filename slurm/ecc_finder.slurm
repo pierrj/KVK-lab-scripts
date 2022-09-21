@@ -66,5 +66,11 @@ bwa mem -t ${SLURM_NTASKS} ${genome_bwa} \
             ecc.sr.R1.fastq.gz \
             ecc.sr.R2.fastq.gz > ecc.sr.sam 2> ecc.sr.sam.log
 
+samtools sort -@ ${SLURM_NTASKS} -n -o ecc.sr.bam ecc.sr.sam
+
+rm ecc.sr.sam
+
+touch ecc.sr.sam
+
 ## transfer to Persephone then run ecc_finder there since it doesn't work on cluster
 # python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 --min-read 0 -p 1.0 -o test_human >& run.test_human.${params}.out

@@ -57,3 +57,8 @@ for i in $(seq 1 100); do
 done
 
 parallel -j ${SLURM_NTASKS} < jobqueue
+
+cp venn_diagram_stats_out.tsv venn_diagram_stats_out.observed.tsv 
+
+## take average and stdev of all shuffled together
+python /global/home/users/pierrj/git/python/parse_venn_diagram_stats.py
