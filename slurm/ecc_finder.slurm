@@ -56,11 +56,18 @@ source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
 
 module purge
 
-fastp --thread ${SLURM_NTASKS} -i /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
-            -I /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq \
-            -o ecc.sr.R1.fastq.gz \
-            -O ecc.sr.R2.fastq.gz \
-            -h ecc.sr.html
+cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
+    --nextseq-trim=20 -o ecc.sr.R1.fastq.gz \
+    -p ecc.sr.R2.fastq.gz \
+    /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
+    /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq
+
+
+# fastp --thread ${SLURM_NTASKS} -i /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
+#             -I /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq \
+#             -o ecc.sr.R1.fastq.gz \
+#             -O ecc.sr.R2.fastq.gz \
+#             -h ecc.sr.html
 
 bwa mem -t ${SLURM_NTASKS} ${genome_bwa} \
             ecc.sr.R1.fastq.gz \
@@ -72,5 +79,5 @@ rm ecc.sr.sam
 
 touch ecc.sr.sam
 
-## transfer to Persephone then run ecc_finder there since it doesn't work on cluster
+## transfer to Mac pro then run ecc_finder there since it doesn't work on cluster
 # python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 --min-read 0 -p 1.0 -o test_human >& run.test_human.${params}.out
