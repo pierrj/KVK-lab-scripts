@@ -52,7 +52,7 @@
 
 # genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
 
-conda activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
+source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
 
 module purge
 
