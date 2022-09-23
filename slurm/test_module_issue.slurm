@@ -10,8 +10,8 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
+# source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
 
 module load python
 
-module purge
+# module purge
