@@ -59,7 +59,7 @@ source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
 
 module purge
 
-cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
+cutadapt -j ${SLURM_NTASKS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
     --nextseq-trim=20 -o ecc.sr.R1.fastq.gz \
     -p ecc.sr.R2.fastq.gz \
     /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
