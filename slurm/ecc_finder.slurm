@@ -36,48 +36,48 @@
 #     sbatch --job-name=$sample.ecc_finder --export=sample=$sample /global/home/users/pierrj/git/slurm/ecc_finder.slurm
 # done < /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile
 
-DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/ecc_finder_${sample}
+# DIR=/global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/ecc_finder_${sample}
 
-if [ -d "$DIR" ]; then
-    rm -r $DIR
-fi
+# if [ -d "$DIR" ]; then
+#     rm -r $DIR
+# fi
 
-mkdir $DIR
+# mkdir $DIR
 
-cd $DIR
+# cd $DIR
 
-mkdir align_files
+# mkdir align_files
 
-cd align_files
+# cd align_files
 
-genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
+# genome_bwa="/global/scratch/users/pierrj/eccDNA/2018_moller/references/GRCh37.p13_bwa"
 
 conda activate /global/scratch/users/pierrj/conda_envs/ecc_finder_pre_steps
 
 module purge
 
-cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
-    --nextseq-trim=20 -o ecc.sr.R1.fastq.gz \
-    -p ecc.sr.R2.fastq.gz \
-    /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
-    /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq
+# cutadapt -j ${THREADS} -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
+#     --nextseq-trim=20 -o ecc.sr.R1.fastq.gz \
+#     -p ecc.sr.R2.fastq.gz \
+#     /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
+#     /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq
 
 
-# fastp --thread ${SLURM_NTASKS} -i /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
-#             -I /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq \
-#             -o ecc.sr.R1.fastq.gz \
-#             -O ecc.sr.R2.fastq.gz \
-#             -h ecc.sr.html
+# # fastp --thread ${SLURM_NTASKS} -i /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_1.fastq \
+# #             -I /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/${sample}.sra_2.fastq \
+# #             -o ecc.sr.R1.fastq.gz \
+# #             -O ecc.sr.R2.fastq.gz \
+# #             -h ecc.sr.html
 
-bwa mem -t ${SLURM_NTASKS} ${genome_bwa} \
-            ecc.sr.R1.fastq.gz \
-            ecc.sr.R2.fastq.gz > ecc.sr.sam 2> ecc.sr.sam.log
+# bwa mem -t ${SLURM_NTASKS} ${genome_bwa} \
+#             ecc.sr.R1.fastq.gz \
+#             ecc.sr.R2.fastq.gz > ecc.sr.sam 2> ecc.sr.sam.log
 
-samtools sort -@ ${SLURM_NTASKS} -n -o ecc.sr.bam ecc.sr.sam
+# samtools sort -@ ${SLURM_NTASKS} -n -o ecc.sr.bam ecc.sr.sam
 
-rm ecc.sr.sam
+# rm ecc.sr.sam
 
-touch ecc.sr.sam
+# touch ecc.sr.sam
 
 ## transfer to Mac pro then run ecc_finder there since it doesn't work on cluster
 # python ecc_finder.py map-sr ${genome} ${reads_1} ${reads_2} -r ${genome} -t 40 -l 0 --min-read 0 -p 1.0 -o test_human >& run.test_human.${params}.out
