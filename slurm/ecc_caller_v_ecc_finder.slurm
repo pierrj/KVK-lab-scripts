@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #SBATCH --job-name=ecc_caller_v_ecc_finder
 #SBATCH --partition=savio2
