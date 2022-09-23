@@ -43,8 +43,8 @@ cd ${sample}
 /global/home/users/pierrj/git/bash/ecc_caller_mapq0_nomatchlength.sh -m ${mapfile} \
     -s ${sample} \
     -t ${SLURM_NTASKS} \
-    -b uniq.filtered.sorted.${sample}.bam \
-    -q multimapped.filtered.name_sorted.${sample}.bam
+    -b /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/uniq.filtered.sorted.${sample}.bam \
+    -q /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/${sample}/multimapped.filtered.name_sorted.${sample}.bam
 
 # call confidence
 /global/home/users/pierrj/git/bash/assign_confidence_nodb_nomerge.sh -m ${mapfile} \
