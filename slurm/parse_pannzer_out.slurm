@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ecc_finder
+#SBATCH --job-name=parse_pannzer_out
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -31,23 +31,11 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-## LAUNCH JOB WITH
-# while read sample; do 
-#     sbatch --job-name=$sample.ecc_finder --export=sample=$sample /global/home/users/pierrj/git/slurm/ecc_finder.slurm
-# done < /global/scratch/users/pierrj/eccDNA/2018_moller/full_run/mapfile
+cd /global/scratch/users/pierrj/references/
 
+PANNZER_INPUT=/global/scratch/users/pierrj/references/pannzer_output_fungap_guy11_12_28_20.txt
+SCORE_CUTOFF=0.6
 
-sample=G3_1A
-genome=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
-reads_1=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R1.fastq
-reads_2=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R2.fastq
+python /global/home/users/pierrj/git/python/parse_pannzer_output.py ${PANNZER_INPUT} ${SCORE_CUTOFF} G3.filtered.GO.txt
 
-cd /global/scratch/users/pierrj/ecc_finder
-
-source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_mine
-
-python ecc_finder.py map-sr ${genome} \
-            ${reads_1} \
-            ${reads_2} \
-            -r ${genome} \
-            -t ${SLURM_NTASKS} -o ecc_finder_${sample}
+awk -v OFS='\t' '{print $0}' G3.filtered.GO.txt > G3.filtered.GO.awk.txt
