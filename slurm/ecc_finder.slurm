@@ -46,6 +46,8 @@ cd /global/scratch/users/pierrj/ecc_finder
 
 source activate /global/scratch/users/pierrj/conda_envs/ecc_finder_mine
 
+export PATH=/global/scratch/users/pierrj/conda_envs/ecc_finder_mine/bin:$PATH
+
 python ecc_finder.py map-sr ${genome} \
             ${reads_1} \
             ${reads_2} \
