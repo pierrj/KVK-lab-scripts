@@ -10,13 +10,19 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/predicted_effectors
 
 PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes/
 MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
 
 module load seqtk
 
-while read genome; do
-    /global/home/users/pierrj/git/bash/effector_predictor.sh -i ${PROTEOMES_PATH}/${genome}/${genome}_fungap_out_prot.faa -o ${genome}
-done < $MAPFILE
+if [ -f "jobqueue" ]; then
+    rm jobqueue
+fi
+
+while read proteome; do
+    echo /global/home/users/pierrj/git/bash/effector_predictor.sh -i ${PROTEOMES_PATH}/${proteome}_fungap_out_prot.faa -o ${proteome}.effectors_pred >> jobqueue
+done < ${MAPFILE}
+
+parallel -j ${SLURM_NTASKS} < jobqueue
