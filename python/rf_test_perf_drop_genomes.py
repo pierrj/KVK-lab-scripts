@@ -10,6 +10,7 @@ from sklearn.metrics import plot_confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 from imblearn.over_sampling import SMOTE
 import sys
+import pickle
 
 input_table = sys.argv[1]
 output_string = sys.argv[2]
@@ -88,23 +89,27 @@ print(TP/(TP+FP))
 print('NPV')
 print(TN/(TN+FN))
 
-for genome in genome_test_subset:
-    df_genes_test_subset_per_genome = df_genes_test_subset[df_genes_test_subset['genome'] == genome]
-    df_genes_test_subset_per_genome = df_genes_test_subset_per_genome.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
-    truths = df_genes_test_subset_per_genome['lineage_pav']
-    genome_X_test = df_genes_test_subset_per_genome.drop('lineage_pav', axis=1)
-    preds = SMOTE_SRF.predict(genome_X_test)
-    TP = len(preds[(preds == 1) & (truths == 1)])
-    FN = len(preds[(preds == 0) & (truths == 1)])
-    TN = len(preds[(preds == 0) & (truths == 0)])
-    FP = len(preds[(preds == 1) & (truths == 0)])
-    print(genome)
-    print('specificity')
-    print(TN/(TN+FP))
-    print('sensitivity')
-    print(TP/(TP+FN))
-    print('PPV')
-    print(TP/(TP+FP))
-    print('NPV')
-    print(TN/(TN+FN))
+pickle.dump(SMOTE_SRF, open(output_string + ".rf_model.pkl", "wb"))
+
+print(genome_test_subset)
+
+# for genome in genome_test_subset:
+#     df_genes_test_subset_per_genome = df_genes_test_subset[df_genes_test_subset['genome'] == genome]
+#     df_genes_test_subset_per_genome = df_genes_test_subset_per_genome.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
+#                             'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+#     truths = df_genes_test_subset_per_genome['lineage_pav']
+#     genome_X_test = df_genes_test_subset_per_genome.drop('lineage_pav', axis=1)
+#     preds = SMOTE_SRF.predict(genome_X_test)
+#     TP = len(preds[(preds == 1) & (truths == 1)])
+#     FN = len(preds[(preds == 0) & (truths == 1)])
+#     TN = len(preds[(preds == 0) & (truths == 0)])
+#     FP = len(preds[(preds == 1) & (truths == 0)])
+#     print(genome)
+#     print('specificity')
+#     print(TN/(TN+FP))
+#     print('sensitivity')
+#     print(TP/(TP+FN))
+#     print('PPV')
+#     print(TP/(TP+FP))
+#     print('NPV')
+#     print(TN/(TN+FN))
