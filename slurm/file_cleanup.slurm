@@ -14,12 +14,12 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
 
 rm -r predicted_effectors
 
-rm -r *.effectorpout
-rm -r *.notm.faa
-rm -r *.notm.names
-rm -r *.notm.sp.faa
-rm -r *.predicted_effectors
-rm -r *.signalpout.short
-rm -r *.sp.names
-rm -r *.tmhmmout
+rm *.effectorpout
+rm *.notm.faa
+rm *.notm.names
+rm *.notm.sp.faa
+rm *.predicted_effectors
+rm *.signalpout.short
+rm *.sp.names
+rm *.tmhmmout
 rm -r TMHMM_*
