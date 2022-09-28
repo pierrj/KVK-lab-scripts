@@ -10,16 +10,19 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
+cd /global/home/users/pierrj/foldseek/mg8_proteome_tests
 
-rm -r predicted_effectors
+rm -r structures
 
-rm *.effectorpout
-rm *.notm.faa
-rm *.notm.names
-rm *.notm.sp.faa
-rm *.predicted_effectors
-rm *.signalpout.short
-rm *.sp.names
-rm *.tmhmmout
-rm -r TMHMM_*
+cd structures
+
+mv ../proteome-tax_id-242507-0_v3.tar .
+mv ../proteome-tax_id-242507-1_v3.tar .
+
+tar -xvf proteome-tax_id-242507-0_v3.tar
+tar -xvf proteome-tax_id-242507-1_v3.tar
+
+rm *.json.gz
+
+mv proteome-tax_id-242507-0_v3.tar ../
+mv proteome-tax_id-242507-1_v3.tar ../
