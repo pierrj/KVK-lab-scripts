@@ -10,19 +10,26 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/home/users/pierrj/foldseek/mg8_proteome_tests
+rm -r /global/scratch/users/pierrj/foldseek/mg8_proteome_tests
+rm -r /global/home/users/pierrj/foldseek/mg8_proteome_tests
 
-rm -r structures
+cd /global/scratch/users/pierrj/foldseek/
+
+mkdir mg8_proteome_tests
+
+cd mg8_proteome_tests
+
+mkdir structures
 
 cd structures
 
-mv ../proteome-tax_id-242507-0_v3.tar .
-mv ../proteome-tax_id-242507-1_v3.tar .
+cp /global/scratch/users/pierrj/foldseek/proteome-tax_id-242507-0_v3.tar .
+cp /global/scratch/users/pierrj/foldseek/proteome-tax_id-242507-1_v3.tar .
 
 tar -xvf proteome-tax_id-242507-0_v3.tar
 tar -xvf proteome-tax_id-242507-1_v3.tar
 
 rm *.json.gz
 
-mv proteome-tax_id-242507-0_v3.tar ../
-mv proteome-tax_id-242507-1_v3.tar ../
+rm proteome-tax_id-242507-0_v3.tar
+rm proteome-tax_id-242507-1_v3.tar
