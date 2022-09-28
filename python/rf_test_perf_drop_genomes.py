@@ -35,13 +35,22 @@ df_genes = df_genes.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orth
                         'LTR/Unknown','LTR/Pao','DNA/TcMar-Pogo',
                         'LINE/R2-NeSL','LINE/Penelope'], axis=1)
 
+df_genes_test_subset = df_genes_test_subset.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
+                        'genome', 'lineage', 'lineage_conserved', 'proportion',
+                        'LTR/Gypsy', 'Unknown', 'DNA',
+                        'DNA/TcMar-Fot1', 'LINE/Tad1', 'DNA/Tc-Mar',
+                        'LTR/Copia','DNA/MULE-MuDR','DNA/hAT-Ac',
+                        'DNA/CMC-EnSpm','LINE/CRE', 'DNA/Kolobok-H', 
+                        'LTR/Unknown','LTR/Pao','DNA/TcMar-Pogo',
+                        'LINE/R2-NeSL','LINE/Penelope'], axis=1)
+
 y = df_genes['lineage_pav']
 X = df_genes.drop('lineage_pav', axis=1)
 
 #Use SMOTE to oversample the minority class
 oversample = SMOTE()
 over_X, over_y = oversample.fit_resample(X, y)
-over_X_train, over_X_test, over_y_train, over_y_test = train_test_split(over_X, over_y, test_size=0.1, stratify=over_y)
+# over_X_train, over_X_test, over_y_train, over_y_test = train_test_split(over_X, over_y, test_size=0.01, stratify=over_y)
 
 #Build SMOTE SRF model
 SMOTE_SRF = RandomForestClassifier(random_state=0)
@@ -56,11 +65,11 @@ print('Mean f1: %.3f' % mean(scores['test_f1']))
 print('Mean recall: %.3f' % mean(scores['test_recall']))
 print('Mean precision: %.3f' % mean(scores['test_precision']))
 
-#Randomly spilt dataset to test and train set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, stratify=y)
 #Train SMOTE SRF
-SMOTE_SRF.fit(over_X_train, over_y_train)
-#SMOTE SRF prediction result
+SMOTE_SRF.fit(over_X, over_y)
+
+y_test = df_genes_test_subset['lineage_pav']
+X_test = df_genes_test_subset.drop('lineage_pav', axis=1)
 y_pred = SMOTE_SRF.predict(X_test)
 
 fig = plot_confusion_matrix(SMOTE_SRF, X_test, y_test, display_labels=['Will not be lost', 'Will be lost'], cmap='Greens')

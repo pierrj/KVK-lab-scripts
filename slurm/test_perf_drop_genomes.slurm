@@ -16,4 +16,4 @@ module purge
 
 source activate /global/scratch/users/pierrj/conda_envs/random_forest/
 
-/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_test_perf_drop_genomes.py gene_info_w_proportions.csv test_perf_drop_genomes
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_test_perf_drop_genomes.py gene_info_w_proportions.csv test_perf_drop_genomes_reworked
