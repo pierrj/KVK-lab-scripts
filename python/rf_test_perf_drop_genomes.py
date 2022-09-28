@@ -27,7 +27,13 @@ df_genes = df_genes[~df_genes.genome.isin(genome_test_subset)]
 
 # drop columns
 df_genes = df_genes.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                        'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                        'genome', 'lineage', 'lineage_conserved', 'proportion',
+                        'LTR/Gypsy', 'Unknown', 'DNA',
+                        'DNA/TcMar-Fot1', 'LINE/Tad1', 'DNA/Tc-Mar',
+                        'LTR/Copia','DNA/MULE-MuDR','DNA/hAT-Ac',
+                        'DNA/CMC-EnSpm','LINE/CRE', 'DNA/Kolobok-H', 
+                        'LTR/Unknown','LTR/Pao','DNA/TcMar-Pogo',
+                        'LINE/R2-NeSL','LINE/Penelope', 'host'], axis=1)
 
 y = df_genes['lineage_pav']
 X = df_genes.drop('lineage_pav', axis=1)
@@ -38,13 +44,7 @@ over_X, over_y = oversample.fit_resample(X, y)
 over_X_train, over_X_test, over_y_train, over_y_test = train_test_split(over_X, over_y, test_size=0.1, stratify=over_y)
 
 #Build SMOTE SRF model
-SMOTE_SRF = RandomForestClassifier(n_estimators=900, # default is 100
-                                min_samples_split=2, # default is 2
-                                min_samples_leaf=1, # default is 1
-                                max_features=None, # default is sqrt
-                                max_depth=60, # default is none
-                                bootstrap=True, # default is True...
-                                random_state=1)
+SMOTE_SRF = RandomForestClassifier(random_state=0)
 #Create Stratified K-fold cross validation
 cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
 scoring = ('f1', 'recall', 'precision')
