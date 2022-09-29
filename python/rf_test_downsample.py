@@ -67,6 +67,8 @@ column_names = ["majority_fraction", "replicate", "recall", "precision", "ap", "
 df_srf = pd.DataFrame(columns = column_names)
 df_brfc = pd.DataFrame(columns = column_names)
 df_smotesrf = pd.DataFrame(columns = column_names)
+df_srf_balanced = pd.DataFrame(columns = column_names)
+df_srf_balanced_subsample = pd.DataFrame(columns = column_names)
 
 reps = 3
 fractions = [0.05, 0.1, 0.25,0.5,0.75,1.0]
@@ -74,13 +76,13 @@ fractions = [0.05, 0.1, 0.25,0.5,0.75,1.0]
 for majority_fraction in fractions:
     for replicate in range(reps):
         y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
-        SRF = RandomForestClassifier(random_state=0)
+        SRF = RandomForestClassifier()
         SRF.fit(X_train, y_train)
         row = reports_short(SRF, X_test, y_test, majority_fraction, replicate)
         df_srf.loc[len(df_srf.index)] = row
     for replicate in range(reps):
         y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
-        BRFC = BalancedRandomForestClassifier(random_state=0)
+        BRFC = BalancedRandomForestClassifier()
         BRFC.fit(X_train, y_train)
         row = reports_short(BRFC, X_test, y_test, majority_fraction, replicate)
         df_brfc.loc[len(df_brfc.index)] = row
@@ -88,11 +90,25 @@ for majority_fraction in fractions:
         y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
         oversample = SMOTE()
         over_X_train, over_y_train = oversample.fit_resample(X_train, y_train)
-        SMOTE_SRF = RandomForestClassifier(random_state=0)
+        SMOTE_SRF = RandomForestClassifier()
         SMOTE_SRF.fit(over_X_train, over_y_train)
         row = reports_short(SMOTE_SRF, X_test, y_test, majority_fraction, replicate)
         df_smotesrf.loc[len(df_smotesrf.index)] = row
+    for replicate in range(reps):
+        y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
+        SRF_balanced = RandomForestClassifier(class_weight="balanced")
+        SRF_balanced.fit(X_train, y_train)
+        row = reports_short(SRF_balanced, X_test, y_test, majority_fraction, replicate)
+        df_srf_balanced.loc[len(df_srf_balanced.index)] = row
+    for replicate in range(reps):
+        y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
+        SRF_balanced_subsample = RandomForestClassifier(class_weight="balanced_subsample")
+        SRF_balanced_subsample.fit(X_train, y_train)
+        row = reports_short(SRF_balanced_subsample, X_test, y_test, majority_fraction, replicate)
+        df_srf_balanced_subsample.loc[len(df_srf_balanced_subsample.index)] = row
 
 df_srf.to_csv('srf_downsample_test.csv')
 df_brfc.to_csv('brfc_downsample_test.csv')
 df_smotesrf.to_csv('smotesrf_downsample_test.csv')
+df_srf_balanced.to_csv('srf_balanced_downsample_test.csv')
+df_srf_balanced_subsample.to_csv('srf_balanced_subsample_downsample_test.csv')
