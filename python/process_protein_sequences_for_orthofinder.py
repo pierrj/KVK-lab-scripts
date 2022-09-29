@@ -47,6 +47,8 @@ for seq in seq_list:
         accession = 'FJ2003_masked_ncbi'
     elif seq == 'FJ2003_unmasked_ncbi_fungap_out_prot.faa' :
         accession = 'FJ2003_unmasked_ncbi'
+    elif seq == "guy11_fungap_out_12_28_20_prot.faa":
+        accession = "GUY11"
     else:
         isolate = seq.split('_')[0]
         lineage = lineage_info[isolate]
