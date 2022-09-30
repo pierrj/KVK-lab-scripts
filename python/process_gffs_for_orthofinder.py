@@ -16,7 +16,10 @@ if os.path.isdir(out_dir):
 os.mkdir(out_dir)
 
 for genome in genomes:
-    accession = genome.split('_')[0] + genome.split('_')[1]
+    ## originally this for wheat
+    # accession = genome.split('_')[0] + genome.split('_')[1]
+    ## but this for rice
+    accession = genome
     print(genome)
     in_file = join(genome, 'fungap_out','fungap_out', 'fungap_out.nocomments.gff3')
     in_handle = open(in_file)
