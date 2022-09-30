@@ -42,21 +42,9 @@ def train_test_split_mine_downsample(majority_fraction):
     df_genes_downsampled = df_genes[(df_genes.id.isin(pav_false_subset_downsampled)) | (df_genes.id.isin(pav_true_subset))]
     # drop columns
     df_genes_downsampled = df_genes_downsampled.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion',
-                            'LTR/Gypsy', 'Unknown', 'DNA',
-                            'DNA/TcMar-Fot1', 'LINE/Tad1', 'DNA/Tc-Mar',
-                            'LTR/Copia','DNA/MULE-MuDR','DNA/hAT-Ac',
-                            'DNA/CMC-EnSpm','LINE/CRE', 'DNA/Kolobok-H', 
-                            'LTR/Unknown','LTR/Pao','DNA/TcMar-Pogo',
-                            'LINE/R2-NeSL','LINE/Penelope'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
     df_genes_test_subset = df_genes_test_subset.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion',
-                            'LTR/Gypsy', 'Unknown', 'DNA',
-                            'DNA/TcMar-Fot1', 'LINE/Tad1', 'DNA/Tc-Mar',
-                            'LTR/Copia','DNA/MULE-MuDR','DNA/hAT-Ac',
-                            'DNA/CMC-EnSpm','LINE/CRE', 'DNA/Kolobok-H', 
-                            'LTR/Unknown','LTR/Pao','DNA/TcMar-Pogo',
-                            'LINE/R2-NeSL','LINE/Penelope'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
     y_train = df_genes_downsampled['lineage_pav']
     X_train = df_genes_downsampled.drop('lineage_pav', axis=1)
     y_test = df_genes_test_subset['lineage_pav']
@@ -107,8 +95,8 @@ for majority_fraction in fractions:
         row = reports_short(SRF_balanced_subsample, X_test, y_test, majority_fraction, replicate)
         df_srf_balanced_subsample.loc[len(df_srf_balanced_subsample.index)] = row
 
-df_srf.to_csv('srf_downsample_test.csv')
-df_brfc.to_csv('brfc_downsample_test.csv')
-df_smotesrf.to_csv('smotesrf_downsample_test.csv')
-df_srf_balanced.to_csv('srf_balanced_downsample_test.csv')
-df_srf_balanced_subsample.to_csv('srf_balanced_subsample_downsample_test.csv')
+df_srf.to_csv('srf_downsample_test_all_tes.csv')
+df_brfc.to_csv('brfc_downsample_test_all_tes.csv')
+df_smotesrf.to_csv('smotesrf_downsample_test_all_tes.csv')
+df_srf_balanced.to_csv('srf_balanced_downsample_test_all_tes.csv')
+df_srf_balanced_subsample.to_csv('srf_balanced_subsample_downsample_test_all_tes.csv')
