@@ -10,39 +10,39 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
+# cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
 
-if [ ! -d "all_proteomes" ]; then
-    mkdir all_proteomes
-fi
+# if [ ! -d "all_proteomes" ]; then
+#     mkdir all_proteomes
+# fi
+
+# MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
+# FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/gladieux_all/
+
+# while read genome; do
+#     cp ${FUNGAP_DIR}/${genome}/fungap_out/fungap_out/fungap_out_prot.faa all_proteomes/${genome}_fungap_out_prot.faa
+# done < $MAPFILE
+
+# if [ ! -d "all_proteomes_corrected" ]; then
+#     mkdir all_proteomes_corrected
+# fi
+
+# source activate /global/scratch/users/pierrj/conda_envs/orthofinder
+# module purge
+
+# /global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes \
+#     all_proteomes_corrected \
+#     gladieux_et_al_assembly_stats.txt \
+#     output_accession_names
+
+# /global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes_w_guy11 \
+#     all_proteomes_corrected_w_guy11 \
+#     gladieux_et_al_assembly_stats.txt \
+#     output_accession_names_w_guy11
+
+cd /global/scratch/users/pierrj/fungap_runs/gladieux_all
 
 MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
-FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/gladieux_all/
-
-while read genome; do
-    cp ${FUNGAP_DIR}/${genome}/fungap_out/fungap_out/fungap_out_prot.faa all_proteomes/${genome}_fungap_out_prot.faa
-done < $MAPFILE
-
-if [ ! -d "all_proteomes_corrected" ]; then
-    mkdir all_proteomes_corrected
-fi
-
-source activate /global/scratch/users/pierrj/conda_envs/orthofinder
-module purge
-
-/global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes \
-    all_proteomes_corrected \
-    gladieux_et_al_assembly_stats.txt \
-    output_accession_names
-
-/global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes_w_guy11 \
-    all_proteomes_corrected_w_guy11 \
-    gladieux_et_al_assembly_stats.txt \
-    output_accession_names_w_guy11
-
-cd /global/scratch/users/pierrj/fungap_runs/wheat_blast/
-
-MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_annotated_mapfile
 
 while read genome; do
     grep -v '#' ${genome}/fungap_out/fungap_out/fungap_out.gff3 > ${genome}/fungap_out/fungap_out/fungap_out.nocomments.gff3

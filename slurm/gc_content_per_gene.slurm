@@ -10,7 +10,7 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/random_forest/
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
@@ -44,8 +44,8 @@ fi
 
 while read genome; do
     echo ${genome}
-    GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/assemblies/${genome}.fasta
-    GENOME_CHROM_SIZES=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/assemblies/${genome}.chromsizes
+    GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/assemblies/${genome}.fasta
+    GENOME_CHROM_SIZES=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/assemblies/${genome}.chromsizes
     GENES_BED=all_beds_fixed/${genome}.genes.bed
 
     bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} | awk -v OFS='\t' '{ if (NR > 1) {print $4, $5}}' > gc_content_per_gene/${genome}.gene.gc
@@ -70,6 +70,6 @@ while read genome; do
     paste ${genome}.gene_col ${genome}.gene.gc_col ${genome}.1kb.gc_col ${genome}.5kb.gc_col > gc_content_table/${genome}.gc_table.txt
     
     rm ${genome}*
-done < clonal_lineage_genomes.txt
+done < genomes_mapfile_no_mgrisae
 
 cat gc_content_table/* > all_genomes.gc_table.txt
