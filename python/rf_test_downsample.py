@@ -71,7 +71,7 @@ df_srf_balanced = pd.DataFrame(columns = column_names)
 df_srf_balanced_subsample = pd.DataFrame(columns = column_names)
 
 reps = 3
-fractions = [0.05, 0.1, 0.25,0.5,0.75,1.0]
+fractions = [0.05, 0.1, 0.25,0.5,0.75,0.95] # max is 0.99
 
 for majority_fraction in fractions:
     for replicate in range(reps):

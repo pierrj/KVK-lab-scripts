@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=file_cleanup
+#SBATCH --job-name=rf_test_downsample
 #SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1

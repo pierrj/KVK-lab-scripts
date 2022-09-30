@@ -35,6 +35,11 @@ module purge
     gladieux_et_al_assembly_stats.txt \
     output_accession_names
 
+/global/scratch/users/pierrj/conda_envs/orthofinder/bin/python /global/home/users/pierrj/git/python/process_protein_sequences_for_orthofinder.py all_proteomes_w_guy11 \
+    all_proteomes_corrected_w_guy11 \
+    gladieux_et_al_assembly_stats.txt \
+    output_accession_names_w_guy11
+
 cd /global/scratch/users/pierrj/fungap_runs/wheat_blast/
 
 MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_annotated_mapfile
