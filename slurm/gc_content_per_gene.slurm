@@ -14,11 +14,11 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_f
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
-# for file in all_gffs_fixed/*; do
-#     genome=$(basename $file | awk '{print substr($1, 0, length($1)-18)}')
-#     echo $genome
-#     awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $file > all_beds_fixed/${genome}.genes.bed
-# done
+for file in all_gffs_fixed/*; do
+    genome=$(basename $file | awk '{print substr($1, 0, length($1)-18)}')
+    echo $genome
+    awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $file > all_beds_fixed/${genome}.genes.bed
+done
 
 # while read genome; do
 #     samtools faidx ${genome}.fasta
