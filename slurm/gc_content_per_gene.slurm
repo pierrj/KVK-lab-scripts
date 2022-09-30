@@ -16,6 +16,10 @@ source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
 cp -r /global/scratch/users/pierrj/fungap_runs/gladieux_all/all_gffs_fixed .
 
+if [ ! -d all_beds_fixed ]; then
+    mkdir all_beds_fixed
+fi
+
 for file in all_gffs_fixed/*; do
     genome=$(basename $file | awk '{print substr($1, 0, length($1)-22)}')
     echo $genome
