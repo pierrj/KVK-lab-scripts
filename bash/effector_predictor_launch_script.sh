@@ -33,3 +33,23 @@ fi
 while read genome; do
     cat ${genome}.effectors_pred.predicted_effectors >> all_effector_names
 done < $MAPFILE
+
+## pass to get_effector_og_list.ipynb to get list of effector ogs
+
+if [ -f "all.signalp.table" ]; then
+    rm all.signalp.table
+fi
+
+if [ -f "all.tmhmm.table" ]; then
+    rm all.tmhmm.table
+fi
+
+if [ -f "all.effectorp.table" ]; then
+    rm all.effectorp.table
+fi
+
+while read genome; do
+    cat ${genome}.effectors_pred.signalp.table >> all.signalp.table
+    cat ${genome}.effectors_pred.tmhmm.table >> all.tmhmm.table
+    cat ${genome}.effectors_pred.effectorp.table >> all.effectorp.table
+done < $MAPFILE
