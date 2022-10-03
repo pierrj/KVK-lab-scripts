@@ -6,20 +6,20 @@ import sys
 from os.path import join
 
 genome_list = sys.argv[1]
-lineage_info_file = sys.argv[2]
+# lineage_info_file = sys.argv[2]
 
 with open(genome_list) as file:
     genomes = [genomes.strip() for genomes in file]
 
 ## for gladieux proteomes/rice
-lineage_info = {}
-with open(lineage_info_file, newline = '') as file:
-    file_reader = csv.reader(file, delimiter = '\t')
-    for row in file_reader:
-        if row[0] == 'WD-3-1_1':
-            lineage_info['WD-3-1'] = row[2]+'_'+row[3]
-        else:
-            lineage_info[row[0]] = row[2]+'_'+row[3]
+# lineage_info = {}
+# with open(lineage_info_file, newline = '') as file:
+#     file_reader = csv.reader(file, delimiter = '\t')
+#     for row in file_reader:
+#         if row[0] == 'WD-3-1_1':
+#             lineage_info['WD-3-1'] = row[2]+'_'+row[3]
+#         else:
+#             lineage_info[row[0]] = row[2]+'_'+row[3]
 
 out_dir = 'all_gffs_fixed'
 if os.path.isdir(out_dir):
@@ -30,9 +30,10 @@ for genome in genomes:
     ## originally this for wheat
     # accession = genome.split('_')[0] + genome.split('_')[1]
     ## but this for rice
-    isolate = genome
-    lineage = lineage_info[isolate]
-    accession = isolate + '_' + lineage
+    # isolate = genome
+    # lineage = lineage_info[isolate]
+    # accession = isolate + '_' + lineage
+    acccesion = genome
     print(genome)
     in_file = join(genome, 'fungap_out','fungap_out', 'fungap_out.nocomments.gff3')
     in_handle = open(in_file)
