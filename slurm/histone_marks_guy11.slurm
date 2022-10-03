@@ -62,7 +62,7 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_f
 
 ## fix guy11 gff to match input for orthofinder
 
-if [ -d GUY1]; then
+if [ -d GUY1 ]; then
     rm -r GUY11
 fi
 
@@ -98,8 +98,8 @@ awk '{print $2}' biorep_treament | sort | uniq > treatments
 
 ## run bedtools coverage on the mapped histone mark files, normalize by read count
 while read biorep treatment; do
-    read_count=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
     bam_file=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${treatment}_${biorep}.sam.bam
+    read_count=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
     bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk -v r=$read_count '{print $(NF)/r*1000000}' > ${treatment}_${biorep}.coverage
 done < biorep_treament
 
