@@ -42,7 +42,7 @@
 
 cd /global/scratch/users/pierrj/fungap_runs/gladieux_all
 
-MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
+MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile_no_mgrisae
 LINEAGE_INFO=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/gladieux_et_al_assembly_stats.txt
 
 while read genome; do
