@@ -33,7 +33,7 @@ for genome in genomes:
     # isolate = genome
     # lineage = lineage_info[isolate]
     # accession = isolate + '_' + lineage
-    acccesion = genome
+    accession = genome
     print(genome)
     in_file = join(genome, 'fungap_out','fungap_out', 'fungap_out.nocomments.gff3')
     in_handle = open(in_file)
