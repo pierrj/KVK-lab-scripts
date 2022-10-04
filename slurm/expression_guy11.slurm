@@ -55,7 +55,7 @@ while read SRA; do
         /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
         STAR --runThreadN ${THREADS} \
             --genomeDir ${genome_fasta_basename}_starindex \
-            --readFilesIn ${SRA}.sra_1.fastq ${SRA}.sra_2.fastq \
+            --readFilesIn ${SRA}.sra.fastq \
             --outSAMtype BAM SortedByCoordinate \
             --outFileNamePrefix ${SRA}. \
             --quantMode GeneCounts
@@ -102,7 +102,7 @@ while read SRA; do
         /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
         STAR --runThreadN ${THREADS} \
             --genomeDir ${genome_fasta_basename}_starindex \
-            --readFilesIn ${SRA}.sra_1.fastq ${SRA}.sra_2.fastq \
+            --readFilesIn ${SRA}.sra.fastq \
             --outSAMtype BAM SortedByCoordinate \
             --outFileNamePrefix ${SRA}. \
             --quantMode GeneCounts
