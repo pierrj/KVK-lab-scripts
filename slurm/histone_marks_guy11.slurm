@@ -91,7 +91,7 @@ cp all_gffs_fixed/${genome}_fungap_out.fixed.gff3 .
 genome=$(basename ${genome}_fungap_out.fixed.gff3 | awk '{print substr($1, 0, length($1)-22)}')
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' ${genome}_fungap_out.fixed.gff3 > ${genome}.genes.bed
 
-awk '{print $1}' ${genome}.genes.bed > ${genome}.genes_column
+awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
 cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/biorep_treament .
 awk '{print $2}' biorep_treament | sort | uniq > treatments
