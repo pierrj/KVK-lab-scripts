@@ -76,4 +76,4 @@ for replicate in range(reps):
     df_results.loc[len(df_results.index)] = row
 
 averages = df_results.mean().tolist()
-print(approach + '\t' + majority_fraction + '\t' + str(averages[0]) + '\t' + str(averages[1]) + '\t' + str(averages[2]) + '\t' + str(averages[3]))
+print(approach + '\t' + str(majority_fraction) + '\t' + str(averages[0]) + '\t' + str(averages[1]) + '\t' + str(averages[2]) + '\t' + str(averages[3]))
