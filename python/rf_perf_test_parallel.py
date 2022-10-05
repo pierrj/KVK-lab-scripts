@@ -8,9 +8,8 @@ from sklearn.metrics import roc_auc_score
 import sys
 
 input_df = sys.argv[1]
-reps = int(sys.argv[2])
-majority_fraction = float(sys.argv[3])
-approach = sys.argv[4]
+majority_fraction = float(sys.argv[2])
+approach = sys.argv[3]
 
 def reports(model, X_test, y_test):
     y_pred = model.predict(X_test)
@@ -54,26 +53,23 @@ if majority_fraction > 0.95:
 column_names = ["recall", "precision", "ap", "auc"]
 df_results = pd.DataFrame(columns = column_names)
 
-for replicate in range(reps):
-    y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
-    if approach == "SMOTE":
-        oversample = SMOTE()
-        over_X_train, over_y_train = oversample.fit_resample(X_train, y_train)
-        X_train = over_X_train
-        y_train = over_y_train
-    if approach == "BRFC":
-        model = BalancedRandomForestClassifier()
-    elif approach == "RF_balanced":
-        model = RandomForestClassifier(class_weight="balanced")
-    elif approach == "RF_balanced_subsample":
-        model = RandomForestClassifier(class_weight="balanced_subsample")
-    elif approach == "RF":
-        model = RandomForestClassifier()
-    elif approach == "SMOTE":
-        model = RandomForestClassifier()
-    model.fit(X_train, y_train)
-    row = reports(model, X_test, y_test)
-    df_results.loc[len(df_results.index)] = row
+y_train,X_train,y_test,X_test = train_test_split_mine_downsample(majority_fraction)
+if approach == "SMOTE":
+    oversample = SMOTE()
+    over_X_train, over_y_train = oversample.fit_resample(X_train, y_train)
+    X_train = over_X_train
+    y_train = over_y_train
+if approach == "BRFC":
+    model = BalancedRandomForestClassifier()
+elif approach == "RF_balanced":
+    model = RandomForestClassifier(class_weight="balanced")
+elif approach == "RF_balanced_subsample":
+    model = RandomForestClassifier(class_weight="balanced_subsample")
+elif approach == "RF":
+    model = RandomForestClassifier()
+elif approach == "SMOTE":
+    model = RandomForestClassifier()
+model.fit(X_train, y_train)
+results = reports(model, X_test, y_test)
 
-averages = df_results.mean().tolist()
-print(approach + '\t' + str(majority_fraction) + '\t' + str(averages[0]) + '\t' + str(averages[1]) + '\t' + str(averages[2]) + '\t' + str(averages[3]))
+print(approach + '\t' + str(majority_fraction) + '\t' + str(results[0]) + '\t' + str(results[1]) + '\t' + str(results[2]) + '\t' + str(results[3]))
