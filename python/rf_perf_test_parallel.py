@@ -8,10 +8,9 @@ from sklearn.metrics import roc_auc_score
 import sys
 
 input_df = sys.argv[1]
-output_name = sys.argv[2]
-reps = int(sys.argv[3])
-majority_fraction = float(sys.argv[4])
-approach = sys.argv[5]
+reps = int(sys.argv[2])
+majority_fraction = float(sys.argv[3])
+approach = sys.argv[4]
 
 def reports(model, X_test, y_test):
     y_pred = model.predict(X_test)
