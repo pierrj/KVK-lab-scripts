@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=htc4_gnu_parallel_rf
 #SBATCH --partition=savio4_htc
-#SBATCH --acount=co_minium
+#SBATCH --account=co_minium
 #SBATCH --qos=minium_htc4_normal
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
