@@ -30,6 +30,7 @@ cd $PROJ_DIR
 GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/assemblies/${genome}.fasta
 GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/all_gffs_fixed/${genome}_fungap_out.fixed.gff3
 SRA_LIST=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/zhang_et_al_2019_complete_medium
+SRA_TAG=$(basename $SRA_LIST)
 
 grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
     awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
@@ -71,13 +72,13 @@ while read SRA; do
     awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
     awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
-    paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
+    paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
-paste *.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
+paste *.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab | \
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
+paste ${genome}.genes_column all.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_TAG}_expression.txt
 
 
 
@@ -92,6 +93,7 @@ cat $RICE_GFF $GFF_FILE > ${genome}_plus_rice.gff
 GFF_FILE=${genome}_plus_rice.gff
 GENOME_FILE=${genome}_plus_rice.fasta
 SRA_LIST=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/zhang_et_al_2019_in_planta
+SRA_TAG=$(basename $SRA_LIST)
 
 basename_gff_file=$(basename ${GFF_FILE})
 
@@ -130,10 +132,10 @@ while read SRA; do
     awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | grep ${genome} | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
     awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
-    paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
+    paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
-paste *.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
+paste *.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab | \
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
+paste ${genome}.genes_column all.${SRA_TAG}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_TAG}_expression.txt
