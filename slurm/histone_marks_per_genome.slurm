@@ -12,7 +12,7 @@
 
 ## launch with
 # genome=something
-# sbatch --export=ALL,genome=$genome /global/home/users/pierrj/git/slurm/expression_per_genome.slurm
+# sbatch --export=ALL,genome=$genome /global/home/users/pierrj/git/slurm/histone_marks_per_genome.slurm
 
 PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_histone_marks
 THREADS=$SLURM_NTASKS
@@ -33,6 +33,7 @@ TREATMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_mar
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
+bwa index ${GENOME_FASTA}
 
 ## map and sort all reads
 while read sample; do
