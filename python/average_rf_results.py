@@ -9,4 +9,4 @@ df.columns = ['approach', 'majority_fraction', 'recall', 'precision', 'ap', 'auc
 
 df_grouped = df.groupby(["approach", "majority_fraction"]).mean().reset_index()
 
-df_grouped.to_csv(output_name + "average_results.txt",sep='\t', index=False)
+df_grouped.to_csv(output_name,sep='\t', index=False)
