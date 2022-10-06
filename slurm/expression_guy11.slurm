@@ -39,9 +39,10 @@ echo SRR12319301 >> $SRA_LIST
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
 basename_gff_file=$(basename ${GFF_FILE})
-grep 'exon' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' |\
-     awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | \
-     awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
+
+grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
+    awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
+    sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
@@ -72,7 +73,8 @@ while read SRA; do
         --outFileNamePrefix ${SRA}. \
         --quantMode GeneCounts
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
-    awk 'NR>4 {print $2}' ${SRA}.ReadsPerGene.out.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
+    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
+    awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
     paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
@@ -83,8 +85,8 @@ paste *.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab | \
 paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab > guy11_${SRA_LIST}_expression.txt
 
 
-GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/kamoun_lab_rnaseq/guy11_plus_orsa_w_organelles.fasta
-GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/kamoun_lab_rnaseq/guy11_plus_orsa.gff
+GENOME_FASTA=guy11_plus_orsa_w_organelles.fasta
+GFF_FILE=GUY11_fungap_out.fixed.w_orsa.gff3
 SRA_LIST=zhang_et_al_2019_in_planta
 genome=GUY11
 
@@ -108,9 +110,11 @@ echo SRR12319286 >> $SRA_LIST
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
 basename_gff_file=$(basename ${GFF_FILE})
-grep 'exon' ${GFF_FILE} | awk -v OFS='\t' '{print substr($9,4, 10), $5-$4}' |\
-     awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | sort -k1,1 | \
-     awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
+
+
+grep 'MQOP010000' ${GFF_FILE} | grep "exon" | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
+    awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
+    sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
 
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 
@@ -141,7 +145,8 @@ while read SRA; do
         --outFileNamePrefix ${SRA}. \
         --quantMode GeneCounts
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
-    awk 'NR>4 {print $2}' ${SRA}.ReadsPerGene.out.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
+    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | grep gene | grep t1 | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
+    awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
     paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
