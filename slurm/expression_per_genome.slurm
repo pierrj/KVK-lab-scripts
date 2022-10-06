@@ -11,8 +11,13 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 
+## launch with
+# genome=something
+# sbatch --export=ALL,genome=$genome /global/home/users/pierrj/git/slurm/expression_per_genome.slurm
+
+
 PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_expression
-THREADS=24
+THREADS=$SLURM_NTASKS
 
 if [ -d "$PROJ_DIR" ]; then
     rm -r "$PROJ_DIR"
