@@ -36,7 +36,9 @@ echo SRR12319299 >> $SRA_LIST
 echo SRR12319300 >> $SRA_LIST
 echo SRR12319301 >> $SRA_LIST
 
-awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
+grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
+    awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
+    sort -k1,1 | awk '{print $1}' > ${genome}.genes_column
 
 basename_gff_file=$(basename ${GFF_FILE})
 
@@ -106,8 +108,6 @@ echo SRR12319285 >> $SRA_LIST
 echo SRR12319287 >> $SRA_LIST
 echo SRR12319288 >> $SRA_LIST
 echo SRR12319286 >> $SRA_LIST
-
-awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
 basename_gff_file=$(basename ${GFF_FILE})
 
