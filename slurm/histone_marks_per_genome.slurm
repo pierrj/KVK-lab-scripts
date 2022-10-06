@@ -14,6 +14,11 @@
 # genome=something
 # sbatch --export=ALL,genome=$genome /global/home/users/pierrj/git/slurm/histone_marks_per_genome.slurm
 
+module purge
+module load bwa
+module load samtools
+module load bedtools
+
 PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_histone_marks
 THREADS=$SLURM_NTASKS
 
