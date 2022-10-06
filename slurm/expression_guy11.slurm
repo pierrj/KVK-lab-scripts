@@ -19,6 +19,9 @@ GFF_FILE=GUY11_fungap_out.fixed.gff3
 SRA_LIST=zhang_et_al_2019_complete_medium
 genome=GUY11
 
+if [ -f "${SRA_LIST}" ]; then
+    rm "${SRA_LIST}"
+fi
 
 echo SRR12319289 >> $SRA_LIST
 echo SRR12319290 >> $SRA_LIST
@@ -60,14 +63,14 @@ STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta
     --sjdbGTFtagExonParentGene Parent
 
 while read SRA; do
-    # /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-    # /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-    # STAR --runThreadN ${THREADS} \
-    #     --genomeDir ${genome_fasta_basename}_starindex \
-    #     --readFilesIn ${SRA}.sra.fastq \
-    #     --outSAMtype BAM SortedByCoordinate \
-    #     --outFileNamePrefix ${SRA}. \
-    #     --quantMode GeneCounts
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+    STAR --runThreadN ${THREADS} \
+        --genomeDir ${genome_fasta_basename}_starindex \
+        --readFilesIn ${SRA}.sra.fastq \
+        --outSAMtype BAM SortedByCoordinate \
+        --outFileNamePrefix ${SRA}. \
+        --quantMode GeneCounts
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
     awk 'NR>4 {print $2}' ${SRA}.ReadsPerGene.out.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
@@ -84,6 +87,10 @@ GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/kamou
 GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes/kamoun_lab_rnaseq/guy11_plus_orsa.gff
 SRA_LIST=zhang_et_al_2019_in_planta
 genome=GUY11
+
+if [ -f "${SRA_LIST}" ]; then
+    rm "${SRA_LIST}"
+fi
 
 echo SRR12319276 >> $SRA_LIST
 echo SRR12319277 >> $SRA_LIST
@@ -125,14 +132,14 @@ STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta
     --sjdbGTFtagExonParentGene Parent
 
 while read SRA; do
-    # /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-    # /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-    # STAR --runThreadN ${THREADS} \
-    #     --genomeDir ${genome_fasta_basename}_starindex \
-    #     --readFilesIn ${SRA}.sra.fastq \
-    #     --outSAMtype BAM SortedByCoordinate \
-    #     --outFileNamePrefix ${SRA}. \
-    #     --quantMode GeneCounts
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+    STAR --runThreadN ${THREADS} \
+        --genomeDir ${genome_fasta_basename}_starindex \
+        --readFilesIn ${SRA}.sra.fastq \
+        --outSAMtype BAM SortedByCoordinate \
+        --outFileNamePrefix ${SRA}. \
+        --quantMode GeneCounts
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
     awk 'NR>4 {print $2}' ${SRA}.ReadsPerGene.out.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
