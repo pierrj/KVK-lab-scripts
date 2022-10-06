@@ -10,6 +10,9 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
+source activate /global/scratch/users/pierrj/conda_envs/pannzer
+
+cd /global/scratch/users/pierrj/pannzer2/test_mg8
 
 /global/scratch/users/pierrj/conda_envs/pannzer/bin/python \
 /global/scratch/users/pierrj/pannzer2/SANSPANZ.3/runsanspanz.py \
