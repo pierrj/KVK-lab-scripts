@@ -28,7 +28,7 @@ cd $PROJ_DIR
 GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/assemblies/${genome}.fasta
 GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/all_gffs_fixed/${genome}_fungap_out.fixed.gff3
 MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/mapfile
-TREATMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/mapfile
+TREATMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/treatments
 
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
