@@ -77,7 +77,7 @@ while read SRA; do
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
     awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
     awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
-    num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
+    num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
     paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
@@ -145,9 +145,9 @@ while read SRA; do
         --outFileNamePrefix ${SRA}. \
         --quantMode GeneCounts
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
-    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | grep gene | grep t1 | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
+    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | grep GUY11 | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
     awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
-    num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
+    num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
     paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
