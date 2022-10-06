@@ -46,7 +46,7 @@ while read sample; do
     samtools index ${sample}.bam
     read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1}')
     ## run bedtools coverage on the mapped histone mark files, normalize by read count
-    bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk -v r=$read_count '{print $(NF)/(r*1000000)}' > ${sample}.coverage
+    bedtools coverage -counts -a ${genome}.genes.bed -b ${sample}.bam | awk -v r=$read_count '{print $(NF)/(r*1000000)}' > ${sample}.coverage
 done < $MAPFILE
 
 paste *.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
