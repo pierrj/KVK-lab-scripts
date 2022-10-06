@@ -49,5 +49,5 @@ while read sample; do
     bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk -v r=$read_count '{print $(NF)/(r*1000000)}' > ${sample}.coverage
 done < $MAPFILE
 
-paste ${treatment}.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
+paste *.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
 paste ${genome}.genes_column all.coverage > ${genome}_eccdnacov_per_gene.txt
