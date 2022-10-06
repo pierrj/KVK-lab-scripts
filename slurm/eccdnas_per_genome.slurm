@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=histone_marks_per_genome
+#SBATCH --job-name=eccdnas_per_genome
 #SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
@@ -12,7 +12,7 @@
 
 ## launch with
 # genome=something
-# sbatch --export=ALL,genome=$genome /global/home/users/pierrj/git/slurm/histone_marks_per_genome.slurm
+# sbatch --export=ALL,genome=$genome /global/home/users/pierrj/git/slurm/eccdnas_per_genome.slurm
 
 module purge
 module load bwa
@@ -32,17 +32,16 @@ cd $PROJ_DIR
 
 GENOME_FASTA=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/assemblies/${genome}.fasta
 GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/all_gffs_fixed/${genome}_fungap_out.fixed.gff3
-MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/mapfile
-TREATMENT_MAPFILE=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/treatments
+MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
 bwa index ${GENOME_FASTA}
 
-## map and sort all reads
 while read sample; do
-    bwa mem -t ${THREADS} $GENOME_FASTA /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/${sample}.fastq | \
+    bwa mem -t ${THREADS} $GENOME_FASTA /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R1.fastq \
+    /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R2.fastq | \
         samtools sort -@ ${THREADS} -o ${sample}.bam -
     samtools index ${sample}.bam
     read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1}')
@@ -50,7 +49,5 @@ while read sample; do
     bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk -v r=$read_count '{print $(NF)/(r*1000000)}' > ${sample}.coverage
 done < $MAPFILE
 
-while read treatment; do
-    paste ${treatment}_*.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.coverage
-    paste ${genome}.genes_column ${treatment}.coverage > ${genome}_${treatment}_per_gene.txt
-done < $TREATMENT_MAPFILE
+paste ${treatment}.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
+paste ${genome}.genes_column all.coverage > ${genome}_eccdnacov_per_gene.txt

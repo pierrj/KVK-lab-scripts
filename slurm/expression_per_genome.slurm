@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=expression_per_genome
-#SBATCH --partition=savio2
+#SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks-per-node=20
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
