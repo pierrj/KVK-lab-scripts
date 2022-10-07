@@ -50,8 +50,16 @@ then
     echo 'two files, treating input as bam, where first is treatment, second is input'
     bamCompare -p ${THREADS} -b1 ${DENSITY_FILE[0]} -b2 ${DENSITY_FILE[1]} -o ${density_file_basename}.bw -of bigwig --scaleFactorsMethod readCount
 else
-    echo 'too many files inputted'
-    exit 1
+    echo 'more than two files, averaging all of them together'
+    for density_file in "${DENSITY_FILE[@]}"; do
+        basename_density_file=$(basename $density_file)
+        read_count=$(samtools view -c -F 4 -F 2048 $density_file | awk '{print $1/1000000}')
+        bedtools coverage -a ${genome_basename}.${WINDOWS}windows \
+            -b $density_file -g ${CHROM_SIZES} | awk -v r=$read_count -v OFS='\t' '{print $(NF)/r}' > ${basename_density_file}.${OUTPUT_NAME}.bg
+    done
+    paste *.${OUTPUT_NAME}.bg | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > averaged.${OUTPUT_NAME}.bg
+    paste ${genome_basename}.${WINDOWS}windows averaged.${OUTPUT_NAME}.bg > ${density_file_basename}.bg
+    bedGraphToBigWig ${density_file_basename}.bg ${CHROM_SIZES} ${density_file_basename}.bw
 fi
 
 if [[ "${SV}" == "TRA" ]]
