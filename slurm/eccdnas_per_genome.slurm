@@ -44,9 +44,9 @@ while read sample; do
     /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R2.fastq | \
         samtools sort -@ ${THREADS} -o ${sample}.bam -
     samtools index ${sample}.bam
-    read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1}')
+    read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1/1000000}')
     ## run bedtools coverage on the mapped histone mark files, normalize by read count
-    bedtools coverage -counts -a ${genome}.genes.bed -b ${sample}.bam | awk -v r=$read_count '{print $(NF)/(r*1000000)}' > ${sample}.coverage
+    bedtools coverage -counts -a ${genome}.genes.bed -b ${sample}.bam | awk -v r=$read_count '{print $(NF)/r}' > ${sample}.coverage
 done < $MAPFILE
 
 paste *.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
