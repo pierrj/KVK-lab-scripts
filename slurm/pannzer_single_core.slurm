@@ -10,13 +10,15 @@
 # proteome=something
 # PROTEOMES_PATH=something
 
-#  sbatch --job-name=$proteome.pannzer --mem=4000M -n 1 --export=ALL,proteome=$proteome,PROTEOMES_PATH=$proteomes_path \
+#  sbatch --job-name=$proteome.pannzer --mem=4000M -n 1 --export=ALL,proteome=$proteome,PROTEOMES_PATH=$PROTEOMES_PATH \
 #     -p savio4_htc --qos=minium_htc4_normal --account=co_minium \
 #     /global/home/users/pierrj/git/slurm/pannzer_single_core.slurm
 
 source activate /global/scratch/users/pierrj/conda_envs/pannzer
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/go
+
+PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes_corrected/
 
 /global/scratch/users/pierrj/conda_envs/pannzer/bin/python \
     /global/scratch/users/pierrj/pannzer2/SANSPANZ.3/runsanspanz.py \
