@@ -19,7 +19,7 @@ module load bwa
 module load samtools
 module load bedtools
 
-PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_histone_marks
+PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_eccdnas
 THREADS=$SLURM_NTASKS
 
 if [ -d "$PROJ_DIR" ]; then
