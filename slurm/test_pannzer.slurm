@@ -16,4 +16,4 @@ cd /global/scratch/users/pierrj/pannzer2/test_mg8
 
 /global/scratch/users/pierrj/conda_envs/pannzer/bin/python \
 /global/scratch/users/pierrj/pannzer2/SANSPANZ.3/runsanspanz.py \
--R -o ",DE.out,GO.out,anno.out" -s "Pyricularia oryzae" < Magnaporthe_oryzae.MG8.pep.all.fa
+-R -o ",DE.${genome}.out,GO.${genome}.out,anno.${genome}.out" -s "Pyricularia oryzae" < Magnaporthe_oryzae.MG8.pep.all.fa
