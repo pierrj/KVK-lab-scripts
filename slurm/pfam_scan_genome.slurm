@@ -13,7 +13,7 @@
 ## launch with
 # genome=something
 # proteome=something_else
-# sbatch --export=ALL,genome=$genome,proteome=$proteome /global/home/users/pierrj/git/slurm/histone_marks_per_genome.slurm
+# sbatch --export=ALL,genome=$genome,proteome=$proteome /global/home/users/pierrj/git/slurm/pfam_scan_genome.slurm
 
 
 PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_pfam_scan
@@ -33,6 +33,6 @@ PFAM_DIR=/global/scratch/users/pierrj/pfam/
 
 source activate /global/scratch/users/pierrj/conda_envs/pfam_scan
 
-pfam_scan.pl -cpu ${THREADS} -outfile ${genome}.pfamscan.out -dir ${PFAM_DIR} -fasta $FASTA
+pfam_scan.pl -cpu ${THREADS} -outfile ${genome}.pfamscan.out -dir ${PFAM_DIR} -fasta $FASTA_FILE
 
 /global/scratch/users/pierrj/parse_pfam_domains/plant_rgenes/processing_scripts/K-parse_Pfam_domains_v3.1.pl -p ${genome}.pfamscan.out -e 0.001 -o ${genome}.pfamscan.kparse.out
