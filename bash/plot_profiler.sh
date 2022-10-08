@@ -16,10 +16,8 @@ done
 genome_basename=$(basename ${GENOME_FILE})
 genome_basename=${genome_basename%%.*}
 
-if [ ! -f "${GENOME_FILE}.chromsizes" ]; then
-    samtools faidx ${GENOME_FILE}
-    cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
-fi
+samtools faidx ${GENOME_FILE}
+cut -f1,2 ${GENOME_FILE}.fai > ${GENOME_FILE}.chromsizes
 
 CHROM_SIZES=${GENOME_FILE}.chromsizes
 
