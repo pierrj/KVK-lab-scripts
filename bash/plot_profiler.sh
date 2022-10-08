@@ -26,11 +26,10 @@ density_file_basename=${density_file_basename[0]%%.*}
 
 file_num=${#DENSITY_FILE[@]}
 
+bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
+
 if [[ "${file_num}" == "1" ]]
 then
-    if [ ! -f "${genome_basename}.${WINDOWS}windows" ]; then
-        bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
-    fi
     if [[ "${DENSITY_FILE[0]}" == "gc" ]]; then
         echo 'gc content'
         bedtools nuc -fi ${GENOME_FILE} -bed ${genome_basename}.${WINDOWS}windows > ${genome_basename}.${WINDOWS}windows.gc
