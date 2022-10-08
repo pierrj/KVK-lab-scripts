@@ -41,7 +41,7 @@ grep -v 'Supercontig_7.9' all_svs.bed.old > all_svs.bed
 
 
 ## get TE annotation file
-if [ ! -f "guy11_genome_baoetal2017_with_70-15_mito.fasta.out.gff" ]; then
+if [ ! -f "guy11_genome_baoetal2017.fasta.out.gff" ]; then
     module load repeatmasker/4.1.1
     RM_LIB=/global/scratch/users/pierrj/PAV_SV/PAV/te_annotations_anne/anne_repbase_te_lib_fixed
     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . $FASTA_FILE
