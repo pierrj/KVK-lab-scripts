@@ -80,7 +80,7 @@ awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' all_svs.be
 SUB_OUTPUT_NAME=cm_expression
 MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/zhang_et_al_2019_complete_medium_bamfile_mapfile
 
-echo /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
+/global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
 ## NOT SURE ABOUT THIS ONE ##
