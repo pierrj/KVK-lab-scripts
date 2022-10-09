@@ -29,6 +29,7 @@ THREADS=$SLURM_NTASKS
 cd $PROJ_DIR
 
 GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/GUY11_fungap_out.fixed.gff3
 MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 
@@ -44,7 +45,7 @@ while read sample; do
     # samtools index ${sample}.bam
     read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1/1000000}')
     ## run bedtools coverage on the mapped histone mark files, normalize by read count
-    bedtools coverage -counts -a ${genome}.genes.bed -b ${sample}.bam | awk -v r=$read_count '{print $(NF)/r}' > ${sample}.coverage
+    bedtools coverage -sorted -counts -a ${genome}.genes.bed -g ${GENOME_CHROMSIZES} -b ${sample}.bam | awk -v r=$read_count '{print $(NF)/r}' > ${sample}.coverage
 done < $MAPFILE
 
 paste *.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
