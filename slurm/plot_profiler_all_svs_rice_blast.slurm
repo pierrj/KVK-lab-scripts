@@ -73,7 +73,7 @@ DENSITY_BED=gc
 SUB_OUTPUT_NAME=gc
 /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
-DENSITY_BED=guy11_fungap_out_12_28_20.justgenes.bed
+DENSITY_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/GUY11.genes.bed
 SUB_OUTPUT_NAME=genes
 /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
@@ -94,6 +94,7 @@ MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteo
 
 /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+
 
 ## to get mapfiles for averageing ##
 # while read SRA; do realpath ${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST > ${SRA_LIST}_bamfile_mapfile
