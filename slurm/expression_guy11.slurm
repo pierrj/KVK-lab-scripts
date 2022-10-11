@@ -162,5 +162,7 @@ SRA_LIST=zhang_et_al_2019_in_planta
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 
 while read SRA; do
-    samtools view -b ${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
+    samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
+    samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
+    samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
 done < $SRA_LIST
