@@ -97,5 +97,5 @@ MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteo
 
 
 ## to get mapfiles for averageing ##
-# while read SRA; do realpath ${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST > ${SRA_LIST}_bamfile_mapfile
+# while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST > ${SRA_LIST}_bamfile_mapfile
 # while read sample; do realpath ${sample}.bam; done < $MAPFILE > bamfile_mapfile
