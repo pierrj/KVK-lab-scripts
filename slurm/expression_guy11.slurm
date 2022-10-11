@@ -161,6 +161,6 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_f
 SRA_LIST=zhang_et_al_2019_in_planta
 MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 
-while read SRA; done
+while read SRA; do
     samtools view -b ${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
 done < $SRA_LIST
