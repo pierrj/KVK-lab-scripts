@@ -31,6 +31,9 @@ do
     /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_pannzer.slurm
 done
 
+
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/go
+
 ## actually just do single cores
 
 PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes_corrected/
@@ -40,4 +43,10 @@ while read proteome; do
     sbatch --job-name=$proteome.pannzer --mem=4000M -n 1 --export=ALL,proteome=$proteome \
         -p savio4_htc --qos=minium_htc4_normal --account=co_minium \
         /global/home/users/pierrj/git/slurm/pannzer_single_core.slurm
+done < $MAPFILE
+
+
+MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/proteomes_mapfile_no_mgrisae
+while read proteome; do
+    cp GO.${proteome}.out GO.${proteome}.out.copy
 done < $MAPFILE

@@ -51,7 +51,7 @@ else
     for density_file in "${DENSITY_FILE[@]}"; do
         basename_density_file=$(basename $density_file)
         read_count=$(samtools view -c -F 4 -F 2048 $density_file | awk '{print $1/1000000}')
-        bedtools coverage -a ${genome_basename}.${WINDOWS}windows \
+        bedtools coverage -counts -sorted -a ${genome_basename}.${WINDOWS}windows \
             -b $density_file -g ${CHROM_SIZES} | awk -v r=$read_count -v OFS='\t' '{print $(NF)/r}' > ${basename_density_file}.${OUTPUT_NAME}.bg
     done
     paste *.${OUTPUT_NAME}.bg | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > averaged.${OUTPUT_NAME}.bg
