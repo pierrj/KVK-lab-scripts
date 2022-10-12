@@ -20,10 +20,11 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_f
 
 PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes_corrected/
 
-line_count=$(wc -l GO.${proteome}.out.copy | awk '{print $1}')
-b=2
+protein_count=$(grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq | wc -l)
+b=7000
 
-if (( line_count < b )); then
+if (( protein_count < b )); then
+    mv GO.${proteome}.out GO.${proteome}.out.old 
     /global/scratch/users/pierrj/conda_envs/pannzer/bin/python \
         /global/scratch/users/pierrj/pannzer2/SANSPANZ.3/runsanspanz.py \
         -R -o ",DE.${proteome}.out,GO.${proteome}.out,anno.${proteome}.out" -s "Pyricularia oryzae" < ${PROTEOMES_PATH}/${proteome}
