@@ -4,7 +4,7 @@
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/scratch/users/pierrj/slurm_stdout/slurm-%j.out
-#SBATCH --error=/global/scratch/users/pierrj/slurm_stderrslurm-%j.out
+#SBATCH --error=/global/scratch/users/pierrj/slurm_stderr/slurm-%j.out
 
 ## launch with
 # proteome=something
