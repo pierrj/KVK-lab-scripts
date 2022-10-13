@@ -29,13 +29,14 @@ module load samtools
 #         -1 ${SAMPLE}.sra_1.fastq -2 ${SAMPLE}.sra_2.fastq \
 #         guy11_genome_baoetal2017/
 
-/global/scratch/users/pierrj/bismark/Bismark-0.24.0/deduplicate_bismark -p \
-		--output_dir  ${SAMPLE}_bismark_out \
-		${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
+# /global/scratch/users/pierrj/bismark/Bismark-0.24.0/deduplicate_bismark -p \
+# 		--output_dir  ${SAMPLE}_bismark_out \
+# 		${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
 
-# /global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
-#     --output ${SAMPLE}_bismark_out \
-#     --ignore_r2 2 \
-#     --comprehensive \
-#     --parallel $SLURM_NTASKS \
-#     /global/scratch/users/chandlersutherland/e14/bismark/deduplicate_bismark/${f}_1_val_1_bismark_bt2_pe.deduplicated.bam
+/global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
+    --output ${SAMPLE}_bismark_out \
+    # --ignore_r2 2 \
+    --comprehensive \
+    --parallel 10 \
+    --bedGraph \
+    ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
