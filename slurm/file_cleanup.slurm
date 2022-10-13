@@ -10,4 +10,4 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-rm -r /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/predicted_effectors
+rm -r /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/pav_validation
