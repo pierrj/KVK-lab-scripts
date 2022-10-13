@@ -33,30 +33,32 @@ module load samtools
 # 		--output_dir  ${SAMPLE}_bismark_out \
 # 		${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
 
-/global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
-    --output ${SAMPLE}_bismark_out \
-    --comprehensive \
-    --parallel 10 \
-    --bedGraph \
-    --CX_context \
-    --ignore 2 \
-    --ignore_r2 2 \
-    ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
+# /global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
+#     --output ${SAMPLE}_bismark_out \
+#     --comprehensive \
+#     --parallel 10 \
+#     --bedGraph \
+#     --CX_context \
+#     --ignore 2 \
+#     --ignore_r2 2 \
+#     ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
 
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
-grep -v track ${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph > ${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg
+gunzip ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph.gz
 
-bedGraphToBigWig ${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $CHROM_SIZES ${SAMPLE}.sra_1_bismark_bt2_pe.bw
+grep -v track ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph > ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg
 
-density_file_basename=${SAMPLE}.sra_1_bismark_bt2_pe.bw
+bedGraphToBigWig ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $CHROM_SIZES ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
+
+density_file=${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
 THREADS=$SLURM_NTASKS
 OUTPUT_NAME=methylation
 REGIONS_BED=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast/all_DEL.bed
 
-computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
+computeMatrix scale-regions -p ${THREADS} -S $density_file \
                             -R ${REGIONS_BED} \
                             --beforeRegionStartLength 500 \
                             --regionBodyLength 10 \
