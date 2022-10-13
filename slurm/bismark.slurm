@@ -35,8 +35,9 @@ module load samtools
 
 /global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
     --output ${SAMPLE}_bismark_out \
-    # --ignore_r2 2 \
     --comprehensive \
     --parallel 10 \
     --bedGraph \
     ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
+
+    # --ignore_r2 2 \
