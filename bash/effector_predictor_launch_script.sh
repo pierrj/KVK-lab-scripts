@@ -1,11 +1,11 @@
 #!/bin/bash
 
-PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes_corrected/
-MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/proteomes_mapfile_no_mgrisae
+PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/all_proteomes_corrected
+MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/proteomes_mapfile_no_mgrisae
 N_NODES=20
 
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/predicted_effectors
+cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/predicted_effectors
 
 if [ -f "jobqueue" ]; then
     rm jobqueue

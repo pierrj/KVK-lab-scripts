@@ -50,3 +50,50 @@ MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/pro
 while read proteome; do
     cp GO.${proteome}.out GO.${proteome}.out.copy
 done < $MAPFILE
+
+while read proteome; do
+    wc -l GO.${proteome}.out
+done < $MAPFILE
+
+while read proteome; do
+    protein_count=$(grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq | wc -l)
+    b=7000
+# grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq | wc -l
+    if (( protein_count < b )); then
+        echo $proteome
+    fi
+done < $MAPFILE
+
+# srun -p savio4_htc -n 1 --qos=minium_htc4_normal --account=co_minium -t 60 --pty bash
+# sbatch -p savio4_htc --qos=minium_htc4_normal --account=co_minium -n 56
+
+# sbatch --mem=510000M -n 224 -p savio4_htc --qos=minium_htc4_normal --account=co_minium slurm/expression_guy11.slurm
+
+
+## to make a single file for go terms in the random forest model
+
+if [ -f "GO.all.out" ]; then
+    rm "GO.all.out"
+fi
+
+while read proteome; do
+    grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq >> GO.all.out
+done < $MAPFILE
+
+
+
+
+
+
+## AND FOR WHEAT BLAST TOOO
+
+cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/go
+
+PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/all_proteomes_corrected/
+MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/proteomes_mapfile_no_mgrisae
+
+while read proteome; do
+    sbatch --job-name=$proteome.pannzer --mem=4000M -n 1 --export=ALL,PROTEOMES_PATH=$PROTEOMES_PATH,proteome=$proteome \
+        -p savio4_htc --qos=minium_htc4_normal --account=co_minium \
+        /global/home/users/pierrj/git/slurm/pannzer_single_core.slurm
+done < $MAPFILE

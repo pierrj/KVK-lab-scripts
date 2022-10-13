@@ -17,6 +17,7 @@ awk -v OFS='\t' '{if ($3 == "Number" && $7 == 0){print $2, "FALSE"} else if ($3 
 awk -v OFS='\t' '{ if ($10 == "Y") {print $1, "TRUE"} else if ($10 == "N") {print $1, "FALSE"} }' ${OUTPUT_NAME}.signalpout.short | sort -k1,1 > ${OUTPUT_NAME}.signalp.table
 
 ## subset to get both
+awk '{if ($7 == 0){print $2}} ' ${OUTPUT_NAME}.tmhmmout > ${OUTPUT_NAME}.notm.names
 seqtk subseq ${INPUT_FILE} ${OUTPUT_NAME}.notm.names > ${OUTPUT_NAME}.notm.faa
 /global/scratch/users/pierrj/signalp-4.1/signalp -t euk -u 0.34 -U 0.34 -f short ${OUTPUT_NAME}.notm.faa > ${OUTPUT_NAME}.signalpout.short
 awk '{ if ($10 == "Y") {print $1} }' ${OUTPUT_NAME}.signalpout.short > ${OUTPUT_NAME}.notm.sp.names
