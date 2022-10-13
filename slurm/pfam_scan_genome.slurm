@@ -16,7 +16,7 @@
 # sbatch --export=ALL,genome=$genome,proteome=$proteome /global/home/users/pierrj/git/slurm/pfam_scan_genome.slurm
 
 
-PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_pfam_scan
+PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/${genome}_pfam_scan
 THREADS=$SLURM_NTASKS
 
 if [ -d "$PROJ_DIR" ]; then
@@ -27,7 +27,7 @@ mkdir $PROJ_DIR
 
 cd $PROJ_DIR
 
-PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes_corrected/
+PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/all_proteomes_corrected/
 FASTA_FILE=${PROTEOMES_PATH}/${proteome}
 PFAM_DIR=/global/scratch/users/pierrj/pfam/
 
