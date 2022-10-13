@@ -16,9 +16,7 @@
 
 source activate /global/scratch/users/pierrj/conda_envs/pannzer
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/go
-
-PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/all_proteomes_corrected/
+cd $SLURM_SUBMIT_DIR
 
 protein_count=$(grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq | wc -l)
 b=7000
