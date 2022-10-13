@@ -42,8 +42,7 @@
 
 cd /global/scratch/users/pierrj/fungap_runs/wheat_blast
 
-MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/wheat_blast_busco_greater_than_90
-LINEAGE_INFO=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/gladieux_et_al_assembly_stats.txt
+MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/wheat_blast_busco_greater_than_90_annotated
 
 while read genome; do
     grep -v '#' ${genome}/fungap_out/fungap_out/fungap_out.gff3 > ${genome}/fungap_out/fungap_out/fungap_out.nocomments.gff3
