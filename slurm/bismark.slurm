@@ -38,6 +38,33 @@ module load samtools
     --comprehensive \
     --parallel 10 \
     --bedGraph \
+    --CX_context \
+    --ignore 2 \
+    --ignore_r2 2 \
     ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
 
-    # --ignore_r2 2 \
+CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
+
+source activate /global/scratch/users/pierrj/conda_envs/deeptools
+
+grep -v track ${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph > ${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg
+
+bedGraphToBigWig ${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $CHROM_SIZES ${SAMPLE}.sra_1_bismark_bt2_pe.bw
+
+density_file_basename=${SAMPLE}.sra_1_bismark_bt2_pe.bw
+THREADS=$SLURM_NTASKS
+OUTPUT_NAME=methylation
+REGIONS_BED=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast/all_DEL.bed
+
+computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
+                            -R ${REGIONS_BED} \
+                            --beforeRegionStartLength 500 \
+                            --regionBodyLength 10 \
+                            --afterRegionStartLength 500 \
+                            -o ${OUTPUT_NAME}.mat.gz
+
+plotProfile -m ${OUTPUT_NAME}.mat.gz \
+            -out ${OUTPUT_NAME}.pdf \
+            --numPlotsPerRow 1 \
+            --plotTitle "${OUTPUT_NAME}" \
+            --outFileNameData ${OUTPUT_NAME}.tab
