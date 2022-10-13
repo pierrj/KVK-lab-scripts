@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=bismark
-#SBATCH --partition=savio2
+#SBATCH --partition=savio3
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks-per-node=32
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -22,10 +22,10 @@ module load samtools
 
 
 /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
+        --parallel 6 \
         --temp_dir tmp \
         --output_dir ${SAMPLE}_bismark_out \
         -p 4 \
-        --non_directional \
         -1 ${SAMPLE}.sra_1.fastq -2 ${SAMPLE}.sra_2.fastq \
         guy11_genome_baoetal2017/
 
