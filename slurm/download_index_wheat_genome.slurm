@@ -48,4 +48,5 @@ STAR --runThreadN ${SLURM_NTASKS} --runMode genomeGenerate --genomeDir Triticum_
     --sjdbOverhang 100 \
     --genomeSAindexNbases 14 \
     --sjdbGTFtagExonParentTranscript ID \
-    --sjdbGTFtagExonParentGene Parent
+    --sjdbGTFtagExonParentGene Parent \
+    --limitGenomeGenerateRAM 100000000000
