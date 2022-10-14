@@ -2,7 +2,7 @@
 #SBATCH --job-name=download_index_wheat_genome
 #SBATCH --partition=savio4_htc
 #SBATCH --qos=minium_htc4_normal
-#SBATCH -A co_minium
+#SBATCH --account=co_minium
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=56
 #SBATCH --time=72:00:00
