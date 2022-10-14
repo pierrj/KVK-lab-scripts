@@ -15,7 +15,7 @@ min_samples_split = int(sys.argv[5])
 min_samples_leaf = int(sys.argv[6])
 max_features = sys.argv[7]
 max_depth = sys.argv[8]
-boostrap = eval(sys.argv[9])
+bootstrap = eval(sys.argv[9])
 
 
 def none_or_str(value):
@@ -32,6 +32,15 @@ def none_or_int(value):
     return int(value)
 
 max_depth = none_or_int(max_depth)
+
+args_dict = {
+    "n_estimators": n_estimators,
+    "min_samples_split": min_samples_split,
+    "min_samples_leaf": min_samples_leaf,
+    "max_features": max_features,
+    "max_depth": max_depth,
+    "bootstrap": bootstrap
+}
 
 def reports(model, X_test, y_test):
     y_pred = model.predict(X_test)
@@ -96,14 +105,5 @@ elif approach == "SMOTE":
     model = RandomForestClassifier(**args_dict)
 model.fit(X_train, y_train)
 results = reports(model, X_test, y_test)
-
-
-SMOTE_SRF = RandomForestClassifier(n_estimators=900, # default is 100
-                                min_samples_split=2, # default is 2
-                                min_samples_leaf=1, # default is 1
-                                max_features=None, # default is sqrt
-                                max_depth=60, # default is none
-                                bootstrap=True, # default is True...
-                                random_state=1)
 
 print(approach + '\t' + str(majority_fraction) + '\t' + str(results[0]) + '\t' + str(results[1]) + '\t' + str(results[2]) + '\t' + str(results[3]))
