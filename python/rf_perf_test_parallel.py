@@ -10,6 +10,20 @@ import sys
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
 approach = sys.argv[3]
+n_estimators = int(sys.argv[4])
+min_samples_split = int(sys.argv[5])
+min_samples_leaf = int(sys.argv[6])
+max_features = sys.argv[7]
+max_depth = sys.argv[8]
+boostrap = sys.argv[9]
+
+
+def none_or_str(value):
+    if value == 'None':
+        return None
+    return value
+
+max_features = none_or_str(max_features)
 
 def reports(model, X_test, y_test):
     y_pred = model.predict(X_test)
@@ -32,7 +46,10 @@ def train_test_split_mine_downsample(majority_fraction):
     df_genes = df_genes[~df_genes.id.isin(gene_test_subset)]
     pav_true_subset = df_genes[df_genes['lineage_pav']==True].id
     pav_false_subset_downsampled = np.random.choice(df_genes[df_genes['lineage_pav'] == False].id, size=int(len(df_genes.index)*majority_fraction),replace=False)
-    df_genes_downsampled = df_genes[(df_genes.id.isin(pav_false_subset_downsampled)) | (df_genes.id.isin(pav_true_subset))]
+    if majority_fraction != 1.0:
+        df_genes_downsampled = df_genes[(df_genes.id.isin(pav_false_subset_downsampled)) | (df_genes.id.isin(pav_true_subset))]
+    else:
+        df_genes_downsampled = df_genes
     # drop columns
     df_genes_downsampled = df_genes_downsampled.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
                             'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
@@ -60,16 +77,25 @@ if approach == "SMOTE":
     X_train = over_X_train
     y_train = over_y_train
 if approach == "BRFC":
-    model = BalancedRandomForestClassifier()
+    model = BalancedRandomForestClassifier(**args_dict)
 elif approach == "RF_balanced":
-    model = RandomForestClassifier(class_weight="balanced")
+    model = RandomForestClassifier(class_weight="balanced", **args_dict)
 elif approach == "RF_balanced_subsample":
-    model = RandomForestClassifier(class_weight="balanced_subsample")
+    model = RandomForestClassifier(class_weight="balanced_subsample", **args_dict)
 elif approach == "RF":
-    model = RandomForestClassifier()
+    model = RandomForestClassifier(**args_dict)
 elif approach == "SMOTE":
-    model = RandomForestClassifier()
+    model = RandomForestClassifier(**args_dict)
 model.fit(X_train, y_train)
 results = reports(model, X_test, y_test)
+
+
+SMOTE_SRF = RandomForestClassifier(n_estimators=900, # default is 100
+                                min_samples_split=2, # default is 2
+                                min_samples_leaf=1, # default is 1
+                                max_features=None, # default is sqrt
+                                max_depth=60, # default is none
+                                bootstrap=True, # default is True...
+                                random_state=1)
 
 print(approach + '\t' + str(majority_fraction) + '\t' + str(results[0]) + '\t' + str(results[1]) + '\t' + str(results[2]) + '\t' + str(results[3]))
