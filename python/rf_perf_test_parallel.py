@@ -15,7 +15,7 @@ min_samples_split = int(sys.argv[5])
 min_samples_leaf = int(sys.argv[6])
 max_features = sys.argv[7]
 max_depth = sys.argv[8]
-boostrap = sys.argv[9]
+boostrap = eval(sys.argv[9])
 
 
 def none_or_str(value):
@@ -24,6 +24,14 @@ def none_or_str(value):
     return value
 
 max_features = none_or_str(max_features)
+
+
+def none_or_int(value):
+    if value == 'None':
+        return None
+    return int(value)
+
+max_depth = none_or_int(max_depth)
 
 def reports(model, X_test, y_test):
     y_pred = model.predict(X_test)
