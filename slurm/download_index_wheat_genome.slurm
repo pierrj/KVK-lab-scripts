@@ -25,6 +25,10 @@
 
 cd /global/scratch/projects/vector_kvklab/references/STAR_indices
 
+if [ -d Triticum_aestivum.IWGSC_plus_B71_starindex ]; then
+    rm -r Triticum_aestivum.IWGSC_plus_B71_starindex
+fi
+
 mkdir Triticum_aestivum.IWGSC_plus_B71_starindex
 
 module load STAR
