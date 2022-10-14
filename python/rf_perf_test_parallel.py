@@ -106,4 +106,22 @@ elif approach == "SMOTE":
 model.fit(X_train, y_train)
 results = reports(model, X_test, y_test)
 
-print(approach + '\t' + str(majority_fraction) + '\t' + str(results[0]) + '\t' + str(results[1]) + '\t' + str(results[2]) + '\t' + str(results[3]))
+# n_estimators = int(sys.argv[4])
+# min_samples_split = int(sys.argv[5])
+# min_samples_leaf = int(sys.argv[6])
+# max_features = sys.argv[7]
+# max_depth = sys.argv[8]
+# bootstrap = eval(sys.argv[9])
+
+print(approach + '\t' + 
+            str(majority_fraction) + '\t' +
+            str(n_estimators) + '\t' +
+            str(min_samples_split) + '\t' +
+            str(min_samples_leaf) + '\t' +
+            str(max_features) + '\t' +
+            str(max_depth) + '\t' +
+            str(bootstrap) + '\t' +
+            str(results[0]) + '\t' + 
+            str(results[1]) + '\t' + 
+            str(results[2]) + '\t' + 
+            str(results[3]))
