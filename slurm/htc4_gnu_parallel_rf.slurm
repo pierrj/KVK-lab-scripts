@@ -13,6 +13,8 @@
 
 cd ${SLURM_SUBMIT_DIR}
 
+module load parallel
+
 source activate /global/scratch/users/pierrj/conda_envs/random_forest/
 
 parallel -j ${SLURM_NTASKS} < jobqueue_${node} >> ${OUTPUT_FILE}
