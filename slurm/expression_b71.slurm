@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=expression_b71
-#SBATCH --partition=savio2
+#SBATCH --partition=savio3_bigmem
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
