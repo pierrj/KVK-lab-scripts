@@ -79,6 +79,8 @@
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
+THREADS=24
+
 STAR_INDEX=/global/scratch/projects/vector_kvklab/references/STAR_indices/Triticum_aestivum.IWGSC_plus_B71_starindex/
 GFF_FILE=/global/scratch/projects/vector_kvklab/references/gff/chinese_spring_w_b71.gff3
 SRA_LIST=b71_assembly_complete_medium_in_planta
