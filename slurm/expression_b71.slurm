@@ -77,6 +77,7 @@
 
 # paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
 
+cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
 STAR_INDEX=/global/scratch/projects/vector_kvklab/references/STAR_indices/Triticum_aestivum.IWGSC_plus_B71_starindex/
 GFF_FILE=/global/scratch/projects/vector_kvklab/references/gff/chinese_spring_w_b71.gff3
@@ -96,6 +97,8 @@ basename_gff_file=$(basename ${GFF_FILE})
 grep 'CP06033' ${GFF_FILE} | grep "exon" | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
     awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
     sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
+
+module load STAR
 
 while read SRA; do
     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
