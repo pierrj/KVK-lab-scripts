@@ -81,9 +81,6 @@ def train_test_split_mine_downsample(majority_fraction):
 if approach not in ["RF", "SMOTE", "BRFC", "RF_balanced", "RF_balanced_subsample"]:
     raise NameError('Approach not in approved list')
 
-if majority_fraction > 0.95:
-    raise ValueError('Majority fraction has to be less than 0.95 otherwise it isnt compatible with downsampling')
-
 column_names = ["recall", "precision", "ap", "auc"]
 df_results = pd.DataFrame(columns = column_names)
 
