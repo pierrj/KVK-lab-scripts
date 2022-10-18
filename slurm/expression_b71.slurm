@@ -10,72 +10,72 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
+# cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
-THREADS=$SLURM_NTASKS
+# THREADS=$SLURM_NTASKS
 
-GENOME_FASTA=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.fna
-GFF_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/all_gffs_fixed/GCA_004785725.2_ASM478572v2_fungap_out.fixed.gff3
-SRA_LIST=b71_assembly_complete_medium
-genome=B71
+# GENOME_FASTA=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.fna
+# GFF_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/all_gffs_fixed/GCA_004785725.2_ASM478572v2_fungap_out.fixed.gff3
+# SRA_LIST=b71_assembly_complete_medium
+# genome=B71
 
-if [ -f "${SRA_LIST}" ]; then
-    rm "${SRA_LIST}"
-fi
+# if [ -f "${SRA_LIST}" ]; then
+#     rm "${SRA_LIST}"
+# fi
 
-echo SRR9127598 >> $SRA_LIST
-echo SRR9127597 >> $SRA_LIST
-echo SRR9127600 >> $SRA_LIST
+# echo SRR9127598 >> $SRA_LIST
+# echo SRR9127597 >> $SRA_LIST
+# echo SRR9127600 >> $SRA_LIST
 
-grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
-    awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
-    sort -k1,1 | awk '{print $1}' > ${genome}.genes_column
+# grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
+#     awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
+#     sort -k1,1 | awk '{print $1}' > ${genome}.genes_column
 
-basename_gff_file=$(basename ${GFF_FILE})
+# basename_gff_file=$(basename ${GFF_FILE})
 
-grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
-    awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
-    sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
+# grep 'exon' ${GFF_FILE} | awk -F'[=\t]' -v OFS='\t' '{print $(NF), $5-$4}' | \
+#     awk '{ seen[$1] += $2 } END { for (i in seen) print i, seen[i] }' | \
+#     sort -k1,1 | awk '{print $2/1000}' > ${basename_gff_file}.exon_lengths
 
-genome_fasta_basename=$(basename ${GENOME_FASTA})
+# genome_fasta_basename=$(basename ${GENOME_FASTA})
 
-if [ -d "${genome_fasta_basename}_starindex" ]; then
-    rm -r ${genome_fasta_basename}_starindex
-fi
+# if [ -d "${genome_fasta_basename}_starindex" ]; then
+#     rm -r ${genome_fasta_basename}_starindex
+# fi
 
-mkdir ${genome_fasta_basename}_starindex
+# mkdir ${genome_fasta_basename}_starindex
 
-module load STAR
+# module load STAR
 
-## index genome for STAR
-STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
-    --genomeFastaFiles ${GENOME_FASTA} \
-    --sjdbGTFfile ${GFF_FILE} \
-    --sjdbOverhang 100 \
-    --genomeSAindexNbases 11 \
-    --sjdbGTFtagExonParentTranscript ID \
-    --sjdbGTFtagExonParentGene Parent
+# ## index genome for STAR
+# STAR --runThreadN ${THREADS} --runMode genomeGenerate --genomeDir ${genome_fasta_basename}_starindex \
+#     --genomeFastaFiles ${GENOME_FASTA} \
+#     --sjdbGTFfile ${GFF_FILE} \
+#     --sjdbOverhang 100 \
+#     --genomeSAindexNbases 11 \
+#     --sjdbGTFtagExonParentTranscript ID \
+#     --sjdbGTFtagExonParentGene Parent
 
-while read SRA; do
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-    STAR --runThreadN ${THREADS} \
-        --genomeDir ${genome_fasta_basename}_starindex \
-        --readFilesIn ${SRA}.sra.fastq \
-        --outSAMtype BAM SortedByCoordinate \
-        --outFileNamePrefix ${SRA}. \
-        --quantMode GeneCounts
-    bam_file=${SRA}.Aligned.sortedByCoord.out.bam
-    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
-    awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
-    num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
-    paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
-done < ${SRA_LIST}
+# while read SRA; do
+#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+#     STAR --runThreadN ${THREADS} \
+#         --genomeDir ${genome_fasta_basename}_starindex \
+#         --readFilesIn ${SRA}.sra.fastq \
+#         --outSAMtype BAM SortedByCoordinate \
+#         --outFileNamePrefix ${SRA}. \
+#         --quantMode GeneCounts
+#     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
+#     awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
+#     awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
+#     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
+#     paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
+# done < ${SRA_LIST}
 
-paste *.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
+# paste *.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab | \
+#     awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
+# paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
@@ -112,7 +112,7 @@ while read SRA; do
         --outFileNamePrefix ${SRA}. \
         --quantMode GeneCounts
     bam_file=${SRA}.Aligned.sortedByCoord.out.bam
-    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | grep GCA_004785725.2 | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
+    awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | grep GCA004785725.2 | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
     awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
     num_reads=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1/1000000}')
     paste ${SRA}.ReadsPerGene.out.genecolumn.tab ${basename_gff_file}.exon_lengths | awk -v N=$num_reads '{print $1/($2*N)}' > ${SRA}.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.tab
