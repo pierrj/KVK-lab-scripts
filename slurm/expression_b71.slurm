@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=expression_b71
-#SBATCH --partition=savio3_bigmem
+#SBATCH --partition=savio3_htc
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks-per-node=40
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -12,7 +12,7 @@
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
-THREADS=24
+THREADS=$SLURM_NTASKS
 
 GENOME_FASTA=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.fna
 GFF_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/all_gffs_fixed/GCA_004785725.2_ASM478572v2_fungap_out.fixed.gff3
@@ -79,7 +79,7 @@ paste ${genome}.genes_column all.${SRA_LIST}.RPKM.ReadsPerGene.out.genecolumn.ta
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
-THREADS=24
+THREADS=$SLURM_NTASKS
 
 STAR_INDEX=/global/scratch/projects/vector_kvklab/references/STAR_indices/Triticum_aestivum.IWGSC_plus_B71_starindex/
 GFF_FILE=/global/scratch/projects/vector_kvklab/references/gff/chinese_spring_w_b71.gff3
