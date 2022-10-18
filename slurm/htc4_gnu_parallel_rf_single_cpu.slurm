@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ht4_gnu_parallel_rf_single_cpu
+#SBATCH --job-name=htc4_gnu_parallel_rf_single_cpu
 #SBATCH --partition=savio4_htc
 #SBATCH --qos=minium_htc4_normal
 #SBATCH --account=co_minium
@@ -15,4 +15,4 @@ module load parallel
 
 source activate /global/scratch/users/pierrj/conda_envs/random_forest/
 
-parallel -j ${SLURM_NTASKS} < jobqueue_${node} >> ${OUTPUT_FILE}
+parallel -j ${SLURM_NTASKS} < jobqueue_${cpu} >> ${OUTPUT_FILE}
