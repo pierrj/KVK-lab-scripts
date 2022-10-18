@@ -2,7 +2,7 @@
 #SBATCH --job-name=rf_cross_host
 #SBATCH --partition=savio2_htc
 #SBATCH --qos=savio_normal
-#SBATCH --ntasks-per-node=2
+#SBATCH --ntasks-per-node=1
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
