@@ -16,6 +16,7 @@ min_samples_leaf = int(sys.argv[6])
 max_features = sys.argv[7]
 max_depth = sys.argv[8]
 bootstrap = eval(sys.argv[9])
+input_df_2 = sys.argv[10]
 
 
 def none_or_str(value):
@@ -110,6 +111,8 @@ results = reports(model, X_test, y_test)
 # max_depth = sys.argv[8]
 # bootstrap = eval(sys.argv[9])
 
+print('primary results')
+
 print(approach + '\t' + 
             str(majority_fraction) + '\t' +
             str(n_estimators) + '\t' +
@@ -122,3 +125,31 @@ print(approach + '\t' +
             str(results[1]) + '\t' + 
             str(results[2]) + '\t' + 
             str(results[3]))
+
+
+## compare to second df
+
+df_genes_2 = pd.read_csv(input_df_2)
+df_genes_2 = df_genes_2[df_genes_2['lineage']!=4]
+# drop columns
+df_genes_2 = df_genes_2.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
+                        'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+y_test_2 = df_genes_2['lineage_pav']
+X_test_2 = df_genes_2.drop('lineage_pav', axis=1)
+
+results_2 = reports(model, X_test_2, y_test_2)
+
+print('secondary results')
+
+print(approach + '\t' + 
+            str(majority_fraction) + '\t' +
+            str(n_estimators) + '\t' +
+            str(min_samples_split) + '\t' +
+            str(min_samples_leaf) + '\t' +
+            str(max_features) + '\t' +
+            str(max_depth) + '\t' +
+            str(bootstrap) + '\t' +
+            str(results_2[0]) + '\t' + 
+            str(results_2[1]) + '\t' + 
+            str(results_2[2]) + '\t' + 
+            str(results_2[3]))
