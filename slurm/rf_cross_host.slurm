@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=rf_cross_host
-#SBATCH --partition=savio2_htc
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
-#SBATCH --ntasks-per-node=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
@@ -10,6 +11,8 @@
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/cross_host
+
+source activate /global/scratch/users/pierrj/conda_envs/random_forest/
 
 MAJORITY_FRACTION=1.0
 APPROACH=SMOTE
@@ -20,15 +23,15 @@ FEATURES=sqrt
 DEPTH=None
 BOOTSTRAP=True
 
-INPUT_DF=gene_info.rice_blast.txt
-INPUT_DF2=gene_info.wheat_blast.txt
+INPUT_DF=gene_info.cross_host.rice_blast.txt
+INPUT_DF2=gene_info.cross_host.wheat_blast.txt
 OUTPUT_FILE=rf_results.cross_host_rice_first.txt
 
 /global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_parallel.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $INPUT_DF2
 
 
-INPUT_DF=gene_info.wheat_blast.txt
-INPUT_DF2=gene_info.rice_blast.txt
+INPUT_DF=gene_info.cross_host.wheat_blast.txt
+INPUT_DF2=gene_info.cross_host.rice_blast.txt
 OUTPUT_FILE=rf_results.cross_host_wheat_first.txt
 
 /global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_parallel.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $INPUT_DF2
