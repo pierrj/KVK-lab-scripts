@@ -4,7 +4,7 @@ from sklearn.model_selection import ParameterGrid
 
 approach = ["SMOTE", "RF"]
 majority_fraction = [0.5, 1.0]
-n_estimators = [int(x) for x in np.linspace(start = 1000, stop = 4000, num = 4)]
+n_estimators = [int(x) for x in np.linspace(start = 1000, stop = 2000, num = 2)]
 min_samples_split = [2]
 min_samples_leaf = [1]
 max_features = ["sqrt", "log2", None]
