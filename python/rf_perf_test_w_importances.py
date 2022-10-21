@@ -132,5 +132,5 @@ I = importances(model, X_test, y_test)
 I.to_csv(output_string+'_permutation_importances.txt',sep='\t')
 
 # drop col importances
-I = dropcol_importances(model, over_X_train, over_y_train, X_test, y_test)
+I = dropcol_importances(model, X_train, y_train, X_test, y_test)
 I.to_csv(output_string+'_dropcol_importances.txt', sep='\t')
