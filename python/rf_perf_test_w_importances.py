@@ -6,6 +6,8 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_auc_score
 import sys
+from rfpimp import importances
+from rfpimp import dropcol_importances
 
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
@@ -16,7 +18,7 @@ min_samples_leaf = int(sys.argv[6])
 max_features = sys.argv[7]
 max_depth = sys.argv[8]
 bootstrap = eval(sys.argv[9])
-
+output_string = sys.argv[10]
 
 def none_or_str(value):
     if value == 'None':
@@ -73,9 +75,9 @@ def train_test_split_mine_downsample(majority_fraction):
         df_genes_downsampled = df_genes
     # drop columns
     df_genes_downsampled = df_genes_downsampled.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'flanking_5kb_gc'], axis=1)
     df_genes_test_subset = df_genes_test_subset.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'flanking_5kb_gc'], axis=1)
     y_train = df_genes_downsampled['lineage_pav']
     X_train = df_genes_downsampled.drop('lineage_pav', axis=1)
     y_test = df_genes_test_subset['lineage_pav']
@@ -116,3 +118,19 @@ print(approach + '\t' +
             str(results[1]) + '\t' + 
             str(results[2]) + '\t' + 
             str(results[3]))
+
+## default importance
+I = pd.DataFrame()
+I['Feature'] = X_train.columns
+I['Importance'] = model.feature_importances_
+I = I.sort_values('Importance', ascending=False)
+I = I.set_index('Feature')
+I.to_csv(output_string+'_default_importances.txt',sep='\t')
+
+# permutation importances
+I = importances(model, X_test, y_test)
+I.to_csv(output_string+'_permutation_importances.txt',sep='\t')
+
+# drop col importances
+I = dropcol_importances(model, over_X_train, over_y_train, X_test, y_test)
+I.to_csv(output_string+'_dropcol_importances.txt', sep='\t')

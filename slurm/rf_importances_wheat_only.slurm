@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --job-name=rf_importances_wheat_only
+#SBATCH --partition=savio2
+#SBATCH --qos=savio_normal
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
+#SBATCH --time=72:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/cross_host
+
+source activate /global/scratch/users/pierrj/conda_envs/random_forest/
+
+MAJORITY_FRACTION=0.5
+APPROACH=RF
+ESTIMATORS=2000
+SPLIT=2
+LEAF=1
+FEATURES=sqrt
+DEPTH=None
+BOOTSTRAP=True
+
+INPUT_DF=gene_info.cross_host.wheat_blast.txt
+OUTPUT_FILE=rf_results.cross_host_wheat_only.txt
+OUTPUT_STRING=cross_host_wheat_only
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_w_importances.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $OUTPUT_STRING > $OUTPUT_FILE
