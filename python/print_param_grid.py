@@ -3,7 +3,7 @@ from itertools import product
 from sklearn.model_selection import ParameterGrid
 
 approach = ["RF"]
-majority_fraction = [0.05, 0.25, 0.5]
+majority_fraction = [0.5]
 n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 4000, num = 3)]
 min_samples_split = [2]
 min_samples_leaf = [1]
