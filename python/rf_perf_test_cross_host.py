@@ -6,6 +6,9 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_auc_score
 import sys
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import plot_confusion_matrix
+import matplotlib.pyplot as plt
 
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
@@ -17,6 +20,7 @@ max_features = sys.argv[7]
 max_depth = sys.argv[8]
 bootstrap = eval(sys.argv[9])
 input_df_2 = sys.argv[10]
+output_string = sys.argv[11]
 
 
 def none_or_str(value):
@@ -130,6 +134,22 @@ print(approach + '\t' +
             str(results[2]) + '\t' + 
             str(results[3]))
 
+y_score = model.predict_proba(X_test)[:, 1]
+precision, recall, thresholds = precision_recall_curve(y_test, y_score)
+
+#create precision recall curve
+fig, ax = plt.subplots()
+ax.plot(recall, precision, color='purple', label = 'model')
+ax.axhline(y=0.05, label='no skill')
+
+#add axis labels to plot
+ax.set_title('Precision-Recall Curve')
+ax.set_ylabel('Precision')
+ax.set_xlabel('Recall')
+
+#display plot
+plt.legend(loc="best")
+plt.savefig(output_string + '_precision-recall_curve.png')
 
 ## compare to second df
 
@@ -157,3 +177,8 @@ print(approach + '\t' +
             str(results_2[1]) + '\t' + 
             str(results_2[2]) + '\t' + 
             str(results_2[3]))
+
+
+fig = plot_confusion_matrix(model, X_test_2, y_test_2, display_labels=['Is not PAV Gene', 'Is PAV gene'], cmap='Greens')
+plt.title('Confusion Matrix')
+plt.savefig(output_string + '_cross_test_confusion_matrix.png')
