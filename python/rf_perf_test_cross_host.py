@@ -78,9 +78,9 @@ def train_test_split_mine_downsample(majority_fraction):
         df_genes_downsampled = df_genes
     # drop columns
     df_genes_downsampled = df_genes_downsampled.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'cm_expression', 'ip_expression'], axis=1)
     df_genes_test_subset = df_genes_test_subset.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'cm_expression', 'ip_expression'], axis=1)
     y_train = df_genes_downsampled['lineage_pav']
     X_train = df_genes_downsampled.drop('lineage_pav', axis=1)
     y_test = df_genes_test_subset['lineage_pav']
@@ -157,7 +157,7 @@ df_genes_2 = pd.read_csv(input_df_2)
 df_genes_2 = df_genes_2[df_genes_2['lineage']!=4]
 # drop columns
 df_genes_2 = df_genes_2.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                        'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
+                        'genome', 'lineage', 'lineage_conserved', 'proportion', 'cm_expression', 'ip_expression'], axis=1)
 y_test_2 = df_genes_2['lineage_pav']
 X_test_2 = df_genes_2.drop('lineage_pav', axis=1)
 
