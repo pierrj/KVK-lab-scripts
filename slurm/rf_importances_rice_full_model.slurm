@@ -23,8 +23,8 @@ FEATURES=None
 DEPTH=None
 BOOTSTRAP=True
 
-INPUT_DF=gene_info.genes_tes_gc.lengths_effectors.guy11_histone_expression.go_pfam_eccdnas.txt
-OUTPUT_FILE=rf_results.full_model_rice.txt
-OUTPUT_STRING=full_model_rice
+INPUT_DF=gene_info.genes_tes_gc.lengths_effectors.guy11_histone_expression.go_pfam_eccdnas.no_te_classes.txt
+OUTPUT_FILE=rf_results.full_model_rice_no_te_classes.txt
+OUTPUT_STRING=full_model_rice_no_te_classes
 
 /global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_w_importances.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $OUTPUT_STRING > $OUTPUT_FILE
