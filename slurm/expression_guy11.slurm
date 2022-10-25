@@ -158,8 +158,6 @@ paste *.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab | \
 
 paste ${genome}.genes_column all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
 
-
-
 # SRA_LIST=zhang_et_al_2019_in_planta
 # MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
 
