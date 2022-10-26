@@ -93,19 +93,23 @@ awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' ${genome}_fungap_ou
 
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
+awk '{print $3-$2}' ${genome}.genes.bed > ${genome}.gene_lengths
+
 cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/biorep_treament .
 awk '{print $2}' biorep_treament | sort | uniq > treatments
 
 ## run bedtools coverage on the mapped histone mark files, normalize by read count
 while read biorep treatment; do
     bam_file=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${treatment}_${biorep}.sam.bam
-    read_count=$(samtools view -c -F 4 -F 2048 $bam_file | awk '{print $1}')
-    bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk -v r=$read_count '{print $(NF)/r*1000000}' > ${treatment}_${biorep}.coverage
+    bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file > ${treatment}_${biorep}.coverage
+    paste ${treatment}_${biorep}.coverage ${genome}.gene_lengths | awk '{print $1/($2)}' > ${treatment}_${biorep}.coverage.RPK
+    sum_rpks=$(awk '{sum+=$1;} END{print sum/1000000;}' ${treatment}_${biorep}.coverage.RPK)
+    awk -v N=$sum_rpks '{print $1/N}' ${treatment}_${biorep}.coverage.RPK > ${treatment}_${biorep}.coverage.normalized
 done < biorep_treament
 
 while read treatment; do
-    paste ${treatment}_*.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.coverage
-    paste ${genome}.genes_column ${treatment}.coverage > guy11_${treatment}_per_gene.txt
+    paste ${treatment}_${biorep}.coverage.normalized | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.coverage.normalized
+    paste ${genome}.genes_column ${treatment}.coverage.normalized > guy11_${treatment}_per_gene.txt
 done < treatments
 
 ## get peak locations and reformat, downloaded from Zhang et al 2021
