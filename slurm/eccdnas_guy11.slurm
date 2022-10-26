@@ -35,6 +35,7 @@ MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/map
 
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
+awk '{print $3-$2}' ${genome}.genes.bed > ${genome}.gene_lengths
 
 bwa index ${GENOME_FASTA}
 
@@ -45,10 +46,13 @@ while read sample; do
     # samtools index ${sample}.bam
     read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1/1000000}')
     ## run bedtools coverage on the mapped histone mark files, normalize by read count
-    bedtools coverage -sorted -counts -a ${genome}.genes.bed -g ${GENOME_CHROMSIZES} -b ${sample}.bam | awk -v r=$read_count '{print $(NF)/r}' > ${sample}.coverage
+    bedtools coverage -sorted -counts -a ${genome}.genes.bed -g ${GENOME_CHROMSIZES} -b ${sample}.bam | awk '{print $(NF)}' > ${sample}.coverage
+    paste ${sample}.coverage ${genome}.gene_lengths | awk '{print $1/($2)}' > ${sample}.coverage.RPK
+    sum_rpks=$(awk '{sum+=$1;} END{print sum/1000000;}' ${sample}.coverage.RPK)
+    awk -v N=$sum_rpks '{print $1/N}' ${sample}.coverage.RPK > ${sample}.coverage.normalized
 done < $MAPFILE
 
-paste *.coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
+paste *.coverage.normalized | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
 paste ${genome}.genes_column all.coverage > ${genome}_eccdnacov_per_gene.txt
 
 # while read sample; do
