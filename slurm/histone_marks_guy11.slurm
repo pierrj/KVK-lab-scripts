@@ -66,9 +66,9 @@ if [ -d GUY1 ]; then
     rm -r GUY11
 fi
 
-mkdir GUY11/
-mkdir GUY11/fungap_out/
-mkdir GUY11/fungap_out/fungap_out/
+# mkdir GUY11/
+# mkdir GUY11/fungap_out/
+# mkdir GUY11/fungap_out/fungap_out/
 
 cp /global/scratch/users/pierrj/references/guy11_fungap_out_12_28_20.gff3 GUY11/fungap_out/fungap_out/fungap_out.gff3
 
@@ -101,7 +101,7 @@ awk '{print $2}' biorep_treament | sort | uniq > treatments
 ## run bedtools coverage on the mapped histone mark files, normalize by read count
 while read biorep treatment; do
     bam_file=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${treatment}_${biorep}.sam.bam
-    bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file > ${treatment}_${biorep}.coverage
+    bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk '{print $NF}' > ${treatment}_${biorep}.coverage
     paste ${treatment}_${biorep}.coverage ${genome}.gene_lengths | awk '{print $1/($2)}' > ${treatment}_${biorep}.coverage.RPK
     sum_rpks=$(awk '{sum+=$1;} END{print sum/1000000;}' ${treatment}_${biorep}.coverage.RPK)
     awk -v N=$sum_rpks '{print $1/N}' ${treatment}_${biorep}.coverage.RPK > ${treatment}_${biorep}.coverage.normalized
