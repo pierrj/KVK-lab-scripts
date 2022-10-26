@@ -17,31 +17,30 @@ SAMPLE=SRR653493
 module load bowtie2
 module load samtools
 
-# /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark_genome_preparation \
-#     --verbose --bowtie2 --path_to_aligner /global/home/groups/consultsw/sl-7.x86_64/modules/bowtie2/2.3.4.1 guy11_genome_baoetal2017/
+/global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark_genome_preparation \
+    --verbose --bowtie2 --path_to_aligner /global/home/groups/consultsw/sl-7.x86_64/modules/bowtie2/2.3.4.1 guy11_genome_baoetal2017/
 
 
-# /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
-#         --parallel 6 \
-#         --temp_dir tmp \
-#         --output_dir ${SAMPLE}_bismark_out \
-#         -p 4 \
-#         -1 ${SAMPLE}.sra_1.fastq -2 ${SAMPLE}.sra_2.fastq \
-#         guy11_genome_baoetal2017/
+/global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
+        --parallel 6 \
+        --temp_dir tmp \
+        --output_dir ${SAMPLE}_bismark_out \
+        -p 4 \
+        -1 ${SAMPLE}.sra_1.fastq -2 ${SAMPLE}.sra_2.fastq \
+        guy11_genome_baoetal2017/
 
-# /global/scratch/users/pierrj/bismark/Bismark-0.24.0/deduplicate_bismark -p \
-# 		--output_dir  ${SAMPLE}_bismark_out \
-# 		${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
+/global/scratch/users/pierrj/bismark/Bismark-0.24.0/deduplicate_bismark -p \
+		--output_dir  ${SAMPLE}_bismark_out \
+		${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
 
-# /global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
-#     --output ${SAMPLE}_bismark_out \
-#     --comprehensive \
-#     --parallel 10 \
-#     --bedGraph \
-#     --CX_context \
-#     --ignore 2 \
-#     --ignore_r2 2 \
-#     ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
+/global/scratch/users/pierrj/bismark/Bismark-0.24.0//bismark_methylation_extractor -p \
+    --output ${SAMPLE}_bismark_out \
+    --comprehensive \
+    --parallel 10 \
+    --bedGraph \
+    --ignore 2 \
+    --ignore_r2 2 \
+    ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bam
 
 CHROM_SIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
 
