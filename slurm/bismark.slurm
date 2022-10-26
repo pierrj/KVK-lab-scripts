@@ -12,15 +12,23 @@
 
 cd /global/scratch/users/pierrj/bismark/moryzae_test
 
-SAMPLE=SRR653493
-
+GENOME=GUY11
 module load bowtie2
 module load samtools
+
+SAMPLE=SRR653493
 
 /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark_genome_preparation \
     --verbose --bowtie2 --path_to_aligner /global/home/groups/consultsw/sl-7.x86_64/modules/bowtie2/2.3.4.1 guy11_genome_baoetal2017/
 
-rm -r ${SAMPLE}_bismark_out
+
+if [ -d ${SAMPLE}_bismark_out ]; then
+    rm -r ${SAMPLE}_bismark_out
+fi
+
+GFF_FILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/GUY11_fungap_out.fixed.gff3
+
+awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 
 /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
         --parallel 6 \
@@ -51,7 +59,14 @@ gunzip ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph.gz
 
 grep -v track ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph > ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg
 
+bedtools intersect -wa -wb -a ${genome}.genes.bed -b ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
+    awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${genome}.${sample}.percentmethylated
+
+
+
 bedGraphToBigWig ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $CHROM_SIZES ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
+
+
 
 density_file=${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
 THREADS=$SLURM_NTASKS
