@@ -44,9 +44,9 @@ cp $GENOME_FASTA ${genome}_dir/
 
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 
-for sample in SRR653493 SRR653494 SRR653495; do
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${sample} -O .
-    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${sample}.sra
+for SAMPLE in SRR653493 SRR653494 SRR653495; do
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SAMPLE} -O .
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SAMPLE}.sra
 
     /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
         --parallel 6 \
@@ -54,7 +54,7 @@ for sample in SRR653493 SRR653494 SRR653495; do
         --output_dir ${SAMPLE}_bismark_out \
         -p 4 \
         -1 ${SAMPLE}.sra_1.fastq -2 ${SAMPLE}.sra_2.fastq \
-        guy11_genome_baoetal2017/
+        ${genome}_dir/
 
     /global/scratch/users/pierrj/bismark/Bismark-0.24.0/deduplicate_bismark -p \
             --output_dir  ${SAMPLE}_bismark_out \
@@ -75,7 +75,7 @@ for sample in SRR653493 SRR653494 SRR653495; do
     grep -v track ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.bedGraph > ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg
 
     bedtools intersect -wa -wb -a ${genome}.genes.bed -b ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
-        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${genome}.${sample}.percentmethylated
+        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${genome}.${SAMPLE}.percentmethylated
 
     bedGraphToBigWig ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $CHROM_SIZES ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
 
