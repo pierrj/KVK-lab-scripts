@@ -108,7 +108,7 @@ while read biorep treatment; do
 done < biorep_treament
 
 while read treatment; do
-    paste ${treatment}_${biorep}.coverage.normalized | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.coverage.normalized
+    paste ${treatment}_*.coverage.normalized | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.coverage.normalized
     paste ${genome}.genes_column ${treatment}.coverage.normalized > guy11_${treatment}_per_gene.txt
 done < treatments
 
