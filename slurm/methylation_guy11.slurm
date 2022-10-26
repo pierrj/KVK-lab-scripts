@@ -45,6 +45,9 @@ cp $GENOME_FASTA ${genome}_dir/
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $GFF_FILE > ${genome}.genes.bed
 
 for sample in SRR653493 SRR653494 SRR653495; do
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${sample} -O .
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${sample}.sra
+
     /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
         --parallel 6 \
         --temp_dir tmp \
