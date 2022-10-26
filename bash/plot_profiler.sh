@@ -70,9 +70,9 @@ computeMatrix reference-point -p ${THREADS} -S ${density_file_basename}.bw \
 else
 computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             -R ${REGIONS_BED} \
-                            --beforeRegionStartLength 500 \
-                            --regionBodyLength 10 \
-                            --afterRegionStartLength 500 \
+                            --beforeRegionStartLength 1000 \
+                            --regionBodyLength 500 \
+                            --afterRegionStartLength 1000 \
                             -o ${OUTPUT_NAME}.mat.gz
 fi
 

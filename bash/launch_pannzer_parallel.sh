@@ -64,11 +64,6 @@ while read proteome; do
     fi
 done < $MAPFILE
 
-# srun -p savio4_htc -n 1 --qos=minium_htc4_normal --account=co_minium -t 60 --pty bash
-# sbatch -p savio4_htc --qos=minium_htc4_normal --account=co_minium -n 56
-
-# sbatch --mem=510000M -n 224 -p savio4_htc --qos=minium_htc4_normal --account=co_minium slurm/expression_guy11.slurm
-
 
 ## to make a single file for go terms in the random forest model
 
@@ -77,7 +72,7 @@ if [ -f "GO.all.out" ]; then
 fi
 
 while read proteome; do
-    grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq >> GO.all.out
+    grep gene GO.${proteome}.out | awk -v OFS='\t' '{print $1, "TRUE"}' | sort | uniq >> GO.all.out
 done < $MAPFILE
 
 
@@ -92,8 +87,43 @@ cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/go
 PROTEOMES_PATH=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/all_proteomes_corrected/
 MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/proteomes_mapfile_no_mgrisae
 
+
 while read proteome; do
-    sbatch --job-name=$proteome.pannzer --mem=4000M -n 1 --export=ALL,PROTEOMES_PATH=$PROTEOMES_PATH,proteome=$proteome \
-        -p savio4_htc --qos=minium_htc4_normal --account=co_minium \
+    sbatch --job-name=$proteome.pannzer -n 1 --export=ALL,PROTEOMES_PATH=$PROTEOMES_PATH,proteome=$proteome \
+        -p savio2_htc --qos=savio_normal --account=fc_kvkallow \
         /global/home/users/pierrj/git/slurm/pannzer_single_core.slurm
+done < $MAPFILE
+
+
+# while read proteome; do
+#     sbatch --job-name=$proteome.pannzer --mem=4000M -n 1 --export=ALL,PROTEOMES_PATH=$PROTEOMES_PATH,proteome=$proteome \
+#         -p savio4_htc --qos=minium_htc4_normal --account=co_minium \
+#         /global/home/users/pierrj/git/slurm/pannzer_single_core.slurm
+# done < $MAPFILE
+
+## to check
+while read proteome; do
+    protein_count=$(grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq | wc -l)
+    b=7000
+    if (( protein_count < b )); then
+        echo $proteome
+        echo $protein_count
+    fi
+    # echo $proteome
+    # grep gene GO.${proteome}.out | awk '{print $1}' | sort | uniq | wc -l
+done < $MAPFILE
+
+# srun -p savio4_htc -n 1 --qos=minium_htc4_normal --account=co_minium -t 60 --pty bash
+# sbatch -p savio4_htc --qos=minium_htc4_normal --account=co_minium -n 56
+
+# sbatch --mem=510000M -n 224 -p savio4_htc --qos=minium_htc4_normal --account=co_minium slurm/expression_guy11.slurm
+
+## to make a single file for go terms in the random forest model
+
+if [ -f "GO.all.out" ]; then
+    rm "GO.all.out"
+fi
+
+while read proteome; do
+    grep gene GO.${proteome}.out | awk -v OFS='\t' '{print $1, "TRUE"}' | sort | uniq >> GO.all.out
 done < $MAPFILE

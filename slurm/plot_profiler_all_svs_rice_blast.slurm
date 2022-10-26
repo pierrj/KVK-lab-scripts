@@ -61,7 +61,10 @@ TE_GFF=guy11_genome_baoetal2017.fasta.out.gff
 awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' all_svs.bed > all_${sv}.bed
 bedtools intersect -a all_${sv}.bed -b $GENE_BED -wa -u -f 0.5 > gene_${sv}.bed
 bedtools intersect -a all_${sv}.bed -b $TE_GFF -wa -u -f 0.5 > te_${sv}.bed
-bedtools shuffle -i all_${sv}.bed -g $GENOME_CHROMSIZES > shuffled_${sv}.bed
+
+for i in $(seq 1 100); do cat all_${sv}.bed; done > all_${sv}.bed.replicated
+
+bedtools shuffle -i all_${sv}.bed.replicated -g $GENOME_CHROMSIZES > shuffled_${sv}.bed
 
 for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed; do
     OUTPUT_NAME=plot_profile_${REGIONS_BED}
