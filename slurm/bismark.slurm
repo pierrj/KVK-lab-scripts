@@ -20,6 +20,7 @@ module load samtools
 /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark_genome_preparation \
     --verbose --bowtie2 --path_to_aligner /global/home/groups/consultsw/sl-7.x86_64/modules/bowtie2/2.3.4.1 guy11_genome_baoetal2017/
 
+rm -r ${SAMPLE}_bismark_out
 
 /global/scratch/users/pierrj/bismark/Bismark-0.24.0/bismark \
         --parallel 6 \
