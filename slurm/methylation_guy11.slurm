@@ -77,7 +77,7 @@ for SAMPLE in SRR653493 SRR653494 SRR653495; do
     bedtools intersect -wa -wb -a ${genome}.genes.bed -b ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
         awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${genome}.${SAMPLE}.percentmethylated
 
-    bedGraphToBigWig ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $CHROM_SIZES ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
+    bedGraphToBigWig ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg $GENOME_CHROMSIZES ${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
 
     density_file=${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bw
     THREADS=$SLURM_NTASKS
