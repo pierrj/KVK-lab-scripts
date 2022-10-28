@@ -20,11 +20,11 @@ module load bedtools
 PROJ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_eccdnas
 THREADS=$SLURM_NTASKS
 
-# if [ -d "$PROJ_DIR" ]; then
-#     rm -r "$PROJ_DIR"
-# fi
+if [ -d "$PROJ_DIR" ]; then
+    rm -r "$PROJ_DIR"
+fi
 
-# mkdir $PROJ_DIR
+mkdir $PROJ_DIR
 
 cd $PROJ_DIR
 
@@ -40,10 +40,10 @@ awk '{print $3-$2}' ${genome}.genes.bed > ${genome}.gene_lengths
 bwa index ${GENOME_FASTA}
 
 while read sample; do
-    # bwa mem -t ${THREADS} $GENOME_FASTA /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R1.fastq \
-    # /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R2.fastq | \
-    #     samtools sort -@ ${THREADS} -o ${sample}.bam -
-    # samtools index ${sample}.bam
+    bwa mem -t ${THREADS} $GENOME_FASTA /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R1.fastq \
+    /global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}_R2.fastq | \
+        samtools sort -@ ${THREADS} -o ${sample}.bam -
+    samtools index ${sample}.bam
     read_count=$(samtools view -c -F 4 -F 2048 ${sample}.bam | awk '{print $1/1000000}')
     ## run bedtools coverage on the mapped histone mark files, normalize by read count
     bedtools coverage -sorted -counts -a ${genome}.genes.bed -g ${GENOME_CHROMSIZES} -b ${sample}.bam | awk '{print $(NF)}' > ${sample}.coverage
@@ -54,13 +54,3 @@ done < $MAPFILE
 
 paste *.coverage.normalized | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.coverage
 paste ${genome}.genes_column all.coverage > ${genome}_eccdnacov_per_gene.txt
-
-# while read sample; do
-#     ecc_file=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/${sample}/${sample}.ecc_caller_out.splitreads.bed
-#     ecc_count=$(wc -l $ecc_file | awk '{print $1/1000000}')
-#     ## run bedtools coverage on the mapped histone mark files, normalize by read count
-#     bedtools coverage -counts -a ${genome}.genes.bed -b $ecc_file | awk -v r=$ecc_count '{print $(NF)/r}' > ${sample}.sr_coverage
-# done < $MAPFILE
-
-# paste *.sr_coverage | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.sr_coverage
-# paste ${genome}.genes_column all.sr_coverage > ${genome}_srcov_per_gene.txt
