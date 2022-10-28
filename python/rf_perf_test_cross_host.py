@@ -6,7 +6,6 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_auc_score
 import sys
-from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import plot_confusion_matrix
 import matplotlib.pyplot as plt
 
@@ -78,9 +77,9 @@ def train_test_split_mine_downsample(majority_fraction):
         df_genes_downsampled = df_genes
     # drop columns
     df_genes_downsampled = df_genes_downsampled.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'cm_expression', 'ip_expression'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
     df_genes_test_subset = df_genes_test_subset.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'cm_expression', 'ip_expression'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
     y_train = df_genes_downsampled['lineage_pav']
     X_train = df_genes_downsampled.drop('lineage_pav', axis=1)
     y_test = df_genes_test_subset['lineage_pav']
@@ -112,13 +111,6 @@ elif approach == "SMOTE":
 model.fit(X_train, y_train)
 results = reports(model, X_test, y_test)
 
-# n_estimators = int(sys.argv[4])
-# min_samples_split = int(sys.argv[5])
-# min_samples_leaf = int(sys.argv[6])
-# max_features = sys.argv[7]
-# max_depth = sys.argv[8]
-# bootstrap = eval(sys.argv[9])
-
 print('primary results')
 
 print(approach + '\t' + 
@@ -134,30 +126,13 @@ print(approach + '\t' +
             str(results[2]) + '\t' + 
             str(results[3]))
 
-y_score = model.predict_proba(X_test)[:, 1]
-precision, recall, thresholds = precision_recall_curve(y_test, y_score)
-
-#create precision recall curve
-fig, ax = plt.subplots()
-ax.plot(recall, precision, color='purple', label = 'model')
-ax.axhline(y=0.05, label='no skill')
-
-#add axis labels to plot
-ax.set_title('Precision-Recall Curve')
-ax.set_ylabel('Precision')
-ax.set_xlabel('Recall')
-
-#display plot
-plt.legend(loc="best")
-plt.savefig(output_string + '_precision-recall_curve.png')
-
 ## compare to second df
 
 df_genes_2 = pd.read_csv(input_df_2)
 df_genes_2 = df_genes_2[df_genes_2['lineage']!=4]
 # drop columns
 df_genes_2 = df_genes_2.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                        'genome', 'lineage', 'lineage_conserved', 'proportion', 'cm_expression', 'ip_expression'], axis=1)
+                            'genome', 'lineage', 'lineage_conserved', 'proportion'], axis=1)
 y_test_2 = df_genes_2['lineage_pav']
 X_test_2 = df_genes_2.drop('lineage_pav', axis=1)
 
