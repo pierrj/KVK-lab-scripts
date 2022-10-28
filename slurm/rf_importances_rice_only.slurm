@@ -28,8 +28,3 @@ OUTPUT_FILE=rf_results.cross_host_rice_only.txt
 OUTPUT_STRING=cross_host_rice_only
 
 /global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_w_importances.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $OUTPUT_STRING > $OUTPUT_FILE
-
-
-
-
-

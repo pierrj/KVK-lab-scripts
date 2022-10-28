@@ -8,6 +8,9 @@ from sklearn.metrics import roc_auc_score
 import sys
 from rfpimp import importances
 from rfpimp import dropcol_importances
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import plot_confusion_matrix
+import matplotlib.pyplot as plt
 
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
@@ -75,9 +78,9 @@ def train_test_split_mine_downsample(majority_fraction):
         df_genes_downsampled = df_genes
     # drop columns
     df_genes_downsampled = df_genes_downsampled.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'flanking_5kb_gc'], axis=1)
+                            'lineage_conserved', 'proportion'], axis=1)
     df_genes_test_subset = df_genes_test_subset.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage', 'lineage_conserved', 'proportion', 'flanking_5kb_gc'], axis=1)
+                            'lineage_conserved', 'proportion'], axis=1)
     y_train = df_genes_downsampled['lineage_pav']
     X_train = df_genes_downsampled.drop('lineage_pav', axis=1)
     y_test = df_genes_test_subset['lineage_pav']
@@ -118,6 +121,27 @@ print(approach + '\t' +
             str(results[1]) + '\t' + 
             str(results[2]) + '\t' + 
             str(results[3]))
+
+y_score = model.predict_proba(X_test)[:, 1]
+precision, recall, thresholds = precision_recall_curve(y_test, y_score)
+
+#create precision recall curve
+fig, ax = plt.subplots()
+ax.plot(recall, precision, color='purple', label = 'model')
+ax.axhline(y=0.05, label='no skill')
+
+#add axis labels to plot
+ax.set_title('Precision-Recall Curve')
+ax.set_ylabel('Precision')
+ax.set_xlabel('Recall')
+
+#display plot
+plt.legend(loc="best")
+plt.savefig(output_string + '_precision-recall_curve.png')
+
+fig = plot_confusion_matrix(model, X_test, y_test, display_labels=['Is not PAV Gene', 'Is PAV gene'], cmap='Greens')
+plt.title('Confusion Matrix')
+plt.savefig(output_string + '_cross_test_confusion_matrix.png')
 
 ## default importance
 I = pd.DataFrame()
