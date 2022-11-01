@@ -12,6 +12,6 @@
 
 cd /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA
 
-find . -name "*.fastq" -type f
+find . -name "*.fastq" -type f > fastq_files_to_delete
 
-find . -name "*.bam" -type f
+find . -name "*.bam" -type f > bam_files_to_delete
