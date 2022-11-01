@@ -13,3 +13,5 @@
 cd /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA
 
 find . -name "*.fastq" -type f
+
+find . -name "*.bam" -type f
