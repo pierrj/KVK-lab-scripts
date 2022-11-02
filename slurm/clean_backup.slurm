@@ -12,14 +12,18 @@
 
 cd /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA
 
-find . -name "*.fastq" -type f -delete
+# find . -name "*.fastq" -type f -delete
 
-find . -name "*.sra" -type f -delete
+# find . -name "*.sra" -type f -delete
 
-find . -name "*.bam" -type f -delete
+# find . -name "*.bam" -type f -delete
 
-find . -name "*.sam" -type f -delete
+# find . -name "*.sam" -type f -delete
+
+rm -r rerunning_stuff_final/pipeline_qc/rarefaction_tech_reps/
+
+rm -r rerunning_stuff_final/pipeline_qc/pacbio/all_false_positives
 
 cd /global/scratch/users/pierrj/space_snif
 
-du -h /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA > eccdna_dir_space_sniff_post_rm_bam_files
+du -h /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA > eccdna_dir_space_sniff_post_rm_bam_files_post_rm_techreps_fps
