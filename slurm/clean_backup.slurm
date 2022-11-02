@@ -12,6 +12,14 @@
 
 cd /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA
 
-find . -name "*.fastq" -type f > fastq_files_to_delete
+find . -name "*.fastq" -type f -delete
 
-find . -name "*.bam" -type f > bam_files_to_delete
+find . -name "*.sra" -type f -delete
+
+find . -name "*.bam" -type f -delete
+
+find . -name "*.sam" -type f -delete
+
+cd /global/scratch/users/pierrj/space_snif
+
+du -h /global/scratch/projects/vector_kvklab/pierrj/eccdna_backup/eccDNA > eccdna_dir_space_sniff_post_rm_bam_files
