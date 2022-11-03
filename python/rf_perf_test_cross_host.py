@@ -6,7 +6,6 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_auc_score
 import sys
-from sklearn.metrics import plot_confusion_matrix
 import matplotlib.pyplot as plt
 
 input_df = sys.argv[1]
@@ -51,13 +50,14 @@ def reports(model, X_test, y_test):
     TP = len(y_pred[(y_pred == 1) & (y_test == 1)])
     FN = len(y_pred[(y_pred == 0) & (y_test == 1)])
     FP = len(y_pred[(y_pred == 1) & (y_test == 0)])
+    TN = len(y_pred[(y_pred == 0) & (y_test == 0)])
     # sensitivity, how sensitive is the test? TP/TP+FN aka recall
     recall = TP/(TP+FN)
     ## PPV, how powerful is a positive? TP/TP+FP aka precision
     precision = TP/(TP+FP)
     ap = average_precision_score(y_test, model.predict_proba(X_test)[:,1])
     auc = roc_auc_score(y_test, model.predict_proba(X_test)[:,1])
-    return([recall, precision, ap, auc])
+    return([recall, precision, ap, auc, TP, FN, FP, TN])
 
 def train_test_split_mine_downsample(majority_fraction):
     df_genes = pd.read_csv(input_df)
@@ -109,22 +109,6 @@ elif approach == "RF":
 elif approach == "SMOTE":
     model = RandomForestClassifier(**args_dict)
 model.fit(X_train, y_train)
-results = reports(model, X_test, y_test)
-
-print('primary results')
-
-print(approach + '\t' + 
-            str(majority_fraction) + '\t' +
-            str(n_estimators) + '\t' +
-            str(min_samples_split) + '\t' +
-            str(min_samples_leaf) + '\t' +
-            str(max_features) + '\t' +
-            str(max_depth) + '\t' +
-            str(bootstrap) + '\t' +
-            str(results[0]) + '\t' + 
-            str(results[1]) + '\t' + 
-            str(results[2]) + '\t' + 
-            str(results[3]))
 
 ## compare to second df
 
@@ -151,9 +135,8 @@ print(approach + '\t' +
             str(results_2[0]) + '\t' + 
             str(results_2[1]) + '\t' + 
             str(results_2[2]) + '\t' + 
-            str(results_2[3]))
-
-
-fig = plot_confusion_matrix(model, X_test_2, y_test_2, display_labels=['Is not PAV Gene', 'Is PAV gene'], cmap='Greens')
-plt.title('Confusion Matrix')
-plt.savefig(output_string + '_cross_test_confusion_matrix.png')
+            str(results_2[3]) + '\t' + 
+            str(results_2[4]) + '\t' + 
+            str(results_2[5]) + '\t' + 
+            str(results_2[6]) + '\t' + 
+            str(results_2[7]))
