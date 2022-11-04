@@ -122,8 +122,6 @@ X_test_2 = df_genes_2.drop('lineage_pav', axis=1)
 
 results_2 = reports(model, X_test_2, y_test_2)
 
-print('secondary results')
-
 print(approach + '\t' + 
             str(majority_fraction) + '\t' +
             str(n_estimators) + '\t' +
