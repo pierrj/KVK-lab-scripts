@@ -9,7 +9,8 @@ df.columns = ['approach', 'majority_fraction',
             'n_estimators', 'min_samples_split',
             'min_samples_leaf', 'max_features',
             'max_depth', 'bootstrap',
-            'recall', 'precision', 'ap', 'auc']
+            'recall', 'precision', 'ap', 'auc',
+            'TP', 'FN', 'FP', 'TN']
 
 
 df_grouped = df.groupby(['approach', 'majority_fraction', 
