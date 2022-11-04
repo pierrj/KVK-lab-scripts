@@ -71,7 +71,7 @@ cut -f1-2 ${FASTA_FILE}.fai > ${FASTA_FILE}.chromsizes
 RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 SRA_LIST_CM=b71_assembly_complete_medium
 SRA_LIST_IP=b71_assembly_complete_medium_in_planta
-if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile" ]; then
+if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile" ]; then
     cd $RNASEQ_DIR
     samtools faidx ${FASTA_FILE}
     cut -f1 ${FASTA_FILE}.fai > ${FASTA_FILE}.contignames

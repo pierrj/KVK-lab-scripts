@@ -64,7 +64,7 @@ cut -f1-2 ${FASTA_FILE}.fai > ${FASTA_FILE}.chromsizes
 RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
 SRA_LIST_CM=zhang_et_al_2019_complete_medium
 SRA_LIST_IP=zhang_et_al_2019_in_planta
-if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile" ]; then
+if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile" ]; then
     cd $RNASEQ_DIR
     samtools faidx ${FASTA_FILE}
     cut -f1 ${FASTA_FILE}.fai > ${FASTA_FILE}.contignames
