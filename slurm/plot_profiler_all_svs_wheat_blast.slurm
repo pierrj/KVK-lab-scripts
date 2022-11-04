@@ -84,7 +84,7 @@ if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile" ]; then
     while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_CM > ${SRA_LIST_CM}_bamfile_mapfile
     while read SRA; do
         samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
-        samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
+        samtools index -c sorted.${SRA}.Aligned.sortedByCoord.out.bam
         samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
     done < $SRA_LIST_IP
     while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_IP > ${SRA_LIST_IP}_bamfile_mapfile
