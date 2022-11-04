@@ -10,7 +10,9 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/PAV_SV/SV/dels_wheat_blast
+WORKING_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_wheat_blast
+
+cd $WORKING_DIR
 
 FASTA_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.fna
 FASTA_FILE_TRIMMED=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.no_mito_no_mini.fna
@@ -23,13 +25,16 @@ FASTA_FILE=$FASTA_FILE_TRIMMED
 
 basename_fasta_file=$(basename $FASTA_FILE)
 
+SV_DIR=/global/scratch/users/pierrj/sv_calling_moryzae/wheat_blast_11_2_22
+SV_MAPFILE=wheat_blast_illumina_seq_runs.txt
+
 ## get svs
 if [ -f all_svs_list ]; then
     rm all_svs_list
 fi
 while read SAMPLE; do
-    echo /global/scratch/users/pierrj/sv_calling_moryzae/wheat_blast_11_2_22/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
-done < /global/scratch/users/pierrj/sv_calling_moryzae/wheat_blast_11_2_22/wheat_blast_illumina_seq_runs.txt
+    echo ${SV_DIR}/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
+done < ${SV_DIR}/${SV_MAPFILE}
 
 ## merge
 # in order #
@@ -63,28 +68,28 @@ samtools faidx ${FASTA_FILE}
 cut -f1-2 ${FASTA_FILE}.fai > ${FASTA_FILE}.chromsizes
 
 ## mapfiles for RNAseq
-if [ ! -f "/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71/b71_assembly_complete_medium_bamfile_mapfile" ]; then
-    cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
-    FASTA_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.no_mito_no_mini.fna
+RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
+SRA_LIST_CM=b71_assembly_complete_medium
+SRA_LIST_IP=b71_assembly_complete_medium_in_planta
+if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile" ]; then
+    cd $RNASEQ_DIR
     samtools faidx ${FASTA_FILE}
     cut -f1 ${FASTA_FILE}.fai > ${FASTA_FILE}.contignames
     MAPFILE=${FASTA_FILE}.contignames
-    SRA_LIST=b71_assembly_complete_medium
     while read SRA; do
         samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
         samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
         samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-    done < $SRA_LIST
-    SRA_LIST=b71_assembly_complete_medium_in_planta
+    done < $SRA_LIST_CM
+    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_CM > ${SRA_LIST_CM}_bamfile_mapfile
     while read SRA; do
         samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
         samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
         samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-        realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam > ${SRA_LIST}_bamfile_mapfile
-    done < $SRA_LIST
+    done < $SRA_LIST_IP
+    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_IP > ${SRA_LIST_IP}_bamfile_mapfile
+    cd $WORKING_DIR
 fi
-
-# to get mapfiles for averageing ##
 
 sv=DEL
 GENOME_FILE=$FASTA_FILE
@@ -118,12 +123,12 @@ for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed;
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     SUB_OUTPUT_NAME=cm_expression
-    MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71/b71_assembly_complete_medium_bamfile_mapfile
+    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
         -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     SUB_OUTPUT_NAME=ip_expression
-    MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71/b71_assembly_complete_medium_in_planta_bamfile_mapfile
+    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
         -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 done

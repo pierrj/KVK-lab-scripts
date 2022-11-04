@@ -35,6 +35,9 @@ then
         bedtools nuc -fi ${GENOME_FILE} -bed ${genome_basename}.${WINDOWS}windows > ${genome_basename}.${WINDOWS}windows.gc
         awk -v OFS='\t' '{ if (NR > 1) {print $1, $2, $3, $5}}' ${genome_basename}.${WINDOWS}windows.gc > ${genome_basename}.${WINDOWS}windows.gc.bg
         bedGraphToBigWig ${genome_basename}.${WINDOWS}windows.gc.bg ${CHROM_SIZES} ${density_file_basename}.bw
+    elif [[ "${DENSITY_FILE[0]}" == *"bismark"* ]]; then
+        echo 'methylation'
+        bedGraphToBigWig ${DENSITY_FILE[0]} ${density_file_basename}.bw
     else
         echo 'single file but not gc, treating input as bed'
         bedtools coverage -a ${genome_basename}.${WINDOWS}windows \

@@ -10,18 +10,24 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
+WORKING_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast
 
-cd /global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast
+cd $WORKING_DIR
 
 FASTA_FILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+
+basename_fasta_file=$(basename $FASTA_FILE)
+
+SV_DIR=/global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11
+SV_MAPFILE=gladieux_accessions
 
 ## get svs
 if [ -f all_svs_list ]; then
     rm all_svs_list
 fi
 while read SAMPLE; do
-    echo /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
-done < /global/scratch/users/pierrj/sv_calling_moryzae/run_1_24_2022_guy11/gladieux_accessions
+    echo ${SV_DIR}/${SAMPLE}/all/${SAMPLE}.all.vcf >> all_svs_list
+done < ${SV_DIR}/${SV_MAPFILE}
 
 ## merge
 # in order #
@@ -41,7 +47,7 @@ grep -v 'Supercontig_7.9' all_svs.bed.old > all_svs.bed
 
 
 ## get TE annotation file
-if [ ! -f "guy11_genome_baoetal2017.fasta.out.gff" ]; then
+if [ ! -f "${basename_fasta_file}.out.gff" ]; then
     module load repeatmasker/4.1.1
     RM_LIB=/global/scratch/users/pierrj/PAV_SV/PAV/te_annotations_anne/anne_repbase_te_lib_fixed
     RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . $FASTA_FILE
@@ -50,13 +56,49 @@ fi
 ## get the profile plots
 source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
+## generate some necessary files
+samtools faidx ${FASTA_FILE}
+cut -f1-2 ${FASTA_FILE}.fai > ${FASTA_FILE}.chromsizes
+
+## mapfiles for RNAseq
+RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
+SRA_LIST_CM=zhang_et_al_2019_complete_medium_bamfile_mapfile
+SRA_LIST_IP=zhang_et_al_2019_in_planta_bamfile_mapfile
+if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile" ]; then
+    cd $RNASEQ_DIR
+    samtools faidx ${FASTA_FILE}
+    cut -f1 ${FASTA_FILE}.fai > ${FASTA_FILE}.contignames
+    MAPFILE=${FASTA_FILE}.contignames
+    while read SRA; do
+        samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
+        samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
+        samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
+    done < $SRA_LIST_CM
+    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_CM > ${SRA_LIST_CM}_bamfile_mapfile
+    while read SRA; do
+        samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
+        samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
+        samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
+    done < $SRA_LIST_IP
+    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_IP > ${SRA_LIST_IP}_bamfile_mapfile
+    cd $WORKING_DIR
+fi
+
+## mapfiles for eccdnas
+ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
+if [ ! -f "${ECCDNA_DIR}/bamfile_mapfile" ]; then
+    cd $ECCDNA_DIR
+    while read sample; do realpath ${sample}.bam; done < $MAPFILE > bamfile_mapfile
+    cd $WORKING_DIR
+fi
+
 sv=DEL
-GENOME_FILE=guy11_genome_baoetal2017.fasta
-GENOME_CHROMSIZES=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.chromsizes
+GENOME_FILE=$FASTA_FILE
+GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
 THREADS=${SLURM_NTASKS}
 WINDOWS=10
 GENE_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/GUY11.genes.bed
-TE_GFF=guy11_genome_baoetal2017.fasta.out.gff
+TE_GFF=${basename_fasta_file}.out.gff
 
 awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' all_svs.bed > all_${sv}.bed
 bedtools intersect -a all_${sv}.bed -b $GENE_BED -wa -u -f 0.5 > gene_${sv}.bed
@@ -69,7 +111,7 @@ bedtools shuffle -i all_${sv}.bed.replicated -g $GENOME_CHROMSIZES > shuffled_${
 for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed; do
     OUTPUT_NAME=plot_profile_${REGIONS_BED}
 
-    DENSITY_BED=guy11_genome_baoetal2017.fasta.out.gff
+    DENSITY_BED=$TE_GFF
     SUB_OUTPUT_NAME=tes
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
@@ -83,29 +125,27 @@ for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed;
     SUB_OUTPUT_NAME=gc
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
-    DENSITY_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/GUY11.genes.bed
+    DENSITY_BED=$GENE_BED
     SUB_OUTPUT_NAME=genes
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     SUB_OUTPUT_NAME=cm_expression
-    MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/zhang_et_al_2019_complete_medium_bamfile_mapfile
-
+    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
         -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     SUB_OUTPUT_NAME=ip_expression
-    MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/zhang_et_al_2019_in_planta_bamfile_mapfile
-
+    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
         -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
     SUB_OUTPUT_NAME=eccdna
-    MAPFILE_FOR_AVERAGING=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/bamfile_mapfile
+    MAPFILE_FOR_AVERAGING=${ECCDNA_DIR}/bamfile_mapfile
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
+        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 
+    SUB_OUTPUT_NAME=methylation
+    DENSITY_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_methylation/SRR653493_bismark_out/SRR653493.sra_1_bismark_bt2_pe.fixed.bg
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
         -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
 done
-
-## to get mapfiles for averageing ##
-# while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST > ${SRA_LIST}_bamfile_mapfile
-# while read sample; do realpath ${sample}.bam; done < $MAPFILE > bamfile_mapfile
