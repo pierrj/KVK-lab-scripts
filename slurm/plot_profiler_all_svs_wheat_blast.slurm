@@ -99,6 +99,10 @@ WINDOWS=10
 GENE_BED=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/all_beds_fixed/GCA_004785725.2_ASM478572v2.genes.bed
 TE_GFF=${basename_fasta_file}.out.gff
 
+grep -v 'CP060337.1' $GENE_BED | grep -v 'CP060338.1' > b71_gene_bed_no_mini_no_mito.bed
+
+GENE_BED=b71_gene_bed_no_mini_no_mito.bed
+
 awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' all_svs.bed > all_${sv}.bed
 bedtools intersect -a all_${sv}.bed -b $GENE_BED -wa -u -f 0.5 > gene_${sv}.bed
 bedtools intersect -a all_${sv}.bed -b $TE_GFF -wa -u -f 0.5 > te_${sv}.bed
