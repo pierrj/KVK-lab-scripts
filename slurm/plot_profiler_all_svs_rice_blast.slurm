@@ -86,9 +86,10 @@ fi
 
 ## mapfiles for eccdnas
 ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
+ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
 if [ ! -f "${ECCDNA_DIR}/bamfile_mapfile" ]; then
     cd $ECCDNA_DIR
-    while read sample; do realpath ${sample}.bam; done < $MAPFILE > bamfile_mapfile
+    while read sample; do realpath ${sample}.bam; done < $ECCDNA_MAPFILE > bamfile_mapfile
     cd $WORKING_DIR
 fi
 
