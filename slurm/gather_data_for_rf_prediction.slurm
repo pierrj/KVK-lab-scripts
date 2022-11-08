@@ -26,43 +26,33 @@ GUY11_DATA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/test_rf_data_generation/g
 cd $PROJ_DIR
 
 ## some prep
-MAKE SURE THE COLUMNS ARE ACTUALLY RIGHT HERE
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $PROTEIN_GFF > ${GENOME_OUTPUT_STRING}_gene.bed
 PROTEIN_BED=${GENOME_OUTPUT_STRING}_gene.bed
-
 samtools faidx ${GENOME_FASTA}
 cut -f1-2 ${GENOME_FASTA}.fai > ${GENOME_FASTA}.chromsizes
 GENOME_CHROM_SIZES=${GENOME_FASTA}.chromsizes
 
-
 ### GATHER DATA
-
 if [ -f slurm_ids ]; then
     rm slurm_ids
 fi
-
 ## get pfam annotations
 sbatch --parsable --export=ALL /global/home/users/pierrj/git/slurm/pfam_scan_per_proteome.slurm >> slurm_ids
-
 ## get GC
 sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/gc_gene_stats.slurm >> slurm_ids
-
 ## repeatmask
 sbatch --parsable --export=ALL /global/home/users/pierrj/git/slurm/repeatmask_per_genome.slurm >> slurm_ids
-
 ## effector domains
 sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/effector_predictor.slurm >> slurm_ids
-
 ## GO
 sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/pannzer_per_proteome.slurm >> slurm_ids
-
 ## xfer info from guy11
 sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/transfer_info_from_guy11_per_genome.slurm >> slurm_ids
-
-## bring it all together now
-
+## make sure everything finishes
 if [ -f slurm_ids ]; then
     # wait for all jobs to finish
     sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
     wait
 fi
+
+## bring it all together now
