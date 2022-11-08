@@ -38,7 +38,7 @@ done < ${SV_DIR}/${SV_MAPFILE}
 # disabled?
 # minimum size
 # output
-/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 1000 1 1 1 0 0 all_svs.vcf
+/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 100 1 1 1 0 0 all_svs.vcf
 /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR vcftobed all_svs.vcf 1 10000000000000000 all_svs.bed
 
 ## remove mitochondria
@@ -109,7 +109,9 @@ for i in $(seq 1 100); do cat all_${sv}.bed; done > all_${sv}.bed.replicated
 
 bedtools shuffle -i all_${sv}.bed.replicated -g $GENOME_CHROMSIZES > shuffled_${sv}.bed
 
-for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed; do
+cp $GENE_BED all_genes.bed
+
+for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed all_genes.bed; do
     OUTPUT_NAME=plot_profile_${REGIONS_BED}
 
     DENSITY_BED=$TE_GFF
