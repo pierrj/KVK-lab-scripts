@@ -70,6 +70,7 @@ sbatch --parsable -A co_minium\
 if [ -f slurm_ids ]; then
     # wait for all jobs to finish
     sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
+
     wait
 fi
 
