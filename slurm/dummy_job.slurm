@@ -2,7 +2,7 @@
 #SBATCH --job-name=dummy_job
 #SBATCH --partition=savio2_htc
 #SBATCH --qos=savio_normal
-#SBATCH --cpus=1
+#SBATCH --ntasks=1
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
