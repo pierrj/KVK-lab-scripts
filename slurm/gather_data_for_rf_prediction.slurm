@@ -27,7 +27,7 @@ cd $PROJ_DIR
 
 ## some prep
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' $PROTEIN_GFF > ${GENOME_OUTPUT_STRING}_gene.bed
-PROTEIN_BED=${GENOME_OUTPUT_STRING}_gene.bed
+PROTEIN_BED=${PROJ_DIR}/${GENOME_OUTPUT_STRING}_gene.bed
 samtools faidx ${GENOME_FASTA}
 cut -f1-2 ${GENOME_FASTA}.fai > ${GENOME_FASTA}.chromsizes
 GENOME_CHROM_SIZES=${GENOME_FASTA}.chromsizes
