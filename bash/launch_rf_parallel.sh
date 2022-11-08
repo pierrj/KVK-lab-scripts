@@ -169,6 +169,11 @@ do
     /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm
 done
 
+mv $OUTPUT_FILE ${OUTPUT_FILE}.old
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/average_rf_results.py ${OUTPUT_FILE}.old $OUTPUT_FILE
+
+
 ## rice reduced model ##
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/cross_host
@@ -210,6 +215,11 @@ do
     /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm
 done
 
+mv $OUTPUT_FILE ${OUTPUT_FILE}.old
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/average_rf_results.py ${OUTPUT_FILE}.old $OUTPUT_FILE
+
+
 ## wheat reduced model ##
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/cross_host
@@ -250,6 +260,11 @@ do
     --account=co_minium \
     /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm
 done
+
+mv $OUTPUT_FILE ${OUTPUT_FILE}.old
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/average_rf_results.py ${OUTPUT_FILE}.old $OUTPUT_FILE
+
 
 ## rice first cross host ##
 
@@ -294,6 +309,11 @@ do
     /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm
 done
 
+mv $OUTPUT_FILE ${OUTPUT_FILE}.old
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/average_rf_results.py ${OUTPUT_FILE}.old $OUTPUT_FILE
+
+
 ## wheat first cross host ##
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/cross_host
@@ -336,3 +356,7 @@ do
     --account=co_minium \
     /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm
 done
+
+mv $OUTPUT_FILE ${OUTPUT_FILE}.old
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/average_rf_results.py ${OUTPUT_FILE}.old $OUTPUT_FILE
