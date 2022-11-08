@@ -36,18 +36,36 @@ GENOME_CHROM_SIZES=${GENOME_FASTA}.chromsizes
 if [ -f slurm_ids ]; then
     rm slurm_ids
 fi
+
 ## get pfam annotations
-sbatch --parsable --export=ALL /global/home/users/pierrj/git/slurm/pfam_scan_per_proteome.slurm >> slurm_ids
+sbatch --parsable \
+--export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR \
+                    /global/home/users/pierrj/git/slurm/pfam_scan_per_proteome.slurm >> slurm_ids
 ## get GC
-sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/gc_gene_stats.slurm >> slurm_ids
+sbatch --parsable -A co_minium \
+--export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR \
+/global/home/users/pierrj/git/slurm/gc_gene_stats.slurm >> slurm_ids
+
 ## repeatmask
-sbatch --parsable --export=ALL /global/home/users/pierrj/git/slurm/repeatmask_per_genome.slurm >> slurm_ids
+sbatch --parsable \
+--export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR \
+/global/home/users/pierrj/git/slurm/repeatmask_per_genome.slurm >> slurm_ids
+
 ## effector domains
-sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/effector_predictor.slurm >> slurm_ids
+sbatch --parsable -A co_minium \
+--export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR \
+ /global/home/users/pierrj/git/slurm/effector_predictor.slurm >> slurm_ids
+
 ## GO
-sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/pannzer_per_proteome.slurm >> slurm_ids
+sbatch --parsable -A co_minium \
+--export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR \
+/global/home/users/pierrj/git/slurm/pannzer_per_proteome.slurm >> slurm_ids
+
 ## xfer info from guy11
-sbatch --parsable --export=ALL -A co_minium /global/home/users/pierrj/git/slurm/transfer_info_from_guy11_per_genome.slurm >> slurm_ids
+sbatch --parsable -A co_minium\
+--export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR \
+/global/home/users/pierrj/git/slurm/transfer_info_from_guy11_per_genome.slurm >> slurm_ids
+
 ## make sure everything finishes
 if [ -f slurm_ids ]; then
     # wait for all jobs to finish
