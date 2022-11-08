@@ -2,7 +2,7 @@
 #SBATCH --job-name=gc_gene_stats
 #SBATCH --partition=savio4_htc
 #SBATCH --qos=minium_htc4_normal
-#SBATCH --cpus=1
+#SBATCH --ntasks=1
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
