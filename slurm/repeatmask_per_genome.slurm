@@ -24,10 +24,6 @@ cd $DATA_OUTPUT_DIR
 
 module load repeatmasker/4.1.1
 
-while read genome; do
-    RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOME_FASTA}
-done < ${MAPFILE}
+RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOME_FASTA}
 
-while read genome; do
-    awk '{print $11}' ${GENOME_FASTA}.out | paste ${GENOME_FASTA}.out.gff - > ${GENOME_FASTA}.w_class.gff
-done < ${MAPFILE}
+awk '{print $11}' ${GENOME_FASTA}.out | paste ${GENOME_FASTA}.out.gff - > ${GENOME_FASTA}.w_class.gff
