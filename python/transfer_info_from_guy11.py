@@ -6,7 +6,7 @@ import sys
 orthogroup_tsv = sys.argv[1]
 guy11_data_dir = sys.argv[2]
 
-og_w_guy11_df = pd.read_csv(orthogroup_tsv, dtype='string', sep='\t', index_col = 0)
+og_w_guy11_df = pd.read_csv(orthogroup_tsv, dtype='str', sep='\t', index_col = 0)
 
 ## to get the og that a gene belongs to for orthogrouping with guy11
 df_lol = og_w_guy11_df.values.tolist()
