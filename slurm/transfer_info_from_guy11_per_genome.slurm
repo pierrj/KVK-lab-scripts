@@ -35,8 +35,8 @@ cp $PROTEIN_FASTA guy11_plus_input/
 
 orthofinder -S diamond_ultra_sens -f guy11_plus_input -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -o orthofinder_out
 
-orthofinder_date=$(date | awk -v OFS='_' '{print $2,$3}')
+orthofinder_date=$(date +%b%d)
 
 cp orthofinder_out/Results_${orthofinder_date}/Orthogroups/Orthogroups.tsv .
 
-/global/home/users/pierrj/git/python/transfer_info_from_guy11.py Orthogroups.tsv $GUY11_DATA_DIR
+python /global/home/users/pierrj/git/python/transfer_info_from_guy11.py Orthogroups.tsv $GUY11_DATA_DIR
