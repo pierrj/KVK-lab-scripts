@@ -62,7 +62,7 @@ sbatch --parsable -A co_minium \
 /global/home/users/pierrj/git/slurm/pannzer_per_proteome.slurm >> slurm_ids
 
 ## xfer info from guy11
-sbatch --parsable -A co_minium\
+sbatch --parsable -A co_minium \
 --export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR,PROTEIN_BED=$PROTEIN_BED,GENOME_CHROM_SIZES=$GENOME_CHROM_SIZES \
 /global/home/users/pierrj/git/slurm/transfer_info_from_guy11_per_genome.slurm >> slurm_ids
 
