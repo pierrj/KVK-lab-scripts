@@ -26,4 +26,6 @@ module load repeatmasker/4.1.1
 
 RepeatMasker -cutoff 250 -gff -nolow -no_is -norna -pa ${SLURM_NTASKS} -lib ${RM_LIB} -dir . ${GENOME_FASTA}
 
-awk '{print $11}' ${GENOME_FASTA}.out | paste ${GENOME_FASTA}.out.gff - > ${GENOME_FASTA}.w_class.gff
+basename_genome_fasta=$(basename ${GENOME_FASTA})
+
+awk '{print $11}' ${basename_genome_fasta}.out | paste ${basename_genome_fasta}.out.gff - > ${basename_genome_fasta}.w_class.gff
