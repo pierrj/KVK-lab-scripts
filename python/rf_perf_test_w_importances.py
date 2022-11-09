@@ -11,6 +11,7 @@ from rfpimp import dropcol_importances
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import plot_confusion_matrix
 import matplotlib.pyplot as plt
+import pickle
 
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
@@ -107,6 +108,12 @@ elif approach == "RF":
 elif approach == "SMOTE":
     model = RandomForestClassifier(**args_dict)
 model.fit(X_train, y_train)
+
+## store model
+file = open(output_string+"_rfmodel.pkl", 'wb')
+pickle.dump(model, file)
+file.close()
+
 results = reports(model, X_test, y_test)
 
 print(approach + '\t' + 

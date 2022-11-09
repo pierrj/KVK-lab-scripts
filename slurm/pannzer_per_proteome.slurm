@@ -26,3 +26,5 @@ source activate /global/scratch/users/pierrj/conda_envs/pannzer
 /global/scratch/users/pierrj/conda_envs/pannzer/bin/python \
     /global/scratch/users/pierrj/pannzer2/SANSPANZ.3/runsanspanz.py \
     -R -o ",DE.out,GO.out,anno.out" -s "Pyricularia oryzae" < $PROTEIN_FASTA
+
+grep -v qpid GO.out | awk -v OFS='\t' '{print $1, "TRUE"}' | sort | uniq > GO.table

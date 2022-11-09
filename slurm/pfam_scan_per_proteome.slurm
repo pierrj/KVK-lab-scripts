@@ -27,3 +27,5 @@ source activate /global/scratch/users/pierrj/conda_envs/pfam_scan
 pfam_scan.pl -cpu ${SLURM_NTASKS} -outfile pfamscan.out -dir ${PFAM_DIR} -fasta $PROTEIN_FASTA
 
 /global/scratch/users/pierrj/parse_pfam_domains/plant_rgenes/processing_scripts/K-parse_Pfam_domains_v3.1.pl -p pfamscan.out -e 0.001 -o pfamscan.kparse.out
+
+awk -v OFS='\t' '{print $1, "TRUE"}' pfamscan.kparse.out  > pfamscan.table

@@ -38,7 +38,7 @@ if [ -f slurm_ids ]; then
 fi
 
 ## get pfam annotations
-if [ ! -s pfam_out/pfamscan.kparse.out ];then
+if [ ! -s pfam_out/pfamscan.table ];then
     sbatch --parsable \
     --export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR,PROTEIN_BED=$PROTEIN_BED,GENOME_CHROM_SIZES=$GENOME_CHROM_SIZES \
                         /global/home/users/pierrj/git/slurm/pfam_scan_per_proteome.slurm >> slurm_ids
@@ -67,7 +67,7 @@ if [[ ! -s effector_predictor/output.signalp.table || ! -s effector_predictor/ou
 fi
 
 ## GO
-if [ ! -s go/GO.out ];then
+if [ ! -s go/GO.table ];then
     sbatch --parsable -A co_minium \
     --export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR,PROTEIN_BED=$PROTEIN_BED,GENOME_CHROM_SIZES=$GENOME_CHROM_SIZES \
     /global/home/users/pierrj/git/slurm/pannzer_per_proteome.slurm >> slurm_ids
@@ -88,4 +88,45 @@ if [ -f slurm_ids ]; then
     wait
 fi
 
+## inputs
+# og_file = args[1]
+# gff_file = args[2]
+# te_file = args[3]
+# genome = args[4]
+# chromsizes_file = args[5]
+# gc_stats = args[6]
+# tmhmm_table = args[7]
+# signalp_table = args[8]
+# effectorp_table = args[9]
+# H3K27ac_per_og = args[10]
+# H3K27me3_per_og = args[11]
+# H3K36me3_per_og = args[12]
+# zhang_et_al_2019_complete_medium_expression_per_og = args[13]
+# zhang_et_al_2019_in_planta_expression_per_og = args[14]
+# eccdnacov_per_og = args[15]
+# methylation_per_og = args[16]
+# go_table = args[17]
+# pfam_table = args[18]
+# output_table = args[19]
+
 ## bring it all together now
+Rscript --vanilla /global/home/users/pierrj/git/R/make_table_for_rf_pred.r \
+    $(realpath transfer_guy11/Orthogroups.tsv) \
+    $PROTEIN_GFF \
+    $(realpath repeatmasker/${basename_genome_fasta}.w_class.gff) \
+    ${PROTEIN_FASTA%.*} \
+    ${GENOME_CHROM_SIZES} \
+    $(realpath gc_content/gc_table.txt) \
+    $(realpath effector_predictor/output.signalp.table) \
+    $(realpath effector_predictor/output.tmhmm.table) \
+    $(realpath effector_predictor/output.effectorp.table) \
+    $(realpath transfer_guy11/H3K27ac_per_og.txt) \
+    $(realpath transfer_guy11/H3K27me3_per_og.txt) \
+    $(realpath transfer_guy11/H3K36me3_per_og.txt) \
+    $(realpath transfer_guy11/zhang_et_al_2019_complete_medium_expression_per_og.txt) \
+    $(realpath transfer_guy11/zhang_et_al_2019_in_planta_expression_per_og.txt) \
+    $(realpath transfer_guy11/eccdnacov_per_og.txt) \
+    $(realpath transfer_guy11/methylation_per_og.txt) \
+    $(realpath go/GO.table) \
+    $(realpath pfam_out/pfamscan.table) \
+    ${PROJ_DIR}/table_for_rf_pred.txt
