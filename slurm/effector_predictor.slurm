@@ -21,4 +21,6 @@ mkdir $DATA_OUTPUT_DIR
 
 cd $DATA_OUTPUT_DIR
 
+module load seqtk
+
 /global/home/users/pierrj/git/bash/effector_predictor.sh -i $PROTEIN_FASTA -o output
