@@ -45,7 +45,7 @@ done < ${SV_DIR}/${SV_MAPFILE}
 # disabled?
 # minimum size
 # output
-/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 1000 1 1 1 0 0 all_svs.vcf
+/global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge all_svs_list 100 1 1 1 0 0 all_svs.vcf
 /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR vcftobed all_svs.vcf 1 10000000000000000 all_svs.bed
 
 ## remove mitochondria and mini
