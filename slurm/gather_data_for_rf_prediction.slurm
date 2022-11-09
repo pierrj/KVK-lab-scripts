@@ -60,7 +60,7 @@ if [ ! -s repeatmasker/${basename_genome_fasta}.w_class.gff ];then
 fi
 
 ## effector domains
-if [[ ! -s effector_predictor/output.signalp.table && ! -s effector_predictor/output.tmhmm.table && ! -s effector_predictor/output.effectorp.table]];then
+if [[ ! -s effector_predictor/output.signalp.table || ! -s effector_predictor/output.tmhmm.table || ! -s effector_predictor/output.effectorp.table ]]; then
     sbatch --parsable -A co_minium \
     --export=ALL,PROJ_DIR=$PROJ_DIR,GENOME_OUTPUT_STRING=$GENOME_OUTPUT_STRING,PROTEIN_FASTA=$PROTEIN_FASTA,PROTEIN_GFF=$PROTEIN_GFF,GENOME_FASTA=$GENOME_FASTA,PFAM_DIR=$PFAM_DIR,RM_LIB=$RM_LIB,GUY11_PROTEOME=$GUY11_PROTEOME,GUY11_DATA_DIR=$GUY11_DATA_DIR,PROTEIN_BED=$PROTEIN_BED,GENOME_CHROM_SIZES=$GENOME_CHROM_SIZES \
     /global/home/users/pierrj/git/slurm/effector_predictor.slurm >> slurm_ids
