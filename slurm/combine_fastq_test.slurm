@@ -66,8 +66,7 @@ read_count=$(samtools view -c -F 4 -F 2048 $density_file | awk '{print $1/100000
 bedtools coverage -counts -sorted -a ${genome_basename}.${WINDOWS}windows \
     -b $density_file -g ${CHROM_SIZES} | awk -v r=$read_count -v OFS='\t' '{print $(NF)/r}' > ${basename_density_file}.${OUTPUT_NAME}.bg
 
-paste *.${OUTPUT_NAME}.bg | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > averaged.${OUTPUT_NAME}.bg
-paste ${genome_basename}.${WINDOWS}windows averaged.${OUTPUT_NAME}.bg > ${density_file_basename}.bg
+paste ${genome_basename}.${WINDOWS}windows ${basename_density_file}.${OUTPUT_NAME}.bg > ${density_file_basename}.bg
 bedGraphToBigWig ${density_file_basename}.bg ${CHROM_SIZES} ${density_file_basename}.bw
 
 sv=DEL
@@ -80,6 +79,12 @@ computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             --afterRegionStartLength 1000 \
                             -o ${OUTPUT_NAME}.shuffled.mat.gz
 
+plotProfile -m ${OUTPUT_NAME}.shuffled.mat.gz \
+            -out ${OUTPUT_NAME}.shuffled.pdf \
+            --numPlotsPerRow 1 \
+            --plotTitle "${OUTPUT_NAME}" \
+            --outFileNameData ${OUTPUT_NAME}.shuffled.tab
+
 sv=DEL
 REGIONS_BED=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast/all_genes.bed
 
@@ -89,3 +94,9 @@ computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             --regionBodyLength 500 \
                             --afterRegionStartLength 1000 \
                             -o ${OUTPUT_NAME}.genes.mat.gz
+
+plotProfile -m ${OUTPUT_NAME}.genes.mat.gz \
+            -out ${OUTPUT_NAME}.genes.pdf \
+            --numPlotsPerRow 1 \
+            --plotTitle "${OUTPUT_NAME}" \
+            --outFileNameData ${OUTPUT_NAME}.genes.tab
