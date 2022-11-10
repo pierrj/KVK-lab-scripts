@@ -17,6 +17,8 @@ GENOME_FASTA=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fa
 GFF_FILE=GUY11_fungap_out.fixed.gff3
 SRA_LIST=zhang_et_al_2019_complete_medium
 genome=GUY11
+genome_fasta_basename=$(basename ${GENOME_FASTA})
+basename_gff_file=$(basename ${GFF_FILE})
 
 cat SRR12319298.sra.fastq SRR12319299.sra.fastq SRR12319300.sra.fastq SRR12319301.sra.fastq > combined.sra.fastq
 
