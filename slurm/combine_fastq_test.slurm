@@ -78,7 +78,7 @@ computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             --beforeRegionStartLength 1000 \
                             --regionBodyLength 500 \
                             --afterRegionStartLength 1000 \
-                            -o ${OUTPUT_NAME}.${REGIONS_BED}.mat.gz
+                            -o ${OUTPUT_NAME}.shuffled.mat.gz
 
 sv=DEL
 REGIONS_BED=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast/all_genes.bed
@@ -88,4 +88,4 @@ computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             --beforeRegionStartLength 1000 \
                             --regionBodyLength 500 \
                             --afterRegionStartLength 1000 \
-                            -o ${OUTPUT_NAME}.${REGIONS_BED}.mat.gz
+                            -o ${OUTPUT_NAME}.genes.mat.gz
