@@ -9,9 +9,28 @@ rf_pkl = sys.argv[2]
 output_table = sys.argv[3]
 
 df_genes = pd.read_csv(input_table)
-df_genes = df_genes.drop(['id', 'scaffold', 'start', 'end', 'orientation', 'orthogroups', 'enough_space_te', 'enough_space_gene',
-                            'genome', 'lineage'], axis=1)
 
+params = [
+    'any_te',
+    'gene_nearby',
+    'gene_gc',
+    'flanking_1kb_gc',
+    'lengths',
+    'tm',
+    'signalp',
+    'effectorp',
+    'H3K27ac',
+    'H3K27me3',
+    'H3K36me3',
+    'cm_expression',
+    'ip_expression',
+    'eccdna_cov',
+    'methylation',
+    'go',
+    'pfam'
+]
+
+df_genes = df_genes[params]
 
 file = open(rf_pkl, 'rb')
 model = pickle.load(file)
