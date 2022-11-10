@@ -22,6 +22,7 @@ PFAM_DIR=/global/scratch/users/pierrj/pfam/
 RM_LIB=/global/scratch/users/pierrj/PAV_SV/PAV/te_annotations_anne/anne_repbase_te_lib_fixed
 GUY11_PROTEOME=/global/scratch/users/pierrj/PAV_SV/PAV/test_rf_data_generation/guy11_data/GUY11_fungap_out_prot_filtered.faa
 GUY11_DATA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/test_rf_data_generation/guy11_data
+RF_MODEL_PKL=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/full_model_rice_rfmodel.pkl
 
 cd $PROJ_DIR
 
@@ -114,7 +115,7 @@ Rscript --vanilla /global/home/users/pierrj/git/R/make_table_for_rf_pred.r \
     $(realpath transfer_guy11/Orthogroups.tsv) \
     $PROTEIN_GFF \
     $(realpath repeatmasker/${basename_genome_fasta}.w_class.gff) \
-    ${PROTEIN_FASTA%.*} \
+    $(basename ${PROTEIN_FASTA%.*}) \
     ${GENOME_CHROM_SIZES} \
     $(realpath gc_content/gc_table.txt) \
     $(realpath effector_predictor/output.signalp.table) \
@@ -130,3 +131,7 @@ Rscript --vanilla /global/home/users/pierrj/git/R/make_table_for_rf_pred.r \
     $(realpath go/GO.table) \
     $(realpath pfam_out/pfamscan.table) \
     ${PROJ_DIR}/table_for_rf_pred.txt
+
+source activate /global/scratch/users/pierrj/conda_envs/random_forest/
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_predict_pav.py table_for_rf_pred.txt $RF_MODEL_PKL table_w_rf_pred.txt
