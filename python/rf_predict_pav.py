@@ -39,3 +39,5 @@ y_pred = model.predict(df_genes)
 
 df_genes = pd.read_csv(input_table)
 df_genes['predicted_lineage_pav'] = y_pred
+
+df_genes.to_csv(output_table, index=False)
