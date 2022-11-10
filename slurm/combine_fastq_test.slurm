@@ -22,6 +22,8 @@ cat SRR12319298.sra.fastq SRR12319299.sra.fastq SRR12319300.sra.fastq SRR1231930
 
 SRA=combined
 
+module load STAR
+
 STAR --runThreadN ${THREADS} \
     --genomeDir ${genome_fasta_basename}_starindex \
     --readFilesIn ${SRA}.sra.fastq \
@@ -42,6 +44,7 @@ samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam 
 samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
 samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
 
+source activate /global/scratch/users/pierrj/conda_envs/deeptools
 
 sv=DEL
 FASTA_FILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
@@ -53,6 +56,8 @@ density_file=filtered.${SRA}.Aligned.sortedByCoord.out.bam
 genome_basename=guy11
 OUTPUT_NAME=combined
 CHROM_SIZES=$GENOME_CHROMSIZES
+
+bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
 
 basename_density_file=$(basename $density_file)
 read_count=$(samtools view -c -F 4 -F 2048 $density_file | awk '{print $1/1000000}')
