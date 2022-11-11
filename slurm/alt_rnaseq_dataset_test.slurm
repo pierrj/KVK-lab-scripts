@@ -20,7 +20,7 @@ genome=GUY11
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 basename_gff_file=$(basename ${GFF_FILE})
 
-SRA=SRR8259727
+SRA=ERR5875670
 
 # /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
 # /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
@@ -59,7 +59,7 @@ THREADS=${SLURM_NTASKS}
 WINDOWS=10
 density_file=filtered.${SRA}.Aligned.sortedByCoord.out.bam
 genome_basename=guy11
-OUTPUT_NAME=SRR8259727
+OUTPUT_NAME=$SRA
 CHROM_SIZES=$GENOME_CHROMSIZES
 
 bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
