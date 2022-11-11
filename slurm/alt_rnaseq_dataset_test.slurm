@@ -20,10 +20,10 @@ genome=GUY11
 genome_fasta_basename=$(basename ${GENOME_FASTA})
 basename_gff_file=$(basename ${GFF_FILE})
 
+SRA=SRR8259727
+
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
 /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-
-SRA=SRR8259727
 
 module load STAR
 
