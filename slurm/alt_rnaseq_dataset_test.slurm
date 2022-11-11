@@ -22,8 +22,8 @@ basename_gff_file=$(basename ${GFF_FILE})
 
 SRA=SRR8259727
 
-/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-/global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+# /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+# /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
 
 module load STAR
 
@@ -32,7 +32,9 @@ STAR --runThreadN ${THREADS} \
     --readFilesIn ${SRA}.sra_1.fastq ${SRA}.sra_2.fastq \
     --outSAMtype BAM SortedByCoordinate \
     --outFileNamePrefix ${SRA}. \
-    --quantMode GeneCounts
+    --quantMode GeneCounts \
+    --limitBAMsortRAM 4000000000
+
 bam_file=${SRA}.Aligned.sortedByCoord.out.bam
 awk 'NR>4 {print $0}' ${SRA}.ReadsPerGene.out.tab | sort -k1,1 > ${SRA}.ReadsPerGene.out.sorted.tab
 awk '{print $2}' ${SRA}.ReadsPerGene.out.sorted.tab > ${SRA}.ReadsPerGene.out.genecolumn.tab
