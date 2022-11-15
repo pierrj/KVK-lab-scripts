@@ -23,9 +23,9 @@ FEATURES=sqrt
 DEPTH=None
 BOOTSTRAP=True
 
-INPUT_DF=gene_info.cross_host.rice_blast.txt
-INPUT_DF2=gene_info.cross_host.wheat_blast.txt
-OUTPUT_STRING=cross_host_rice_first
+INPUT_DF=gene_info.cross_host.wheat_blast.txt
+INPUT_DF2=gene_info.cross_host.rice_blast.txt
+OUTPUT_STRING=cross_host_wheat_first
 OUTPUT_FILE=rf_results.${OUTPUT_STRING}.txt
 
 /global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_cross_host_output_preds.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $INPUT_DF2 $OUTPUT_STRING > $OUTPUT_FILE
