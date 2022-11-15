@@ -123,6 +123,7 @@ X_test_2 = df_genes_2.drop('lineage_pav', axis=1)
 y_pred = model.predict(X_test_2)
 
 df_genes_2 = pd.read_csv(input_df_2)
+df_genes_2 = df_genes_2[df_genes_2['lineage']!=4]
 df_genes_2['predicted_lineage_pav'] = y_pred
 
 df_genes_2.to_csv(output_string + '_input_df2_with_predictions.txt', index=False)
