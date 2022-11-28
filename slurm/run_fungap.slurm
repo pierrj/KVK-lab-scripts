@@ -22,7 +22,7 @@ singularity exec /global/scratch/users/pierrj/fungap_runs/fungap.sif.old python 
                                                         --output_dir fungap_out \
                                                         --trans_read_1 ../template_run/ERR5875670_1.fastq \
                                                         --trans_read_2 ../template_run/ERR5875670_2.fastq \
-                                                        --genome_assembly ../genomes_to_annotate/${genome}_genomic.fna  \
+                                                        --genome_assembly ../Assembly/${genome}_final.scaffolds.fasta  \
                                                         --augustus_species magnaporthe_grisea  \
                                                         --sister_proteome ../template_run/prot_db.faa  \
                                                         --busco_dataset sordariomycetes_odb10 \
