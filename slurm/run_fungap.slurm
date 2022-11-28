@@ -18,7 +18,7 @@ export PERL5LIB=''
 export AUGUSTUS_CONFIG_PATH=/global/scratch/users/pierrj/fungap_runs/fungap_config_copy/
 export AUGUSTUS_SCRIPTS_PATH=/opt/conda/bin
 
-singularity exec /global/scratch/users/pierrj/fungap_runs/fungap.sif python /workspace/FunGAP/fungap.py \
+singularity exec /global/scratch/users/pierrj/fungap_runs/fungap.sif.old python /workspace/FunGAP/fungap.py \
                                                         --output_dir fungap_out \
                                                         --trans_read_1 ../template_run/ERR5875670_1.fastq \
                                                         --trans_read_2 ../template_run/ERR5875670_2.fastq \
