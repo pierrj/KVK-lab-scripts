@@ -67,7 +67,7 @@ else:
 row.append(baseline)
 for perm_feature in X_dep_test.columns:
     if perm_feature == dep_feature:
-        row.append(x)
+        row.append('x')
         continue
     save = X_dep_test[perm_feature].copy()
     X_dep_test[perm_feature] = np.random.permutation(X_dep_test[perm_feature])

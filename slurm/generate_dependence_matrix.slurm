@@ -1,0 +1,55 @@
+#!/bin/bash
+#SBATCH --job-name=generate_dependence_matrix
+#SBATCH --partition=savio4_htc
+#SBATCH --qos=minium_htc4_normal
+#SBATCH --account=co_minium
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=56
+#SBATCH --time=72:00:00
+#SBATCH --mail-user=pierrj@berkeley.edu
+#SBATCH --mail-type=ALL
+#SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
+#SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+
+cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest
+
+INPUT_DF=gene_info.full_model.rice_blast.txt
+
+MAJORITY_FRACTION=0.5
+APPROACH=RF
+ESTIMATORS=2000
+SPLIT=2
+LEAF=1
+FEATURES=None
+DEPTH=None
+BOOTSTRAP=True
+
+OUTPUT_COL_LIST=parameters_list.txt
+OUTPUT_XTRAIN=x_train.${INPUT_DF}
+OUTPUT_XTEST=x_test.${INPUT_DF}
+
+OUTPUT_FILE=dependency_matrix.${INPUT_DF}
+
+/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/output_train_test.py $INPUT_DF $MAJORITY_FRACTION $OUTPUT_COL_LIST $OUTPUT_XTRAIN $OUTPUT_XTEST
+
+if [ -f jobqueue ]; then
+    rm jobqueue
+fi
+
+while read param; do
+    echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/dependencies_per_column.py $OUTPUT_XTRAIN $OUTPUT_XTEST $param $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP" >> jobqueue
+done < $OUTPUT_COL_LIST
+
+parallel -j ${SLURM_NTASKS} < jobqueue >> ${OUTPUT_FILE}
+
+mv $OUPUT_FILE $OUTPUT_FILE.old
+
+mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
+
+cat <(echo x) $OUTPUT_COL_LIST.old > $OUTPUT_COL_LIST
+
+mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
+
+tr "\n" "\t" < $OUTPUT_COL_LIST.old > header
+
+cat header $OUTPUT_FILE.old > $OUTPUT_FILE
