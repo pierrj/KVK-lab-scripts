@@ -46,4 +46,4 @@ X_test.to_csv(output_x_test,index=False)
 
 with open(output_col_list, 'w', newline = '') as out_file:
     w = csv.writer(out_file, delimiter = '\t')
-    w.writerow(X_train.columns.tolist())
+    w.writerows(X_train.columns.tolist())
