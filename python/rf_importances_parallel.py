@@ -100,6 +100,6 @@ for column in X_test.columns:
     permuted_diffs.append(diff)
     X_test[column] = save
 
-print('\t'.join(X_test.columns.to_list()))
+print('\t'.join(map(str, X_test.columns.to_list())))
 
-print('\t'.join(permuted_diffs))
+print('\t'.join(map(str, permuted_diffs)))

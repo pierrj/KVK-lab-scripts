@@ -80,4 +80,4 @@ for perm_feature in X_dep_test.columns:
     row.append(diff)
     X_dep_test[perm_feature] = save
 
-print('\t'.join(row))
+print('\t'.join(map(str, row)))
