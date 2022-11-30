@@ -32,13 +32,16 @@ OUTPUT_FILE=dependency_matrix.${INPUT_DF}
 
 /global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/output_train_test.py $INPUT_DF $MAJORITY_FRACTION $OUTPUT_COL_LIST $OUTPUT_XTRAIN $OUTPUT_XTEST
 
+
+tr -d '\015' <${OUTPUT_COL_LIST} > ${OUTPUT_COL_LIST}.fixed
+
 if [ -f jobqueue ]; then
     rm jobqueue
 fi
 
 while read param; do
     echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/dependencies_per_column.py $OUTPUT_XTRAIN $OUTPUT_XTEST $param $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP" >> jobqueue
-done < $OUTPUT_COL_LIST
+done < ${OUTPUT_COL_LIST}.fixed
 
 parallel -j ${SLURM_NTASKS} < jobqueue >> ${OUTPUT_FILE}
 
