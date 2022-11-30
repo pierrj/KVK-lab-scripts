@@ -35,24 +35,24 @@ OUTPUT_FILE=dependency_matrix.${INPUT_DF}
 
 tr -d '\015' <${OUTPUT_COL_LIST} > ${OUTPUT_COL_LIST}.fixed
 
-if [ -f jobqueue ]; then
-    rm jobqueue
+if [ -f jobqueue_dep ]; then
+    rm jobqueue_dep
 fi
 
 while read param; do
-    echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/dependencies_per_column.py $OUTPUT_XTRAIN $OUTPUT_XTEST $param $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP" >> jobqueue
+    echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/dependencies_per_column.py $OUTPUT_XTRAIN $OUTPUT_XTEST $param $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP" >> jobqueue_dep
 done < ${OUTPUT_COL_LIST}.fixed
 
-parallel -j ${SLURM_NTASKS} < jobqueue >> ${OUTPUT_FILE}
+parallel -j ${SLURM_NTASKS} < jobqueue_dep >> ${OUTPUT_FILE}
 
-mv $OUPUT_FILE $OUTPUT_FILE.old
+# mv $OUPUT_FILE $OUTPUT_FILE.old
 
-mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
+# mv ${OUTPUT_COL_LIST}.fixed $OUTPUT_COL_LIST.fixed.old
 
-cat <(echo x) $OUTPUT_COL_LIST.old > $OUTPUT_COL_LIST
+# cat <(echo x) $OUTPUT_COL_LIST.fixed.old > $OUTPUT_COL_LIST
 
-mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
+# mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
 
-tr "\n" "\t" < $OUTPUT_COL_LIST.old > header
+# tr "\n" "\t" < $OUTPUT_COL_LIST.old > header
 
-cat header $OUTPUT_FILE.old > $OUTPUT_FILE
+# cat header $OUTPUT_FILE.old > $OUTPUT_FILE

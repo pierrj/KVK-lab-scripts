@@ -75,7 +75,7 @@ for perm_feature in X_dep_test.columns:
     if dep_feature in boolcols:
         permuted_score = f1_score(y_dep_test, y_dep_pred_permuted)
     else:
-        permuted_score = f1_score(y_dep_test, y_dep_pred_permuted)
+        permuted_score = r2_score(y_dep_test, y_dep_pred_permuted)
     diff = baseline-permuted_score
     row.append(diff)
     X_dep_test[perm_feature] = save
