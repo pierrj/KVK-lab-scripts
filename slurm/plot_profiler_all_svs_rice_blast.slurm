@@ -93,6 +93,17 @@ if [ ! -f "${ECCDNA_DIR}/bamfile_mapfile" ]; then
     cd $WORKING_DIR
 fi
 
+## mapfiles for histone marks
+HISTONEMARKS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
+HISTONEMARKS_MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/biorep_treament
+cd $HISTONEMARKS_DIR
+while read biorep treatment; do realpath sorted.${treatment}_${biorep}.sam.bam; done < $HISTONEMARKS_MAPFILE > bamfile_mapfile
+cd $WORKING_DIR
+
+for treatment in H3K27ac H3K36me3 H3K27me3; do
+    grep $treatment ${HISTONEMARKS_DIR}/bamfile_mapfile > ${treatment}_bamfile_mapfile
+done
+
 sv=DEL
 GENOME_FILE=$FASTA_FILE
 GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
@@ -122,39 +133,48 @@ for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed 
 
     DENSITY_BED=$TE_GFF
     SUB_OUTPUT_NAME=tes
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    FLANKING_DIST=5000
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
     for treatment in H3K27ac H3K36me3 H3K27me3; do
-        TREATMENT_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${treatment}_1.sam.bam
-        CONTROL_BAM=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.Input_1.sam.bam
-        /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $TREATMENT_BAM -d $CONTROL_BAM -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${treatment} -s ${sv}
+        SUB_OUTPUT_NAME=$treatment
+        MAPFILE_FOR_AVERAGING=${treatment}_bamfile_mapfile
+        FLANKING_DIST=1000
+        /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
+            -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
     done
 
-    DENSITY_BED=gc
-    SUB_OUTPUT_NAME=gc
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    # DENSITY_BED=gc
+    # SUB_OUTPUT_NAME=gc
+    # FLANKING_DIST=1000
+    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
     DENSITY_BED=$GENE_BED
     SUB_OUTPUT_NAME=genes
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    FLANKING_DIST=5000
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
-    SUB_OUTPUT_NAME=cm_expression
-    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    # SUB_OUTPUT_NAME=cm_expression
+    # MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile
+    # FLANKING_DIST=1000
+    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
+    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
-    SUB_OUTPUT_NAME=ip_expression
-    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    # SUB_OUTPUT_NAME=ip_expression
+    # MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile
+    # FLANKING_DIST=1000
+    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
+    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
-    SUB_OUTPUT_NAME=eccdna
-    MAPFILE_FOR_AVERAGING=${ECCDNA_DIR}/bamfile_mapfile
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    # SUB_OUTPUT_NAME=eccdna
+    # MAPFILE_FOR_AVERAGING=${ECCDNA_DIR}/bamfile_mapfile
+    # FLANKING_DIST=1000
+    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
+    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
-    SUB_OUTPUT_NAME=methylation
-    DENSITY_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_methylation/SRR653493_bismark_out/SRR653493.sra_1_bismark_bt2_pe.fixed.bg
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED \
-        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    # SUB_OUTPUT_NAME=methylation
+    # DENSITY_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_methylation/SRR653493_bismark_out/SRR653493.sra_1_bismark_bt2_pe.fixed.bg
+    # FLANKING_DIST=1000
+    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED \
+    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 done

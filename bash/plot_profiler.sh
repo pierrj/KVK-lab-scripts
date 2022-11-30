@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts b:d:g:w:t:o:s: option
+while getopts b:d:g:w:t:o:s:f: option
 do
 case "${option}"
 in
@@ -10,6 +10,7 @@ w) WINDOWS=${OPTARG};;
 t) THREADS=${OPTARG};;
 o) OUTPUT_NAME=${OPTARG};;
 s) SV=${OPTARG};;
+f) FLANKING_DIST=${OPTARG};;
 esac
 done
 
@@ -66,16 +67,16 @@ if [[ "${SV}" == "TRA" ]]
 then
 computeMatrix reference-point -p ${THREADS} -S ${density_file_basename}.bw \
                             -R ${REGIONS_BED} \
-                            --beforeRegionStartLength 10000 \
+                            --beforeRegionStartLength $FLANKING_DIST \
                             --referencePoint TSS \
-                            --afterRegionStartLength 10000 \
+                            --afterRegionStartLength $FLANKING_DIST \
                             -o ${OUTPUT_NAME}.mat.gz
 else
 computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             -R ${REGIONS_BED} \
-                            --beforeRegionStartLength 1000 \
-                            --regionBodyLength 500 \
-                            --afterRegionStartLength 1000 \
+                            --beforeRegionStartLength $FLANKING_DIST \
+                            --regionBodyLength $(( FLANKING_DIST / 2)) \
+                            --afterRegionStartLength $FLANKING_DIST \
                             -o ${OUTPUT_NAME}.mat.gz
 fi
 
