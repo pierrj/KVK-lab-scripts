@@ -43,6 +43,10 @@ while read param; do
     echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/dependencies_per_column.py $OUTPUT_XTRAIN $OUTPUT_XTEST $param $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP" >> jobqueue_dep
 done < ${OUTPUT_COL_LIST}.fixed
 
+if [ -f $OUTPUT_FILE ]; then
+    rm $OUTPUT_FILE
+fi
+
 parallel -j ${SLURM_NTASKS} < jobqueue_dep >> ${OUTPUT_FILE}
 
 # mv $OUPUT_FILE $OUTPUT_FILE.old

@@ -65,7 +65,7 @@ if dep_feature in boolcols:
 else:
     baseline = r2_score(y_dep_test, y_dep_pred)
 row.append(baseline)
-for perm_feature in X_dep_test.columns:
+for perm_feature in X_train.columns:
     if perm_feature == dep_feature:
         row.append('x')
         continue
