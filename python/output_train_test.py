@@ -5,9 +5,9 @@ import csv
 
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
-output_col_list = sys.argv[2]
-output_x_train = sys.argv[3]
-output_x_test = sys.argv[4]
+output_col_list = sys.argv[3]
+output_x_train = sys.argv[4]
+output_x_test = sys.argv[5]
 
 def train_test_split_mine_downsample(majority_fraction):
     df_genes = pd.read_csv(input_df)
