@@ -49,14 +49,14 @@ fi
 
 parallel -j ${SLURM_NTASKS} < jobqueue_dep >> ${OUTPUT_FILE}
 
-# mv $OUPUT_FILE $OUTPUT_FILE.old
+mv $OUTPUT_FILE $OUTPUT_FILE.old
 
-# mv ${OUTPUT_COL_LIST}.fixed $OUTPUT_COL_LIST.fixed.old
+mv ${OUTPUT_COL_LIST}.fixed $OUTPUT_COL_LIST.fixed.old
 
-# cat <(echo x) $OUTPUT_COL_LIST.fixed.old > $OUTPUT_COL_LIST
+cat <(echo x) <(echo f1) $OUTPUT_COL_LIST.fixed.old > $OUTPUT_COL_LIST
 
-# mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
+mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
 
-# tr "\n" "\t" < $OUTPUT_COL_LIST.old > header
+tr "\n" "\t" < $OUTPUT_COL_LIST.old > header
 
-# cat header $OUTPUT_FILE.old > $OUTPUT_FILE
+cat header <(echo) $OUTPUT_FILE.old > $OUTPUT_FILE
