@@ -107,3 +107,10 @@ while read SAMPLE; do
     /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR merge ${SAMPLE}/all/${SAMPLE}.survivor.vcflist 1000 3 1 1 0 50 ${SAMPLE}/all/${SAMPLE}.all.vcf
 
 done < $SAMPLE_LIST
+
+
+while read SAMPLE; do
+    /global/scratch/users/pierrj/SURVIVOR/Debug/SURVIVOR vcftobed ${SAMPLE}/all/${SAMPLE}.all.vcf 1 10000000000000000 ${SAMPLE}/all/${SAMPLE}.all.bed
+    sv=DEL
+    awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' ${SAMPLE}/all/${SAMPLE}.all.bed > ${SAMPLE}/all/${SAMPLE}.DEL.bed
+done < $SAMPLE_LIST

@@ -57,6 +57,6 @@ cat <(echo x) <(echo f1) $OUTPUT_COL_LIST.fixed.old > $OUTPUT_COL_LIST
 
 mv $OUTPUT_COL_LIST $OUTPUT_COL_LIST.old
 
-tr "\n" "\t" < $OUTPUT_COL_LIST.old > header
+tr "\n" "\t" < $OUTPUT_COL_LIST.old | sed 's/.$//' > header
 
 cat header <(echo) $OUTPUT_FILE.old > $OUTPUT_FILE
