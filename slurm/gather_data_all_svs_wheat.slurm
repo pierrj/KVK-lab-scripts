@@ -1,6 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=gather_data_all_svs_rice_blast
-#SBATCH --partition=savio
+#SBATCH --job-name=gather_data_all_svs_wheat
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=20
@@ -10,12 +9,12 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-WORKING_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast_density_hist
-PLOT_PROFILE_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_re_rice_blast
+WORKING_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_wheat_blast_density_hist
+PLOT_PROFILE_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_wheat_blast
 sv=DEL
 DEL_BED=${PLOT_PROFILE_DIR}/all_${sv}.bed
 SHUFFLED_BED=${PLOT_PROFILE_DIR}/shuffled_${sv}.bed
-FASTA_FILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.fasta
+FASTA_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.no_mito_no_mini.fna
 GENOME_FILE=$FASTA_FILE
 GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
 
@@ -39,6 +38,17 @@ if [ -f "jobqueue" ]; then
     rm jobqueue
 fi
 
+# GC CONTENT
+OUTPUT_NAME=gc_content
+for BED_FILE in $DEL_BED $SHUFFLED_BED; do
+    if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
+        label=del
+    elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
+        label=shuffled
+    fi
+    echo "bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${label}.${OUTPUT_NAME}" >> jobqueue
+done
+
 # eccDNA seq
 ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
 BAMFILE_MAPFILE=${ECCDNA_DIR}/bamfile_mapfile
@@ -59,48 +69,16 @@ BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
 OUTPUT_NAME=inplanta
 echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
 
-# histone marks
-for treatment in H3K27ac H3K36me3 H3K27me3; do
-    BAMFILE_MAPFILE=${PLOT_PROFILE_DIR}/${treatment}_bamfile_mapfile
-    OUTPUT_NAME=$treatment
-    echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
-done
-
 ## do all of the coverage calcs in parallel
 while read BAMFILE_MAPFILE OUTPUT_NAME; do
     for BED_FILE in $DEL_BED $SHUFFLED_BED; do
         if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-            label=del
+            LABEL=del
         elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-            label=shuffled
+            LABEL=shuffled
         fi
         echo "/global/home/users/pierrj/git/bash/average_coverage_files.sh -b ${BED_FILE} -l ${LABEL} -m ${BAMFILE_MAPFILE} -g ${GENOME_CHROMSIZES} -o ${OUTPUT_NAME}" >> jobqueue
     done
 done < input_list
 
 parallel -j ${SLURM_NTASKS} < jobqueue
-
-## methylation
-genome=guy11
-METHYLATION_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_methylation
-SAMPLE=SRR653493
-for BED_FILE in $DEL_BED $SHUFFLED_BED; do
-    if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
-    elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
-    fi
-    bedtools intersect -wa -wb -a ${BED_FILE} -b $METHYLATION_DIR/${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
-        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${label}.${OUTPUT_NAME}
-done
-
-# GC CONTENT
-OUTPUT_NAME=gc_content
-for BED_FILE in $DEL_BED $SHUFFLED_BED; do
-    if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
-    elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
-    fi
-    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${label}.${OUTPUT_NAME}
-done
