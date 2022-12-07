@@ -47,7 +47,7 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
         label=shuffled
     fi
-    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${label}.${OUTPUT_NAME}
+    echo "bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${label}.${OUTPUT_NAME}" >> jobqueue
 done
 
 # eccDNA seq
@@ -87,8 +87,8 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
         label=shuffled
     fi
-    bedtools intersect -wa -wb -a ${BED_FILE} -b $METHYLATION_DIR/${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
-        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${label}.${OUTPUT_NAME}
+    echo "bedtools intersect -wa -wb -a ${BED_FILE} -b $METHYLATION_DIR/${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
+        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${label}.${OUTPUT_NAME}" >> jobqueue
 done
 
 
