@@ -31,6 +31,15 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     awk '{print $3-$2}' ${BED_FILE} > ${LABEL}.lengths
 done
 
+DEL_BED_SORTED=$DEL_BED.sorted
+SHUFFLED_BED_SORTED=$SHUFFLED_BED.sorted
+
+sort -k1,1 -k2,2n $DEL_BED > $DEL_BED_SORTED
+sort -k1,1 -k2,2n $SHUFFLED_BED > $SHUFFLED_BED_SORTED
+
+DEL_BED=$DEL_BED_SORTED
+SHUFFLED_BED=$SHUFFLED_BED_SORTED
+
 if [ -f "input_list" ]; then
     rm input_list
 fi
@@ -38,6 +47,8 @@ fi
 if [ -f "jobqueue" ]; then
     rm jobqueue
 fi
+
+
 
 # eccDNA seq
 ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
