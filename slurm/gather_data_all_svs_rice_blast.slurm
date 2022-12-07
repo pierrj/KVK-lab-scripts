@@ -50,51 +50,52 @@ fi
 
 
 
-# eccDNA seq
-ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
-BAMFILE_MAPFILE=${ECCDNA_DIR}/bamfile_mapfile
-OUTPUT_NAME=eccdna
-echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
+# # eccDNA seq
+# ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
+# BAMFILE_MAPFILE=${ECCDNA_DIR}/bamfile_mapfile
+# OUTPUT_NAME=eccdna
+# echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
 
-# in culture rnaseq
-RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
-SRA_LIST=zhang_et_al_2019_complete_medium
-BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
-OUTPUT_NAME=inculture
-echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
+# # in culture rnaseq
+# RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
+# SRA_LIST=zhang_et_al_2019_complete_medium
+# BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
+# OUTPUT_NAME=inculture
+# echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
 
-# in planta rnaseq
-RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
-SRA_LIST=zhang_et_al_2019_in_planta
-BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
-OUTPUT_NAME=inplanta
-echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
+# # in planta rnaseq
+# RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
+# SRA_LIST=zhang_et_al_2019_in_planta
+# BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
+# OUTPUT_NAME=inplanta
+# echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
 
-# histone marks
-for treatment in H3K27ac H3K36me3 H3K27me3; do
-    BAMFILE_MAPFILE=${PLOT_PROFILE_DIR}/${treatment}_bamfile_mapfile
-    OUTPUT_NAME=$treatment
-    echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
-done
+# # histone marks
+# for treatment in H3K27ac H3K36me3 H3K27me3; do
+#     BAMFILE_MAPFILE=${PLOT_PROFILE_DIR}/${treatment}_bamfile_mapfile
+#     OUTPUT_NAME=$treatment
+#     echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
+# done
 
-## do all of the coverage calcs in parallel
-while read BAMFILE_MAPFILE OUTPUT_NAME; do
-    for BED_FILE in $DEL_BED $SHUFFLED_BED; do
-        if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-            LABEL=del
-        elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-            LABEL=shuffled
-        fi
-        echo "/global/home/users/pierrj/git/bash/average_coverage_files.sh -b ${BED_FILE} -l ${LABEL} -m ${BAMFILE_MAPFILE} -g ${GENOME_CHROMSIZES} -o ${OUTPUT_NAME}" >> jobqueue
-    done
-done < input_list
+# ## do all of the coverage calcs in parallel
+# while read BAMFILE_MAPFILE OUTPUT_NAME; do
+#     for BED_FILE in $DEL_BED $SHUFFLED_BED; do
+#         if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
+#             LABEL=del
+#         elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
+#             LABEL=shuffled
+#         fi
+#         echo "/global/home/users/pierrj/git/bash/average_coverage_files.sh -b ${BED_FILE} -l ${LABEL} -m ${BAMFILE_MAPFILE} -g ${GENOME_CHROMSIZES} -o ${OUTPUT_NAME}" >> jobqueue
+#     done
+# done < input_list
 
-parallel -j ${SLURM_NTASKS} < jobqueue
+# parallel -j ${SLURM_NTASKS} < jobqueue
 
 ## methylation
 genome=guy11
 METHYLATION_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/${genome}_methylation
 SAMPLE=SRR653493
+OUTPUT_NAME=methylation
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
         LABEL=del
@@ -102,7 +103,7 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
         LABEL=shuffled
     fi
     bedtools intersect -wa -wb -a ${BED_FILE} -b $METHYLATION_DIR/${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
-        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${LABEL}.${OUTPUT_NAME}
+        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${LABEL}.${OUTPUT_NAME}.txt
 done
 
 # GC CONTENT
@@ -113,5 +114,5 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
         LABEL=shuffled
     fi
-    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${LABEL}.${OUTPUT_NAME}
+    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${LABEL}.${OUTPUT_NAME}.txt
 done
