@@ -24,11 +24,11 @@ cd $WORKING_DIR
 # making prep files
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
+        LABEL=del
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
+        LABEL=shuffled
     fi
-    awk '{print $3-$2}' ${BED_FILE} > ${label}.lengths
+    awk '{print $3-$2}' ${BED_FILE} > ${LABEL}.lengths
 done
 
 if [ -f "input_list" ]; then
@@ -70,9 +70,9 @@ done
 while read BAMFILE_MAPFILE OUTPUT_NAME; do
     for BED_FILE in $DEL_BED $SHUFFLED_BED; do
         if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-            label=del
+            LABEL=del
         elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-            label=shuffled
+            LABEL=shuffled
         fi
         echo "/global/home/users/pierrj/git/bash/average_coverage_files.sh -b ${BED_FILE} -l ${LABEL} -m ${BAMFILE_MAPFILE} -g ${GENOME_CHROMSIZES} -o ${OUTPUT_NAME}" >> jobqueue
     done
@@ -86,21 +86,21 @@ METHYLATION_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fu
 SAMPLE=SRR653493
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
+        LABEL=del
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
+        LABEL=shuffled
     fi
     bedtools intersect -wa -wb -a ${BED_FILE} -b $METHYLATION_DIR/${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
-        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${label}.${OUTPUT_NAME}
+        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${LABEL}.${OUTPUT_NAME}
 done
 
 # GC CONTENT
 OUTPUT_NAME=gc_content
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
+        LABEL=del
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
+        LABEL=shuffled
     fi
-    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${label}.${OUTPUT_NAME}
+    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${LABEL}.${OUTPUT_NAME}
 done

@@ -23,11 +23,11 @@ cd $WORKING_DIR
 # making prep files
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
+        LABEL=del
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
+        LABEL=shuffled
     fi
-    awk '{print $3-$2}' ${BED_FILE} > ${label}.lengths
+    awk '{print $3-$2}' ${BED_FILE} > ${LABEL}.lengths
 done
 
 if [ -f "input_list" ]; then
@@ -42,11 +42,11 @@ fi
 OUTPUT_NAME=gc_content
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        label=del
+        LABEL=del
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        label=shuffled
+        LABEL=shuffled
     fi
-    echo "bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${label}.${OUTPUT_NAME}" >> jobqueue
+    echo "bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${LABEL}.${OUTPUT_NAME}" >> jobqueue
 done
 
 # eccDNA seq
