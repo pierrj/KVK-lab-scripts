@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=gather_data_all_svs_rice_blast
-#SBATCH --partition=savio4_htc
-#SBATCH --qos=minium_htc4_normal
+#SBATCH --partition=savio
+#SBATCH --qos=savio_normal
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=56
+#SBATCH --ntasks-per-node=20
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
