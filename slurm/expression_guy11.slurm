@@ -82,10 +82,11 @@ while read SRA; do
     awk -v N=$sum_rpks '{print $1/N}' ${SRA}.${SRA_LIST}.RPK.ReadsPerGene.out.genecolumn.tab > ${SRA}.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
+# watch out for wild cards here
 paste *.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
+paste ${genome}.genes_column ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
 
 
 GENOME_FASTA=guy11_plus_orsa_w_organelles.fasta
@@ -153,16 +154,8 @@ while read SRA; do
     awk -v N=$sum_rpks '{print $1/N}' ${SRA}.${SRA_LIST}.RPK.ReadsPerGene.out.genecolumn.tab > ${SRA}.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
+# watch out for wild cards here
 paste *.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
-
-# SRA_LIST=zhang_et_al_2019_in_planta
-# MAPFILE=/global/scratch/users/pierrj/references/guy11_genome_baoetal2017.contignames
-
-# while read SRA; do
-#     samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
-#     samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
-#     samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-# done < $SRA_LIST
+paste ${genome}.genes_column ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
