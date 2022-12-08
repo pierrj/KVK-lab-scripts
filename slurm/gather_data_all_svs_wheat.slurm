@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=gather_data_all_svs_wheat
+#SBATCH --partition=savio
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=20
@@ -13,7 +14,6 @@ WORKING_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_wheat_blast_density_hist
 PLOT_PROFILE_DIR=/global/scratch/users/pierrj/PAV_SV/SV/dels_wheat_blast
 sv=DEL
 DEL_BED=${PLOT_PROFILE_DIR}/all_${sv}.bed
-SHUFFLED_BED=${PLOT_PROFILE_DIR}/shuffled_${sv}.bed
 FASTA_FILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate/GCA_004785725.2_ASM478572v2_genomic.no_mito_no_mini.fna
 GENOME_FILE=$FASTA_FILE
 GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
@@ -21,6 +21,9 @@ GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
 cd $WORKING_DIR
 
 # making prep files
+bedtools shuffle -i $DEL_BED -g $GENOME_CHROMSIZES | sort -k1,1 -k2,2n > shuffled.bed
+SHUFFLED_BED=shuffled.bed
+
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
         LABEL=del
@@ -30,6 +33,10 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     awk '{print $3-$2}' ${BED_FILE} > ${LABEL}.lengths
 done
 
+DEL_BED_SORTED=$DEL_BED.sorted
+sort -k1,1 -k2,2n $DEL_BED > $DEL_BED_SORTED
+DEL_BED=$DEL_BED_SORTED
+
 if [ -f "input_list" ]; then
     rm input_list
 fi
@@ -38,33 +45,16 @@ if [ -f "jobqueue" ]; then
     rm jobqueue
 fi
 
-# GC CONTENT
-OUTPUT_NAME=gc_content
-for BED_FILE in $DEL_BED $SHUFFLED_BED; do
-    if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
-        LABEL=del
-    elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
-        LABEL=shuffled
-    fi
-    echo "bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${LABEL}.${OUTPUT_NAME}" >> jobqueue
-done
-
-# eccDNA seq
-ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
-BAMFILE_MAPFILE=${ECCDNA_DIR}/bamfile_mapfile
-OUTPUT_NAME=eccdna
-echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
-
 # in culture rnaseq
-RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
-SRA_LIST=zhang_et_al_2019_complete_medium
+RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
+SRA_LIST=b71_assembly_complete_medium
 BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
 OUTPUT_NAME=inculture
 echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
 
 # in planta rnaseq
-RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
-SRA_LIST=zhang_et_al_2019_in_planta
+RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
+SRA_LIST=b71_assembly_complete_medium_in_planta
 BAMFILE_MAPFILE=${RNASEQ_DIR}/${SRA_LIST}_bamfile_mapfile
 OUTPUT_NAME=inplanta
 echo -e ${BAMFILE_MAPFILE}'\t'${OUTPUT_NAME} >> input_list
@@ -81,4 +71,19 @@ while read BAMFILE_MAPFILE OUTPUT_NAME; do
     done
 done < input_list
 
+## some cleaning before starting the job just in case
+rm *coverage*
+
 parallel -j ${SLURM_NTASKS} < jobqueue
+
+# GC CONTENT
+OUTPUT_NAME=gc_content
+for BED_FILE in $DEL_BED $SHUFFLED_BED; do
+    if [[ "${BED_FILE}" == "${DEL_BED}" ]]; then
+        LABEL=del
+    elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
+        LABEL=shuffled
+    fi
+    ### THIS IS ACTUALLY AT CONTENT NOT GC CONTENT ###
+    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE | awk -v OFS='\t' '{ if (NR > 1) {print $4}}' > ${LABEL}.${OUTPUT_NAME}.txt
+done

@@ -107,7 +107,7 @@ awk -v sv=$sv -v OFS='\t' '{ if ( $11 == sv ) {print $12, $13, $15}}' all_svs.be
 bedtools intersect -a all_${sv}.bed -b $GENE_BED -wa -u -f 0.5 > gene_${sv}.bed
 bedtools intersect -a all_${sv}.bed -b $TE_GFF -wa -u -f 0.5 > te_${sv}.bed
 
-for i in $(seq 1 10); do cat all_${sv}.bed; done > all_${sv}.bed.replicated
+for i in $(seq 1 100); do cat all_${sv}.bed; done > all_${sv}.bed.replicated
 
 bedtools shuffle -i all_${sv}.bed.replicated -g $GENOME_CHROMSIZES > shuffled_${sv}.bed
 
