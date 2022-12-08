@@ -103,7 +103,7 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
         LABEL=shuffled
     fi
     bedtools intersect -wa -wb -a ${BED_FILE} -b $METHYLATION_DIR/${SAMPLE}_bismark_out/${SAMPLE}.sra_1_bismark_bt2_pe.fixed.bg | \
-        awk -v OFS='\t' '{a[$4] += $(NF); b[$4] += 1} END{for (i in a) print i, a[i]/b[i]}' > ${LABEL}.${OUTPUT_NAME}.txt
+        awk -v OFS='\t' '{a[$1,$2,$3] += $(NF); b[$1,$2,$3] += 1} END{for (i in a) print i, a[i]/b[i]}' | awk '{print $2}' > ${LABEL}.${OUTPUT_NAME}.txt
 done
 
 # GC CONTENT
@@ -114,5 +114,6 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
         LABEL=shuffled
     fi
-    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE > ${LABEL}.${OUTPUT_NAME}.txt
+    ### THIS IS ACTUALLY AT CONTENT NOT GC CONTENT ###
+    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE | awk -v OFS='\t' '{ if (NR > 1) {print $4}}' > ${LABEL}.${OUTPUT_NAME}.txt
 done

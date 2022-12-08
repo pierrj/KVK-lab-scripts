@@ -50,6 +50,7 @@ while read genome; do
     GENOME_CHROM_SIZES=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/assemblies/${genome}.chromsizes
     GENES_BED=all_beds_fixed/${genome}.genes.bed
 
+    ## THESE ACTUALLY CALCULATE AT CONTENT NOT GC CONTENT ##
     bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} | awk -v OFS='\t' '{ if (NR > 1) {print $4, $5}}' > gc_content_per_gene/${genome}.gene.gc
 
     bedtools flank -g ${GENOME_CHROM_SIZES} -i ${GENES_BED} -b 1000 | \
