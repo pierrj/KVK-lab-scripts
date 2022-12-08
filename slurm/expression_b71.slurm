@@ -73,10 +73,11 @@ while read SRA; do
     awk -v N=$sum_rpks '{print $1/N}' ${SRA}.${SRA_LIST}.RPK.ReadsPerGene.out.genecolumn.tab > ${SRA}.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
+# watch out for wild cards here
 paste *.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
+paste ${genome}.genes_column ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
 
@@ -120,7 +121,8 @@ while read SRA; do
     awk -v N=$sum_rpks '{print $1/N}' ${SRA}.${SRA_LIST}.RPK.ReadsPerGene.out.genecolumn.tab > ${SRA}.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
 done < ${SRA_LIST}
 
+# watch out for wild cards here
 paste *.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab | \
-    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab
+    awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab
 
-paste ${genome}.genes_column all.${SRA_LIST}.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt
+paste ${genome}.genes_column ${SRA_LIST}.all.TPM.ReadsPerGene.out.genecolumn.tab > ${genome}_${SRA_LIST}_expression.txt

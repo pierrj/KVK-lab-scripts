@@ -84,6 +84,9 @@ while read BAMFILE_MAPFILE OUTPUT_NAME; do
     done
 done < input_list
 
+## some cleaning before starting the job just in case
+rm *coverage*
+
 parallel -j ${SLURM_NTASKS} < jobqueue
 
 ## methylation
