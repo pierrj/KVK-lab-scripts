@@ -60,50 +60,6 @@ source activate /global/scratch/users/pierrj/conda_envs/deeptools
 samtools faidx ${FASTA_FILE}
 cut -f1-2 ${FASTA_FILE}.fai > ${FASTA_FILE}.chromsizes
 
-## mapfiles for RNAseq
-RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/
-SRA_LIST_CM=zhang_et_al_2019_complete_medium
-SRA_LIST_IP=zhang_et_al_2019_in_planta
-if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile" ]; then
-    cd $RNASEQ_DIR
-    samtools faidx ${FASTA_FILE}
-    cut -f1 ${FASTA_FILE}.fai > ${FASTA_FILE}.contignames
-    MAPFILE=${FASTA_FILE}.contignames
-    while read SRA; do
-        samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
-        samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
-        samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-    done < $SRA_LIST_CM
-    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_CM > ${SRA_LIST_CM}_bamfile_mapfile
-    while read SRA; do
-        samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
-        samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
-        samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-    done < $SRA_LIST_IP
-    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_IP > ${SRA_LIST_IP}_bamfile_mapfile
-    cd $WORKING_DIR
-fi
-
-## mapfiles for eccdnas
-ECCDNA_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_eccdnas/
-ECCDNA_MAPFILE=/global/scratch/users/pierrj/eccDNA/magnaporthe_pureculture/illumina/mapfile
-if [ ! -f "${ECCDNA_DIR}/bamfile_mapfile" ]; then
-    cd $ECCDNA_DIR
-    while read sample; do realpath ${sample}.bam; done < $ECCDNA_MAPFILE > bamfile_mapfile
-    cd $WORKING_DIR
-fi
-
-## mapfiles for histone marks
-HISTONEMARKS_DIR=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
-HISTONEMARKS_MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11/biorep_treament
-cd $HISTONEMARKS_DIR
-while read biorep treatment; do realpath sorted.${treatment}_${biorep}.sam.bam; done < $HISTONEMARKS_MAPFILE > bamfile_mapfile
-cd $WORKING_DIR
-
-for treatment in H3K27ac H3K36me3 H3K27me3; do
-    grep $treatment ${HISTONEMARKS_DIR}/bamfile_mapfile > ${treatment}_bamfile_mapfile
-done
-
 sv=DEL
 GENOME_FILE=$FASTA_FILE
 GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
@@ -120,15 +76,11 @@ for i in $(seq 1 100); do cat all_${sv}.bed; done > all_${sv}.bed.replicated
 
 bedtools shuffle -i all_${sv}.bed.replicated -g $GENOME_CHROMSIZES > shuffled_${sv}.bed
 
+awk -v OFS='\t' '{print $1, $4, $5}' $TE_GFF | grep -v "#" > all_tes.bed
+
 cp $GENE_BED all_genes.bed
 
-bedtools intersect -a $GENE_BED -b  all_${sv}.bed -wa -f 1 | sort | uniq -c | awk '$1 > 5' | awk -v OFS='\t' '{print $2, $3, $4, $5}' | sort -k1,1 -k2,2n > deleted_more_than_five_times.bed
-comm -23 <(sort $GENE_BED) <(sort deleted_more_than_five_times.bed) | sort -k1,1 -k2,2n > deleted_less_than_five_times.bed
-
-bedtools intersect -a $GENE_BED -b  all_${sv}.bed -wa -f 1 | sort | uniq -c | awk '$1 > 4' | awk -v OFS='\t' '{print $2, $3, $4, $5}' | sort -k1,1 -k2,2n > deleted_more_than_four_times.bed
-comm -23 <(sort $GENE_BED) <(sort deleted_more_than_four_times.bed) | sort -k1,1 -k2,2n > deleted_less_than_four_times.bed
-
-for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed all_genes.bed deleted_more_than_five_times.bed deleted_less_than_five_times.bed deleted_more_than_four_times.bed deleted_less_than_four_times.bed; do
+for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed all_genes.bed all_tes.bed; do
     OUTPUT_NAME=plot_profile_${REGIONS_BED}
 
     DENSITY_BED=$TE_GFF
@@ -136,45 +88,8 @@ for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed 
     FLANKING_DIST=5000
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
-    for treatment in H3K27ac H3K36me3 H3K27me3; do
-        SUB_OUTPUT_NAME=$treatment
-        MAPFILE_FOR_AVERAGING=${treatment}_bamfile_mapfile
-        FLANKING_DIST=1000
-        /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-            -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
-    done
-
-    # DENSITY_BED=gc
-    # SUB_OUTPUT_NAME=gc
-    # FLANKING_DIST=1000
-    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
-
     DENSITY_BED=$GENE_BED
     SUB_OUTPUT_NAME=genes
     FLANKING_DIST=5000
     /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
-
-    # SUB_OUTPUT_NAME=cm_expression
-    # MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile
-    # FLANKING_DIST=1000
-    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
-
-    # SUB_OUTPUT_NAME=ip_expression
-    # MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile
-    # FLANKING_DIST=1000
-    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
-
-    # SUB_OUTPUT_NAME=eccdna
-    # MAPFILE_FOR_AVERAGING=${ECCDNA_DIR}/bamfile_mapfile
-    # FLANKING_DIST=1000
-    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
-
-    # SUB_OUTPUT_NAME=methylation
-    # DENSITY_BED=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11_methylation/SRR653493_bismark_out/SRR653493.sra_1_bismark_bt2_pe.fixed.bg
-    # FLANKING_DIST=1000
-    # /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED \
-    #     -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 done

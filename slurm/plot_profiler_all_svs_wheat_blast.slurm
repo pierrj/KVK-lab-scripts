@@ -67,30 +67,6 @@ source activate /global/scratch/users/pierrj/conda_envs/deeptools
 samtools faidx ${FASTA_FILE}
 cut -f1-2 ${FASTA_FILE}.fai > ${FASTA_FILE}.chromsizes
 
-## mapfiles for RNAseq
-RNASEQ_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_all/random_forest/b71
-SRA_LIST_CM=b71_assembly_complete_medium
-SRA_LIST_IP=b71_assembly_complete_medium_in_planta
-if [ ! -f "${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile" ]; then
-    cd $RNASEQ_DIR
-    samtools faidx ${FASTA_FILE}
-    cut -f1 ${FASTA_FILE}.fai > ${FASTA_FILE}.contignames
-    MAPFILE=${FASTA_FILE}.contignames
-    while read SRA; do
-        samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
-        samtools index sorted.${SRA}.Aligned.sortedByCoord.out.bam
-        samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-    done < $SRA_LIST_CM
-    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_CM > ${SRA_LIST_CM}_bamfile_mapfile
-    while read SRA; do
-        samtools sort -@ ${SLURM_NTASKS} -o sorted.${SRA}.Aligned.sortedByCoord.out.bam ${SRA}.Aligned.sortedByCoord.out.bam
-        samtools index -c sorted.${SRA}.Aligned.sortedByCoord.out.bam
-        samtools view -b sorted.${SRA}.Aligned.sortedByCoord.out.bam $(cat ${MAPFILE} | tr "\n" " ") > filtered.${SRA}.Aligned.sortedByCoord.out.bam
-    done < $SRA_LIST_IP
-    while read SRA; do realpath filtered.${SRA}.Aligned.sortedByCoord.out.bam; done < $SRA_LIST_IP > ${SRA_LIST_IP}_bamfile_mapfile
-    cd $WORKING_DIR
-fi
-
 sv=DEL
 GENOME_FILE=$FASTA_FILE
 GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
@@ -111,30 +87,20 @@ for i in $(seq 1 100); do cat all_${sv}.bed; done > all_${sv}.bed.replicated
 
 bedtools shuffle -i all_${sv}.bed.replicated -g $GENOME_CHROMSIZES > shuffled_${sv}.bed
 
+awk -v OFS='\t' '{print $1, $4, $5}' $TE_GFF | grep -v "#" > all_tes.bed
+
 cp $GENE_BED all_genes.bed
 
-for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed all_genes.bed; do
+for REGIONS_BED in all_${sv}.bed gene_${sv}.bed te_${sv}.bed shuffled_${sv}.bed all_genes.bed all_tes.bed; do
     OUTPUT_NAME=plot_profile_${REGIONS_BED}
 
     DENSITY_BED=$TE_GFF
     SUB_OUTPUT_NAME=tes
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
-
-    DENSITY_BED=gc
-    SUB_OUTPUT_NAME=gc
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    FLANKING_DIST=5000
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 
     DENSITY_BED=$GENE_BED
     SUB_OUTPUT_NAME=genes
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
-
-    SUB_OUTPUT_NAME=cm_expression
-    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_CM}_bamfile_mapfile
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
-
-    SUB_OUTPUT_NAME=ip_expression
-    MAPFILE_FOR_AVERAGING=${RNASEQ_DIR}/${SRA_LIST_IP}_bamfile_mapfile
-    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d `cat $MAPFILE_FOR_AVERAGING | tr '\n' ' ' | xargs | sed -e 's/ / -d /g'` \
-        -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv}
+    FLANKING_DIST=5000
+    /global/home/users/pierrj/git/bash/plot_profiler.sh -b $REGIONS_BED -d $DENSITY_BED -g $GENOME_FILE -w $WINDOWS -t $THREADS -o ${OUTPUT_NAME}_${SUB_OUTPUT_NAME} -s ${sv} -f $FLANKING_DIST
 done
