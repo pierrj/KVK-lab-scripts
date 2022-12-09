@@ -21,7 +21,16 @@ GENOME_CHROMSIZES=${FASTA_FILE}.chromsizes
 cd $WORKING_DIR
 
 # making prep files
-bedtools shuffle -i $DEL_BED -g $GENOME_CHROMSIZES | sort -k1,1 -k2,2n > shuffled.bed
+
+## only keep the ~90% shortest deletions and sort
+
+DEL_BED_ORIGINAL=$DEL_BED
+
+awk '{ if ($3-$2 < 10000) {print $0}}' $DEL_BED | sort -k1,1 -k2,2n > dels.subset.bed
+DEL_BED=dels.subset.bed
+
+## exclude the original deletions but shuffle only the small deletions
+bedtools shuffle -i $DEL_BED -g $GENOME_CHROMSIZES -excl $DEL_BED_ORIGINAL | sort -k1,1 -k2,2n > shuffled.bed
 SHUFFLED_BED=shuffled.bed
 
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
@@ -32,10 +41,6 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     fi
     awk '{print $3-$2}' ${BED_FILE} > ${LABEL}.lengths
 done
-
-DEL_BED_SORTED=$DEL_BED.sorted
-sort -k1,1 -k2,2n $DEL_BED > $DEL_BED_SORTED
-DEL_BED=$DEL_BED_SORTED
 
 if [ -f "input_list" ]; then
     rm input_list
