@@ -22,11 +22,15 @@ cd $WORKING_DIR
 
 # making prep files
 
-## only keep the ~90% shortest deletions
+## only keep the ~90% shortest deletions and sort
+
+DEL_BED_ORIGINAL=$DEL_BED
+
 awk '{ if ($3-$2 < 10000) {print $0}}' $DEL_BED | sort -k1,1 -k2,2n > dels.subset.bed
 DEL_BED=dels.subset.bed
 
-bedtools shuffle -i $DEL_BED -g $GENOME_CHROMSIZES | sort -k1,1 -k2,2n > shuffled.bed
+## exclude the original deletions but shuffle only the small deletions
+bedtools shuffle -i $DEL_BED -g $GENOME_CHROMSIZES -excl $DEL_BED_ORIGINAL | sort -k1,1 -k2,2n > shuffled.bed
 SHUFFLED_BED=shuffled.bed
 
 for BED_FILE in $DEL_BED $SHUFFLED_BED; do
