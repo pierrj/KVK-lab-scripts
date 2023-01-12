@@ -9,54 +9,75 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 
-# cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
+cd /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/
 
-# ## download and map all chpseq data from Zhang et al 2021
-# while read SRA; do
-#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-# done < accessions_histone_marks.txt 
+## download and map all chpseq data from Zhang et al 2021
+while read SRA; do
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+done < accessions_histone_marks.txt 
 
-# while read SRA; do
-#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
-#     /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
-# done < chpseq_loading_control_accessions.txt
+while read SRA; do
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/prefetch ${SRA} -O .
+    /global/home/users/pierrj/scripts/sratoolkit.2.10.4-centos_linux64/bin/fasterq-dump -e ${THREADS} -O . -t tmp ${SRA}.sra
+done < chpseq_loading_control_accessions.txt
 
-# # reformat metadata downloaded from Zhang et al
-# # sort accessions by treatment
-# awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' metadata_histone_marks.txt > metadata_biorep_treatment.txt
-# awk -v OFS='\t' '{print $2, $3}' metadata_biorep_treatment.txt | tail -n+2 | sort | uniq > biorep_treament
-# while read biorep treatment; do
-# awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' metadata_biorep_treatment.txt > accessions
-# cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
-# done < biorep_treament
+# reformat metadata downloaded from Zhang et al
+# sort accessions by treatment
+awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' metadata_histone_marks.txt > metadata_biorep_treatment.txt
+awk -v OFS='\t' '{print $2, $3}' metadata_biorep_treatment.txt | tail -n+2 | sort | uniq > biorep_treament
+while read biorep treatment; do
+awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' metadata_biorep_treatment.txt > accessions
+cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
+done < biorep_treament
 
-# awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' chpseq_loading_control_metadata.txt > control_biorep_treatment.txt
-# awk -v OFS='\t' '{print $2, $3}' control_biorep_treatment.txt | tail -n+2 | sort | uniq > control_biorep_treament
-# while read biorep treatment; do
-# awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' control_biorep_treatment.txt > accessions
-# cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
-# done < control_biorep_treament
+awk -v FS=',' -v OFS='\t' '{print $1,$50, $55}' chpseq_loading_control_metadata.txt > control_biorep_treatment.txt
+awk -v OFS='\t' '{print $2, $3}' control_biorep_treatment.txt | tail -n+2 | sort | uniq > control_biorep_treament
+while read biorep treatment; do
+awk -v b=$biorep -v t=$treatment '{if ($2==b && $3==t) {print "raw_data/"$1".sra.fastq"}}' control_biorep_treatment.txt > accessions
+cat $(cat accessions | tr "\n" " ") > samples_merged/${treatment}_${biorep}.fastq
+done < control_biorep_treament
 
-# ## map and sort all reads
-# while read sample; do
-#     bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
-# done < mapfile
+## map and sort all reads
+while read sample; do
+    bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
+done < mapfile
 
-# while read sample; do
-#     bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
-# done < mapfile_input
+while read sample; do
+    bwa mem -t ${SLURM_NTASKS} /global/scratch/users/pierrj/eccDNA/pipeline_tests/eccdna_gene_expression/zhang_et_al_data/guy11_genome_baoetal2017.fasta ${sample}.fastq -o ${sample}.sam
+done < mapfile_input
 
-# while read biorep treatment; do
-#     samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
-#     samtools index sorted.${treatment}_${biorep}.sam.bam
-# done < biorep_treament
+while read biorep treatment; do
+    samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
+    samtools index sorted.${treatment}_${biorep}.sam.bam
+done < biorep_treament
 
-# while read biorep treatment; do
-#     samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
-#     samtools index sorted.${treatment}_${biorep}.sam.bam
-# done < control_biorep_treament
+while read biorep treatment; do
+    samtools sort ${treatment}_${biorep}.sam.bam > sorted.${treatment}_${biorep}.sam.bam
+    samtools index sorted.${treatment}_${biorep}.sam.bam
+done < control_biorep_treament
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/guy11
 
@@ -91,10 +112,12 @@ cp all_gffs_fixed/${genome}_fungap_out.fixed.gff3 .
 genome=$(basename ${genome}_fungap_out.fixed.gff3 | awk '{print substr($1, 0, length($1)-22)}')
 awk -v OFS='\t' '{if ($3 == "gene") {print $1, $4, $5, $9}}' ${genome}_fungap_out.fixed.gff3 > ${genome}.genes.bed
 
+## get gene names and lengths
 awk '{print $4}' ${genome}.genes.bed > ${genome}.genes_column
 
 awk '{print $3-$2}' ${genome}.genes.bed > ${genome}.gene_lengths
 
+# make treatment mapfile
 cp /global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/biorep_treament .
 awk '{print $2}' biorep_treament | sort | uniq > treatments
 
@@ -102,11 +125,15 @@ awk '{print $2}' biorep_treament | sort | uniq > treatments
 while read biorep treatment; do
     bam_file=/global/scratch/users/pierrj/eccDNA/pipeline_tests/histone_marks/samples_merged/sorted.${treatment}_${biorep}.sam.bam
     bedtools coverage -counts -a ${genome}.genes.bed -b $bam_file | awk '{print $NF}' > ${treatment}_${biorep}.coverage
+    # calculate RPK values for all genes
     paste ${treatment}_${biorep}.coverage ${genome}.gene_lengths | awk '{print $1/($2)}' > ${treatment}_${biorep}.coverage.RPK
+    # sum up RPKs total
     sum_rpks=$(awk '{sum+=$1;} END{print sum/1000000;}' ${treatment}_${biorep}.coverage.RPK)
+    # calculate per million RPKs
     awk -v N=$sum_rpks '{print $1/N}' ${treatment}_${biorep}.coverage.RPK > ${treatment}_${biorep}.coverage.normalized
 done < biorep_treament
 
+## average per treatment
 while read treatment; do
     paste ${treatment}_*.coverage.normalized | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > ${treatment}.coverage.normalized
     paste ${genome}.genes_column ${treatment}.coverage.normalized > guy11_${treatment}_per_gene.txt

@@ -1,4 +1,25 @@
 #!/bin/bash
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 
 N_NODES=50
 
@@ -8,11 +29,8 @@ cd $PROJECT_DIR
 
 conda activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-# orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder | grep "diamond blastp" > jobqueue
-
-# orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected_w_70_15 -o orthofinder_w_70_15 | grep "diamond blastp" > jobqueue
-
-orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected_w_guy11 -o orthofinder_w_guy11 | grep "diamond blastp" > jobqueue
+# output diamond commands to run in order to parallelize them separately
+orthofinder -op -S diamond_ultra_sens -f all_proteomes_corrected -o orthofinder | grep "diamond blastp" > jobqueue
 
 mv jobqueue jobqueue_old
 
@@ -20,6 +38,7 @@ shuf jobqueue_old > jobqueue
 
 split -a 3 --number=l/${N_NODES} --numeric-suffixes=1 jobqueue jobqueue_
 
+## submit separate jobs to run diamond commands in parallel
 for node in $(seq -f "%03g" 1 ${N_NODES})
 do
     echo $node

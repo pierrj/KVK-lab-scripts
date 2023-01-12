@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
@@ -19,6 +40,7 @@ max_features = sys.argv[9]
 max_depth = sys.argv[10]
 bootstrap = eval(sys.argv[11])
 
+# make sure input rf params are properly formatted
 def none_or_str(value):
     if value == 'None':
         return None
@@ -43,15 +65,19 @@ args_dict = {
     "bootstrap": bootstrap
 }
 
-## make sure colnames are okay
+# read in previously split train and testing data
 X_train = pd.read_csv(input_xtrain)
 X_test = pd.read_csv(input_xtest)
 
+# define boolean columns so that the proper classifier or regressor choice is made
 all_cols = [col for col in X_train]
 boolcols = [col for col in X_train if is_bool_dtype(X_train[col])]
 
+# do one feature per run of the script
 dep_feature = input_dep_feature
+# need very specific format for output
 row = [dep_feature]
+# going to predict the dependence feature
 X_dep_train, y_dep_train = X_train.drop(dep_feature, axis=1), X_train[dep_feature]
 X_dep_test, y_dep_test = X_test.drop(dep_feature, axis=1), X_test[dep_feature]
 if dep_feature in boolcols:
@@ -67,7 +93,7 @@ else:
 row.append(baseline)
 for perm_feature in X_train.columns:
     if perm_feature == dep_feature:
-        row.append('x')
+        row.append('x') # make sure to add x here (for formatting purposes) and not permute
         continue
     save = X_dep_test[perm_feature].copy()
     X_dep_test[perm_feature] = np.random.permutation(X_dep_test[perm_feature])
@@ -80,4 +106,5 @@ for perm_feature in X_train.columns:
     row.append(diff)
     X_dep_test[perm_feature] = save
 
+# output in specific format for putting together the dependency table later
 print('\t'.join(map(str, row)))

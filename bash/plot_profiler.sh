@@ -1,4 +1,25 @@
 #!/bin/bash
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 while getopts b:d:g:w:t:o:s:f: option
 do
 case "${option}"
@@ -29,6 +50,8 @@ file_num=${#DENSITY_FILE[@]}
 
 bedtools makewindows -g ${CHROM_SIZES} -w ${WINDOWS} > ${genome_basename}.${WINDOWS}windows
 
+## automatically desides whether to calculate gc content, methylation, bed entry count, or sequencing coverage (bam) for all bed entries
+## also creates bigwig files for use with deeptools
 if [[ "${file_num}" == "1" ]]
 then
     if [[ "${DENSITY_FILE[0]}" == "gc" ]]; then
@@ -59,11 +82,13 @@ else
         bedtools coverage -counts -sorted -a ${genome_basename}.${WINDOWS}windows \
             -b $density_file -g ${CHROM_SIZES} | awk -v r=$read_count -v OFS='\t' '{print $(NF)/r}' > ${basename_density_file}.${OUTPUT_NAME}.bg
     done
+    # average coverage files
     paste *.${OUTPUT_NAME}.bg | awk '{sum = 0; for (i = 1; i <= NF; i++) sum += $i; sum /= NF; print sum}' > averaged.${OUTPUT_NAME}.bg
     paste ${genome_basename}.${WINDOWS}windows averaged.${OUTPUT_NAME}.bg > ${density_file_basename}.bg
     bedGraphToBigWig ${density_file_basename}.bg ${CHROM_SIZES} ${density_file_basename}.bw
 fi
 
+## for TRA svs need to only calculate for a single reference point
 if [[ "${SV}" == "TRA" ]]
 then
 computeMatrix reference-point -p ${THREADS} -S ${density_file_basename}.bw \
@@ -81,6 +106,7 @@ computeMatrix scale-regions -p ${THREADS} -S ${density_file_basename}.bw \
                             -o ${OUTPUT_NAME}.mat.gz
 fi
 
+## output tab format so I can plot the values myself
 plotProfile -m ${OUTPUT_NAME}.mat.gz \
             -out ${OUTPUT_NAME}.pdf \
             --numPlotsPerRow 1 \

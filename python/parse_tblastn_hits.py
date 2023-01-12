@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import numpy as np
 import csv
 from itertools import filterfalse
@@ -13,6 +34,7 @@ og = sys.argv[7]
 
 prelim_hits = {}
 
+## read in tblastn hits file
 with open(input_file, newline = '') as file:
     file_reader = csv.reader(file, delimiter = '\t')
     for row in file_reader:
@@ -20,7 +42,7 @@ with open(input_file, newline = '') as file:
             prelim_hits[row[0]] = []
         prelim_hits[row[0]].append([row[1],float(row[2]),int(row[3]),int(row[4]),
                              int(row[5]),int(row[6]),int(row[7]),
-                             (int(row[8])/(int(row[8])+int(row[9])))*100]) # calculate pident manually here
+                             (int(row[8])/(int(row[8])+int(row[9])))*100]) # calculate pident manually here bc the tblastn one is strange
 prelim_hits_arrays = {}
 
 for key in prelim_hits.keys():
@@ -28,6 +50,7 @@ for key in prelim_hits.keys():
 
 parsed_hits = {}
 
+## just group all of the hsps together
 for protein in prelim_hits.keys():
     prelim_hit_sorted = prelim_hits_arrays[protein][prelim_hits_arrays[protein][:, 5].argsort()]
     count = 0
@@ -35,7 +58,7 @@ for protein in prelim_hits.keys():
     for index in range(len(prelim_hit_sorted)):
         hsp = prelim_hit_sorted[index]
         if np.any(previous != 0):
-            if hsp[5] - previous[6] < 3000:
+            if hsp[5] - previous[6] < 3000: ## 3000 is the max intro length for the tblastn command
                 parsed_hits[protein+'_'+str(count)].append(hsp)
                 previous = hsp
             elif index == len(prelim_hit_sorted)-1:
@@ -76,13 +99,16 @@ for protein in parsed_hits_arrays:
                 if protein[:-2] not in protein_hits: # same protein cant be counted twice for two alignments
                     protein_hits.append(protein[:-2])
 
+## this complicated function is to output well formatted gffs files from tblastn hits that pass cutoffs
 def output_gff(input_valid_hits):
     gff_no_ids = {}
     gff_no_ids_count = {}
     for hit in input_valid_hits:
         orientation_dict = {}
-        orientation_dict['-'] = 0
+        orientation_dict['-'] = 0 ## orientation matters a lot here
         orientation_dict['+'] = 0
+        ## need to deal with hsps that aren't all in the same orientation, basically just majority vote to pick a single orientation
+        # this works very well since only a few very small hits are facing the wrong orientation
         for i in hit[:,5:7]:
             if i[0] > i[1]:
                 orientation_dict['-'] += abs(i[1]-i[0])
@@ -95,6 +121,7 @@ def output_gff(input_valid_hits):
         else:
             orientation = '+' ## this shouldn't happen very often, only for tandem repeats, in which case just assign +
         scaffold = hit[0][0]
+        # now just generating the gff entry
         gene_start = np.min(hit[:,5:7])
         gene_end = np.max(hit[:,5:7])
         gene_entry = [
@@ -125,10 +152,12 @@ def output_gff(input_valid_hits):
             for hsp in hit:
                 start = min([hsp[5],hsp[6]])
                 end = max([hsp[5],hsp[6]])
+                ## need to be very careful to properly calculate the reading frame here
                 if orientation == '+':
                     frame = (gene_start - start) % 3
                 else:
                     frame = (gene_end - end) % 3
+                ## needs both an exon and a cds entry that look slightly different
                 exon_entry = [
                     scaffold,
                     'PAV_validation',
@@ -156,6 +185,7 @@ def output_gff(input_valid_hits):
 
     gff = []
 
+    ## finally add proper ids to gff files (basically just making it an official gff file)
     for entry_count, gene_entry in enumerate(gff_no_ids):
         hit_count = gff_no_ids_count[gene_entry]
         gene_ID = 'ID='+str(entry_count)+'_'+str(hit_count)+';Name='+str(entry_count)+'_'+str(hit_count)
@@ -183,12 +213,13 @@ def output_gff(input_valid_hits):
 
     with open(genome+'_'+og+'.gff3', 'w', newline = '') as output_csv:
         w = csv.writer(output_csv, delimiter = '\t')
-        w.writerow(['##gff-version 3'])
+        w.writerow(['##gff-version 3']) ## add a gff header
         for row in gff:
             w.writerow(row)
 
 expected_og = og.split('.')[0]
 
+## write to final output file that no valid tblastn hits were found or prepare for blastp validation step
 if len(protein_hits) < hit_count:
     print(genome + '\t' + expected_og + '\tno_tblastn_hit')
 else:

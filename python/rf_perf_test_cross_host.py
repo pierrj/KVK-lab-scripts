@@ -1,3 +1,24 @@
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
@@ -6,7 +27,6 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_auc_score
 import sys
-import matplotlib.pyplot as plt
 
 input_df = sys.argv[1]
 majority_fraction = float(sys.argv[2])
@@ -20,7 +40,7 @@ bootstrap = eval(sys.argv[9])
 input_df_2 = sys.argv[10]
 output_string = sys.argv[11]
 
-
+# process variables so they're in the expected format
 def none_or_str(value):
     if value == 'None':
         return None
@@ -45,6 +65,7 @@ args_dict = {
     "bootstrap": bootstrap
 }
 
+# output results
 def reports(model, X_test, y_test):
     y_pred = model.predict(X_test)
     TP = len(y_pred[(y_pred == 1) & (y_test == 1)])
@@ -59,6 +80,7 @@ def reports(model, X_test, y_test):
     auc = roc_auc_score(y_test, model.predict_proba(X_test)[:,1])
     return([recall, precision, ap, auc, TP, FN, FP, TN])
 
+# my own train_test_split that subsets many genomes from the same randomly selected genomes rather than randomly selected genes
 def train_test_split_mine_downsample(majority_fraction):
     df_genes = pd.read_csv(input_df)
     df_genes = df_genes[df_genes['lineage']!=4]
@@ -69,6 +91,7 @@ def train_test_split_mine_downsample(majority_fraction):
             genome_test_subset.append(genome)
     df_genes_test_subset = df_genes[df_genes.genome.isin(genome_test_subset)]
     df_genes = df_genes[~df_genes.genome.isin(genome_test_subset)]
+    # subset non-pav genes using majority fraction input variable
     if majority_fraction != 1.0:
         pav_true_subset = df_genes[df_genes['lineage_pav']==True].id
         pav_false_subset_downsampled = np.random.choice(df_genes[df_genes['lineage_pav'] == False].id, size=int(len(df_genes.index)*majority_fraction),replace=False)
@@ -110,7 +133,7 @@ elif approach == "SMOTE":
     model = RandomForestClassifier(**args_dict)
 model.fit(X_train, y_train)
 
-## compare to second df
+## compare to second df (second host)
 
 df_genes_2 = pd.read_csv(input_df_2)
 df_genes_2 = df_genes_2[df_genes_2['lineage']!=4]
@@ -120,8 +143,10 @@ df_genes_2 = df_genes_2.drop(['id', 'scaffold', 'start', 'end', 'orientation', '
 y_test_2 = df_genes_2['lineage_pav']
 X_test_2 = df_genes_2.drop('lineage_pav', axis=1)
 
+# get results for second input dataframe
 results_2 = reports(model, X_test_2, y_test_2)
 
+# print results
 print(approach + '\t' + 
             str(majority_fraction) + '\t' +
             str(n_estimators) + '\t' +
