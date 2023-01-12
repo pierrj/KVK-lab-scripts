@@ -100,7 +100,7 @@ done < input_list
 ## some cleaning before starting the job just in case
 rm *coverage*
 
-parallel -j ${SLURM_NTASKS} < jobqueue
+# parallel -j ${SLURM_NTASKS} < jobqueue
 
 # GC CONTENT using bedtools nuc
 OUTPUT_NAME=gc_content

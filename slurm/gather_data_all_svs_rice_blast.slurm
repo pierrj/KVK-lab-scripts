@@ -113,7 +113,7 @@ done < input_list
 ## some cleaning before starting the job just in case
 rm *coverage*
 
-parallel -j ${SLURM_NTASKS} < jobqueue
+# parallel -j ${SLURM_NTASKS} < jobqueue
 
 ## methylation
 genome=guy11
