@@ -110,6 +110,5 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
         LABEL=shuffled
     fi
-    ### THIS IS ACTUALLY AT CONTENT NOT GC CONTENT ###
-    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE | awk -v OFS='\t' '{ if (NR > 1) {print $4}}' > ${LABEL}.${OUTPUT_NAME}.txt
+    bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE | awk -v OFS='\t' '{ if (NR > 1) {print $5}}' > ${LABEL}.${OUTPUT_NAME}.txt
 done
