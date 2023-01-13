@@ -138,5 +138,6 @@ for BED_FILE in $DEL_BED $SHUFFLED_BED; do
     elif [[ "${BED_FILE}" == "${SHUFFLED_BED}" ]]; then
         LABEL=shuffled
     fi
+    ## calculate gc content manually from base counts in order to deal with Ns
     bedtools nuc -fi ${GENOME_FILE} -bed $BED_FILE | awk -v OFS='\t' '{ if (NR > 1) {print ($7+$8)/($6+$7+$8+$9)}}' > ${LABEL}.${OUTPUT_NAME}.txt
 done
