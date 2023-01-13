@@ -76,15 +76,15 @@ while read genome; do
     GENES_BED=all_beds_fixed/${genome}.genes.bed
 
     # get gc content per gene
-    bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} | awk -v OFS='\t' '{ if (NR > 1) {print $4, $6}}' > gc_content_per_gene/${genome}.gene.gc
-
+    bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} | awk -v OFS='\t' '{ if (NR > 1) {print $4, ($8+$9)/($7+$8+$9+$10)}}' > gc_content_per_gene/${genome}.gene.gc
 
     # get 1kb flanking per gene, on either side
     # then get region gc content
     # then average the two regions with awk
+    ## calculate gc content manually bc otherwise Ns are counted as part of the total number of bases
     bedtools flank -g ${GENOME_CHROM_SIZES} -i ${GENES_BED} -b 1000 | \
         bedtools nuc -fi ${GENOME_FASTA} -bed - | \
-        awk -v OFS='\t' '{ if (NR > 1) {print $4, $6}}' | \
+        awk -v OFS='\t' '{ if (NR > 1) {print $4, ($8+$9)/($7+$8+$9+$10)}}' | \
         awk -v OFS='\t' '{ sum[$1] += $2; count[$1] += 1 } END { for ( key in count ) { print key, sum[key] / count[key] } }' > gc_content_1kb_flank/${genome}.1kb.gc
 
     cut -f1 gc_content_1kb_flank/${genome}.1kb.gc > ${genome}.gene_col
