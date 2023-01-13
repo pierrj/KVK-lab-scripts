@@ -76,25 +76,17 @@ while read genome; do
     GENES_BED=all_beds_fixed/${genome}.genes.bed
 
     # get gc content per gene
-    bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} | awk -v OFS='\t' '{ if (NR > 1) {print $4, ($8+$9)/($7+$8+$9+$10)}}' > gc_content_per_gene/${genome}.gene.gc
+    bedtools nuc -fi ${GENOME_FASTA} -bed ${GENES_BED} > gc_content_per_gene/${genome}.gene.gc
 
     # get 1kb flanking per gene, on either side
-    # then get region gc content
-    # then average the two regions with awk
-    ## calculate gc content manually bc otherwise Ns are counted as part of the total number of bases
     bedtools flank -g ${GENOME_CHROM_SIZES} -i ${GENES_BED} -b 1000 | \
-        bedtools nuc -fi ${GENOME_FASTA} -bed - | \
-        awk -v OFS='\t' '{ if (NR > 1) {print $4, ($8+$9)/($7+$8+$9+$10)}}' | \
-        awk -v OFS='\t' '{ sum[$1] += $2; count[$1] += 1 } END { for ( key in count ) { print key, sum[key] / count[key] } }' > gc_content_1kb_flank/${genome}.1kb.gc
+        bedtools nuc -fi ${GENOME_FASTA} -bed - > gc_content_1kb_flank/${genome}.1kb.gc
 
-    cut -f1 gc_content_1kb_flank/${genome}.1kb.gc > ${genome}.gene_col
-
-    cut -f2 gc_content_per_gene/${genome}.gene.gc > ${genome}.gene.gc_col
-    cut -f2 gc_content_1kb_flank/${genome}.1kb.gc > ${genome}.1kb.gc_col
-
-    paste ${genome}.gene_col ${genome}.gene.gc_col ${genome}.1kb.gc_col > gc_content_table/${genome}.gc_table.txt
+    ## need to manually calculate gc content here to deal with Ns
+    ## also need to deal with flanking regions that are too small or have too many Ns
+    ## basically filtering regions less than 100 bp and regions that have less than 10% Ns
+    python /global/home/users/pierrj/git/python/generate_gc_table_per_genome.py gc_content_per_gene/${genome}.gene.gc gc_content_1kb_flank/${genome}.1kb.gc $genome
     
-    rm ${genome}*
 done < ${MAPFILE}
 
 cat gc_content_table/* > all_genomes.gc_table.txt
