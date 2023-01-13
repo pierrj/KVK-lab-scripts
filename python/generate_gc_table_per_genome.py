@@ -24,7 +24,7 @@ import csv
 import sys
 
 input_gene_gc = sys.argv[1]
-input_flanking_gc = sys.arv[2]
+input_flanking_gc = sys.argv[2]
 genome_name = sys.argv[3]
 
 ## read in gene gc content
