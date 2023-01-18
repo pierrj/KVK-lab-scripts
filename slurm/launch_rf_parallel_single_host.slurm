@@ -66,7 +66,7 @@ done
 
 N_NODES=3
 
-split --number=l/${N_NODES} --numeric-suffixes=1 jobqueue jobqueue_
+split --number=l/${N_NODES} --numeric-suffixes=1 $jobqueue_file ${jobqueue_file}_
 
 if [ -f slurm_ids ]; then
     rm slurm_ids
@@ -126,7 +126,7 @@ done
 
 N_NODES=3
 
-split --number=l/${N_NODES} --numeric-suffixes=1 jobqueue jobqueue_
+split --number=l/${N_NODES} --numeric-suffixes=1 $jobqueue_file ${jobqueue_file}_
 
 if [ -f slurm_ids ]; then
     rm slurm_ids
@@ -186,7 +186,7 @@ done
 
 N_NODES=3
 
-split --number=l/${N_NODES} --numeric-suffixes=1 jobqueue jobqueue_
+split --number=l/${N_NODES} --numeric-suffixes=1 $jobqueue_file ${jobqueue_file}_
 
 if [ -f slurm_ids ]; then
     rm slurm_ids
