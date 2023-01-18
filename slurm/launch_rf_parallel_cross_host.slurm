@@ -30,6 +30,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+jobqueue_file=jobqueue_crosshost
+
 ## rice first cross host ##
 
 cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/random_forest/cross_host
@@ -53,27 +55,38 @@ if [ -f $OUTPUT_FILE ]; then
     rm $OUTPUT_FILE
 fi
 
-if [ -f jobqueue ]; then
-    rm jobqueue
+if [ -f $jobqueue_file ]; then
+    rm $jobqueue_file
 fi
 
 REPLICATES=100
 
 # parallelization stuff
 for i in $(seq $REPLICATES); do
-    echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_cross_host.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $INPUT_DF2 $OUTPUT_STRING" >> jobqueue
+    echo "/global/scratch/users/pierrj/conda_envs/random_forest/bin/python /global/home/users/pierrj/git/python/rf_perf_test_cross_host.py $INPUT_DF $MAJORITY_FRACTION $APPROACH $ESTIMATORS $SPLIT $LEAF $FEATURES $DEPTH $BOOTSTRAP $INPUT_DF2 $OUTPUT_STRING" >> $jobqueue_file
 done
 
 N_NODES=3
 
 split --number=l/${N_NODES} --numeric-suffixes=1 jobqueue jobqueue_
 
+if [ -f slurm_ids ]; then
+    rm slurm_ids
+fi
+
 for node in $(seq -f "%02g" 1 ${N_NODES})
 do
-    sbatch --job-name=$node.rf --export=ALL,OUTPUT_FILE=$OUTPUT_FILE,node=$node \
+    sbatch --parsable --job-name=$node.rf --export=ALL,OUTPUT_FILE=$OUTPUT_FILE,node=$node,jobqueue_file=$jobqueue_file \
     --account=co_minium \
-    /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm
+    /global/home/users/pierrj/git/slurm/htc4_gnu_parallel_rf.slurm >> slurm_ids
 done
+
+if [ -f slurm_ids ]; then
+    # wait for all jobs to finish
+    sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
+
+    wait
+fi
 
 # average results
 mv $OUTPUT_FILE ${OUTPUT_FILE}.old
