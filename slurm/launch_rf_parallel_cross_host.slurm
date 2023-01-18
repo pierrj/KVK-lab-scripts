@@ -1,10 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=launch_rf_parallel_cross_host
-#SBATCH --partition=savio
+#SBATCH --partition=savio3_htc
 #SBATCH --qos=savio_normal
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=20
-#SBATCH --time=0:30:00
+#SBATCH --ntasks=1
+#SBATCH --time=72:00:00
 #SBATCH --mail-user=pierrj@berkeley.edu
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
