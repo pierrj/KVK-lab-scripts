@@ -26,6 +26,7 @@ from imblearn.over_sampling import SMOTE
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_auc_score
+from sklearn.metrics import f1_score
 import sys
 
 input_df = sys.argv[1]
@@ -78,7 +79,8 @@ def reports(model, X_test, y_test):
     precision = TP/(TP+FP)
     ap = average_precision_score(y_test, model.predict_proba(X_test)[:,1])
     auc = roc_auc_score(y_test, model.predict_proba(X_test)[:,1])
-    return([recall, precision, ap, auc, TP, FN, FP, TN])
+    f1 = f1_score(y_test, y_pred)
+    return([recall, precision, ap, auc, TP, FN, FP, TN, f1])
 
 # my own train_test_split that subsets many genomes from the same randomly selected genomes rather than randomly selected genes
 def train_test_split_mine_downsample(majority_fraction):
@@ -162,4 +164,5 @@ print(approach + '\t' +
             str(results_2[4]) + '\t' + 
             str(results_2[5]) + '\t' + 
             str(results_2[6]) + '\t' + 
-            str(results_2[7]))
+            str(results_2[7]) + '\t' +
+            str(results_2[8]))

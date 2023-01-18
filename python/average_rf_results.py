@@ -31,7 +31,7 @@ df.columns = ['approach', 'majority_fraction',
             'min_samples_leaf', 'max_features',
             'max_depth', 'bootstrap',
             'recall', 'precision', 'ap', 'auc',
-            'TP', 'FN', 'FP', 'TN']
+            'TP', 'FN', 'FP', 'TN', 'f1']
 
 # group by defined columns and average
 df_grouped = df.groupby(['approach', 'majority_fraction', 
