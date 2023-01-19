@@ -99,7 +99,7 @@ cat ${OUTPUT_FILE}.old.colnames ${OUTPUT_FILE}.old.nocolnames > ${OUTPUT_FILE}.o
 mv $OUTPUT_FILE ${OUTPUT_FILE}.old
 
 ## transpose and fix line ending issues for plotting in R
-awk -v OFS=';' '
+awk -v OFS='\t' '
 { 
     for (i=1; i<=NF; i++)  {
         a[NR,i] = $i
@@ -116,7 +116,7 @@ END {
     }
 }' $OUTPUT_FILE.old > $OUTPUT_FILE.transposed
 
-cat $(echo -e Feature'\t'Importance ) $OUTPUT_FILE.transposed > $OUTPUT_FILE
+cat <(echo -e Feature'\t'Importance ) $OUTPUT_FILE.transposed > $OUTPUT_FILE
 
 mv $OUTPUT_FILE $OUTPUT_FILE.old
 
