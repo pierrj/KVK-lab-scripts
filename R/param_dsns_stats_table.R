@@ -31,33 +31,33 @@ get_stats = function(vector, stats) {
   return(output_stats)
 }
 
-# permutation_test = function(vector1, vector2, stat, replicates){
-#     observed = stat(vector1) - stat(vector2)
-#     combined = c(vector1, vector2)
-
-#     null_dsn <- replicate(replicates,
-#                           {
-#                             sample_one_index <- sample(length(combined), length(vector1), replace = FALSE)
-#                             sample_two_index <- seq(length(combined))[!seq(length(combined))%in%sample_one_index]
-
-#                             sample_one <- combined[sample_one_index]
-#                             sample_two <- combined[sample_two_index]
-#                             stat(sample_one) - stat(sample_two)
-#                           })
-
-#     ## this is the two tailed p-value
-#     p_value <- mean(abs(observed)<=abs(null_dsn))
-
-#     if (p_value == 0){
-#       return(paste("<", as.character(1/replicates), sep=''))
-#     } else {
-#       return(as.character(p_value))
-#     }
-# }
-
 permutation_test = function(vector1, vector2, stat, replicates){
-  return('NA')
+    observed = stat(vector1) - stat(vector2)
+    combined = c(vector1, vector2)
+
+    null_dsn <- replicate(replicates,
+                          {
+                            sample_one_index <- sample(length(combined), length(vector1), replace = FALSE)
+                            sample_two_index <- seq(length(combined))[!seq(length(combined))%in%sample_one_index]
+
+                            sample_one <- combined[sample_one_index]
+                            sample_two <- combined[sample_two_index]
+                            stat(sample_one) - stat(sample_two)
+                          })
+
+    ## this is the two tailed p-value
+    p_value <- mean(abs(observed)<=abs(null_dsn))
+
+    if (p_value == 0){
+      return(paste("<", as.character(1/replicates), sep=''))
+    } else {
+      return(as.character(p_value))
+    }
 }
+
+# permutation_test = function(vector1, vector2, stat, replicates){
+#   return('NA')
+# }
 
 get_all_pvalues = function(vector1, vector2, stats, replicates) {
   p_values <- c()
