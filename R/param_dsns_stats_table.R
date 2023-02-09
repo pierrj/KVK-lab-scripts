@@ -7,6 +7,12 @@ df_gene_info_wheat_blast <-data.frame(fread('gene_info.cross_host.wheat_blast.tx
 
 df_gene_info_rice_blast <- data.frame(fread('gene_info.full_model.rice_blast.txt', na.strings = ''))
 
+## remove lineage 4 since PAV isn't as well defined there
+
+df_gene_info_wheat_blast <- df_gene_info_wheat_blast[df_gene_info_wheat_blast$lineage != 4,]
+
+df_gene_info_rice_blast <- df_gene_info_rice_blast[df_gene_info_rice_blast$lineage != 4,]
+
 
 twofive_quant = function(vector){
   return(unname(quantile(vector, 0.25)))
@@ -177,6 +183,10 @@ df <- rbind(df_gene_info_rice_blast, df_gene_info_wheat_blast)
 rm(df_gene_info_wheat_blast)
 
 rm(df_gene_info_rice_blast)
+
+## remove lineage 4 since pavs arent as well defined there
+
+df <- df[df$lineage != 4,]
 
 df_stats <- data.frame(matrix(ncol = length(stats)*3+2, nrow = 0))
 
