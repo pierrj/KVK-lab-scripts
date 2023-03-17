@@ -31,8 +31,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
-DATE=Sep29
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_anne_subset
+DATE=out
 
 cd $PROJECT_DIR
 
@@ -41,4 +41,4 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 module purge
 
 ## finalize orthofinder run based off precalculated blast outputs
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -b orthofinder_w_guy11/Results_${DATE}/WorkingDirectory
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -n out -b orthofinder_w_guy11/Results_${DATE}/WorkingDirectory

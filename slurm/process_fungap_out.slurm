@@ -31,19 +31,27 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-cd /global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap
+cd /global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_anne_subset
 
 if [ ! -d "all_proteomes" ]; then
     mkdir all_proteomes
 fi
 
-MAPFILE=/global/scratch/users/pierrj/PAV_SV/PAV/re_gladieux_proteomes_fungap/genomes_mapfile
-FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/gladieux_all/
+MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/anne_curated_mapfile_annotated.txt
+FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/wheat_blast
 
 # copy fungap out files over
 while read genome; do
+    echo $genome
     cp ${FUNGAP_DIR}/${genome}/fungap_out/fungap_out/fungap_out_prot.faa all_proteomes/${genome}_fungap_out_prot.faa
 done < $MAPFILE
+
+FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/gladieux_all/
+genome=GCA_004355905.1_PgNI
+cp ${FUNGAP_DIR}/${genome}/fungap_out/fungap_out/fungap_out_prot.faa all_proteomes/${genome}_fungap_out_prot.faa
+
+MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/anne_curated_mapfile_annotated.txt
+FUNGAP_DIR=/global/scratch/users/pierrj/fungap_runs/wheat_blast
 
 if [ ! -d "all_proteomes_corrected" ]; then
     mkdir all_proteomes_corrected
@@ -60,7 +68,7 @@ module purge
 
 cd /global/scratch/users/pierrj/fungap_runs/wheat_blast
 
-MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/wheat_blast_busco_greater_than_90_annotated
+MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/anne_curated_mapfile_annotated.txt
 
 ## some issues with the gff file that need to be fixed before processing
 while read genome; do
