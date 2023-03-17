@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=full_orthofinder_run
-#SBATCH --partition=savio2_bigmem
+#SBATCH --partition=savio2
 #SBATCH --qos=savio_normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=24
