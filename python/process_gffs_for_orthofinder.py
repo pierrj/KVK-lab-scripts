@@ -50,14 +50,14 @@ os.mkdir(out_dir)
 
 ## read in all gffs, change the names and output processed gffs
 for genome in genomes:
-    # # originally this for wheat
-    # accession = genome.split('_')[0] + genome.split('_')[1]
+    # originally this for wheat
+    accession = genome.split('_')[0] + genome.split('_')[1]
     ## but this for rice
     # isolate = genome
     # lineage = lineage_info[isolate]
     # accession = isolate + '_' + lineage
     ## and this for guy11
-    accession = genome
+    # accession = genome
     in_file = join(genome, 'fungap_out','fungap_out', 'fungap_out.nocomments.gff3')
     in_handle = open(in_file)
     out_file = join(out_dir,genome+"_fungap_out.fixed.gff3")
