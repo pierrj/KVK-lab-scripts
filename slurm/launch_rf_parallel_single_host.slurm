@@ -30,7 +30,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-# jobqueue_file=jobqueue_singlehost
+jobqueue_file=jobqueue_singlehost
 
 # ## rice full model ##
 
