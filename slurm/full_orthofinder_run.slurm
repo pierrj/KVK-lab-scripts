@@ -41,4 +41,4 @@ source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 module purge
 
 ## finalize orthofinder run based off precalculated blast outputs
-orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -n out -b orthofinder_w_guy11/Results_${DATE}/WorkingDirectory
+orthofinder -oa -M msa -A mafft -T fasttree -t ${SLURM_NTASKS} -a ${SLURM_NTASKS} -n out -b orthofinder/Results_${DATE}/WorkingDirectory
