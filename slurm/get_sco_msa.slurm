@@ -34,7 +34,7 @@
 
 source activate /global/scratch/users/pierrj/conda_envs/orthofinder
 
-PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_anne_subset
+PROJECT_DIR=/global/scratch/users/pierrj/PAV_SV/PAV/wheat_blast_anne_subset_re
 DATE=out
 
 cd $PROJECT_DIR
