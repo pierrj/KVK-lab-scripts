@@ -83,7 +83,7 @@ done
 
 if [ -f slurm_ids ]; then
     # wait for all jobs to finish
-    sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
+    sbatch -A ac_kvklight -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
 
     wait
 fi
@@ -145,7 +145,7 @@ done
 
 if [ -f slurm_ids ]; then
     # wait for all jobs to finish
-    sbatch -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
+    sbatch -A ac_kvklight -W --dependency=afterok:$(cat slurm_ids | head -c -1 | tr '\n' ':') /global/home/users/pierrj/git/slurm/dummy_job.slurm
 
     wait
 fi
