@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=dummy_job
 #SBATCH --partition=savio3_htc
+#SBATCH --account=ac_kvklight
 #SBATCH --qos=savio_normal
 #SBATCH --ntasks=1
 #SBATCH --time=00:30:00
