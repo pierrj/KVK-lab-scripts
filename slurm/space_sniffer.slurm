@@ -10,6 +10,6 @@
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
 
-cd /global/scratch/users/pierrj/space_snif
+cd /global/scratch/projects/vector_kvklab/pierrj/
 
-du -h /global/scratch/users/pierrj/eccDNA/ > eccdna_dir_space_sniff
+du -h eccdna_backup > du_output_5_26_23
