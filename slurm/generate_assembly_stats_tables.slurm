@@ -38,8 +38,8 @@ while read genome; do
 done < ${MAPFILE}
 
 # busco
-if [ -r "genomes_for_busco" ]; then
-    rm genomes_for_busco
+if [ -d "genomes_for_busco" ]; then
+    rm -r genomes_for_busco
 fi
 
 mkdir genomes_for_busco
@@ -55,7 +55,7 @@ export PATH=/global/scratch/users/pierrj/conda_envs/BUSCO/bin:$PATH
 busco -i genomes_for_busco -l sordariomycetes_odb10 -o ${host}.genomes_for_busco_buscofied -m genome -c $SLURM_NTASKS -f
 
 # remove header
-tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt ${host}.busco.out
+tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > ${host}.busco.out
 
 ## assemble columns with paste and select useful columns
 # from assembly stats
@@ -65,7 +65,7 @@ tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt ${host}.busco.o
 # L50
 # from busco
 # completeness
-paste $MAPFILE $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $22, $23}' genome_assembly_stats) $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
+paste $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
@@ -88,13 +88,13 @@ if [ -f "genome_assembly_stats" ]; then
 fi
 
 while read genome; do
-    tr '\n' '\t' ${genome}.stats >> genome_assembly_stats
+    tr '\n' '\t' < ${genome}.stats >> genome_assembly_stats
     echo >> genome_assembly_stats
 done < ${MAPFILE}
 
 # busco
-if [ -r "genomes_for_busco" ]; then
-    rm genomes_for_busco
+if [ -d "genomes_for_busco" ]; then
+    rm -r genomes_for_busco
 fi
 
 mkdir genomes_for_busco
@@ -110,7 +110,7 @@ export PATH=/global/scratch/users/pierrj/conda_envs/BUSCO/bin:$PATH
 busco -i genomes_for_busco -l sordariomycetes_odb10 -o ${host}.genomes_for_busco_buscofied -m genome -c $SLURM_NTASKS -f
 
 # remove header
-tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt ${host}.busco.out
+tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > ${host}.busco.out
 
 # process accession names just for wheat blast
 awk -F "_" '{print $1$2}' $MAPFILE > accession_column
@@ -123,25 +123,11 @@ awk -F "_" '{print $1$2}' $MAPFILE > accession_column
 # L50
 # from busco
 # completeness
-paste accession_column $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $22, $23}' genome_assembly_stats) $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
+paste accession_column $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
 
-
-## MAKE SURE EVERYTHING IS PROPERLY SORTED ##
-
-
-## needed
-# genome stats
-## N50
-## L50
-## N of seqs
-## N of nucleotides
-
-# busco stats
-
-# metadata
-## isolate name or genbank accession
-## lineage
-## host
+cat <(echo -e isolate'\t'host'\t'acronym'\t'n_seqs'\t'n_bases'\t'N50'\t'L50'\t'busco_complete) \
+    rice.final_table \
+    wheat.final_table > pav_paper.assembly_stats.txt
