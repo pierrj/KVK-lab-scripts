@@ -52,7 +52,7 @@ source activate /global/scratch/users/pierrj/conda_envs/BUSCO
 
 export PATH=/global/scratch/users/pierrj/conda_envs/BUSCO/bin:$PATH
 
-busco -i genomes_for_busco -l sordariomycetes_odb10 -o ${host}.genomes_for_busco_buscofied -m genome -c $SLURM_NTASKS -f
+# busco -i genomes_for_busco -l sordariomycetes_odb10 -o ${host}.genomes_for_busco_buscofied -m genome -c $SLURM_NTASKS -f
 
 # remove header
 tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > ${host}.busco.out
