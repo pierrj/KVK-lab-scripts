@@ -71,6 +71,12 @@ paste $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_as
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
 
 
+source activate /global/scratch/users/pierrj/conda_envs/gaas
+
+export PERL5LIB=/global/scratch/users/pierrj/conda_envs/gaas/lib
+
+cd /global/scratch/users/pierrj/PAV_SV/PAV/assembly_stats
+
 ## wheat
 
 GENOMES_PATH=/global/scratch/users/pierrj/fungap_runs/wheat_blast/genomes_to_annotate
@@ -107,7 +113,7 @@ source activate /global/scratch/users/pierrj/conda_envs/BUSCO
 
 export PATH=/global/scratch/users/pierrj/conda_envs/BUSCO/bin:$PATH
 
-busco -i genomes_for_busco -l sordariomycetes_odb10 -o ${host}.genomes_for_busco_buscofied -m genome -c $SLURM_NTASKS -f
+# busco -i genomes_for_busco -l sordariomycetes_odb10 -o ${host}.genomes_for_busco_buscofied -m genome -c $SLURM_NTASKS -f
 
 # remove header
 tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > ${host}.busco.out
@@ -123,7 +129,7 @@ awk -F "_" '{print $1$2}' $MAPFILE > accession_column
 # L50
 # from busco
 # completeness
-paste accession_column $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) $(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
+paste accession_column <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
