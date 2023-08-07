@@ -9,6 +9,27 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=/global/home/users/pierrj/slurm_stdout/slurm-%j.out
 #SBATCH --error=/global/home/users/pierrj/slurm_stderr/slurm-%j.out
+#MIT License
+#
+#Copyright (c) 2023 Pierre Michel Joubert
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 
 source activate /global/scratch/users/pierrj/conda_envs/gaas
 
@@ -84,6 +105,10 @@ MAPFILE=/global/scratch/users/pierrj/fungap_runs/wheat_blast/anne_curated_mapfil
 host=wheat
 acronym=MoT
 
+# sort mapfile
+sort -k1,1 $MAPFILE > wheat_mapfile
+MAPFILE=wheat_mapfile
+
 # assembly stats
 while read genome; do
     gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 !~ /--/' > ${genome}.stats
@@ -118,9 +143,6 @@ export PATH=/global/scratch/users/pierrj/conda_envs/BUSCO/bin:$PATH
 # remove header
 tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > ${host}.busco.out
 
-# process accession names just for wheat blast
-awk -F "_" '{print $1$2}' $MAPFILE > accession_column
-
 ## assemble columns with paste and select useful columns
 # from assembly stats
 # N seqs
@@ -129,7 +151,11 @@ awk -F "_" '{print $1$2}' $MAPFILE > accession_column
 # L50
 # from busco
 # completeness
-paste accession_column <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
+
+awk -F "_" '{print $1$2}' $MAPFILE > wheat_colnames
+MAPFILE=wheat_colnames
+
+paste $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
