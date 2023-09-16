@@ -12,4 +12,6 @@
 
 cd /global/scratch/projects/vector_kvklab/pierrj/
 
-du -h eccdna_backup > du_output_5_26_23
+# du -h eccdna_backup > du_output_5_26_23
+
+tar -czvf eccdna_backup.tar.gz eccdna_backup
