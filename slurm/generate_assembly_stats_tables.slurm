@@ -89,7 +89,7 @@ tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > 
 paste $MAPFILE $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
-awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
+awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, $2, host, acronym, $3, $4, $5, $6, $7}' final_table > ${host}.final_table
 
 
 source activate /global/scratch/users/pierrj/conda_envs/gaas
@@ -199,7 +199,7 @@ echo 'BTMP_S_13_2' >> wheat_strain_names
 paste wheat_strain_names $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
-awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
+awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, $2, host, acronym, $3, $4, $5, $6, $7}' final_table > ${host}.final_table
 
 cat <(echo -e isolate'\t'assembly'\t'host'\t'acronym'\t'n_seqs'\t'n_bases'\t'N50'\t'L50'\t'busco_complete) \
     rice.final_table \
