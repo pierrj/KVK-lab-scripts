@@ -45,9 +45,9 @@ host=rice
 acronym=MoO
 
 # assembly stats
-while read genome; do
-    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 !~ /--/' > ${genome}.stats
-done < ${MAPFILE}
+# while read genome; do
+#     gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 !~ /--/' > ${genome}.stats
+# done < ${MAPFILE}
 
 if [ -f "genome_assembly_stats" ]; then
     rm genome_assembly_stats
@@ -86,7 +86,7 @@ tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > 
 # L50
 # from busco
 # completeness
-paste $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
+paste $MAPFILE $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
@@ -110,9 +110,9 @@ sort -k1,1 $MAPFILE > wheat_mapfile
 MAPFILE=wheat_mapfile
 
 # assembly stats
-while read genome; do
-    gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 !~ /--/' > ${genome}.stats
-done < ${MAPFILE}
+# while read genome; do
+#     gaas_fasta_statistics.pl -f ${GENOMES_PATH}/${genome}_genomic.fna | awk '{print $(NF-1)}' | awk '$1 !~ /--/' > ${genome}.stats
+# done < ${MAPFILE}
 
 if [ -f "genome_assembly_stats" ]; then
     rm genome_assembly_stats
@@ -155,11 +155,52 @@ tail -n +2 ${host}.genomes_for_busco_buscofied/batch_summary.txt | sort -k1,1 > 
 awk -F "_" '{print $1$2}' $MAPFILE > wheat_colnames
 MAPFILE=wheat_colnames
 
-paste $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
+if [ -f "wheat_strain_names" ]; then
+    rm wheat_strain_names
+fi
+
+echo 'BdJes16-1' >> wheat_strain_names
+echo 'BdMeh16-1' >> wheat_strain_names
+echo 'BdBar16-1' >> wheat_strain_names
+echo 'Py22.1' >> wheat_strain_names
+echo 'Py5020' >> wheat_strain_names
+echo 'B2' >> wheat_strain_names
+echo 'WHTQ' >> wheat_strain_names
+echo 'WBKY11' >> wheat_strain_names
+echo 'T25' >> wheat_strain_names
+echo 'Br130' >> wheat_strain_names
+echo 'Br7' >> wheat_strain_names
+echo 'Br80' >> wheat_strain_names
+echo 'B71' >> wheat_strain_names
+echo 'PR01-37.V.3.07' >> wheat_strain_names
+echo 'PR01-37.V.1.05' >> wheat_strain_names
+echo 'BR32' >> wheat_strain_names
+echo 'BTGP1_b' >> wheat_strain_names
+echo 'BTJP4_12' >> wheat_strain_names
+echo 'BTJP4_11' >> wheat_strain_names
+echo 'BTBaB1' >> wheat_strain_names
+echo 'BTBa_2' >> wheat_strain_names
+echo 'BTJP4_16' >> wheat_strain_names
+echo 'BTJP4_18' >> wheat_strain_names
+echo 'BTJP4_6' >> wheat_strain_names
+echo 'BTJP_4_2' >> wheat_strain_names
+echo 'BTJP4_3' >> wheat_strain_names
+echo 'BTMP_S13_1' >> wheat_strain_names
+echo 'BTGP_6_g' >> wheat_strain_names
+echo 'BTJP_4_15' >> wheat_strain_names
+echo 'BTJP_4_9' >> wheat_strain_names
+echo 'BTGP_6_e' >> wheat_strain_names
+echo 'BTGP_6_f' >> wheat_strain_names
+echo 'BTGP_6_h' >> wheat_strain_names
+echo 'BTJP_4_1' >> wheat_strain_names
+echo 'BTJP4_5' >> wheat_strain_names
+echo 'BTMP_S_13_2' >> wheat_strain_names
+
+paste wheat_strain_names $MAPFILE <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3, $6, $21, $22}' genome_assembly_stats) <(awk -F'\t' 'BEGIN{OFS="\t"} {print $3}' ${host}.busco.out) > final_table
 
 ## add repeated values
 awk -v host=$host -v acronym=$acronym -F'\t' 'BEGIN{OFS="\t"} {print $1, host, acronym, $2, $3, $4, $5, $6}' final_table > ${host}.final_table
 
-cat <(echo -e isolate'\t'host'\t'acronym'\t'n_seqs'\t'n_bases'\t'N50'\t'L50'\t'busco_complete) \
+cat <(echo -e isolate'\t'assembly'\t'host'\t'acronym'\t'n_seqs'\t'n_bases'\t'N50'\t'L50'\t'busco_complete) \
     rice.final_table \
     wheat.final_table > pav_paper.assembly_stats.txt
