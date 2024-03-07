@@ -51,4 +51,8 @@ rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scr
 rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/ecc_finder
 rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/citrus_rnaseq
 
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/conda_env
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/conda_envs
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/rnaseq
+
 du -h PAV_SV > pav_sv_du_03_07_24.txt
