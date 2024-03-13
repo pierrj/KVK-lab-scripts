@@ -46,13 +46,17 @@ cd /global/scratch/users/pierrj/
 
 # rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/fungap_runs/tree_problems
 # rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/fungap_runs/wheat_blast/working_directories
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/fungap_runs/gladieux_all/working_directories
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/ciri2
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/ecc_finder
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/citrus_rnaseq
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/fungap_runs/gladieux_all/working_directories
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/ciri2
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/ecc_finder
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/citrus_rnaseq
 
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/conda_env
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/conda_envs
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/rnaseq
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/conda_env
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/conda_envs
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/rnaseq
 
-du -h PAV_SV > pav_sv_du_03_07_24.txt
+# du -h PAV_SV > pav_sv_du_03_07_24.txt
+
+tar -czvf /global/scratch/projects/vector_kvklab/pierrj/PAV_SV.tar.gz PAV_SV
+
+tar -czvf /global/scratch/projects/vector_kvklab/pierrj/moryzae_virulence_project.tar.gz moryzae_virulence_project
