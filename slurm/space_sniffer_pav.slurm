@@ -57,6 +57,6 @@ cd /global/scratch/users/pierrj/
 
 # du -h PAV_SV > pav_sv_du_03_07_24.txt
 
-tar -czvf /global/scratch/projects/vector_kvklab/pierrj/PAV_SV.tar.gz PAV_SV
+# tar -czvf /global/scratch/projects/vector_kvklab/pierrj/PAV_SV.tar.gz PAV_SV
 
 tar -czvf /global/scratch/projects/vector_kvklab/pierrj/moryzae_virulence_project.tar.gz moryzae_virulence_project
