@@ -59,4 +59,9 @@ cd /global/scratch/users/pierrj/
 
 # tar -czvf /global/scratch/projects/vector_kvklab/pierrj/PAV_SV.tar.gz PAV_SV
 
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/moryzae_virulence_project/orthogrouping/orthofinder_out
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/moryzae_virulence_project/orthogrouping/Single_Copy_Orthologue_Sequences_msas
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/moryzae_virulence_project/genome_annotation/annotation_working_directories
+rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/moryzae_virulence_project/pav_validation/pav_validation
+
 tar -czvf /global/scratch/projects/vector_kvklab/pierrj/moryzae_virulence_project.tar.gz moryzae_virulence_project
