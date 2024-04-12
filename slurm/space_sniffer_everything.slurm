@@ -77,8 +77,11 @@ cd /global/scratch/users/pierrj/
 # du -h wham/ >> everything_du_03_05_24.txt
 
 
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/sv_calling_moryzae
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/sra
-rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/scooping_emile/
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/sv_calling_moryzae
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/sra
+# rsync -a --delete /global/scratch/users/pierrj/PAV_SV/PAV/empty_dir/ /global/scratch/users/pierrj/scooping_emile/
 
-tar -czvf /global/scratch/projects/vector_kvklab/pierrj/everything_else.tar.gz --exclude='PAV_SV' --exclude='moryzae_virulence_project' /global/scratch/users/pierrj/
+# tar -czvf /global/scratch/projects/vector_kvklab/pierrj/everything_else.tar.gz --exclude='PAV_SV' --exclude='moryzae_virulence_project' /global/scratch/users/pierrj/
+
+
+rsync -a --delete /global/home/users/pierrj/empty_dir/ /global/scratch/users/pierrj
